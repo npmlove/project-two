@@ -1,0 +1,114 @@
+{
+  "id": "1864688",
+  "name": "宏英MES",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "3252104",
+      "name": "ECN",
+      "font_class": "ECN",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "4636949",
+      "name": "工艺管理-19",
+      "font_class": "gongyiguanli-",
+      "unicode": "e642",
+      "unicode_decimal": 58946
+    },
+    {
+      "icon_id": "2729223",
+      "name": "暂无图片",
+      "font_class": "iconfontzwtupian",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "8228280",
+      "name": "PDF",
+      "font_class": "PDF",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "8965494",
+      "name": "出入库检录",
+      "font_class": "churukujianlu",
+      "unicode": "e66b",
+      "unicode_decimal": 58987
+    },
+    {
+      "icon_id": "15248017",
+      "name": "zanwuneirong",
+      "font_class": "zanwuneirong",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "15247992",
+      "name": "jiazaishibai1",
+      "font_class": "jiazaishibai1",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "15167550",
+      "name": "correct",
+      "font_class": "correct",
+      "unicode": "e64c",
+      "unicode_decimal": 58956
+    },
+    {
+      "icon_id": "11240728",
+      "name": "首页-选中",
+      "font_class": "yemian-copy-copy",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "8088428",
+      "name": "系统设置",
+      "font_class": "shezhi",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "11869857",
+      "name": "员工管理",
+      "font_class": "yuangongguanli",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "12628791",
+      "name": "追溯",
+      "font_class": "zhuisu1",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "11895774",
+      "name": "报表",
+      "font_class": "diannao",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
+      "icon_id": "10809980",
+      "name": "生产",
+      "font_class": "shengchan",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "3702280",
+      "name": "库存",
+      "font_class": "kucun",
+      "unicode": "e659",
+      "unicode_decimal": 58969
+    }
+  ]
+}
