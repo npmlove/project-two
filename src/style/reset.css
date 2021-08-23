@@ -1,6 +1,5 @@
-@charset "utf-8";html{background-color:#f4f4f4;color:#474f5a;font-size:14px}
+@charset "utf-8";html{font-size:14px}
 body,ul,ol,dl,dd,h1,h2,h3,h4,h5,h6,figure,form,fieldset,legend,input,textarea,button,p,blockquote,th,td,pre,xmp{margin:0;padding:0}
-body,input,textarea,button,select,pre,xmp,tt,code,kbd,samp{line-height:1.5}
 h1,h2,h3,h4,h5,h6,small,big,input,textarea,button,select{font-size:100%}
 /* h1,h2,h3,h4,h5,h6{font-family:tahoma,arial,"Hiragino Sans GB","微软雅黑",simsun,sans-serif} */
 h1,h2,h3,h4,h5,h6,b,strong{font-weight:normal}
@@ -19,8 +18,8 @@ button::-moz-focus-inner,input::-moz-focus-inner{padding:0;border:0}
 mark{background-color:transparent}
 a,ins,s,u,del{text-decoration:none}
 sup,sub{vertical-align:baseline}
-html {overflow: hidden;height: 100%;font-size: 50px;-webkit-tap-highlight-color: transparent;}
-body {height:100%;font-family: Arial Regular, "Microsoft Yahei", Helvetica, sans-serif;color: #474f5a;font-size: 12px;line-height: 1;-webkit-text-size-adjust: none;}
+html {height: 100%;font-size: 50px;-webkit-tap-highlight-color: transparent;}
+body {font-family: Arial Regular, "Microsoft Yahei", Helvetica, sans-serif;font-size: 12px;-webkit-text-size-adjust: none;}
 hr {height: .02rem;margin: .1rem 0;border: medium none;border-top: .02rem solid #cacaca;}
 a {color: #00A06E;text-decoration: none;cursor: pointer;padding: 0 5px}
 input::-webkit-input-placeholder,textarea::-webkit-input-placeholder {color: #ccc;font-size: 14px;font-family: Arial Regular,"Microsoft Yahei"}
@@ -33,4 +32,44 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder {color: #cc
 }
 ::-webkit-scrollbar-corner {
   background-color: black;
+}
+.com-width{
+  width: 1200px;
+  min-width: 1200px;
+  margin: 0 auto;
+}
+.com-top30{
+  margin-top: 30px;
+}
+.el-input__inner{
+  border-radius: 0;
+  border-color: #E7E8EC;
+}
+.el-input.is-active .el-input__inner, .el-input__inner:focus{
+  border-color: #000000;
+}
+.el-button{
+  border-radius: 0;
+}
+.el-button--warning{
+  background-color: #FF9914;
+  border-color: #FF9914;
+}
+.el-button--primary{
+  background-color: #2273CB;
+  border-color: #2273CB;
+}
+.el-radio__input.is-checked .el-radio__inner{
+  background-color: #2273CB;
+  border-color: #2273CB;
+}
+.el-radio__input.is-checked+.el-radio__label{
+  color: #2273CB;
+}
+.com-boutique{
+  width: 100%;
+  background-color: #F8F8F8;
+}
+.com-padding15{
+  padding: 15px 15px 0 15px;
 }

@@ -4,8 +4,24 @@ import router from './router'
 import store from './store'
 import http from '@/util/http'
 import serviceAPI from '@/service/index'
+import 'swiper/dist/css/swiper.min.css'
+import 'swiper/dist/js/swiper.min'
 
-import { Input } from 'element-ui'
+import {
+  Carousel, CarouselItem, Form, FormItem, Input, Button, Popover,
+  RadioGroup, Radio
+} from 'element-ui'
+Vue.use(Carousel)
+Vue.use(CarouselItem)
+Vue.use(Input)
+Vue.use(Button)
+Vue.use(Popover)
+Vue.use(RadioGroup)
+Vue.use(Radio)
+
+
+
+
 import '@/style/icon/iconfont.css'
 import '@/style/reset.css'
 import '@/style/common.css'

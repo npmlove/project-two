@@ -1,7 +1,9 @@
+var publicWeb = '/dcErp/faw'
+
 
 const serviceApi = {
-  // 登录
-  login: '/login',
+  // 首页Banner广告展示
+  showBanners: publicWeb+'/t-banner/showBanners',
 
 }
 export default serviceApi

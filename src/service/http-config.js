@@ -9,6 +9,6 @@ export default {
   withCredentials: true,
   // `headers` are custom headers to be sent
   headers: {
-    'Content-Type': 'application/json;charset=UTF-8'
+    'Content-Type': 'application/json'
   }
 }

@@ -61,7 +61,8 @@ const dealError = (error) => {
 
 // 请求拦截器
 const requestInterceptor = (config) => {
-  config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+  config.headers['Content-Type'] = 'application/json'
+  config.headers['tokenId'] = '8ec5af5532ba4ad1b24fe61e8f889e83'
   return config
 }
 
