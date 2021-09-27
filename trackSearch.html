@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="format-detection" content="telephone=no,address=no,email=no">
+		<meta name="applicable-device" content="pc,mobile">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Cache-Control" content="no-transform">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="renderer" content="webkit">
+		<meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+		<meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+		<link rel='icon' href='./img/favicon.ico' type='image/x-icon' />
+		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+		<link rel="stylesheet" href="./css/element-ui-min.css">
+		<link rel="stylesheet" href="./css/reset.css" />
+		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/vue.js"></script>
+		<script src="./js/axios.min.js"></script>
+		<script src="./js/element-ui.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<!-- 头部 -->
+			<div class="header">
+				<div class="header-img">
+					<a href="./index.html">
+						<!-- <img class="logo" src="./img/logo.png" /> -->
+						<div class="logo"></div>
+					</a>
+					<div class="logo-title"></div>
+				</div>
+				<div @click="loginClick" class="header-user">登录</div>
+			</div>
+			<div class="header-menu">
+				<ul class="header-menu-list com-width">
+					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
+					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+				</ul>
+			</div>
+			
+			<!-- 运价查询 -->
+			<div class="modify-search-box">
+				<div class="modify-search-img"></div>
+				<div class="modify-search-form" style="height: auto;margin-top: -46px;">
+					<div class="form-line">
+						<div class="group-wrap group-wrap-item borderE7E8EC" style="margin-top: 0;">
+							<div>
+								<div class="form-item">
+									<div class="form-item-owrt">
+										<input v-model="trackSearchInput" placeholder="全网货物跟踪，运单信息全掌握" type="text" style="width: 100%;" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="group-wrap" style="margin-right: 0;margin-top: 0;">
+							<div class="form-item">
+								<div class="form-item-owrt">
+									<button @click="submitQuery" class="box-btn btn-prprimary com-width130 com-height50">立即查询</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="com-width track-details rest-table">
+				<div style="font-size: 16px;font-weight: 400;color: #999;">货物基本信息</div>
+				<el-table :data="tableData1" border stripe style="width: 100%">
+					<template slot="empty">
+						<img style="width: 262px;height: 201px;margin-top: 20px;" src="./img/null.png" />
+						<p>暂无数据</p>
+					</template>
+				    <el-table-column prop="awb" label="运单号" width="180"></el-table-column>
+				    <el-table-column prop="orgin" label="起始地" width="180"></el-table-column>
+				    <el-table-column prop="destination" label="目的地"></el-table-column>
+					<el-table-column prop="cargoNum" label="数量" width="180"></el-table-column>
+					<el-table-column prop="cargoweight" label="重量" width="180"></el-table-column>
+					<el-table-column prop="cargoStatus" label="最新状态"></el-table-column>
+				</el-table>
+				
+				<div style="font-size: 16px;font-weight: 400;color: #999;margin-top: 20px;">航班信息</div>
+				<el-table :data="tableData2" border stripe style="width: 100%;">
+					<template slot="empty">
+						<img style="width: 262px;height: 201px;margin-top: 20px;" src="./img/null.png" />
+						<p>暂无数据</p>
+					</template>
+				    <el-table-column prop="airLineId" label="航班号" width="180"></el-table-column>
+				    <el-table-column prop="etd" label="航班日期" width="180"></el-table-column>
+				    <el-table-column prop="atd" label="实际起飞日期"></el-table-column>
+					<el-table-column prop="flightOrgin" label="航班起始港" width="180"></el-table-column>
+					<el-table-column prop="flightDestination" label="航班目的港" width="180"></el-table-column>
+					<el-table-column prop="remarks" label="其他信息"></el-table-column>
+				</el-table>
+				
+				<div style="font-size: 16px;font-weight: 400;color: #999;margin-top: 20px;">状态信息</div>
+				<el-table :data="tableData3" border stripe style="width: 100%;">
+					<template slot="empty">
+						<img style="width: 262px;height: 201px;margin-top: 20px;" src="./img/null.png" />
+						<p>暂无数据</p>
+					</template>
+				    <el-table-column prop="cargoStatus" label="状态" width="180"></el-table-column>
+				    <el-table-column prop="currPlace" label="当前港" width="180"></el-table-column>
+				    <el-table-column prop="tracsportMode" label="交通工具类型 ">
+						<template slot-scope="scope">
+							<span v-if="scope.row.tracsportMode == '1'">飞机</span>
+							<span v-else-if="scope.row.tracsportMode == '2'">卡车</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="modeNum" label="交通工具标识" width="180"></el-table-column>
+					<el-table-column prop="statusTime" label="状态时间" width="180"></el-table-column>
+					<el-table-column prop="statusDescription" label="状态描述"></el-table-column>
+				</el-table>
+				
+				
+				<!-- <el-tabs v-model="activeName" type="border-card">
+				    <el-tab-pane label="货物基本信息" name="first">
+						<el-table :data="tableData1" border stripe style="width: 100%">
+						    <el-table-column prop="awb" label="运单号" width="180"></el-table-column>
+						    <el-table-column prop="orgin" label="起始地" width="180"></el-table-column>
+						    <el-table-column prop="destination" label="目的地"></el-table-column>
+							<el-table-column prop="cargoNum" label="数量" width="180"></el-table-column>
+							<el-table-column prop="cargoweight" label="重量" width="180"></el-table-column>
+							<el-table-column prop="cargoStatus" label="最新状态"></el-table-column>
+						</el-table>
+					</el-tab-pane>
+				    <el-tab-pane label="航班信息" name="second">
+						<el-table :data="tableData2" border stripe style="width: 100%">
+						    <el-table-column prop="airLineId" label="航班号" width="180"></el-table-column>
+						    <el-table-column prop="etd" label="航班日期" width="180"></el-table-column>
+						    <el-table-column prop="atd" label="实际起飞日期"></el-table-column>
+							<el-table-column prop="flightOrgin" label="航班起始港" width="180"></el-table-column>
+							<el-table-column prop="flightDestination" label="航班目的港" width="180"></el-table-column>
+							<el-table-column prop="remarks" label="其他信息"></el-table-column>
+						</el-table>
+					</el-tab-pane>
+				    <el-tab-pane label="状态信息" name="third">
+						<el-table :data="tableData3" border stripe style="width: 100%">
+						    <el-table-column prop="cargoStatus" label="状态" width="180"></el-table-column>
+						    <el-table-column prop="currPlace" label="当前港" width="180"></el-table-column>
+						    <el-table-column prop="tracsportMode" label="交通工具类型 ">
+								<template slot-scope="scope">
+									<span v-if="scope.row.tracsportMode == '1'">飞机</span>
+									<span v-else-if="scope.row.tracsportMode == '2'">卡车</span>
+								</template>
+							</el-table-column>
+							<el-table-column prop="modeNum" label="交通工具标识" width="180"></el-table-column>
+							<el-table-column prop="statusTime" label="状态时间" width="180"></el-table-column>
+							<el-table-column prop="statusDescription" label="状态描述"></el-table-column>
+						</el-table>
+					</el-tab-pane>
+				</el-tabs> -->
+			</div>
+			
+			<!-- 尾部 -->
+			<iframe style="width: 100%;" height="140px" frameborder="no" scrolling="no" src="./footer.html"></iframe>
+		</div>
+	</body>
+	<script src="./service/index.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				menuIndex: 0,
+				trackSearchInput: '',
+				data: '',
+				activeName: 'first',
+				tableData1: [],
+				tableData2: [],
+				tableData3: []
+			},
+			mounted() {
+				this.trackSearchInput = getQueryVariable('trackSearchInput')
+				this.initData()
+			},
+			methods: {
+				//物流追踪
+				initData() {
+					var jsonData = {
+						awb: this.trackSearchInput
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.trackSearchWeekRates+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.data = JSON.parse(data.data)
+							// console.log(this.data)
+							this.tableData1 = this.data.cargoInfos
+							this.tableData2 = this.data.flightInfo
+							this.tableData3 = this.data.statusFlows
+						}else{
+							this.$message.error('查询失败')
+						}
+					})
+				},
+				//立即查询
+				submitQuery() {
+					if(!this.trackSearchInput){
+						return
+					}
+					this.initData()
+				},
+				//登录
+				loginClick() {
+					window.location.href = './login.html'
+				},
+				// muen
+				menuClick(index) {
+					this.menuIndex = index
+				}
+			}
+		})
+	</script>
+</html>

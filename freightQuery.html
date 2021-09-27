@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="format-detection" content="telephone=no,address=no,email=no">
+		<meta name="applicable-device" content="pc,mobile">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Cache-Control" content="no-transform">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="renderer" content="webkit">
+		<meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+		<meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+		<link rel='icon' href='./img/favicon.ico' type='image/x-icon' />
+		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+		<link rel="stylesheet" href="./css/element-ui-min.css">
+		<link rel="stylesheet" href="./css/reset.css" />
+		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/vue.js"></script>
+		<script src="./js/axios.min.js"></script>
+		<script src="./js/element-ui.js"></script>
+	</head>
+	<body>
+		<div id="app" style="font-size: 0;">
+			<!-- 头部 -->
+			<div class="header">
+				<div class="header-img">
+					<a href="./index.html">
+						<!-- <img class="logo" src="./img/logo.png" /> -->
+						<div class="logo"></div>
+					</a>
+					<div class="logo-title"></div>
+				</div>
+				<div @click="loginClick" class="header-user">登录</div>
+			</div>
+			<div class="header-menu">
+				<ul class="header-menu-list com-width">
+					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
+					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+				</ul>
+			</div>
+			<!-- 查询内容 -->
+			<div class="modify-flight" style="margin-top: 0;padding-top: 0;">
+				<div>
+					<div class="modify-search-box" style="background-color: #FFF;padding-bottom: 20px;margin-bottom: 20px;">
+						<div class="modify-search-img"></div>
+						<div class="modify-search-form">
+							<div class="form-line">
+								<div class="group-wrap group-wrap-item borderE7E8EC">
+									<div style="display: flex;align-items: center;justify-content: space-between;">
+										<div class="form-item">
+											<label>起飞港</label>
+											<div class="form-item-owrt">
+												<input @input="qiSearchByPage" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="pol" placeholder="输入城市或机场三字码" type="text" />
+												<div v-show="qiShowState" style="display: none;" class="open-warp-router">
+													<div v-if="!pol" class="open-warp-router-hot">热门机场</div>
+													<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
+														<span>{{item.threeLetterCode}}</span>
+														<span>{{item.name}}</span>
+														<span>{{item.city}}</span>
+														<span>{{item.country}}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="switch-item"></div>
+										<div class="form-item">
+											<label>目的港</label>
+											<div class="form-item-owrt">
+												<input @input="muSearchByPage" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="pod" placeholder="输入城市或机场三字码" type="text" />
+												<div v-show="muShowState" style="display: none;" class="open-warp-router">
+													<div v-if="!pod" class="open-warp-router-hot">热门机场</div>
+													<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
+														<span>{{item.threeLetterCode}}</span>
+														<span>{{item.name}}</span>
+														<span>{{item.city}}</span>
+														<span>{{item.country}}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="group-wrap group-wrap-item1 borderE7E8EC">
+									<div class="form-item">
+										<label>件</label>
+										<div class="form-item-owrt">
+											<input maxlength="4" v-model="piece" onkeyup="value=value.replace(/[^\d]/g, '')" type="text" />
+											<div class="owrt-text">PCS</div>
+										</div>
+									</div>
+								</div>
+								<div class="group-wrap group-wrap-item1 borderE7E8EC">
+									<div class="form-item">
+										<label>体积</label>
+										<div class="form-item-owrt">
+											<input maxlength="4" v-model="volume" onkeyup="value=value.replace(/[^\d\.]/g, '')" type="text" />
+											<div class="owrt-text">CBM</div>
+										</div>
+									</div>
+								</div>
+								<div class="group-wrap group-wrap-item1 borderE7E8EC">
+									<div class="form-item">
+										<label>重量</label>
+										<div class="form-item-owrt">
+											<input maxlength="6" v-model="weight" onkeyup="value=value.replace(/[^\d]/g, '')" type="text" />
+											<div class="owrt-text">KG</div>
+										</div>
+									</div>
+								</div>
+								<div class="group-wrap group-wrap-item2">
+									<div class="form-item">
+										<label>货物比重</label>
+										<div class="form-item-owrt">
+											<div v-if="((Math.ceil(weight/volume)) != 'Infinity') && !isNaN(Math.ceil(weight/volume)) && weight && volume" class="item-owrt-text">1:{{Math.ceil(weight/volume)}}</div>
+											<div v-else class="item-owrt-text">---</div>
+										</div>
+									</div>
+								</div>
+								<div class="group-wrap group-wrap-item2">
+									<div class="form-item">
+										<label>计费重</label>
+										<div class="form-item-owrt">
+											<div v-if="volume && weight" class="item-owrt-text">{{(parseInt(volume)*weightPrice) > weight ? (parseInt(volume)*weightPrice) : weight}}KG</div>
+											<div v-else class="item-owrt-text">---</div>
+										</div>
+									</div>
+								</div>
+								<div class="group-wrap" style="margin-right: 0;">
+									<div class="form-item">
+										<div class="form-item-owrt">
+											<button @click="submitQuery" class="box-btn btn-prprimary com-width130 com-height50">立即查询</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div style="display: flex;margin-top: 18px;">
+								<span style="margin-right: 20px;">货物类型</span>
+								<ul class="group-radio-ul">
+									<li @click="aircraftRadioClick('散货')" :class="{radio_li_active: aircraftRadioName == '散货'}" class="radio-li com-font-size14">散货</li>
+									<li @click="aircraftRadioClick('托盘')" :class="{radio_li_active: aircraftRadioName == '托盘'}" class="radio-li com-font-size14">托盘</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div v-show="!isShowMore" class="modify-flight-date com-width">
+						<ul class="modify-date-tabs">
+							<li v-for="(item,index) in dateArr" :key="index" :class="{'modify-date-tab-active': dateTabActive == splitDate(item.date)}" class="modify-date-tab">
+								<div   @click="dateItemClick(item.dow,item.date)">
+									<div v-if="item.dow == 1" class="date">{{splitDate(item.date)}}  周一</div>
+									<div v-if="item.dow == 2" class="date">{{splitDate(item.date)}}  周二</div>
+									<div v-if="item.dow == 3" class="date">{{splitDate(item.date)}}  周三</div>
+									<div v-if="item.dow == 4" class="date">{{splitDate(item.date)}}  周四</div>
+									<div v-if="item.dow == 5" class="date">{{splitDate(item.date)}}  周五</div>
+									<div v-if="item.dow == 6" class="date">{{splitDate(item.date)}}  周六</div>
+									<div v-if="item.dow == 0" class="date">{{splitDate(item.date)}}  周日</div>
+									<div v-if="weekDatePrice[item.isDow-1] == null" class="price">无航班</div>
+									<div v-else class="price">￥{{weekDatePrice[item.isDow-1]}}/kg</div>
+								</div>
+							</li>
+							<li @click="moreClick(true)" class="modify-date-tab modify-more-date">更多日期</li>
+						</ul>
+					</div>
+					<div v-show="isShowMore" class="calendar-lowprice-cla">
+						<div class="cld-tab-title">
+							<div class="cld-tabs-name">日历查看</div>
+							<img @click="moreClick(false)" src="./img/close.png" />
+						</div>
+						<div class="cld-body">
+							<table class="cld-body-table">
+								<tr>
+									<th>周一</th>
+									<th>周二</th>
+									<th>周三</th>
+									<th>周四</th>
+									<th>周五</th>
+									<th>周六</th>
+									<th>周日</th>
+								</tr>
+								<tr v-for="(item,index) in dateMoreArr" :key="index">
+									<td v-if="index >= isIndexDay" :class="{default_color: childerItem.currentDay,default_active: currentDay == childerItem.date}" v-for="(childerItem,childerIndex) in item" :key="childerIndex">
+										<div v-if="childerItem.currentDay" @click="dateClick(childerItem.date,childerIndex)">
+											<div>{{splitDate(childerItem.date)}}</div>
+											<div v-if="isIndexDay == index" style="font-size: 12px;color: #2273CB;">
+												<span v-if="weekDatePrice[childerIndex]">￥{{weekDatePrice[childerIndex]}}</span>
+												<span v-else>无航班</span>
+											</div>
+											<div v-else-if="(isIndexDay+1) == index">
+												<div v-if="weekDatePrice[childerIndex]" style="font-size: 12px;color: #FF9914;"><span style="color: #333;">参考价</span>￥{{weekDatePrice[childerIndex]}}</div>
+												<div v-else style="font-size: 12px;color: #FF9914;">无航班</div>
+											</div>
+											<div v-else-if="childerItem.currentDay" style="font-size: 12px;">可占仓</div>
+										</div>
+										<div v-else>
+											<div>{{splitDate(childerItem.date)}}</div>
+											<div style="font-size: 12px;color: #999;">
+												<span v-if="weekDatePrice[childerIndex]">￥{{weekDatePrice[childerIndex]}}</span>
+												<span v-else>无航班</span>
+											</div>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="modify-flight-bar com-width">
+						<div class="flight-bar-box">
+							<div class="flight-bar-input">
+								<el-select v-model="twoLetterCode1" @change="selectChange" multiple collapse-tags placeholder="请选择航司">
+									<el-option
+										v-for="item in twoCodeArr"
+										:key="item.value"
+										:label="item.airCompanyCode"
+										:value="item.airCompanyCode">
+										<span>{{item.airCompanyCode}}</span>
+										<span style="margin-left: 10px;padding-right: 20px;">{{item.name}}</span>
+									</el-option>
+								</el-select>
+							</div>
+							<!-- <div class="flight-bar-btn"><button @click="submitQuery" class="box-btn btn-prprimary com-width60">确认</button></div> -->
+						</div>
+						<ul class="flight-bar-ul">
+							<li v-for="(item,index) in distanceArr" :key="index" class="flight-bar-li">
+								<div v-if="index != 0" class="flight-bar-arrow1">
+									<img @click="sortClick(item.value,'top')" class="flight-bar-arrow1-img" src="./img/modify-arrow1.png" />
+								</div>
+								<div class="flight-bar-name">{{item.name}}</div>
+								<div v-if="index != 0" class="flight-bar-arrow2">
+									<img @click="sortClick(item.value,'bottom')" class="flight-bar-arrow2-img" src="./img/modify-arrow1.png" />
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				
+				<div class="modify-result-wrapper com-width">
+					<div v-if="priceArr.length == 0" style="width: 100%;text-align: center;padding: 20px;">
+						<img style="width: 262px;height: 201px;" src="./img/null.png" />
+						<div style="color: #999;font-size: 14px;margin-top: 20px;">暂无数据</div>
+					</div>
+					<ul v-if="priceArr.length > 0" class="result-wrapper-ul">
+						<li v-for="(item,index) in priceArr" :key="index" class="result-wrapper-li">
+							<div class="wrapper-li-content">
+								<div class="wrapper-li-content-left">
+									<div class="wrapper-li-tags" style="justify-content: space-between;">
+										<div style="width: auto;font-size: 12px;display: flex;align-items: center;"><img v-if="item.logoPath" style="margin-right: 10px;height: 20px;width: auto;" :src="item.logoPath" />{{item.name}}</div>
+										<div style="display: flex;width: auto;flex: 0 0 130px;justify-content: flex-end;">
+											<div v-if="item.legCount == '1'" class="li-tag1">时效快</div>
+											<!-- <div class="li-tag2">价格低</div> -->
+										</div>
+									</div>
+									<div class="wrapper-li-flgiht">
+										<div class="li-flgiht-airline">
+											<div class="li-flgiht-airline-name">{{item.pol}}</div>
+											<div class="li-flgiht-airline-tip">{{item.polName}}</div>
+										</div>
+										<div class="li-flgiht-icon">{{item.legCount == 1 ? '直达' : '中转'}}</div>
+										<div class="li-flgiht-airline">
+											<div class="li-flgiht-airline-name">{{item.pod}}</div>
+											<div class="li-flgiht-airline-tip">{{item.podName}}</div>
+										</div>
+									</div>
+									<div class="wrapper-li-date">
+										<div class="li-date-text">时效：{{item.shortDuration}}天</div>
+										<div class="li-date-text">班期：D{{item.dows}}</div>
+									</div>
+								</div>
+								<div class="wrapper-li-content-right">
+									<ul class="li-content-price-ul">
+										<li v-for="(childerItem,childerIndex) in item.rates" :key="childerIndex" class="li-content-price-li">
+											<!-- <div v-if="childerIndex == 0">{{childerItem.vwrLow}}CMB < {{childerItem.vwrHigh}}</div> -->
+											<div>1:{{childerItem.vwr}}</div>
+											<div>{{childerItem.ratesLevel0}}</div>
+											<div>{{childerItem.ratesN}}</div>
+											<div>{{childerItem.ratesLevel1}}</div>
+											<div>{{childerItem.ratesLevel2}}</div>
+											<div>{{childerItem.ratesLevel3}}</div>
+											<div>{{childerItem.ratesLevel4}}</div>
+											<div>{{childerItem.ratesLevel5}}</div>
+										</li>
+									</ul>
+									<div style="margin-top: 15px;text-align: right;">
+										<button @click="bookingSpace" class="box-btn btn-prprimary com-width110 com-height50" style="margin-right: 30px;font-size: 16px;font-weight: 500;">订舱</button>
+										<button class="box-btn el-button--warning com-width110 com-height50" style="font-size: 16px;font-weight: 500;">咨询客服</button>
+									</div>
+								</div>
+							</div>
+							<div class="result-wrapper-tabs">
+								<ul class="result-wrapper-tabs-ul">
+									<li class="result-wrapper-tabs-active">普货政策</li>
+									<li>杂费说明</li>
+									<li>航班信息</li>
+								</ul>
+								<div class="result-wrapper-shouqi">收起</div>
+							</div>
+							<div class="result-wrapper-content">
+								<div class="wrapper-content-item">
+									<div class="wrapper-content-item-text">
+										<label>中转/直飞：</label>{{item.legCount == 1 ? '直达' : '中转'}}
+									</div>
+									<div class="wrapper-content-item-text">
+										<label>备注：</label>{{item.remark}}
+									</div>
+								</div>
+								<div class="wrapper-content-item">
+									<div class="wrapper-content-item-text">
+										<label>化工品包装要求（能接）：</label>托盘、散货
+									</div>
+									<div class="wrapper-content-item-text">
+										<label>其他政策：</label>重货，泡货价格另议
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<!-- 尾部 -->
+			<iframe style="width: 100%;" height="140px" frameborder="no" scrolling="no" src="./footer.html"></iframe>
+		</div>
+	</body>
+	<script src="./service/index.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				//菜单
+				menuArr: [
+					{name: '首页'},
+					{name: '订单跟踪'},
+					{name: '行业咨询'},
+					{name: '关于我们'}
+				],
+				menuIndex: 0,
+				aircraftRadioName: '散货',
+				dateTabActive: '',
+				pod: '',
+				pol: '',
+				qiPageArr: [],
+				qiShowState: false,
+				muPageArr: [],
+				muShowState: false,
+				piece: '',
+				volume: '',
+				weight: '',
+				weightPrice: 167,
+				twoLetterCode: '',
+				twoLetterCode1: [],
+				twoLetterCodeStatus: false,
+				twoCodeArr: [],
+				dow: '',
+				pageNum: 0,
+				pageSize: 10,
+				currWeekDate: '',
+				currentDayWeekDate: [],
+				currentDay: '',
+				weekDatePrice: [],
+				isShowMore: false,
+				distanceArr: [
+					{name: 'M', value: 'N'},
+					{name: 'N', value: 'M'},
+					{name: '45+', value: '45'},
+					{name: '100+', value: '100'},
+					{name: '300+', value: '300'},
+					{name: '500+', value: '500'},
+					{name: '1000+', value: '1000'}
+				],
+				priceArr: [],
+				dateArr: [],
+				dateMoreArr: [],
+				isIndexDay: 0
+			},
+			created() {
+				if(!localStorage.getItem('wxOpenId')){
+					window.location.href = './login.html'
+				}
+			},
+			mounted() {
+				var myDate = new Date()
+				this.currWeekDate = myDate.getDay()
+				this.dow = myDate.getDay()
+				this.pol = getQueryVariable('qi')
+				this.pod = getQueryVariable('mu')
+				this.initDate()
+				this.initData()
+				var getMm = getNowM()
+				this.currentDayWeekDate = getWeekDay1(myDate.toLocaleDateString())
+				if(this.currWeekDate == 0){
+					this.currentDayWeekDate = this.currentDayWeekDate.sort()
+				}
+				this.currentDayWeekDate = isDateCurrent1(this.currentDayWeekDate)
+				this.dateArr = this.currentDayWeekDate.slice(0,7)
+				this.currentDay = formatDate(myDate.toLocaleDateString())
+				this.dateTabActive = this.splitDate(this.currentDay)
+				var mmWeek = []
+				for(var i = 0; i < getMm.length; i++){
+					mmWeek.push(getWeekDay(getMm[i]).slice(-7))
+				}
+				var newMmWeek = this.duplicate2(mmWeek)
+				this.dateMoreArr = []
+				for(var a = 0; a < newMmWeek.length; a++){
+					var arr = []
+					for(var z = 0; z < newMmWeek[a].length; z++){
+						if(this.currentDay == newMmWeek[a][z]){
+							this.isIndexDay = a
+						}
+						var json = {
+							date: newMmWeek[a][z],
+							currentMm: getCurrentMm() == newMmWeek[a][z].split('-')[1] ? true : false,
+							currentDay: isDateCurrent(newMmWeek[a][z])
+						}
+						arr.push(json)
+					}
+					this.dateMoreArr.push(arr)
+				}
+				this.qiSearchByPage()
+				this.muSearchByPage()
+				this.initTwoCode()
+			},
+			methods: {
+				sortClick(value,type) {
+					for(var i = 0; i < this.priceArr.length; i++){
+						if(value == 'M' && type == 'top'){
+							this.priceArr.sort(function(a, b){return b.sortMTop - a.sortMTop})
+							this.priceArr[i].rates.sort(function(a, b){return b.ratesN - a.ratesN})
+						}else if(value == 'M' && type == 'bottom') {
+							this.priceArr.sort(function(a, b){return a.sortMBottom - b.sortMBottom})
+							this.priceArr[i].rates.sort(function(a, b){return a.ratesN - b.ratesN})
+						}else if(value == '45' && type == 'top'){
+							this.priceArr.sort(function(a, b){return b.sort45Top - a.sort45Top})
+							this.priceArr[i].rates.sort(function(a, b){return b.ratesLevel1 - a.ratesLevel1})
+						}else if(value == '45' && type == 'bottom') {
+							this.priceArr.sort(function(a, b){return a.sort45Bottom - b.sort45Bottom})
+							this.priceArr[i].rates.sort(function(a, b){return a.ratesLevel1 - b.ratesLevel1})
+						}else if(value == '100' && type == 'top'){
+							this.priceArr.sort(function(a, b){return b.sort100Top - a.sort100Top})
+							this.priceArr[i].rates.sort(function(a, b){return b.ratesLevel2 - a.ratesLevel2})
+						}else if(value == '100' && type == 'bottom') {
+							this.priceArr.sort(function(a, b){return a.sort100Bottom - b.sort100Bottom})
+							this.priceArr[i].rates.sort(function(a, b){return a.ratesLevel2 - b.ratesLevel2})
+						}else if(value == '300' && type == 'top'){
+							this.priceArr.sort(function(a, b){return b.sort300Top - a.sort300Top})
+							this.priceArr[i].rates.sort(function(a, b){return b.ratesLevel3 - a.ratesLevel3})
+						}else if(value == '300' && type == 'bottom') {
+							this.priceArr.sort(function(a, b){return a.sort300Bottom - b.sort300Bottom})
+							this.priceArr[i].rates.sort(function(a, b){return a.ratesLevel3 - b.ratesLevel3})
+						}else if(value == '500' && type == 'top'){
+							this.priceArr.sort(function(a, b){return b.sort500Top - a.sort500Top})
+							this.priceArr[i].rates.sort(function(a, b){return b.ratesLevel4 - a.ratesLevel4})
+						}else if(value == '500' && type == 'bottom') {
+							this.priceArr.sort(function(a, b){return a.sort500Bottom - b.sort500Bottom})
+							this.priceArr[i].rates.sort(function(a, b){return a.ratesLevel4 - b.ratesLevel4})
+						}else if(value == '1000' && type == 'top'){
+							this.priceArr.sort(function(a, b){return b.sort1000Top - a.sort1000Top})
+							this.priceArr[i].rates.sort(function(a, b){return b.ratesLevel5 - a.ratesLevel5})
+						}else if(value == '1000' && type == 'bottom') {
+							this.priceArr.sort(function(a, b){return a.sort1000Bottom - b.sort1000Bottom})
+							this.priceArr[i].rates.sort(function(a, b){return a.ratesLevel5 - b.ratesLevel5})
+						}
+					}
+				},
+				//获取二字码
+				initTwoCode() {
+					var jsonData = {
+						cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
+						dow: this.dow == 0 ? 7 : this.dow,
+						pod: this.pod,
+						pol: this.pol,
+						vwr: isNaN(Math.ceil(this.weight/this.volume)) ? '' : Math.ceil(this.weight/this.volume)
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.twoCodeSearchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.twoCodeArr = data.data
+						}
+					})
+				},
+				//起始港
+				showCityList(type, state) {
+					if (type == 1) {
+						if (state) {
+							this.qiSearchByPage()
+							this.qiShowState = state //显示下拉列表
+						} else {
+							this.qiShowState = state //隐藏下拉框
+						}
+					} else if(type == 2) {
+						if (state) {
+							this.muSearchByPage()
+							this.muShowState = state //显示下拉列表
+						} else {
+							this.muShowState = state //隐藏下拉框
+						}
+					} else if(type == 3) {
+						if (state) {
+							this.initTwoCode()
+							this.twoLetterCodeStatus = state //显示下拉列表
+						} else {
+							this.twoLetterCodeStatus = state //隐藏下拉框
+						}
+					}
+				},
+				openCityClick(type, item) {
+					if (type == 1) {
+						this.pol = item.threeLetterCode
+					} else if(type == 2) {
+						this.pod = item.threeLetterCode
+					}
+					this.initData()
+					this.initDate()
+					this.initTwoCode()
+					this.twoLetterCode1 = []
+				},
+				qiSearchByPage() {
+					var jsonData = {
+						keyWord: this.pol,
+						type: this.pol ? '' : '1'
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.searchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.qiPageArr = data.data
+						}
+					})
+				},
+				muSearchByPage() {
+					var jsonData = {
+						keyWord: this.pod,
+						type: this.pod ? '' : '2'
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.searchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.muPageArr = data.data
+						}
+					})
+				},
+				//立即查询
+				submitQuery() {
+					if(!this.pod){
+						return
+					}
+					this.initData()
+					this.initDate()
+					this.initTwoCode()
+					this.twoLetterCode1 = []
+				},
+				selectChange() {
+					this.initData()
+				},
+				dateClick(date,childerIndex) {
+					for(var z = 0; z < this.currentDayWeekDate.length; z++){
+						if(this.currentDayWeekDate[z].date == date){
+							if(z < 7){
+								this.dateArr = this.currentDayWeekDate.slice(0,7)
+							}else if(z > 13){
+								this.dateArr = this.currentDayWeekDate.slice(-7)
+							}else {
+								this.dateArr = this.currentDayWeekDate.slice(z-3,z+4)
+							}
+						}
+					}
+					this.currentDay = date
+					this.dateTabActive = this.splitDate(date)
+					this.dow = childerIndex+1
+					this.initData()
+					this.initTwoCode()
+					this.twoLetterCode1 = []
+				},
+				moreClick(type) {
+					this.isShowMore = type
+				},
+				//切割日期
+				splitDate(date) {
+					var data = date.split('-')
+					return data[1]+'-'+data[2]
+				},
+				//二维数组去重
+				duplicate2(arr) {
+				    let res={}
+				    arr.forEach(item=>{
+				        item.sort((a,b)=>a-b);
+				        res[item]=item;
+				    });
+				    return Object.values(res)
+				},
+				//获取日期数据
+				initDate() {
+					var data = {
+						cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
+						chargedWeight: isNaN(parseInt(this.volume)*this.weightPrice) ? '' : parseInt(this.volume)*this.weightPrice,
+						pod: this.pod,
+						pol: this.pol,
+						vwr: isNaN(Math.ceil(this.weight/this.volume)) ? '' : Math.ceil(this.weight/this.volume)
+					}
+					data = toData(data)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.noAuthSearchWeekRates+'?'+data
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.weekDatePrice = []
+							for(var q = 0; q < data.data.length; q++){
+								this.weekDatePrice.push(data.data[q].value)
+							}
+						}
+					})
+				},
+				//获取运价查询
+				initData(){
+					var codeArr = JSON.parse(JSON.stringify(this.twoLetterCode1))
+					var data = {
+						cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
+						dow: this.dow == 0 ? 7 : this.dow,
+						pageNum: this.pageNum,
+						pageSize: this.pageSize,
+						pod: this.pod,
+						pol: this.pol,
+						twoLetterCode: codeArr.toString(),
+						vwr: isNaN(Math.ceil(parseInt(this.weight)/parseInt(this.volume))) ? '' : Math.ceil(parseInt(this.weight)/parseInt(this.volume))
+					}
+					data = toData(data)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.noAuthSearchBaseRates+'?'+data
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.priceArr = data.data
+							if(this.priceArr == null){
+								this.priceArr = []
+								return
+							}
+							for(var i = 0; i < this.priceArr.length; i++){
+								this.priceArr[i].sortMTop = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','top')
+								this.priceArr[i].sortMBottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','bottom')
+								this.priceArr[i].sort45Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'45','top')
+								this.priceArr[i].sort45Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'45','bottom')
+								this.priceArr[i].sort100Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'100','top')
+								this.priceArr[i].sort100Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'100','bottom')
+								this.priceArr[i].sort300Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'300','top')
+								this.priceArr[i].sort300Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'300','bottom')
+								this.priceArr[i].sort500Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'500','top')
+								this.priceArr[i].sort500Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'500','bottom')
+								this.priceArr[i].sort1000Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'1000','top')
+								this.priceArr[i].sort1000Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'1000','bottom')
+							}
+						}
+					})
+				},
+				initSort(data,value,type) {
+					var newData
+					if(value == 'M' && type == 'top'){
+						newData = data.sort(function(a, b){return b.ratesN - a.ratesN})
+						return newData[0].ratesN
+					}else if(value == 'M' && type == 'bottom') {
+						newData = data.sort(function(a, b){return a.ratesN - b.ratesN})
+						return newData[0].ratesN
+					}else if(value == '45' && type == 'top'){
+						newData = data.sort(function(a, b){return b.ratesLevel1 - a.ratesLevel1})
+						return newData[0].ratesLevel1
+					}else if(value == '45' && type == 'bottom') {
+						newData = data.sort(function(a, b){return a.ratesLevel1 - b.ratesLevel1})
+						return newData[0].ratesLevel1
+					}else if(value == '100' && type == 'top'){
+						newData = data.sort(function(a, b){return b.ratesLevel2 - a.ratesLevel2})
+						return newData[0].ratesLevel2
+					}else if(value == '100' && type == 'bottom') {
+						newData = data.sort(function(a, b){return a.ratesLevel2 - b.ratesLevel2})
+						return newData[0].ratesLevel2
+					}else if(value == '300' && type == 'top'){
+						newData = data.sort(function(a, b){return b.ratesLevel3 - a.ratesLevel3})
+						return newData[0].ratesLevel3
+					}else if(value == '300' && type == 'bottom') {
+						newData = data.sort(function(a, b){return a.ratesLevel3 - b.ratesLevel3})
+						return newData[0].ratesLevel3
+					}else if(value == '500' && type == 'top'){
+						newData = data.sort(function(a, b){return b.ratesLevel4 - a.ratesLevel4})
+						return newData[0].ratesLevel4
+					}else if(value == '500' && type == 'bottom') {
+						newData = data.sort(function(a, b){return a.ratesLevel4 - b.ratesLevel4})
+						return newData[0].ratesLevel4
+					}else if(value == '1000' && type == 'top'){
+						newData = data.sort(function(a, b){return b.ratesLevel5 - a.ratesLevel5})
+						return newData[0].ratesLevel5
+					}else if(value == '1000' && type == 'bottom') {
+						newData = data.sort(function(a, b){return a.ratesLevel5 - b.ratesLevel5})
+						return newData[0].ratesLevel5
+					}
+				},
+				//订舱
+				bookingSpace() {
+					window.location.href = './bookingSpace.html'
+				},
+				dateItemClick(index,date) {
+					this.dateTabActive = this.splitDate(date)
+					this.dow = index
+					this.initData()
+					this.initTwoCode()
+					this.twoLetterCode1 = []
+				},
+				//货物类型单选
+				aircraftRadioClick(name) {
+					this.aircraftRadioName = name
+					this.initDate()
+					this.initData()
+				},
+				//登录
+				loginClick() {
+					window.location.href = './login.html'
+				},
+				// muen
+				menuClick(index) {
+					this.menuIndex = index
+				}
+			}
+		})
+	</script>
+</html>

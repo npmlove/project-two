@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="format-detection" content="telephone=no,address=no,email=no">
+		<meta name="applicable-device" content="pc,mobile">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Cache-Control" content="no-transform">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="renderer" content="webkit">
+		<meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+		<meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+		<link rel='icon' href='./img/favicon.ico' type='image/x-icon' />
+		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+		<link rel="stylesheet" href="./css/reset.css" />
+		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/vue.js"></script>
+		<script src="./js/axios.min.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<!-- 头部 -->
+			<div class="header">
+				<div class="header-img">
+					<a href="./index.html">
+						<!-- <img class="logo" src="./img/logo.png" /> -->
+						<div class="logo"></div>
+					</a>
+					<div class="logo-title"></div>
+				</div>
+				<div @click="loginClick" class="header-user">登录</div>
+			</div>
+			<div class="header-menu">
+				<ul class="header-menu-list com-width">
+					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
+					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+				</ul>
+			</div>
+			<!-- 订舱 -->
+			<div style="background-color: #F8FBFD;padding: 20px 0;">
+				<div class="com-width booking">
+					<div class="booking-edit">填写订舱信息</div>
+					<div class="booking-content">
+						<div class="com-width770">
+							<div class="booking-item borderEFEFEF bakFFFFFF">
+								<div class="booking-item-name">货物信息<img style="width: 14px;height: 14px;margin-left: 10px;cursor: pointer;" src="./img/booking-tips.png" /></div>
+								<div class="booking-form-line">
+									<div class="booking-form-item">
+										<label class="booking-form-item-label">件数</label>
+										<div class="booking-form-item-content">
+											<!-- <div class="booking-form-tips-left">PCS</div> -->
+											<input class="booking-form-input" type="text" />
+											<div class="booking-form-tips-right">PCS</div>
+										</div>
+									</div>
+									<div class="booking-form-item">
+										<label class="booking-form-item-label">重量</label>
+										<div class="booking-form-item-content">
+											<input class="booking-form-input" type="text" />
+											<div class="booking-form-tips-right">KG</div>
+										</div>
+									</div>
+									<div class="booking-form-item">
+										<label class="booking-form-item-label">体积</label>
+										<div class="booking-form-item-content">
+											<input class="booking-form-input" type="text" />
+											<div class="booking-form-tips-right">CBM</div>
+										</div>
+									</div>
+								</div>
+								<div class="booking-form-line">
+									<div class="booking-form-item">
+										<label class="booking-form-item-label">品名</label>
+										<div class="booking-form-item-content">
+											<input placeholder="请填写货物品名" class="booking-form-input" type="text" style="width: 200px;"/>
+										</div>
+									</div>
+								</div>
+								<div class="booking-form-item-tips">提示：该货物需要提供《磁检报告》</div>
+								<ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 40px;">
+									<li class="radio-li radio_li_active">普货</li>
+									<li class="radio-li">化工品</li>
+									<li class="radio-li">危险品</li>
+									<li class="radio-li">防疫物资</li>
+								</ul>
+								<div class="booking-item-name">货物类型</div>
+								<ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 20px;">
+									<li class="radio-li radio_li_active">散货</li>
+									<li class="radio-li">托盘</li>
+								</ul>
+								<div class="booking-form-line">
+									<div class="booking-form-item">
+										<label class="booking-form-item-label">托盘数量</label>
+										<div class="booking-form-item-content">
+											<input class="booking-form-input" type="text" />
+										</div>
+									</div>
+									<div class="booking-form-item">
+										<label class="booking-form-item-label">托盘尺寸</label>
+										<div class="booking-form-item-content">
+											<div class="booking-form-tips-left">长</div>
+											<input class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;"/>
+											<div class="booking-form-tips-right">M</div>
+										</div>
+									</div>
+									<div class="booking-form-item" style="margin-left: 20px;">
+										<div class="booking-form-item-content">
+											<div class="booking-form-tips-left">宽</div>
+											<input class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;" />
+											<div class="booking-form-tips-right">M</div>
+										</div>
+									</div>
+									<div class="booking-form-item" style="margin-left: 20px;">
+										<div class="booking-form-item-content">
+											<div class="booking-form-tips-left">高</div>
+											<input class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;" />
+											<div class="booking-form-tips-right">M</div>
+										</div>
+									</div>
+								</div>
+								<button class="box-btn btn-prprimary com-width100" style="margin-left: 30px;">添加</button>
+							</div>
+							<div class="booking-item borderEFEFEF bakFFFFFF">
+								<div class="booking-item-name">其他服务</div>
+								<div class="booking-form-line">
+									<div class="booking-form-item">
+										<label class="booking-form-item-label">国内上门提货</label>
+										<div class="booking-form-item-content">
+											<ul class="group-radio-ul" style="font-size: 14px;">
+												<li class="radio-li radio_li_active">不需要</li>
+												<li class="radio-li">需要</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="booking-form-line">
+									<div class="booking-form-item">
+										<label class="booking-form-item-label" style="width: 84px;">清关服务</label>
+										<div class="booking-form-item-content">
+											<ul class="group-radio-ul" style="font-size: 14px;">
+												<li class="radio-li radio_li_active">自行清关</li>
+												<li class="radio-li">DDU</li>
+												<li class="radio-li">DDP</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="booking-item borderEFEFEF bakFFFFFF">
+								<div class="booking-item-name">货物单价</div>
+								<ul class="booking-proportion-ul">
+									<li class="booking-proportion-item">
+										<div>比重</div>
+										<div>M</div>
+										<div>N</div>
+										<div>45KG+</div>
+										<div>100KG+</div>
+										<div>300KG+</div>
+										<div>500KG+</div>
+										<div>1000KG+</div>
+									</li>
+									<li v-for="(item,index) in proportionArr" class="booking-proportion-item">
+										<div>{{item.text1}}</div>
+										<div>￥{{item.text2}}</div>
+										<div>￥{{item.text3}}</div>
+										<div>￥{{item.text4}}</div>
+										<div>￥{{item.text5}}</div>
+										<div>￥{{item.text6}}</div>
+										<div>￥{{item.text7}}</div>
+										<div>￥{{item.text8}}</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="com-width410">
+							<div class="booking-item borderEFEFEF bakFFFFFF">
+								<div class="booking-flight-date"><span>08-04</span><span>周二</span></div>
+								<div class="booking-flight-name"><span></span><span>东方航空</span></div>
+								<div class="booking-flight-route">
+									<div class="booking-flight-route-item">
+										<div>PVG</div>
+										<div>上海浦东</div>
+									</div>
+									<div class="booking-flight-route-tips">直达</div>
+									<div class="booking-flight-route-item">
+										<div>LAX</div>
+										<div>美国洛杉矶</div>
+									</div>
+								</div>
+								<div class="booking-flight-date-num">
+									<div>时效：1天</div>
+								</div>
+							</div>
+							<div class="booking-price borderEFEFEF bakFFFFFF">
+								<div class="booking-price-item">
+									<div class="booking-price-item-name">国内段</div>
+									<div v-for="(item,index) in domesticArr" :key="index" class="booking-price-item-list">
+										<div>{{item.name}}</div>
+										<div><span v-if="item.price2" style="margin-right: 30px;">{{item.price2}}</span><span>{{item.price1}}</span></div>
+									</div>
+								</div>
+								<div class="booking-price-total">
+									<div>CNY</div>
+									<div>￥8550</div>
+								</div>
+							</div>
+							<div class="booking-price borderEFEFEF bakFFFFFF">
+								<div class="booking-price-item">
+									<div class="booking-price-item-name">国际段</div>
+									<div v-for="(item,index) in abroadArr" :key="index" class="booking-price-item-list">
+										<div>{{item.name}}</div>
+										<div><span>{{item.price1}}</span></div>
+									</div>
+								</div>
+								<div class="booking-price-total">
+									<div>USD</div>
+									<div>$100</div>
+								</div>
+							</div>
+							<div>
+								<button style="width: 100%;font-size: 18px;" class="box-btn btn-prprimary com-height50">提交订单</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- 尾部 -->
+			<iframe style="width: 100%;" height="140px" frameborder="no" scrolling="no" src="./footer.html"></iframe>
+		</div>
+	</body>
+	<script src="./service/index.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				//菜单
+				menuArr: [
+					{
+						name: '首页'
+					},
+					{
+						name: '订单跟踪'
+					},
+					{
+						name: '行业咨询'
+					},
+					{
+						name: '关于我们'
+					}
+				],
+				menuIndex: 0,
+				domesticArr: [
+					{
+						name: '空运费',
+						price1: '￥8400',
+						price2: '28*300'
+					},
+					{
+						name: '报关费',
+						price1: '￥50'
+					},
+					{
+						name: '信息费',
+						price1: '￥50'
+					},
+					{
+						name: '制单费',
+						price1: '￥50'
+					}
+				],
+				abroadArr: [
+					{
+						name: '清关费',
+						price1: '$50'
+					},
+					{
+						name: '配送费',
+						price1: '$50'
+					}
+				],
+				proportionArr: [
+					{
+						text1: '167<1cmb≤200',
+						text2: '0',
+						text3: '0',
+						text4: '30',
+						text5: '30',
+						text6: '30',
+						text7: '28',
+						text8: '26',
+					},
+					{
+						text1: '200<1cmb≤300',
+						text2: '0',
+						text3: '0',
+						text4: '30',
+						text5: '30',
+						text6: '30',
+						text7: '28',
+						text8: '26',
+					},
+					{
+						text1: '300<1cmb≤500',
+						text2: '0',
+						text3: '0',
+						text4: '30',
+						text5: '30',
+						text6: '30',
+						text7: '28',
+						text8: '26',
+					},
+					{
+						text1: '500<1cmb≤600',
+						text2: '0',
+						text3: '0',
+						text4: '30',
+						text5: '30',
+						text6: '30',
+						text7: '28',
+						text8: '26',
+					},
+					{
+						text1: '600<1cmb≤700',
+						text2: '0',
+						text3: '0',
+						text4: '30',
+						text5: '30',
+						text6: '30',
+						text7: '28',
+						text8: '26',
+					},
+					{
+						text1: '700<1cmb≤800',
+						text2: '0',
+						text3: '0',
+						text4: '30',
+						text5: '30',
+						text6: '30',
+						text7: '28',
+						text8: '26',
+					}
+				]
+			},
+			created() {
+				if(!localStorage.getItem('wxOpenId')){
+					window.location.href = './login.html'
+				}
+			},
+			mounted() {
+				
+			},
+			methods: {
+				//登录
+				loginClick() {
+					window.location.href = './login.html'
+				},
+				// muen
+				menuClick(index) {
+					this.menuIndex = index
+				}
+			}
+		})
+	</script>
+</html>

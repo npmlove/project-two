@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="format-detection" content="telephone=no,address=no,email=no">
+		<meta name="applicable-device" content="pc,mobile">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Cache-Control" content="no-transform">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="renderer" content="webkit">
+		<meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+		<meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+		<link rel='icon' href='./img/favicon.ico' type='image/x-icon' />
+		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+		<link rel="stylesheet" href="./css/reset.css" />
+		<script src="./js/vue.js"></script>
+		<script src="./js/axios.min.js"></script>
+		<style>
+			.login-bg{
+				height: calc(100vh - 140px);
+				min-height: 500px;
+				width: 100%;
+				min-width: 1200px;
+				background-image: url(../img/login_bak.png);
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: cover;
+				display: flex;
+				align-items: center;
+			}
+			.login-total{
+				display: flex;
+				justify-content: space-between;
+				/* margin-top: -15vh; */
+			}
+			.login-from{
+				width: 406px;
+				height: 456px;
+				background-color: #FFF;
+				border-radius: 5px;
+				position: relative;
+			}
+			.login-title{
+				font-size: 20px;
+				color: #000000;
+				font-weight: 500;
+				padding: 60px 0 0 37px;
+				line-height: 100%;
+			}
+			.login-type{
+				width: 138px;
+				height: 56px;
+				position: absolute;
+				top: 12px;
+				right: 12px;
+				cursor: pointer;
+			}
+			.login-content{
+				margin-top: 40px;
+				text-align: center;
+			}
+			.login-content .qcode img{
+				width: 150px;
+				height: 150px;
+			}
+			.login-content .sao{
+				font-size: 14px;
+				color: #333;
+				font-weight: 500;
+				margin-top: 20px;
+			}
+			.login-content .gong{
+				font-size: 14px;
+				color: #2273CB;
+				margin-bottom: 37px;
+				margin-top: 13px;
+			}
+			.login-tips{
+				color: #999;
+				font-size: 14px;
+				text-align: center;
+			}
+			.login-tips > a{
+				color: #2273CB;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app" style="font-size: 0;">
+			<div class="login-bg">
+				<div class="com-width login-total">
+					<div style="margin-top: 100px;">
+						<img src="img/login_logo.png" style="width: 350px;height: 105px;"/>
+					</div>
+					<div class="login-from">
+						<img v-if="typeImg" @click="imgClick" src="./img/login_type.png" class="login-type"/>
+						<img v-if="!typeImg" @click="imgClick" src="./img/login_type1.png" class="login-type"/>
+						<div v-if="typeImg" class="login-title">微信扫码登录/注册</div>
+						<div v-if="!typeImg" class="login-title">账号登录</div>
+						<div v-if="typeImg" class="login-content">
+							<div class="qcode"><img :src="imgQrCode" /></div>
+							<div class="sao">请使用微信扫描二维码</div>
+							<div class="gong">关注“17订舱”公众号</div>
+						</div>
+						<div v-if="!typeImg" class="login-content input-content" style="margin: 40px 37px 0;">
+							<div class="input-item">
+								<input v-model="tel" @focus="isError = false" placeholder="账号" class="input-inner input-icon1" type="text" />
+							</div>
+							<div class="input-item com-top30">
+								<input v-model="password" @focus="isError = false" placeholder="密码" class="input-inner input-icon2" type="password" />
+							</div>
+							<div class="input-tips" :style="{visibility: !isError ? 'hidden' : 'visible'}">{{errorText}}</div>
+							<div class="input-text"><a href="./register_pass.html">忘记密码</a></div>
+							<div class="input-item com-top30 com-bottom30">
+								<button @click="submitClick" class="input-btn btn-prprimary">登录</button>
+							</div>
+						</div>
+						<div class="login-tips">登录/注册即代表您同意<a href="./agreement.html">《17订舱隐私协议》</a></div>
+					</div>
+				</div>
+			</div>
+			<!-- 尾部 -->
+			<iframe style="width: 100%;" height="140px" frameborder="no" scrolling="no" src="./footer.html"></iframe>
+		</div>
+	</body>
+	<script src="./service/index.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				typeImg: true,
+				uuid: '',
+				imgQrCode: '',
+				socket: '',
+				isError: false,
+				errorText: '请输入',
+				openId: '',
+				tel: '',
+				password: ''
+			},
+			created() {
+				this.uuid = localStorage.getItem('dcUuid')
+				if(!this.uuid){
+					var newUuid = getGuid()
+					localStorage.setItem('dcUuid',newUuid)
+					this.uuid = newUuid
+				}
+				this.initQrCode()
+			},
+			mounted() {
+				setInterval(() => {
+					this.initQrCode()
+				},60000)
+				this.initWebSocket()
+			},
+			methods: {
+				submitClick() {
+					var reg = /^(1[3456789])\d{9}$/
+					var regpass = /^[0-9A-Za-z]{6,20}$/ 
+					if(!reg.test(this.tel)){
+						this.isError = true
+						this.errorText = '请输入有效的手机号码'
+						return
+					}else if(!regpass.test(this.password)){
+						this.isError = true
+						this.errorText = '请输入有效的密码'
+						return
+					}
+					this.isError = false
+					var data = {
+						password: this.password,
+						tel: this.tel
+					}
+					axios({
+						method: 'post',
+						url: webIp+serviceApi.userLogin,
+						data: data
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							localStorage.setItem('wxOpenId',data.data.tportalUser.wechatOpenId)
+							window.location.href = './index.html'
+						}else{
+							this.isError = true
+							this.errorText = data.message
+						}
+					})
+				},
+				
+				
+				
+				initWebSocket: function () {
+					if(typeof(WebSocket) === "undefined"){
+						alert("您的浏览器不支持socket")
+					}else{
+						// 实例化socket
+						this.socket = new WebSocket(websocketUrl+this.uuid)
+						// 监听socket连接
+						this.socket.onopen = this.open
+						// 监听socket错误信息
+						this.socket.onerror = this.error
+						// 监听socket消息
+						this.socket.onmessage = this.getMessage
+					}
+				},
+				open: function () {
+					console.log("socket连接成功")
+				},
+				error: function () {
+					console.log("连接错误")
+				},
+				getMessage: function (msg) {
+					var data = JSON.parse(msg.data)
+					if(data.type == '0'){
+						window.location.href = './register.html?openId='+data.openId
+					}else if(data.type == '1'){
+						localStorage.setItem('wxOpenId',data.openId)
+						window.location.href = './index.html'
+					}
+				},
+				send: function () {
+					this.socket.send(params)
+				},
+				close: function () {
+					console.log("socket已经关闭")
+				},
+				initQrCode() {
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.noAuthQrCode+'?scene=login_'+this.uuid
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.imgQrCode = 'data:image/png;base64,'+data.data
+						}else{
+							this.isError = true
+							this.errorText = data.message
+						}
+					})
+				},
+				imgClick() {
+					this.typeImg = !this.typeImg
+				}
+			},
+			destroyed () {
+				// 销毁监听
+				this.socket.onclose = this.close
+			}
+		})
+	</script>
+</html>

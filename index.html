@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="format-detection" content="telephone=no,address=no,email=no">
+		<meta name="applicable-device" content="pc,mobile">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Cache-Control" content="no-transform">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="renderer" content="webkit">
+		<meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+		<meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+		<link rel='icon' href='./img/favicon.ico' type='image/x-icon' />
+		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+		<!-- <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/7.0.0/swiper-bundle.min.css"> -->
+		<link rel="stylesheet" href="./css/swiper-bundle.min.css" />
+		<link rel="stylesheet" href="./css/reset.css" />
+		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/vue.js"></script>
+		<script src="./js/axios.min.js"></script>
+		<script src="./js/swiper-bundle.min.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<!-- 头部 -->
+			<div class="header">
+				<div class="header-img">
+					<a href="./index.html">
+						<!-- <img class="logo" src="./img/logo.png" /> -->
+						<div class="logo"></div>
+					</a>
+					<div class="logo-title"></div>
+				</div>
+				<div @click="loginClick" class="header-user">登录</div>
+			</div>
+			<div class="header-menu">
+				<ul class="header-menu-list com-width">
+					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
+					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+				</ul>
+			</div>
+			<!-- banner -->
+			<div class="banner-content">
+				<div class="banner-carousel">
+					<div class="swiper-container lunbo-swiper" style="height: 380px;overflow: hidden;">
+					    <div class="swiper-wrapper">
+					    	${bannerContent}
+						</div>
+					    <!-- 如果需要分页器 -->
+					    <div class="swiper-pagination"></div>
+					</div>
+				</div>
+				<!-- 搜索 -->
+				<div class="mod-search">
+					<div class="pos-search">
+						<div class="mod-search-top">
+							<div class="s_tab">
+								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">智能订舱</div>
+								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">快捷粘贴</div>
+							</div>
+							<div class="search-box">
+								<div v-if="searchTopIndex == 0">
+									<div class="search-box-input">
+										<div class="search-item">
+											<div class="search-item-input search-item-icon1" style="position: relative;">
+												<input @input="qiSearchByPage" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input" type="text" placeholder="输入起飞港"/>
+												<div v-show="qiShowState" style="display: none;" class="open-warp-router">
+													<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>
+													<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
+														<span>{{item.threeLetterCode}}</span>
+														<span>{{item.name}}</span>
+														<span>{{item.city}}</span>
+														<span>{{item.country}}</span>
+													</div>
+												</div>
+											</div>
+											<div class="search-item-arrow"></div>
+											<div class="search-item-input search-item-icon3" style="position: relative;">
+												<input @input="muSearchByPage" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input" type="text" placeholder="输入目的港"/>
+												<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>
+												<div v-show="muShowState" style="display: none;" class="open-warp-router">
+													<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>
+													<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
+														<span>{{item.threeLetterCode}}</span>
+														<span>{{item.name}}</span>
+														<span>{{item.city}}</span>
+														<span>{{item.country}}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<button @click="freightQueryClick(1)" class="box-btn btn-prprimary">立即查询</button>
+									</div>
+									<div class="search-san-tip">支持城市，港口，三字码输入</div>
+								</div>
+								<div v-if="searchTopIndex == 1">
+									<div class="search-box-input">
+										<textarea v-model="pasteInput" class="box-input box-textarea" type="textarea" placeholder="复制粘贴，自动识别关键字，快速获取报价方案。例如  PVG-LAX">
+										</textarea>
+										<button @click="freightQueryClick(2)" class="box-btn btn-prprimary">立即查询</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="mod-search-bottom com-top30">
+							<div class="s_tab s_tab_bak_color">
+								<div @click="searchBottomClick(0)" :class="{s_tab_current: searchBottomIndex == 0}" class="s_tab_nocurrent">运单查询</div>
+								<!-- <div @click="searchBottomClick(1)" :class="{s_tab_current: searchBottomIndex == 1}" class="s_tab_nocurrent">航班查询</div> -->
+							</div>
+							<div class="search-box">
+								<div v-if="searchBottomIndex == 0" class="search-box-input" style="position: relative;">
+									<input v-model="trackSearchInput" @focus="isShowYundan = false" maxlength="11" onkeyup="value=value.replace(/[^\d]/g, '')" class="box-input" type="text" placeholder="全网货物跟踪，运单信息全掌握" style="width: 300px;" />
+									<button @click="trackSearch" class="box-btn btn-warning">全网追踪</button>
+									<div v-show="isShowYundan" style="position: absolute;bottom: -15px;font-size: 12px;color: #F00;display: none;">请输入11位的运单号</div>
+								</div>
+								<div v-if="searchBottomIndex == 1" class="search-box-input">
+									<input v-model="searchYunDan" class="box-input" type="text" placeholder="全网航班查询，航班信息全掌握" style="width: 300px;" />
+									<button class="box-btn btn-warning">立即查询</button>
+								</div>
+								<div class="search-tips">
+									<div class="qcode">
+										<img src="./img/qcode.png" />
+									</div>
+									<div class="qcode-text">
+										<div class="qcode-text-tips1">关注公众号即可建立自己的<span>运单状态库</span></div>
+										<div class="qcode-text-tips2">支持<span>全网全航线</span>运单状态<span>实时推送</span></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 航班 -->
+			<div class="aircraft-route com-width">
+				<div class="aircraft-city">
+					<ul id="cityShowId" style="visibility: hidden;" class="aircraft-city-ul">
+						<li class="aircraft-city-li">起运港</li>
+						<li @click="cityActiveClick(item.value)" class="aircraft-city-li" :class="{aircraft_city_li_active: cityName == item.value}" v-for="(item,index) in cityArr" :key="index">{{item.name}}</li>
+						<li @mouseover="moreClick(true)" @mouseout="moreClick(false)" class="city-more-arrow">更多</li>
+					</ul>
+					<!-- <div class="more-arrow">更多</div> -->
+					<div class="aircraft-group">
+						<ul class="group-radio-ul">
+							<li @click="aircraftRadioClick('全部')" :class="{radio_li_active: aircraftRadioName == '全部'}" class="radio-li">全部</li>
+							<li @click="aircraftRadioClick('特价航线')" :class="{radio_li_active: aircraftRadioName == '特价航线'}" class="radio-li">特价航线</li>
+							<li @click="aircraftRadioClick('直达航线')" :class="{radio_li_active: aircraftRadioName == '直达航线'}" class="radio-li">直达航线</li>
+						</ul>
+					</div>
+					<ul @mouseover="moreClick(true)" @mouseout="moreClick(false)" v-show="isMoreCity" class="more-city-prop">
+						<li :class="{'city-prop-active': cityName == item.value}" @click="cityActiveClick(item.value)" v-for="(item,index) in gengduoArr" :key="item.value">{{item.name}}</li>
+					</ul>
+				</div>
+				<div class="aircraft-home-low" style="margin-top: 30px;">
+					<div class="home-low-port">
+						<ul id="portId" style="visibility: hidden;" class="home-low-port-ul">
+							<li class="home-low-port-li">目的港</li>
+							<li @mouseover="portClick(true,index)" @mouseout="portClick(false,99999)" class="home-low-port-li" v-for="(item,index) in portArr" :key="index">
+								<div class="home-low-port-li-btn">{{item.name}}</div>
+								<ul v-show="portCountyIndex == index" class="popover-ul-country">
+									<li @click="countyClick(childer.value)"
+										:class="{popover_li_active: countyName == childer.value}"
+										class="popover-ul-country-li" v-for="(childer,childerIndex) in item.childer"
+										:key="childerIndex">{{childer.name}}</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div id="perferred" style="visibility: hidden;height: 400px;flex: 0 0 1068px;" class="home-low-card" >
+						<div style="width: 100%;height: 400px;display: flex;justify-content: center;align-items: center;" v-if="perferredArr.length == 0">
+							<img style="width: 262px;height: 201px;" :src="nullImage" />
+						</div>
+						<div @click="clickHref(item)" v-if="perferredArr.length > 0" class="home-low-card-div" v-for="(item,index) in perferredArr" :key="index">
+							<div v-if="item.activityState == 1" class="card-route-label">
+								{{item.activityType}}<span>最后{{item.activityDay}}天</span>
+							</div>
+							<div class="card-name"><img v-if="item.logoPath" :src="imgUrl+item.logoPath" />{{item.airlineCompanyName}}</div>
+							<div class="card-route">
+								<div class="card-route-item">
+									<div class="card-route-item-info">
+										<div>{{item.pol}}</div>
+										<div>{{item.polName}}</div>
+									</div>
+									<div class="card-route-item-icon">{{item.legCount == '1' ? '直飞' : '中转'}}</div>
+									<div class="card-route-item-info">
+										<div>{{item.pod}}</div>
+										<div>{{item.podName}}</div>
+									</div>
+								</div>
+								<div class="card-route-tips">
+									<div class="card-route-tips-text">{{item.shortDuration}}天</div>
+									<div v-if="item.acceptCargoType == 0" class="card-route-tips-text card-route-tips-text1">散货 托盘</div>
+									<div v-else-if="item.acceptCargoType == 1" class="card-route-tips-text card-route-tips-text1">散货</div>
+									<div v-else class="card-route-tips-text card-route-tips-text1">托盘</div>
+								</div>
+							</div>
+							<div class="card-price">
+								<div class="card-price-text"><span>￥{{item.ratesLowest}}</span><span>/KG起</span></div>
+								<!-- <div v-if="item.isStore == '0'" class="card-store">收藏</div> -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 精品航线 -->
+			<div class="com-boutique">
+				<div class="boutique-content">
+					<div class="boutique-title">精品航线<span>BOUTIQUE ROUTE</span></div>
+					<div class="boutique-swiper">
+						<div class="swiper-container jingpin-swiper">
+							<div class="swiper-wrapper">
+								<div :class="{swiper_card_active: boutiqueIndex == index}" v-for="(item,index) in boutiqueArr" :key="index" class="swiper-slide swiper-card">
+									<div @click="boutiqueClick(index)">
+										<div :style="{backgroundImage: 'url('+item.imgUrl+')'}" class="swiper-card-img"></div>
+										<div class="swiper-card-content">
+											<div class="swiper-card-hang">
+												<div class="swiper-card-bb">
+													<div>{{item.qiSan}}</div>
+													<div>{{item.qiName}}</div>
+												</div>
+												<div class="swiper-card-arrow"></div>
+												<div class="swiper-card-bb">
+													<div>{{item.muSan}}</div>
+													<div>{{item.muName}}</div>
+												</div>
+											</div>
+											<div class="swiper-card-hang-tips">{{item.tips}}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- 如果需要导航按钮 -->
+						<div class="swiper-button-prev"></div>
+						<div class="swiper-button-next"></div>
+					</div>
+				</div>
+			</div>
+			<!-- 产品介绍 -->
+			<div class="product-content">
+				<div class="boutique-title">产品介绍<span>PRODUCT INTRODUCTION</span></div>
+				<div class="product-item">
+					<div v-if="productItemIndex == index" v-for="(item,index) in productDetailsArr" :key="index" :class="{product_item_img: productItemIndex == index}" class="product-item-tp">
+						<div class="product-item-lf" style="width: 320px;margin-top: 70px;">
+							<div class="product-item-num">{{item.num}}</div>
+							<div class="product-item-title">{{item.title}}</div>
+							<div class="product-item-tip" style="height: 38px;">{{item.tips}}</div>
+						</div>
+						<div class="product-item-rg" :style="{backgroundImage: 'url('+item.imgUrl+')'}"></div>
+					</div>
+					<ul class="product-item-ul">
+						<li @mouseover="productItemClick(index)" v-for="(item,index) in productItemArr" :key="index" :class="{product_item_ul_li_active: productItemIndex == index}" class="product-item-ul-li">
+							<div></div>
+							<span>{{item.name}}</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- 国际货运 -->
+			<div class="transport-img" :style="{backgroundImage: 'url('+transportImg+')'}"></div>
+
+
+			<!-- 新闻资讯 -->
+			<!-- <div class="com-width" id="newStaticPublicTemplate">
+				<div class="boutique-content">
+					<div class="boutique-title" style="position: relative;">新闻资讯<span>NEWS RESOURCES</span>
+						<div class="more-arrow" style="font-weight: initial;">更多</div>
+					</div>
+					<div class="new-item">
+						${bigNewsTemplate}
+					</div>
+					<ul class="new-item-ul">
+						${normalNewsTemplate}
+					</ul>
+				</div>
+			</div> -->
+			<!-- 合作伙伴 -->
+			<div class="com-boutique">
+				<div class="boutique-content">
+					<div class="boutique-title">合作伙伴<span>COOPERATIVE PARTNER</span></div>
+					<div class="cooperation-item">
+						<img src="./img/cooperation16.png" style="width: 1200px;height: 170px;margin-top: 30px;"/>
+					</div>
+				</div>
+			</div>
+			<div class="com-width">
+				
+				<ul class="service-ul">
+					<li class="service-ul-li" v-for="(item,index) in serviceArr" :key="index">
+						<div :style="{backgroundImage: 'url('+item.imgUrl+')'}" class="service-ul-li-img"></div>
+						<div>{{item.text}}</div>
+					</li>
+				</ul>
+			</div>
+
+			<!-- 尾部 -->
+			<iframe style="width: 100%;" height="140px" frameborder="no" scrolling="no" src="./footer.html"></iframe>
+		</div>
+	</body>
+	<script src="./service/index.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				imgUrl: '',
+				isMoreCity: false,
+				//菜单
+				menuArr: [{
+						name: '首页'
+					},
+					{
+						name: '订单跟踪'
+					},
+					{
+						name: '行业咨询'
+					},
+					{
+						name: '关于我们'
+					}
+				],
+				menuIndex: 0,
+				//banner
+				bannerArr: [],
+				isShowBanner: false,
+				//搜索
+				searchTop: '',
+				searchTop: [{
+						name: '智能订舱'
+					},
+					{
+						name: '快捷粘贴'
+					}
+				],
+				searchTopIndex: 0,
+				searchBottom: [{
+						name: '运单查询'
+					},
+					{
+						name: '航班查询'
+					}
+				],
+				searchBottomIndex: 0,
+				qiPageArr: [],
+				qiSearchInput: '',
+				qiShowState: false,
+				isShowGang: false,
+				gangText: '请选择目的港',
+				muPageArr: [],
+				muSearchInput: '',
+				muShowState: false,
+				pasteInput: '',
+				searchYunDan: '',
+				//航班
+				cityArr: [{
+						name: '全部',
+						value: '全部'
+					},
+					{
+						name: '上海',
+						value: 'Shanghai'
+					},
+					{
+						name: '广州',
+						value: 'Guangzhou'
+					},
+					{
+						name: '北京',
+						value: 'Beijing'
+					},
+					{
+						name: '郑州',
+						value: 'Zhengzhou'
+					},
+					{
+						name: '深圳',
+						value: 'Shenzhen'
+					},
+					{
+						name: '昆明',
+						value: 'Kunming'
+					},
+					{
+						name: '重庆',
+						value: 'Chongqing'
+					}
+				],
+				cityName: '全部',
+				gengduoArr: [
+					{
+						name: '济南',
+						value: 'Jinan'
+					},
+					{
+						name: '长沙',
+						value: 'Changsha'
+					},
+					{
+						name: '南京',
+						value: 'Nanjing'
+					},
+					{
+						name: '杭州',
+						value: 'Hangzhou'
+					},
+					{
+						name: '天津',
+						value: 'Tianjin'
+					},
+					{
+						name: '成都',
+						value: 'Chengdu'
+					},
+					{
+						name: '南昌',
+						value: 'Nanchang'
+					},
+					{
+						name: '宁波',
+						value: 'Ningbo'
+					},
+					{
+						name: '西安',
+						value: 'Xian'
+					},
+					{
+						name: '青岛',
+						value: 'Qingdao'
+					},
+					{
+						name: '武汉',
+						value: 'Wuhan'
+					},
+					{
+						name: '厦门',
+						value: 'Xiamen'
+					}
+				],
+				portArr: [
+					{
+						name: '亚洲',
+						value: '',
+						childer: [
+							{name: '日本', value: 'JP'},
+							{name: '韩国', value: 'KR'},
+							{name: '新加坡', value: 'SG'},
+							{name: '菲律宾', value: 'PH'},
+							{name: '中国台湾', value: 'TW'},
+							{name: '马来西亚', value: 'MY'},
+							{name: '泰国', value: 'TH'},
+							{name: '斯里兰卡', value: 'LK'},
+							{name: '巴基斯坦', value: 'PK'},
+							{name: '约旦', value: 'JO'},
+							{name: '伊朗', value: 'IR'},
+							{name: '科威特', value: 'KW'},
+							{name: '阿联酋', value: 'AE'},
+							{name: '土耳其', value: 'TR'}
+						]
+					},
+					{
+						name: '北美洲',
+						value: '',
+						childer: [
+							{name: '美国', value: 'US'},
+							{name: '加拿大', value: 'CA'},
+							{name: '墨西哥', value: 'MX'},
+							{name: '危地马拉', value: 'GT'}
+						]
+					},
+					{
+						name: '南美洲',
+						value: '',
+						childer: [
+							{name: '哥伦比亚', value: 'CO'},
+							{name: '智利', value: 'CL'},
+							{name: '秘鲁', value: 'PE'},
+							{name: '巴西', value: 'BR'},
+							{name: '阿根廷', value: 'AR'},
+							{name: '玻利维亚', value: 'BO'},
+							{name: '厄瓜多尔', value: 'EC'}
+						]
+					},
+					{
+						name: '欧洲',
+						value: '',
+						childer: [
+							{name: '德国', value: 'DE'},
+							{name: '比利时', value: 'BE'},
+							{name: '英国', value: 'GB'},
+							{name: '法国', value: 'FR'},
+							{name: '爱尔兰', value: 'IE'},
+							{name: '荷兰', value: 'NL'},
+							{name: '瑞士', value: 'CH'},
+							{name: '瑞典', value: 'SE'}
+						]
+					},
+					{
+						name: '大洋洲',
+						value: '',
+						childer: [
+							{name: '澳大利亚', value: 'AU'},
+							{name: '新西兰', value: 'NZ'}
+						]
+					},
+					{
+						name: '非洲',
+						value: '',
+						childer: [
+							{name: '埃塞俄比亚', value: 'ET'},
+							{name: '肯尼亚', value: 'KE'},
+							{name: '坦桑尼亚', value: 'TZ'},
+							{name: '阿尔及利亚', value: 'DZ'},
+							{name: '埃及', value: 'EG'}
+						]
+					}
+				],
+				portCountyIndex: 99999,
+				countyName: '',
+				aircraftRadioName: '全部',
+				perferredArr: [],
+
+				//精品航线
+				boutiqueIndex: 0,
+				boutiqueArr: [{
+						qiSan: 'PVG',
+						qiName: '上海浦东',
+						muSan: 'LAX',
+						muName: '美国洛杉矶',
+						tips: '上海直飞胡志明市，4月8号首飞',
+						imgUrl: './img/hang1.png'
+					},
+					{
+						qiSan: 'PVG',
+						qiName: '上海浦东',
+						muSan: 'LAX',
+						muName: '美国洛杉矶',
+						tips: '上海直飞胡志明市，4月8号首飞',
+						imgUrl: './img/hang2.png'
+					},
+					{
+						qiSan: 'PVG',
+						qiName: '上海浦东',
+						muSan: 'LAX',
+						muName: '美国洛杉矶',
+						tips: '上海直飞胡志明市，4月8号首飞',
+						imgUrl: './img/hang3.png'
+					},
+					{
+						qiSan: 'PVG',
+						qiName: '上海浦东',
+						muSan: 'LAX',
+						muName: '美国洛杉矶',
+						tips: '上海直飞胡志明市，4月8号首飞',
+						imgUrl: './img/hang2.png'
+					}
+				],
+				//产品介绍
+				productDetailsArr: [{
+						num: '1',
+						title: '极速订舱',
+						tips: '在线下单，订舱全程可视',
+						imgUrl: './img/product1_3.png'
+					},
+					{
+						num: '2',
+						title: '在线报关',
+						tips: '用技术取代人工录单，智能审核把关，在线回执，时效保证',
+						imgUrl: './img/product2_3.png'
+					},
+					{
+						num: '3',
+						title: '航班跟踪',
+						tips: '物流轨迹实时追踪，掌握最新动态',
+						imgUrl: './img/product3_3.png'
+					},
+					{
+						num: '4',
+						title: '舱单生成',
+						tips: '系统自动校验，快速生成，时效保证',
+						imgUrl: './img/product4_3.png'
+					}
+				],
+				productItemIndex: 0,
+				productItemArr: [{
+						name: '极速订舱'
+					},
+					{
+						name: '在线报关'
+					},
+					{
+						name: '航班跟踪'
+					},
+					{
+						name: '舱单生成'
+					}
+				],
+				//新闻
+				transportImg: './img/banner_xinwen.png',
+				newsArr: [{
+						imgUrl: './img/news1.jpg',
+						title: '回归二十年 内地与香港民航共发展',
+						content: '从1997到2017，花开花落的20年，岁月如歌的20年。“一国两制”下香港回归的20年，保持了GDP年均实质3.2%的增长速度。... ',
+						time: '2017-07-03 10:50',
+						copyName: '来源：中南局'
+					},
+					{
+						imgUrl: './img/news2.png',
+						title: '郑州新郑国际机场开通货运航线大盘点',
+						content: '1997年8月郑州新郑机场建成通航；2012年12月机场二期工程正式开工建设。2013年3月，郑州航空港经济综合实验区上升为国家战略... ',
+						time: '2017-07-03 10:50',
+						copyName: '来源：中南局'
+					}
+				],
+				// 尾部
+				serviceArr: [{
+						text: '航线更多，全球覆盖',
+						imgUrl: './img/tips_label1.png'
+					},
+					{
+						text: '不加差价，价格更低',
+						imgUrl: './img/tips_label2.png'
+					},
+					{
+						text: '订单跟踪，实时反馈',
+						imgUrl: './img/tips_label3.png'
+					},
+					{
+						text: '精致服务，售后无忧',
+						imgUrl: './img/tips_label4.png'
+					}
+				],
+				nullImage: './img/null.png',
+				trackSearchInput: '',
+				isShowYundan: false
+			},
+			computed: {
+				swiper() {
+					return this.$refs.mySwiper.swiper;
+				}
+			},
+			created() {
+				if(!localStorage.getItem('wxOpenId')){
+					window.location.href = './login.html'
+				}
+				
+				this.qiSearchByPage()
+				this.muSearchByPage()
+			},
+			mounted() {
+				new Swiper('.lunbo-swiper', {
+					loop: true,
+					autoplay: true,
+					delay: 5000,
+					// 如果需要分页器
+					pagination: {
+						el: '.swiper-pagination',
+						clickable: true,
+					}
+				})
+				var _this = this
+				setTimeout(() => {
+					_this.isShowBanner = true
+				}, 3000)
+				new Swiper('.jingpin-swiper', {
+					loop: false,
+					slidesPerView: 3,
+					spaceBetween: 20,
+					// 如果需要前进后退按钮
+					navigation: {
+						nextEl: '.swiper-button-next',
+						prevEl: '.swiper-button-prev',
+					},
+				})
+				document.getElementById('cityShowId').style.visibility = 'visible'
+				document.getElementById('portId').style.visibility = 'visible'
+				document.getElementById('perferred').style.visibility = 'visible'
+				this.initSearchPreferred()
+				// this.qiSearchInput = this.qiPageArr[0].threeLetterCode
+				// this.muSearchInput = this.muPageArr[0].threeLetterCode
+			},
+			methods: {
+				trackSearch() {
+					if(!this.trackSearchInput){
+						this.isShowYundan = true
+						return
+					}else if(this.trackSearchInput.length != 11){
+						this.isShowYundan = true
+						return
+					}
+					this.isShowYundan = false
+					window.location.href = './trackSearch.html?trackSearchInput='+this.trackSearchInput
+				},
+				freightQueryClick(type) {
+					if(type == '1'){
+						var boxText = /^[\u4e00-\u9fa5]+$/
+						if(!this.muSearchInput){
+							this.isShowGang = true
+							this.gangText = '请选择目的港'
+							return
+						}else if(boxText.test(this.muSearchInput)){
+							this.isShowGang = true
+							this.gangText = '请选择三字码'
+							return
+						}
+						window.location.href = './freightQuery.html?qi='+this.qiSearchInput+'&mu='+this.muSearchInput
+					}else if(type == '2'){
+						if(!this.pasteInput){
+							return
+						}
+						if(this.pasteInput.split('-').length == 2){
+							var item1 = this.pasteInput.split('-')[0]
+							var item2 = this.pasteInput.split('-')[1]
+							window.location.href = './freightQuery.html?qi='+item1+'&mu='+item2
+						}else if(this.pasteInput.split('-').length == 1){
+							var item1 = this.pasteInput.split('-')[0]
+							// var item2 = this.pasteInput.split('-')[1]
+							window.location.href = './freightQuery.html?qi=&mu='+item1
+						}
+					}
+				},
+				clickHref(item) {
+					window.location.href = './freightQuery.html?qi='+item.pol+'&mu='+item.pod
+				},
+				loginClick() {
+					window.location.href = './login.html'
+				},
+				moreClick(type) {
+					this.isMoreCity = type
+				},
+				aircraftRadioClick(name) {
+					this.aircraftRadioName = name
+				},
+				menuClick(index) {
+					this.menuIndex = index
+				},
+				searchTopClick(index) {
+					this.searchTopIndex = index
+				},
+				searchBottomClick(index) {
+					this.searchBottomIndex = index
+				},
+				cityActiveClick(name) {
+					this.cityName = name
+					this.initSearchPreferred()
+				},
+
+				boutiqueClick(index) {
+					this.boutiqueIndex = index
+				},
+				countyClick(name) {
+					this.countyName = name
+					this.initSearchPreferred()
+				},
+				portClick(type,index) {
+					if(type){
+						this.portCountyIndex = index
+					}else{
+						this.portCountyIndex = index
+					}
+				},
+				productItemClick(index) {
+					this.productItemIndex = index
+				},
+				initShowBanners() {
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.showBanners
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							for(var i = 0; i < data.data.length; i++){
+								if(i == 0){
+									this.bannerArr.push(data.data[0])
+								}else{
+									this.bannerArr.push({})
+								}
+							}
+							var _this = this
+							setTimeout(() => {
+								_this.bannerArr = data.data
+							}, 3500)
+						}
+					}).catch((error) =>{
+					
+					})
+				},
+				//起始港
+				showCityList(type, state) {
+					if (type == 1) {
+						if (state) {
+							this.qiSearchByPage()
+							this.qiShowState = state //显示下拉列表
+						} else {
+							this.qiShowState = state //隐藏下拉框
+						}
+					} else {
+						this.isShowGang = false
+						if (state) {
+							this.muSearchByPage()
+							this.muShowState = state //显示下拉列表
+						} else {
+							this.muShowState = state //隐藏下拉框
+						}
+					}
+				},
+				qiSearchByPage() {
+					var jsonData = {
+						keyWord: this.qiSearchInput,
+						type: this.qiSearchInput ? '' : '1'
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.searchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.qiPageArr = data.data
+						}
+					})
+				},
+				muSearchByPage() {
+					var jsonData = {
+						keyWord: this.muSearchInput,
+						type: this.muSearchInput ? '' : '2'
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.searchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.muPageArr = data.data
+						}
+					})
+				},
+				openCityClick(type, item) {
+					if (type == 1) {
+						this.qiSearchInput = item.threeLetterCode
+					} else {
+						this.muSearchInput = item.threeLetterCode
+					}
+				},
+				// 航线优选
+				initSearchPreferred() {
+					var jsonData = {
+						polCity: this.cityName == '全部' ? '' : this.cityName,
+						podCountry: this.countyName
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.searchPreferred+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.perferredArr = data.data
+						}
+					})
+				}
+			}
+		})
+	</script>
+</html>

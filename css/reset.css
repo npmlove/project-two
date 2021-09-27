@@ -1,0 +1,218 @@
+@charset "utf-8";html{font-size:14px}
+body,ul,ol,dl,dd,h1,h2,h3,h4,h5,h6,figure,form,fieldset,legend,input,textarea,button,p,blockquote,th,td,pre,xmp{margin:0;padding:0}
+h1,h2,h3,h4,h5,h6,small,big,input,textarea,button,select{font-size:100%}
+/* h1,h2,h3,h4,h5,h6{font-family:tahoma,arial,"Hiragino Sans GB","微软雅黑",simsun,sans-serif} */
+h1,h2,h3,h4,h5,h6,b,strong{font-weight:normal}
+address,cite,dfn,em,i,optgroup,var{font-style:normal}
+table{border-collapse:collapse;border-spacing:0;text-align:left}
+caption,th{text-align:inherit}
+ul,ol,menu{list-style:none}
+fieldset,img{border:0}
+img,object,input,textarea,button,select{vertical-align:middle}
+article,aside,footer,header,section,nav,figure,figcaption,hgroup,details,menu{display:block}
+audio,canvas,video{display:inline-block;*display:inline;*zoom:1}
+blockquote:before,blockquote:after,q:before,q:after{content:"\0020"}
+textarea{overflow:auto;resize:vertical;font-family: Arial Regular,"Microsoft Yahei"}
+input,textarea,button,select,a{outline:0 none;border: none;font-size: 14px;}
+button::-moz-focus-inner,input::-moz-focus-inner{padding:0;border:0}
+mark{background-color:transparent}
+a,ins,s,u,del{text-decoration:none}
+sup,sub{vertical-align:baseline}
+html {height: 100%;font-size: 50px;-webkit-tap-highlight-color: transparent;}
+body {font-family: Arial Regular, "Microsoft Yahei", Helvetica, sans-serif;font-size: 12px;-webkit-text-size-adjust: none;}
+hr {height: .02rem;margin: .1rem 0;border: medium none;border-top: .02rem solid #cacaca;}
+a {color: #00A06E;text-decoration: none;cursor: pointer;padding: 0 5px}
+input::-webkit-input-placeholder,textarea::-webkit-input-placeholder {color: #ccc;font-size: 14px;font-family: Arial Regular,"Microsoft Yahei"}
+::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-corner {
+  background-color: black;
+}
+.com-width{
+  width: 1200px;
+  min-width: 1200px;
+  margin: 0 auto;
+}
+.com-width60{
+	width: 60px;
+}
+.com-width100{
+	width: 100px;
+}
+.com-width110{
+	width: 110px;
+}
+.com-width130{
+	width: 130px;
+}
+.com-width770{
+	width: 770px;
+}
+.com-width410{
+	width: 410px;
+}
+.com-height50{
+	height: 50px !important;
+}
+.com-bottom10{
+	margin-bottom: 10px;
+}
+.com-top20{
+	margin-top: 20px;
+}
+.com-top30{
+  margin-top: 30px;
+}
+.com-bottom30{
+	margin-bottom: 30px;
+}
+.com-padding-right100{
+	padding-right: 100px !important;
+}
+.com-font-size14{
+	font-size: 14px !important;
+}
+.el-input__inner{
+  border-radius: 0;
+  border-color: #E7E8EC;
+}
+.el-input.is-active .el-input__inner, .el-input__inner:focus{
+  border-color: #000000;
+}
+.el-button{
+  border-radius: 0;
+}
+.el-button--warning{
+  background-color: #FF9914;
+  border-color: #FF9914;
+}
+.el-button--primary{
+  background-color: #2273CB;
+  border-color: #2273CB;
+}
+.el-radio__input.is-checked .el-radio__inner{
+  background-color: #2273CB;
+  border-color: #2273CB;
+}
+.el-radio__input.is-checked+.el-radio__label{
+  color: #2273CB;
+}
+.com-boutique{
+  width: 100%;
+  background-color: #F8F8F8;
+}
+.com-padding15{
+  padding: 15px 15px 0 15px;
+}
+.btn-prprimary{
+	cursor: pointer;
+	background-color: rgba(34, 115, 203, 1);
+}
+.btn-prprimary:hover{
+	background-color: rgba(34, 115, 203, 0.7);
+}
+.btn-warning{
+	background-color: rgba(255, 153, 20, 1);
+}
+.btn-warning:hover{
+	background-color: rgba(255, 153, 20, 0.7);
+}
+	
+.input-content .input-item{
+	position: relative;
+}
+.input-content .input-item .input-inner{
+	background-color: #FFFFFF;
+	border: 1px solid #E7E8EC;
+	height: 48px;
+	line-height: 48px;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 0 10px;
+	font-size: 14px;
+}
+.input-yzm{
+	position: absolute;
+	font-size: 12px;
+	color: #FFF;
+	background-color: #0088F4;
+	height: 28px;
+	width: 80px;
+	line-height: 28px;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+}
+.input-icon1{
+	background-image: url(../img/login_zh.png);
+	background-repeat: no-repeat;
+	background-position: left 10px center;
+	background-size: 30px 30px;
+	padding-left: 50px !important;
+}
+.input-icon2{
+	background-image: url(../img/login_pas.png);
+	background-repeat: no-repeat;
+	background-position: left 13px center;
+	background-size: 25px 25px;
+	padding-left: 50px !important;
+}
+.input-icon3{
+	background-image: url(../img/login_yzm.png);
+	background-repeat: no-repeat;
+	background-position: left 11px center;
+	background-size: 28px 28px;
+	padding-left: 50px !important;
+}
+.input-tips{
+	color: #F00;
+	text-align: left;
+	margin-top: 2px;
+	font-size: 12px !important;
+}
+.input-text{
+	text-align: right;
+	font-size: 14px;
+}
+.input-text a{
+	color: #999;
+}
+.input-btn{
+	color: #FFF;
+	height: 48px;
+	width: 100%;
+}
+.login-register-text{
+	text-align: left !important;
+	background-image: url(../img/radio.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+	background-size: 15px 15px;
+	padding-left: 25px;
+}
+.login-register-text-active{
+	background-image: url(../img/radio_check.png);
+}
+.login-register-text span{
+	cursor: pointer;
+}
+.borderE7E8EC{
+	border: 1px solid #E7E8EC;
+}
+.borderEFEFEF{
+	border: 1px solid #EFEFEF;
+}
+.bakFFFFFF{
+	background-color: #FFF;
+}
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected{
+	color: #2273CB;
+	font-weight: inherit;
+	/* font-size: 12px; */
+}
