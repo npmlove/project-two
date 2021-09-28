@@ -52,7 +52,7 @@
 							<div>
 								<div class="form-item">
 									<div class="form-item-owrt">
-										<input v-model="trackSearchInput" placeholder="全网货物跟踪，运单信息全掌握" type="text" style="width: 100%;" />
+										<input v-model="trackSearchInput" maxlength="11" onkeyup="value=value.replace(/[^\d]/g, '')" placeholder="全网货物跟踪，运单信息全掌握" type="text" style="width: 100%;" />
 									</div>
 								</div>
 							</div>

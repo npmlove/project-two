@@ -553,13 +553,14 @@
 				},
 				//立即查询
 				submitQuery() {
+					this.initDate()
+					this.initTwoCode()
+					this.twoLetterCode1 = []
 					if(!this.pod){
 						return
 					}
 					this.initData()
-					this.initDate()
-					this.initTwoCode()
-					this.twoLetterCode1 = []
+					
 				},
 				selectChange() {
 					this.initData()
@@ -602,9 +603,14 @@
 				},
 				//获取日期数据
 				initDate() {
+					if(this.volume && this.weight){
+						var chargedWeight = (parseInt(this.volume)*this.weightPrice) > this.weight ? (parseInt(this.volume)*this.weightPrice) : this.weight
+					}else{
+						var chargedWeight = ''
+					}
 					var data = {
 						cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
-						chargedWeight: isNaN(parseInt(this.volume)*this.weightPrice) ? '' : parseInt(this.volume)*this.weightPrice,
+						chargedWeight: chargedWeight,
 						pod: this.pod,
 						pol: this.pol,
 						vwr: isNaN(Math.ceil(this.weight/this.volume)) ? '' : Math.ceil(this.weight/this.volume)
