@@ -1,6 +1,6 @@
 // var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境
 // var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortalTest/user/' //测试环境
-var websocketUrl = 'wss://www.17dc.com/back/dcPortal/user/' //生成环境
+// var websocketUrl = 'wss://www.17dc.com/back/dcPortal/user/' //生成环境
 
 
 
