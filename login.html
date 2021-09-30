@@ -94,15 +94,15 @@
 			<div class="login-bg">
 				<div class="com-width login-total">
 					<div style="margin-top: 100px;">
-						<img src="img/login_logo.png" style="width: 350px;height: 105px;"/>
+						<img alt="图片" src="img/login_logo.png" style="width: 350px;height: 105px;"/>
 					</div>
 					<div class="login-from">
-						<img v-if="typeImg" @click="imgClick" src="./img/login_type.png" class="login-type"/>
-						<img v-if="!typeImg" @click="imgClick" src="./img/login_type1.png" class="login-type"/>
+						<img alt="图片" v-if="typeImg" @click="imgClick" src="./img/login_type.png" class="login-type"/>
+						<img alt="图片" v-if="!typeImg" @click="imgClick" src="./img/login_type1.png" class="login-type"/>
 						<div v-if="typeImg" class="login-title">微信扫码登录/注册</div>
 						<div v-if="!typeImg" class="login-title">账号登录</div>
 						<div v-if="typeImg" class="login-content">
-							<div class="qcode"><img :src="imgQrCode" /></div>
+							<div class="qcode"><img alt="图片" :src="imgQrCode" /></div>
 							<div class="sao">请使用微信扫描二维码</div>
 							<div class="gong">关注“17订舱”公众号</div>
 						</div>
@@ -137,7 +137,7 @@
 							</div> -->
 							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
-						<div class="footer-img"><img src="./img/qcode.png" /></div>
+						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
 				</div>
 			</div>

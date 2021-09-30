@@ -167,7 +167,7 @@
 					<div v-show="isShowMore" class="calendar-lowprice-cla">
 						<div class="cld-tab-title">
 							<div class="cld-tabs-name">日历查看</div>
-							<img @click="moreClick(false)" src="./img/close.png" />
+							<img alt="图片" @click="moreClick(false)" src="./img/close.png" />
 						</div>
 						<div class="cld-body">
 							<table class="cld-body-table">
@@ -225,11 +225,11 @@
 						<ul class="flight-bar-ul">
 							<li v-for="(item,index) in distanceArr" :key="index" class="flight-bar-li">
 								<div v-if="index != 0" class="flight-bar-arrow1">
-									<img @click="sortClick(item.value,'top')" class="flight-bar-arrow1-img" src="./img/modify-arrow1.png" />
+									<img alt="图片" @click="sortClick(item.value,'top')" class="flight-bar-arrow1-img" src="./img/modify-arrow1.png" />
 								</div>
 								<div class="flight-bar-name">{{item.name}}</div>
 								<div v-if="index != 0" class="flight-bar-arrow2">
-									<img @click="sortClick(item.value,'bottom')" class="flight-bar-arrow2-img" src="./img/modify-arrow1.png" />
+									<img alt="图片" @click="sortClick(item.value,'bottom')" class="flight-bar-arrow2-img" src="./img/modify-arrow1.png" />
 								</div>
 							</li>
 						</ul>
@@ -238,7 +238,7 @@
 				
 				<div class="modify-result-wrapper com-width">
 					<div v-if="priceArr.length == 0" style="width: 100%;text-align: center;padding: 20px;">
-						<img style="width: 262px;height: 201px;" src="./img/null.png" />
+						<img alt="图片" style="width: 262px;height: 201px;" src="./img/null.png" />
 						<div style="color: #999;font-size: 14px;margin-top: 20px;">暂无数据</div>
 					</div>
 					<ul v-if="priceArr.length > 0" class="result-wrapper-ul">
@@ -246,7 +246,7 @@
 							<div class="wrapper-li-content">
 								<div class="wrapper-li-content-left">
 									<div class="wrapper-li-tags" style="justify-content: space-between;">
-										<div style="width: auto;font-size: 12px;display: flex;align-items: center;"><img v-if="item.logoPath" style="margin-right: 10px;height: 20px;width: auto;" :src="item.logoPath" />{{item.name}}</div>
+										<div style="width: auto;font-size: 12px;display: flex;align-items: center;"><img alt="图片" v-if="item.logoPath" style="margin-right: 10px;height: 20px;width: auto;" :src="item.logoPath" />{{item.name}}</div>
 										<div style="display: flex;width: auto;flex: 0 0 130px;justify-content: flex-end;">
 											<div v-if="item.legCount == '1'" class="li-tag1">时效快</div>
 											<!-- <div class="li-tag2">价格低</div> -->
@@ -333,7 +333,7 @@
 							</div> -->
 							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
-						<div class="footer-img"><img src="./img/qcode.png" /></div>
+						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
 				</div>
 			</div>

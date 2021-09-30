@@ -95,7 +95,7 @@
 			<div class="login-bg">
 				<div class="com-width login-total">
 					<div style="margin-top: 100px;">
-						<img src="img/login_logo.png" style="width: 350px;height: 105px;"/>
+						<img alt="图片" src="img/login_logo.png" style="width: 350px;height: 105px;"/>
 					</div>
 					<div class="login-from" style="height: auto;">
 						<div class="login-title" style="padding-top: 40px;">绑定手机号</div>
@@ -144,7 +144,7 @@
 							</div> -->
 							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
-						<div class="footer-img"><img src="./img/qcode.png" /></div>
+						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
 				</div>
 			</div>
@@ -221,7 +221,16 @@
 						var data = data.data
 						if(data.code == 200){
 							localStorage.setItem('wxOpenId',data.data.tportalUser.wechatOpenId)
-							window.location.href = './index.html'
+							axios({
+								method: 'get',
+								url: webIp+serviceApi.userUserInfo+'?openId='+data.data.tportalUser.wechatOpenId
+							}).then((user) => {
+								var user = user.data
+								if(user.code == 200){
+									localStorage.setItem('userInfo',JSON.stringify(user.data))
+									window.location.href = './index.html'
+								}
+							})
 						}else{
 							this.isError = true
 							this.errorText = data.message

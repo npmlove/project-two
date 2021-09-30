@@ -123,7 +123,7 @@
 								</div>
 								<div class="search-tips">
 									<div class="qcode">
-										<img src="./img/qcode.png" />
+										<img alt="图片" src="./img/qcode.png" />
 									</div>
 									<div class="qcode-text">
 										<div class="qcode-text-tips1">关注公众号即可建立自己的<span>运单状态库</span></div>
@@ -172,13 +172,13 @@
 					</div>
 					<div id="perferred" style="visibility: hidden;height: 400px;flex: 0 0 1068px;" class="home-low-card" >
 						<div style="width: 100%;height: 400px;display: flex;justify-content: center;align-items: center;" v-if="perferredArr.length == 0">
-							<img style="width: 262px;height: 201px;" :src="nullImage" />
+							<img alt="图片" style="width: 262px;height: 201px;" :src="nullImage" />
 						</div>
 						<div @click="clickHref(item)" v-if="perferredArr.length > 0" class="home-low-card-div" v-for="(item,index) in perferredArr" :key="index">
 							<div v-if="item.activityState == 1" class="card-route-label">
 								{{item.activityType}}<span>最后{{item.activityDay}}天</span>
 							</div>
-							<div class="card-name"><img v-if="item.logoPath" :src="imgUrl+item.logoPath" />{{item.airlineCompanyName}}</div>
+							<div class="card-name"><img alt="图片" v-if="item.logoPath" :src="imgUrl+item.logoPath" />{{item.airlineCompanyName}}</div>
 							<div class="card-route">
 								<div class="card-route-item">
 									<div class="card-route-item-info">
@@ -284,7 +284,7 @@
 				<div class="boutique-content">
 					<div class="boutique-title">合作伙伴<span>COOPERATIVE PARTNER</span></div>
 					<div class="cooperation-item">
-						<img src="./img/cooperation16.png" style="width: 1200px;height: 170px;margin-top: 30px;"/>
+						<img alt="图片" src="./img/cooperation16.png" style="width: 1200px;height: 170px;margin-top: 30px;"/>
 					</div>
 				</div>
 			</div>
@@ -312,7 +312,7 @@
 							</div> -->
 							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
-						<div class="footer-img"><img src="./img/qcode.png" /></div>
+						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
 				</div>
 			</div>
