@@ -79,7 +79,7 @@
 				    <el-table-column prop="orgin" label="起始地" width="180"></el-table-column>
 				    <el-table-column prop="destination" label="目的地"></el-table-column>
 					<el-table-column prop="cargoNum" label="数量" width="180"></el-table-column>
-					<el-table-column prop="cargoweight" label="重量" width="180"></el-table-column>
+					<el-table-column prop="cargoWeight" label="重量" width="180"></el-table-column>
 					<el-table-column prop="cargoStatus" label="最新状态"></el-table-column>
 				</el-table>
 				
@@ -92,8 +92,8 @@
 				    <el-table-column prop="airLineId" label="航班号" width="180"></el-table-column>
 				    <el-table-column prop="etd" label="航班日期" width="180"></el-table-column>
 				    <el-table-column prop="atd" label="实际起飞日期"></el-table-column>
-					<el-table-column prop="flightOrgin" label="航班起始港" width="180"></el-table-column>
-					<el-table-column prop="flightDestination" label="航班目的港" width="180"></el-table-column>
+					<el-table-column prop="filghtOrgin" label="航班起始港" width="180"></el-table-column>
+					<el-table-column prop="filghtDestination" label="航班目的港" width="180"></el-table-column>
 					<el-table-column prop="remarks" label="其他信息"></el-table-column>
 				</el-table>
 				
@@ -218,7 +218,7 @@
 				},
 				//立即查询
 				submitQuery() {
-					if(!this.trackSearchInput){
+					if(!this.trackSearchInput || (this.trackSearchInput != 11)){
 						return
 					}
 					this.initData()

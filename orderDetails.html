@@ -248,43 +248,31 @@
 			data: {
 				loading: false,
 				menuIndex: 0,
-				userInfo: {},
-				order: '',
-				waybillNo: '',
-				pol: '',
-				polOpt: [],
-				pod: '',
-				podOpt: [],
-				airCompanyCode: '',
-				airCompanyCodeOpt: [],
-				departureDate: '',
-				activeName: 'first'
+				orderId: '',
+				detailsArr: {}
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
 					window.location.href = './login.html'
 				}
-				this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-			},
-			mounted() {
-				console.log(this.userInfo)
+				this.orderId = getQueryVariable('orderId')
+				this.orderSearchDetail()
 			},
 			methods: {
-				//跳转详情
-				orderClick() {
-					window.location.href = './orderDetails.html'
-				},
-				searchClick() {
-					
-				},
-				restClick() {
-					
-				},
-				polMethod() {
-					
-				},
-				companyMethod() {
-					
+				//获取详情
+				orderSearchDetail() {
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.orderSearchDetail+'?orderId='+this.orderId,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.detailsArr = data.data
+						}
+					})
 				},
 				//登录
 				loginClick() {

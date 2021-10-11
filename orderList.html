@@ -141,7 +141,7 @@
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+										<li @click="orderClick(item.orderNo)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
@@ -151,7 +151,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：2021-01-01</div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -198,7 +198,7 @@
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+										<li @click="orderClick(item.orderNo)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
@@ -208,7 +208,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：2021-01-01</div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -255,7 +255,7 @@
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+										<li @click="orderClick(item.orderNo)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
@@ -265,7 +265,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：2021-01-01</div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -312,7 +312,7 @@
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+										<li @click="orderClick(item.orderNo)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
@@ -322,7 +322,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：2021-01-01</div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -369,7 +369,7 @@
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+										<li @click="orderClick(item.orderNo)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
@@ -379,7 +379,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：2021-01-01</div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -426,7 +426,7 @@
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+										<li @click="orderClick(item.orderNo)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
@@ -436,7 +436,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：2021-01-01</div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -483,7 +483,7 @@
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+										<li @click="orderClick(item.orderNo)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
@@ -493,7 +493,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：2021-01-01</div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -540,7 +540,7 @@
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+										<li @click="orderClick(item.orderNo)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
@@ -550,7 +550,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：2021-01-01</div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -597,7 +597,7 @@
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+										<li @click="orderClick(item.orderNo)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
@@ -607,7 +607,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：2021-01-01</div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -826,8 +826,8 @@
 					})
 				},
 				//跳转详情
-				orderClick() {
-					window.location.href = './orderDetails.html'
+				orderClick(orderId) {
+					window.location.href = './orderDetails.html?orderId='+orderId
 				},
 				searchClick() {
 					this.initData()

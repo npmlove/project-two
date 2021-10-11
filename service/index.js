@@ -56,7 +56,9 @@ const serviceApi = {
 	//查询订单信息列表
 	orderSearchByPage: publicWeb+'/t-order/searchByPage',
 	//统计分类的订单列表数目
-	orderCountList: publicWeb+'/t-order/countList'
+	orderCountList: publicWeb+'/t-order/countList',
+	//查询订单详情
+	orderSearchDetail: publicWeb+'/t-order/searchDetail'
 }
 
 
