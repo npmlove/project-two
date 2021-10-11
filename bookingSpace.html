@@ -391,7 +391,8 @@
 				otherFeeMap: {},
 				newOtherFeeMap: [],
 				totolPrice: '',
-				dateTabActive: ''
+				dateTabActive: '',
+				bookingCw: ''
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -504,8 +505,8 @@
 					
 					var jq = {
 						expenseName: '空运费',
-						price: this.chargedJiaqian*this.chargedWeight,
-						quantity: '1',
+						price: this.chargedJiaqian,
+						quantity: this.chargedWeight,
 						currency: '1'
 					}
 					orderPriceList.push(jq)
@@ -542,6 +543,20 @@
 						pickUpAddress: this.pickUpAddress,
 						pickUpContacts: this.pickUpContacts,
 						pickUpTel: this.pickUpTel,
+						departureDate: this.dateTabActive,
+						dow: this.dowA,
+						bookingVwr: this.chargedWeight,
+						bookingCw: this.bookingCw,
+						packageType: this.packageType,
+						trayDetail: JSON.stringify(this.trayDetail),
+						bookingPrice: this.chargedJiaqian,
+						pod: this.proportionArr.pod,
+						pol: this.proportionArr.pol,
+						airCompanyCode: this.proportionArr.airCompanyCode,
+						legCount: this.proportionArr.legCount,
+						shortDuration: this.proportionArr.shortDuration,
+						longDuration: this.proportionArr.longDuration,
+						fullLeg: this.proportionArr.fullLeg
 					}
 					
 					var json = {
@@ -559,19 +574,19 @@
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
-							
+							window.location.href = './orderList.html'
 						}
 					})
 				},
 				// 货物单价
 				huowuDanjia() {
 					this.chargedWeight = Math.ceil(this.bookingWeight/this.bookingCbm)
-					var newWeight = (parseInt(this.bookingCbm)*this.weightPrice) > this.bookingWeight ? (parseInt(this.bookingCbm)*this.weightPrice) : this.bookingWeight
+					this.bookingCw = (parseInt(this.bookingCbm)*this.weightPrice) > this.bookingWeight ? (parseInt(this.bookingCbm)*this.weightPrice) : this.bookingWeight
 					var newLength = this.proportionArr.baseRatesList.length-1
 					for(var i = 0; i < this.proportionArr.baseRatesList.length; i++){
 						if(this.chargedWeight < this.proportionArr.baseRatesList[i].vwr){
 							if(this.bookingWeight < 45){
-								if(Number(newWeight*this.proportionArr.baseRatesList[i].ratesN) > Number(this.proportionArr.baseRatesList[i].ratesLevel0)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesN) > Number(this.proportionArr.baseRatesList[i].ratesLevel0)){
 									this.chargedKey = 'N'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesN
 								}else{
@@ -579,7 +594,7 @@
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 100){
-								if(Number(newWeight*this.proportionArr.baseRatesList[i].ratesLevel1) > Number(this.proportionArr.baseRatesList[i].ratesLevel1)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel1) > Number(this.proportionArr.baseRatesList[i].ratesLevel1)){
 									this.chargedKey = '45+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel1
 								}else{
@@ -587,7 +602,7 @@
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 300){
-								if(Number(newWeight*this.proportionArr.baseRatesList[i].ratesLevel2) > Number(this.proportionArr.baseRatesList[i].ratesLevel2)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel2) > Number(this.proportionArr.baseRatesList[i].ratesLevel2)){
 									this.chargedKey = '100+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel2
 								}else{
@@ -595,7 +610,7 @@
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 500){
-								if(Number(newWeight*this.proportionArr.baseRatesList[i].ratesLevel3) > Number(this.proportionArr.baseRatesList[i].ratesLevel3)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel3) > Number(this.proportionArr.baseRatesList[i].ratesLevel3)){
 									this.chargedKey = '300+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel3
 								}else{
@@ -603,7 +618,7 @@
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 1000){
-								if(Number(newWeight*this.proportionArr.baseRatesList[i].ratesLevel4) > Number(this.proportionArr.baseRatesList[i].ratesLevel4)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel4) > Number(this.proportionArr.baseRatesList[i].ratesLevel4)){
 									this.chargedKey = '500+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel4
 								}else{
@@ -611,7 +626,7 @@
 									this.chargedKey = 'M'
 								}
 							}else if(1000 <= this.bookingWeight){
-								if(Number(newWeight*this.proportionArr.baseRatesList[i].ratesLevel5) > Number(this.proportionArr.baseRatesList[i].ratesLevel5)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel5) > Number(this.proportionArr.baseRatesList[i].ratesLevel5)){
 									this.chargedKey = '1000+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel5
 								}else{
@@ -623,7 +638,7 @@
 							return
 						}else{
 							if(this.bookingWeight < 45){
-								if(Number(newWeight*this.proportionArr.baseRatesList[newLength].ratesN) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel0)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesN) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel0)){
 									this.chargedKey = 'N'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesN
 								}else{
@@ -631,7 +646,7 @@
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 100){
-								if(Number(newWeight*this.proportionArr.baseRatesList[newLength].ratesLevel1) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel1)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel1) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel1)){
 									this.chargedKey = '45+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel1
 								}else{
@@ -639,7 +654,7 @@
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 300){
-								if(Number(newWeight*this.proportionArr.baseRatesList[newLength].ratesLevel2) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel2)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel2) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel2)){
 									this.chargedKey = '100+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel2
 								}else{
@@ -647,7 +662,7 @@
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 500){
-								if(Number(newWeight*this.proportionArr.baseRatesList[newLength].ratesLevel3) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel3)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel3) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel3)){
 									this.chargedKey = '300+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel3
 								}else{
@@ -655,7 +670,7 @@
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 1000){
-								if(Number(newWeight*this.proportionArr.baseRatesList[newLength].ratesLevel4) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel4)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel4) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel4)){
 									this.chargedKey = '500+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel4
 								}else{
@@ -663,7 +678,7 @@
 									this.chargedKey = 'M'
 								}
 							}else if(1000 <= this.bookingWeight){
-								if(Number(newWeight*this.proportionArr.baseRatesList[newLength].ratesLevel5) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel5)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel5) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel5)){
 									this.chargedKey = '1000+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel5
 								}else{

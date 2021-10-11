@@ -72,26 +72,29 @@
 								<div class="content-search-normal">
 									<div>
 										<el-form-item label="订单号">
-											<el-input v-model="order" placeholder="请输入订单号" style="width: 180px;"></el-input>
+											<el-input v-model="orderNo" placeholder="请输入订单号" style="width: 140px;"></el-input>
 										</el-form-item>
 										<el-form-item label="运单号">
-											<el-input v-model="waybillNo" placeholder="请输入运单号" style="width: 180px;"></el-input>
+											<el-input v-model="waybillNo" placeholder="请输入运单号" style="width: 140px;"></el-input>
+										</el-form-item>
+										<el-form-item label="进仓编号" label-width="75px">
+											<el-input v-model="inboundNo" placeholder="请输入进仓编号" style="width: 140px;"></el-input>
 										</el-form-item>
 										<el-form-item label="航线">
-											<el-select v-model="pol" placeholder="起运港" :remote-method="polMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 100px;">
+											<el-select v-model="pol" placeholder="起运港" :remote-method="polMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 90px;">
 												<el-option 
 													v-for="(item,index) in polOpt" 
-													:disabled="pol == item.threeLetterCode"
+													:disabled="pod == item.threeLetterCode"
 													:key="item.threeLetterCode" :value="item.threeLetterCode">
 													<span>{{item.threeLetterCode}}</span>
 													<span style="margin-left: 5px;">{{item.name}}</span>
 												</el-option>
 											</el-select>
-											<div style="display: inline-block;background-image: url(./img/jiantou.png);margin: 0 10px;width: 16px;height: 30px;vertical-align: top;background-size: 16px 16px;background-repeat: no-repeat;background-position: center;"></div>
-											<el-select v-model="pod" placeholder="目的港" :remote-method="polMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 100px;">
+											<div style="display: inline-block;background-image: url(./img/jiantou.png);margin: 0 5px;width: 16px;height: 30px;vertical-align: top;background-size: 16px 16px;background-repeat: no-repeat;background-position: center;"></div>
+											<el-select v-model="pod" placeholder="目的港" :remote-method="polMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 90px;">
 												<el-option 
 													v-for="(item,index) in podOpt" 
-													:disabled="pod == item.threeLetterCode"
+													:disabled="pol == item.threeLetterCode"
 													:key="item.threeLetterCode" :value="item.threeLetterCode">
 													<span>{{item.threeLetterCode}}</span>
 													<span style="margin-left: 5px;">{{item.name}}</span>
@@ -101,7 +104,7 @@
 									</div>
 									<div>
 										<el-form-item label="航司">
-											<el-select v-model="airCompanyCode" placeholder="航司代码" :remote-method="companyMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 180px;">
+											<el-select v-model="airCompanyCode" placeholder="航司代码" :remote-method="companyMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 140px;">
 												<el-option 
 													v-for="item in airCompanyCodeOpt" 
 													:key="item.airCompanyCode" 
@@ -118,6 +121,7 @@
 												style="width: 255px;"
 											    range-separator="至"
 											    start-placeholder="起始日期"
+												value-format="yyyy-MM-dd"
 											    end-placeholder="结束日期">
 											</el-date-picker>
 										</el-form-item>
@@ -130,46 +134,46 @@
 							</el-form>
 						</div>
 						<div class="tabs__nav-wrap">
-							<el-tabs v-model="activeName" type="border-card">
-							    <el-tab-pane label="全部订单" name="first">
+							<el-tabs v-model="typeCode" type="border-card">
+							    <el-tab-pane label="全部订单" name="全部订单">
 									<ul class="nav-wrap-ul">
-										<li @click="orderClick" v-for="item in 3" class="nav-wrap-li">
+										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
-												<div>订单号：15265486362</div>
-												<div>预订日期：2021-01-01</div>
+												<div>订单号：{{item.orderNo}}</div>
+												<div>预订日期：{{item.orderTime}}</div>
 											</div>
 											<div class="nav-wrap-content">
 												<div class="nav-wrap-route">
 													<div class="nav-wrap-logo">
-														<img alt="图片" src="./img/routeIcon.png">
-														<div>东方航空</div>
-														<div>预订日期：2021-01-01</div>
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：2021-01-01</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
-															<div>PVG</div>
-															<div>上海浦东国际机场</div>
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
 														</div>
-														<div class="nav-wrap-route-zhida">直达</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
 														<div class="nav-wrap-route-info">
-															<div>LAX</div>
-															<div>洛杉矶国际机场</div>
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
 														</div>
 													</div>
 													<div class="nav-wrap-route-remarks">
-														<label>呼吸机</label>
-														<label>3PCS</label>
-														<label>24.4CMB</label>
-														<label>114KGS</label>
-														<label>散货</label>
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
 												</div>
 												<div class="nav-wrap-right">
 													<div class="nav-wrap-text">
-														<div>已委托，待平台确认</div>
-														<div>订舱单价 ￥32.5</div>
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div class="nav-wrap-price">￥6547.5起</div>
+													<div class="nav-wrap-price">￥{{JSON.parse(item.totalArOrgn)[0].amount}}起</div>
 												</div>
 											</div>
 										</li>
@@ -177,16 +181,20 @@
 									<div style="text-align: right;">
 										<el-pagination
 										  background
+										  :page-size="pageSize"
 										  layout="prev, pager, next"
-										  :total="1000">
+										  :total="total">
 										</el-pagination>
 									</div>
 								</el-tab-pane>
-							    <el-tab-pane label="已下单" name="second">已下单</el-tab-pane>
-							    <el-tab-pane label="进仓中" name="third">进仓中</el-tab-pane>
-							    <el-tab-pane label="操作中" name="fourth">操作中</el-tab-pane>
-								<el-tab-pane label="运输中" name="five">运输中</el-tab-pane>
-								<el-tab-pane label="异常" name="six">异常</el-tab-pane>
+							    <el-tab-pane label="待审核" name="1">待审核</el-tab-pane>
+							    <el-tab-pane label="待进仓" name="2">待进仓</el-tab-pane>
+							    <el-tab-pane label="操作中" name="3">操作中</el-tab-pane>
+								<el-tab-pane label="海关安检" name="4">海关安检</el-tab-pane>
+								<el-tab-pane label="运输中" name="5">运输中</el-tab-pane>
+								<el-tab-pane label="已完成" name="6">已完成</el-tab-pane>
+								<el-tab-pane label="已取消" name="7">已取消</el-tab-pane>
+								<el-tab-pane label="异常" name="8">异常</el-tab-pane>
 							</el-tabs>
 						</div>
 					</div>
@@ -221,7 +229,7 @@
 				loading: false,
 				menuIndex: 0,
 				userInfo: {},
-				order: '',
+				orderNo: '',
 				waybillNo: '',
 				pol: '',
 				polOpt: [],
@@ -229,8 +237,13 @@
 				podOpt: [],
 				airCompanyCode: '',
 				airCompanyCodeOpt: [],
+				inboundNo: '',
+				pageNum: 1,
+				pageSize: 2,
 				departureDate: '',
-				activeName: 'first'
+				typeCode: '全部订单',
+				total: 0,
+				dataArr: []
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -239,15 +252,46 @@
 				this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 			},
 			mounted() {
-				console.log(this.userInfo)
+				this.initData()
 			},
 			methods: {
+				initData() {
+					var json = {
+						orderNo: this.orderNo,
+						waybillNo: this.waybillNo,
+						inboundNo: this.inboundNo,
+						pol: this.pol,
+						pod: this.pod,
+						airCompanyCode: this.airCompanyCode,
+						departureDate1: this.departureDate == '' ? '' : this.departureDate[0],
+						departureDate2: this.departureDate == '' ? '' : this.departureDate[1],
+						typeCode: this.typeCode == '全部订单' ? '' : this.typeCode,
+						pageNum: this.pageNum,
+						pageSize: this.pageSize
+					}
+					axios({
+						method: 'post',
+						url: webIp+serviceApi.orderSearchByPage,
+						data: json,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.dataArr = data.data.records
+							this.total = data.data.total
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
 				//跳转详情
 				orderClick() {
 					window.location.href = './orderDetails.html'
 				},
 				searchClick() {
-					
+					this.initData()
 				},
 				restClick() {
 					

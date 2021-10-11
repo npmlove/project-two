@@ -388,7 +388,8 @@
 				priceArr: [],
 				dateArr: [],
 				dateMoreArr: [],
-				isIndexDay: 0
+				isIndexDay: 0,
+				bookingDate: ''
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -411,6 +412,7 @@
 				this.dateArr = this.currentDayWeekDate.slice(0,7)
 				
 				this.currentDay = formatDate(myDate.toLocaleDateString())
+				this.bookingDate = this.currentDay
 				this.dateTabActive = this.splitDate(this.currentDay)
 				
 				var mmWeek = []
@@ -595,6 +597,7 @@
 						}
 					}
 					this.currentDay = date
+					this.bookingDate = date
 					this.dateTabActive = this.splitDate(date)
 					this.dow = childerIndex+1
 					this.initData()
@@ -736,11 +739,17 @@
 				},
 				//订舱
 				bookingSpace(id) {
-					var dow = this.dow == 0 ? 7 : this.dow
-					var aircraftRadioName = this.aircraftRadioName == '散货' ? 1 : 2
-					window.location.href = './bookingSpace.html?airlineId='+id+'&cargoType='+aircraftRadioName+'&dow='+dow+'&date='+this.dateTabActive
+					if(localStorage.getItem('tokenId')){
+						var dow = this.dow == 0 ? 7 : this.dow
+						var aircraftRadioName = this.aircraftRadioName == '散货' ? 1 : 2
+						window.location.href = './bookingSpace.html?airlineId='+id+'&cargoType='+aircraftRadioName+'&dow='+dow+'&date='+this.bookingDate
+					}else{
+						window.location.href = './login.html'
+					}
+					
 				},
 				dateItemClick(index,date) {
+					this.bookingDate = date
 					this.dateTabActive = this.splitDate(date)
 					this.dow = index
 					this.initData()

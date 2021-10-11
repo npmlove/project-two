@@ -5,7 +5,9 @@ var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境
 
 
 //开发环境
-var webIp = 'https://17dc.shenghuoq.com'
+// var webIp = 'https://17dc.shenghuoq.com'
+var webIp = 'http://10.8.0.1'
+// var webIp = 'http://10.8.0.6:6679'
 var publicWeb = '/back/dcPortal/faw'
 
 //测试环境
@@ -50,7 +52,9 @@ const serviceApi = {
 	//指定航线、货物类型、周几的运价查询
 	hangxianSearchBaseRates: publicWeb+'/es/searchBaseRates',
 	//用户下单
-	getStartOrder: publicWeb+'/t-order/startOrder'
+	getStartOrder: publicWeb+'/t-order/startOrder',
+	//查询订单信息列表
+	orderSearchByPage: publicWeb+'/t-order/searchByPage'
 }
 
 
