@@ -452,3 +452,13 @@ textarea::-webkit-input-placeholder {
 .el-pagination.is-background .el-pager li:not(.disabled).active{
 	background-color: #2273CB;
 }
+
+.color9995{
+	color: rgba(153, 153, 153, 0.5) !important;
+}
+.color227{
+	color: rgba(34, 115, 203, 1) !important;
+}
+.border-btm-da{
+	border-bottom: 1px dashed #EFEFEF;
+}

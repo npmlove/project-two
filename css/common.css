@@ -1718,6 +1718,14 @@
 	font-weight: 500;
 	/* line-height: 100%; */
 	margin-top: 10px;
+	line-height: 16px;
+	height: 32px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-clamp: 2;
+	-webkit-line-clamp: 2;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
 }
 
 .wrapper-li-flgiht .li-flgiht-icon {
@@ -1852,6 +1860,7 @@
 	font-size: 12px;
 	color: #333;
 	font-weight: 500;
+	flex: 0 0 100px;
 }
 
 .booking .booking-flight-route .booking-flight-route-item>div:first-child {
@@ -1860,7 +1869,16 @@
 	color: #333;
 	margin-bottom: 20px;
 }
-
+.booking .booking-flight-route .booking-flight-route-item>div:last-child{
+	line-height: 16px;
+	height: 32px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-clamp: 2;
+	-webkit-line-clamp: 2;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+}
 .booking .booking-flight-route .booking-flight-route-tips {
 	color: #999;
 	font-weight: 500;
@@ -1872,6 +1890,7 @@
 	padding-bottom: 20px;
 	background-repeat: no-repeat;
 	background-position: bottom 10px center;
+	height: 30px;
 }
 
 .booking .booking-flight-date-num {
@@ -2475,6 +2494,312 @@
 	bottom: 0;
 	right: 0;
 }
+
+
+/* 订单详情 */
+.order-details{
+	background-color: #F8FBFD;
+}
+.order-details-content {
+	padding: 20px 0;
+}
+.order-details-content .order-details-title{
+	font-size: 12px;
+	display: flex;
+	align-items: center;
+	margin-bottom: 20px;
+}
+.order-details-content .order-details-title img{
+	width: 12px;
+	height: 12px;
+}
+.order-details-content .order-details-title > div:nth-child(3){
+	font-weight: 500;
+	color: #999999;
+	margin: 0 30px 0 5px;
+}
+.order-details-content .order-details-title > div:nth-child(4){
+	font-weight: 500;
+	text-decoration: underline;
+	color: #000000;
+}
+.order-details-content .order-details-step{
+	font-size: 12px;
+	background: #FFFFFF;
+	border: 1px solid #EFEFEF;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 20px 0;
+}
+.order-details-step .order-details-step-btn{
+	width: 112px;
+	height: 36px;
+	border: 1px solid #999999;
+	color: #666666;
+	line-height: 36px;
+	text-align: center;
+}
+.order-details-step .order-details-step-active{
+	border-color: #2273CB;
+	color: #2273CB;
+}
+.order-details-step .order-details-step-check{
+	background-color: #2273CB;
+	border-color: #2273CB;
+	color: #FFF;
+}
+.order-details-step .order-details-step-btn img{
+	width: 14px;
+	height: 14px;
+	margin-right: 10px;
+	vertical-align: sub;
+}
+.order-details-step .order-details-step-btn:last-child{
+	margin-right: 0;
+	background-image: none;
+}
+.order-details-step .order-details-step-btn:last-child::after{
+	background-image: none;
+}
+.order-details-step > div{
+	margin-right: 24px;
+	position: relative;
+}
+.order-details-step > div::after{
+	content: '';
+	position: absolute;
+	width: 12px;
+	height: 12px;
+	background-image: url(../img/arrow_details.png);
+	background-repeat: no-repeat;
+	background-size: 12px 12px;
+	right: -18px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+.order-details-step > div > div:first-child{
+	margin-bottom: 8px;
+}
+.order-details-table{
+	margin-top: 20px;
+	display: flex;
+	justify-content: space-between;
+}
+.order-details-table .order-details-table-zhangdan{
+	width: 400px;
+	flex: 0 0 400px;
+}
+.order-details-table .order-details-table-zhangdan .details-table-zhangdan-title{
+	height: 80px;
+	background-image: url(../img/orderDetails_zhangdan.png);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	font-size: 18px;
+	font-weight: bold;
+	color: #333333;
+	text-align: center;
+	line-height: 80px;
+}
+.order-details-table .order-details-table-zhangdan .booking-price-item-name{
+	font-size: 14px;
+	padding-left: 30px;
+}
+.order-details-table .order-details-table-zhangdan .booking-price{
+	border-top: none;
+}
+.order-details-list{
+	flex: 0 0 780px;
+}
+.order-details-list .details-table-list{
+	background: #FFFFFF;
+	border: 1px solid #EFEFEF;
+	margin-top: 20px;
+}
+.order-details-list .details-table-list .details-table-title{
+	height: 45px;
+	line-height: 45px;
+	background: #F4F4F4;
+	font-size: 18px;
+	font-weight: bold;
+	color: #000000;
+	padding: 0 20px;
+}
+.details-table-list .details-table-tab{
+	padding: 0 20px 20px 20px;
+}
+.details-table-list .details-table-tab .details-table-tab-title{
+	font-size: 14px;
+	font-weight: 500;
+	color: #000000;
+	padding: 20px 0 0 0;
+	line-height: 100%;
+}
+.details-table-list .details-table-tab .details-table-details .details-table-tabs{
+	margin-top: 20px;
+	font-size: 14px;
+	display: flex;
+	color: #000;
+	align-items: center;
+	margin-right: 30px;
+}
+.details-table-list .details-table-tab .details-table-details .details-table-tabs span{
+	color: #999999;
+}
+
+
+.table-list-title-arr{
+	padding: 0 20px;
+	height: 45px;
+	background: #F4F4F4;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.table-list-title-arr .list-title-arr-left{
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+	display: flex;
+	align-items: center;
+}
+.table-list-title-arr .list-title-arr-right{
+	font-size: 12px;
+	font-weight: 500;
+	color: #333333;
+}
+.list-route-icon{
+	padding: 20px 20px 30px 20px;
+	display: flex;
+	align-items: center;
+	font-size: 0;
+}
+.list-route-icon > img{
+	height: 20px;
+	width: auto;
+}
+.list-route-icon .list-route-icon-title{
+	font-size: 12px;
+	font-weight: 500;
+	color: #000000;
+	margin-left: 10px;
+}
+.list-route-icon .list-route-icon-date{
+	margin-left: 50px;
+	font-size: 14px;
+	font-weight: bold;
+	color: #000000;
+}
+.list-arr-route{
+	display: flex;
+	justify-content: space-between;
+	padding: 0 20px 20px;
+	align-items: center;
+}
+.list-arr-route .list-arr-route-jiaqian{
+	font-size: 14px;
+	font-weight: 500;
+	color: #333333;
+}
+.list-arr-route .list-arr-route-yitong{
+	display: flex;
+}
+.list-arr-route .list-arr-route-yitong .list-arr-route-neirong{
+	padding-right: 90px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #000000;
+	text-align: center;
+	position: relative;
+}
+.list-arr-route .list-arr-route-yitong .list-arr-route-neirong::after{
+	position: absolute;
+	content: '';
+	width: 34px;
+	height: 30px;
+	background-image: url(../img/route_icon.png);
+	background-repeat: no-repeat;
+	top: 5px;
+	background-position: center;
+	background-size: auto;
+	right: 28px;
+}
+.list-arr-route .list-arr-route-yitong .list-arr-route-neirong > div:first-child{
+	line-height: 100%;
+	margin-bottom: 10px;
+}
+.list-arr-route .list-arr-route-yitong .list-arr-route-neirong > div:last-child{
+	line-height: 14px;
+	font-size: 12px;
+	font-weight: 500;
+	color: #333333;
+	flex: 0 0 96px;
+	width: 96px;
+	height: 28px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-clamp: 2;
+	-webkit-line-clamp: 2;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+}
+.list-arr-route .list-arr-route-yitong .list-arr-route-neirong:last-child{
+	padding-right: 0;
+}
+.list-arr-route .list-arr-route-yitong .list-arr-route-neirong:last-child::after{
+	background-image: none;
+}
+
+.table-list-title-arr-title{
+	font-size: 18px;
+	font-weight: bold;
+	color: #F41928;
+	line-height: 45px;
+	background: rgba(244, 25, 40, 0.08);
+	text-align: center;
+}
+.tuijianhangxian{
+	font-size: 14px;
+	font-weight: bold;
+	color: #000000;
+	margin: 20px 20px 0 20px;
+	padding-left: 26px;
+	background-image: url(../img/tuijian.png);
+	background-position: left center;
+	background-repeat: no-repeat;
+	background-size: 16px 16px;
+	height: 20px;
+	line-height: 20px;
+}
+.list-tuijian-feiyong{
+	margin-top: -70px;
+}
+.list-tuijian-feiyong .yunfei{
+	font-size: 14px;
+	font-weight: 500;
+	color: #FF9914;
+	margin-bottom: 10px;
+	text-align: right;
+}
+.list-tuijian-feiyong .danjia{
+	font-size: 14px;
+	font-weight: 500;
+	color: #333333;
+	margin-bottom: 20px;
+	text-align: right;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

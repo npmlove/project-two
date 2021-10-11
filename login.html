@@ -199,6 +199,7 @@
 						var data = data.data
 						if(data.code == 200){
 							localStorage.setItem('wxOpenId',data.data.tportalUser.wechatOpenId)
+							localStorage.setItem('tokenId',data.data.tokenId)
 							window.location.href = './index.html'
 						}else{
 							this.isError = true

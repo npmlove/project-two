@@ -47,7 +47,10 @@ const serviceApi = {
 	noAuthSearchWeekRates: publicWeb+'/es/noAuth/searchWeekRates',
 	//按运单查询
 	trackSearchWeekRates: publicWeb+'/t-track/noAuth/queryByAWB',
-
+	//指定航线、货物类型、周几的运价查询
+	hangxianSearchBaseRates: publicWeb+'/es/searchBaseRates',
+	//用户下单
+	getStartOrder: publicWeb+'/t-order/startOrder'
 }
 
 
