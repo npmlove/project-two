@@ -462,3 +462,9 @@ textarea::-webkit-input-placeholder {
 .border-btm-da{
 	border-bottom: 1px dashed #EFEFEF;
 }
+.el-tabs__nav .el-tabs__item.is-active{
+	color: #2273CB !important;
+}
+.el-tabs__nav .el-tabs__item:hover{
+	color: #2273CB !important;
+}

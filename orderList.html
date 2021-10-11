@@ -72,10 +72,10 @@
 								<div class="content-search-normal">
 									<div>
 										<el-form-item label="订单号">
-											<el-input v-model="orderNo" placeholder="请输入订单号" style="width: 140px;"></el-input>
+											<el-input v-model="orderNo" onkeyup="value=value.replace(/[^\d\w]/g, '')" maxlength="15" placeholder="请输入订单号" style="width: 140px;"></el-input>
 										</el-form-item>
 										<el-form-item label="运单号">
-											<el-input v-model="waybillNo" placeholder="请输入运单号" style="width: 140px;"></el-input>
+											<el-input v-model="waybillNo" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="11" placeholder="请输入运单号" style="width: 140px;"></el-input>
 										</el-form-item>
 										<el-form-item label="进仓编号" label-width="75px">
 											<el-input v-model="inboundNo" placeholder="请输入进仓编号" style="width: 140px;"></el-input>
@@ -91,7 +91,7 @@
 												</el-option>
 											</el-select>
 											<div style="display: inline-block;background-image: url(./img/jiantou.png);margin: 0 5px;width: 16px;height: 30px;vertical-align: top;background-size: 16px 16px;background-repeat: no-repeat;background-position: center;"></div>
-											<el-select v-model="pod" placeholder="目的港" :remote-method="polMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 90px;">
+											<el-select v-model="pod" placeholder="目的港" :remote-method="podMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 90px;">
 												<el-option 
 													v-for="(item,index) in podOpt" 
 													:disabled="pol == item.threeLetterCode"
@@ -134,9 +134,13 @@
 							</el-form>
 						</div>
 						<div class="tabs__nav-wrap">
-							<el-tabs v-model="typeCode" type="border-card">
+							<el-tabs v-model="typeCode" type="border-card" @tab-click="tabClickData">
 							    <el-tab-pane label="全部订单" name="全部订单">
-									<ul class="nav-wrap-ul">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
 										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
@@ -178,23 +182,472 @@
 											</div>
 										</li>
 									</ul>
-									<div style="text-align: right;">
+									<div v-if="total != '0'" style="text-align: right;">
 										<el-pagination
-										  background
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
 										  :page-size="pageSize"
-										  layout="prev, pager, next"
+										  layout="total, prev, pager, next, jumper"
 										  :total="total">
 										</el-pagination>
 									</div>
 								</el-tab-pane>
-							    <el-tab-pane label="待审核" name="1">待审核</el-tab-pane>
-							    <el-tab-pane label="待进仓" name="2">待进仓</el-tab-pane>
-							    <el-tab-pane label="操作中" name="3">操作中</el-tab-pane>
-								<el-tab-pane label="海关安检" name="4">海关安检</el-tab-pane>
-								<el-tab-pane label="运输中" name="5">运输中</el-tab-pane>
-								<el-tab-pane label="已完成" name="6">已完成</el-tab-pane>
-								<el-tab-pane label="已取消" name="7">已取消</el-tab-pane>
-								<el-tab-pane label="异常" name="8">异常</el-tab-pane>
+							    <el-tab-pane label="待审核" name="1">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
+										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+											<div class="nav-wrap-order">
+												<div>订单号：{{item.orderNo}}</div>
+												<div>预订日期：{{item.orderTime}}</div>
+											</div>
+											<div class="nav-wrap-content">
+												<div class="nav-wrap-route">
+													<div class="nav-wrap-logo">
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：2021-01-01</div>
+													</div>
+													<div class="nav-wrap-route-content">
+														<div class="nav-wrap-route-info">
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
+														</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-info">
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
+														</div>
+													</div>
+													<div class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+												</div>
+												<div class="nav-wrap-right">
+													<div class="nav-wrap-text">
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
+													</div>
+													<div class="nav-wrap-price">￥{{JSON.parse(item.totalArOrgn)[0].amount}}起</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+									<div v-if="total != '0'" style="text-align: right;">
+										<el-pagination
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
+										  :page-size="pageSize"
+										  layout="total, prev, pager, next, jumper"
+										  :total="total">
+										</el-pagination>
+									</div>
+								</el-tab-pane>
+							    <el-tab-pane label="待进仓" name="2">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
+										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+											<div class="nav-wrap-order">
+												<div>订单号：{{item.orderNo}}</div>
+												<div>预订日期：{{item.orderTime}}</div>
+											</div>
+											<div class="nav-wrap-content">
+												<div class="nav-wrap-route">
+													<div class="nav-wrap-logo">
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：2021-01-01</div>
+													</div>
+													<div class="nav-wrap-route-content">
+														<div class="nav-wrap-route-info">
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
+														</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-info">
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
+														</div>
+													</div>
+													<div class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+												</div>
+												<div class="nav-wrap-right">
+													<div class="nav-wrap-text">
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
+													</div>
+													<div class="nav-wrap-price">￥{{JSON.parse(item.totalArOrgn)[0].amount}}起</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+									<div v-if="total != '0'" style="text-align: right;">
+										<el-pagination
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
+										  :page-size="pageSize"
+										  layout="total, prev, pager, next, jumper"
+										  :total="total">
+										</el-pagination>
+									</div>
+								</el-tab-pane>
+							    <el-tab-pane label="操作中" name="3">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
+										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+											<div class="nav-wrap-order">
+												<div>订单号：{{item.orderNo}}</div>
+												<div>预订日期：{{item.orderTime}}</div>
+											</div>
+											<div class="nav-wrap-content">
+												<div class="nav-wrap-route">
+													<div class="nav-wrap-logo">
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：2021-01-01</div>
+													</div>
+													<div class="nav-wrap-route-content">
+														<div class="nav-wrap-route-info">
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
+														</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-info">
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
+														</div>
+													</div>
+													<div class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+												</div>
+												<div class="nav-wrap-right">
+													<div class="nav-wrap-text">
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
+													</div>
+													<div class="nav-wrap-price">￥{{JSON.parse(item.totalArOrgn)[0].amount}}起</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+									<div v-if="total != '0'" style="text-align: right;">
+										<el-pagination
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
+										  :page-size="pageSize"
+										  layout="total, prev, pager, next, jumper"
+										  :total="total">
+										</el-pagination>
+									</div>
+								</el-tab-pane>
+								<el-tab-pane label="海关安检" name="4">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
+										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+											<div class="nav-wrap-order">
+												<div>订单号：{{item.orderNo}}</div>
+												<div>预订日期：{{item.orderTime}}</div>
+											</div>
+											<div class="nav-wrap-content">
+												<div class="nav-wrap-route">
+													<div class="nav-wrap-logo">
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：2021-01-01</div>
+													</div>
+													<div class="nav-wrap-route-content">
+														<div class="nav-wrap-route-info">
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
+														</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-info">
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
+														</div>
+													</div>
+													<div class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+												</div>
+												<div class="nav-wrap-right">
+													<div class="nav-wrap-text">
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
+													</div>
+													<div class="nav-wrap-price">￥{{JSON.parse(item.totalArOrgn)[0].amount}}起</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+									<div v-if="total != '0'" style="text-align: right;">
+										<el-pagination
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
+										  :page-size="pageSize"
+										  layout="total, prev, pager, next, jumper"
+										  :total="total">
+										</el-pagination>
+									</div>
+								</el-tab-pane>
+								<el-tab-pane label="运输中" name="5">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
+										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+											<div class="nav-wrap-order">
+												<div>订单号：{{item.orderNo}}</div>
+												<div>预订日期：{{item.orderTime}}</div>
+											</div>
+											<div class="nav-wrap-content">
+												<div class="nav-wrap-route">
+													<div class="nav-wrap-logo">
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：2021-01-01</div>
+													</div>
+													<div class="nav-wrap-route-content">
+														<div class="nav-wrap-route-info">
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
+														</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-info">
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
+														</div>
+													</div>
+													<div class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+												</div>
+												<div class="nav-wrap-right">
+													<div class="nav-wrap-text">
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
+													</div>
+													<div class="nav-wrap-price">￥{{JSON.parse(item.totalArOrgn)[0].amount}}起</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+									<div v-if="total != '0'" style="text-align: right;">
+										<el-pagination
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
+										  :page-size="pageSize"
+										  layout="total, prev, pager, next, jumper"
+										  :total="total">
+										</el-pagination>
+									</div>
+								</el-tab-pane>
+								<el-tab-pane label="已完成" name="6">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
+										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+											<div class="nav-wrap-order">
+												<div>订单号：{{item.orderNo}}</div>
+												<div>预订日期：{{item.orderTime}}</div>
+											</div>
+											<div class="nav-wrap-content">
+												<div class="nav-wrap-route">
+													<div class="nav-wrap-logo">
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：2021-01-01</div>
+													</div>
+													<div class="nav-wrap-route-content">
+														<div class="nav-wrap-route-info">
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
+														</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-info">
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
+														</div>
+													</div>
+													<div class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+												</div>
+												<div class="nav-wrap-right">
+													<div class="nav-wrap-text">
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
+													</div>
+													<div class="nav-wrap-price">￥{{JSON.parse(item.totalArOrgn)[0].amount}}起</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+									<div v-if="total != '0'" style="text-align: right;">
+										<el-pagination
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
+										  :page-size="pageSize"
+										  layout="total, prev, pager, next, jumper"
+										  :total="total">
+										</el-pagination>
+									</div>
+								</el-tab-pane>
+								<el-tab-pane label="已取消" name="7">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
+										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+											<div class="nav-wrap-order">
+												<div>订单号：{{item.orderNo}}</div>
+												<div>预订日期：{{item.orderTime}}</div>
+											</div>
+											<div class="nav-wrap-content">
+												<div class="nav-wrap-route">
+													<div class="nav-wrap-logo">
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：2021-01-01</div>
+													</div>
+													<div class="nav-wrap-route-content">
+														<div class="nav-wrap-route-info">
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
+														</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-info">
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
+														</div>
+													</div>
+													<div class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+												</div>
+												<div class="nav-wrap-right">
+													<div class="nav-wrap-text">
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
+													</div>
+													<div class="nav-wrap-price">￥{{JSON.parse(item.totalArOrgn)[0].amount}}起</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+									<div v-if="total != '0'" style="text-align: right;">
+										<el-pagination
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
+										  :page-size="pageSize"
+										  layout="total, prev, pager, next, jumper"
+										  :total="total">
+										</el-pagination>
+									</div>
+								</el-tab-pane>
+								<el-tab-pane :label="'异常'+orderCount" name="8">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
+										<li @click="orderClick" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+											<div class="nav-wrap-order">
+												<div>订单号：{{item.orderNo}}</div>
+												<div>预订日期：{{item.orderTime}}</div>
+											</div>
+											<div class="nav-wrap-content">
+												<div class="nav-wrap-route">
+													<div class="nav-wrap-logo">
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：2021-01-01</div>
+													</div>
+													<div class="nav-wrap-route-content">
+														<div class="nav-wrap-route-info">
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
+														</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-info">
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
+														</div>
+													</div>
+													<div class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+												</div>
+												<div class="nav-wrap-right">
+													<div class="nav-wrap-text">
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
+													</div>
+													<div class="nav-wrap-price">￥{{JSON.parse(item.totalArOrgn)[0].amount}}起</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+									<div v-if="total != '0'" style="text-align: right;">
+										<el-pagination
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
+										  :page-size="pageSize"
+										  layout="total, prev, pager, next, jumper"
+										  :total="total">
+										</el-pagination>
+									</div>
+								</el-tab-pane>
 							</el-tabs>
 						</div>
 					</div>
@@ -229,6 +682,7 @@
 				loading: false,
 				menuIndex: 0,
 				userInfo: {},
+				openId: '',
 				orderNo: '',
 				waybillNo: '',
 				pol: '',
@@ -243,18 +697,42 @@
 				departureDate: '',
 				typeCode: '全部订单',
 				total: 0,
-				dataArr: []
+				dataArr: [],
+				orderCount: 0
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
 					window.location.href = './login.html'
 				}
-				this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				this.openId = localStorage.getItem('wxOpenId')
+				this.initUserInfo()
+				this.initData()
+				this.initOrderCountList()
+				this.qiSearchByPage()
+				this.muSearchByPage()
+				this.initTwoCode()
 			},
 			mounted() {
-				this.initData()
+				
 			},
 			methods: {
+				initOrderCountList() {
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.orderCountList+'?typeCode='+8,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.orderCount = data.data
+						}
+					})
+				},
+				tabClickData() {
+					this.initData()
+				},
 				initData() {
 					var json = {
 						orderNo: this.orderNo,
@@ -269,10 +747,10 @@
 						pageNum: this.pageNum,
 						pageSize: this.pageSize
 					}
+					json = toData(json)
 					axios({
-						method: 'post',
-						url: webIp+serviceApi.orderSearchByPage,
-						data: json,
+						method: 'get',
+						url: webIp+serviceApi.orderSearchByPage+'?'+json,
 						headers: {
 							'tokenId': localStorage.getItem('tokenId')
 						}
@@ -286,6 +764,67 @@
 						}
 					})
 				},
+				initUserInfo(){
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.userUserInfo+'?openId='+this.openId
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.userInfo = data.data
+						}
+					})
+				},
+				//目的港
+				muSearchByPage() {
+					var jsonData = {
+						keyWord: this.pod,
+						type: this.pod ? '' : '2'
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.searchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.podOpt = data.data
+						}
+					})
+				},
+				//起运港
+				qiSearchByPage() {
+					var jsonData = {
+						keyWord: this.pol,
+						type: this.pol ? '' : '1'
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.searchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.polOpt = data.data
+						}
+					})
+				},
+				//获取二字码
+				initTwoCode() {
+					var jsonData = {
+						keyWord: this.airCompanyCode
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.twoCodeSearchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.airCompanyCodeOpt = data.data
+						}
+					})
+				},
 				//跳转详情
 				orderClick() {
 					window.location.href = './orderDetails.html'
@@ -294,13 +833,33 @@
 					this.initData()
 				},
 				restClick() {
-					
+					this.orderNo = ''
+					this.waybillNo = ''
+					this.inboundNo = ''
+					this.pol = ''
+					this.pod = ''
+					this.airCompanyCode = ''
+					this.departureDate = ''
+					this.pageNum = 1
+					this.pageSize  = 2
+					this.initData()
 				},
-				polMethod() {
-					
+				handleCurrentChange(val) {
+					console.log(val)
+					this.pageNum = val
+					this.initData()
 				},
-				companyMethod() {
-					
+				polMethod(val) {
+					this.pol = val
+					this.qiSearchByPage()
+				},
+				podMethod(val) {
+					this.pod = val
+					this.muSearchByPage()
+				},
+				companyMethod(val) {
+					this.airCompanyCode = val
+					this.initTwoCode()
 				},
 				//登录
 				loginClick() {
