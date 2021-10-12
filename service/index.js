@@ -6,13 +6,13 @@ var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境
 
 //开发环境
 // var webIp = 'https://17dc.shenghuoq.com'
-var webIp = 'http://10.8.0.1'
+// var webIp = 'http://10.8.0.1'
 // var webIp = 'http://10.8.0.6:6679'
-var publicWeb = '/back/dcPortal/faw'
+// var publicWeb = '/back/dcPortal/faw'
 
 //测试环境
-// var webIp = ''
-// var publicWeb = '/back/dcPortalTest/faw'
+var webIp = ''
+var publicWeb = '/back/dcPortalTest/faw'
 
 //生成环境
 // var webIp = ''
