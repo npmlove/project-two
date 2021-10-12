@@ -268,18 +268,22 @@
 										<div class="li-date-text">班期：D{{item.dows}}</div>
 									</div>
 								</div>
-								<div class="wrapper-li-content-right">
+								<div class="wrapper-li-content-right" style="position: relative;">
+									<div v-if="item.amount" style="position: absolute;font-size: 14px;right: 0;top: -16px;">
+										<div>运价</div>
+										<div style="font-size: 16px;margin-top: 5px;color: #FF9914;font-weight: bold;">￥{{item.amount}}</div>
+									</div>
 									<ul class="li-content-price-ul">
 										<li v-for="(childerItem,childerIndex) in item.rates" :key="childerIndex" class="li-content-price-li">
 											<!-- <div v-if="childerIndex == 0">{{childerItem.vwrLow}}CMB < {{childerItem.vwrHigh}}</div> -->
 											<div>1:{{childerItem.vwr}}</div>
-											<div>{{childerItem.ratesLevel0}}</div>
-											<div>{{childerItem.ratesN}}</div>
-											<div>{{childerItem.ratesLevel1}}</div>
-											<div>{{childerItem.ratesLevel2}}</div>
-											<div>{{childerItem.ratesLevel3}}</div>
-											<div>{{childerItem.ratesLevel4}}</div>
-											<div>{{childerItem.ratesLevel5}}</div>
+											<div :style="{color: item.amounTtitle == 'M' ? '#ff9914' : '#333'}">{{childerItem.ratesLevel0}}</div>
+											<div :style="{color: item.amounTtitle == 'N' ? '#ff9914' : '#333'}">{{childerItem.ratesN}}</div>
+											<div :style="{color: item.amounTtitle == '45+' ? '#ff9914' : '#333'}">{{childerItem.ratesLevel1}}</div>
+											<div :style="{color: item.amounTtitle == '100+' ? '#ff9914' : '#333'}">{{childerItem.ratesLevel2}}</div>
+											<div :style="{color: item.amounTtitle == '300+' ? '#ff9914' : '#333'}">{{childerItem.ratesLevel3}}</div>
+											<div :style="{color: item.amounTtitle == '500+' ? '#ff9914' : '#333'}">{{childerItem.ratesLevel4}}</div>
+											<div :style="{color: item.amounTtitle == '1000+' ? '#ff9914' : '#333'}">{{childerItem.ratesLevel5}}</div>
 										</li>
 									</ul>
 									<div style="margin-top: 15px;text-align: right;">

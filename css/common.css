@@ -1556,13 +1556,13 @@
 	display: flex;
 	align-items: center;
 	text-align: center;
-	margin-left: 450px;
+	margin-left: 400px;
 }
 
 .flight-bar-ul .flight-bar-li {
 	color: #333;
 	font-size: 12px;
-	margin-right: 40px;
+	margin-right: 30px;
 	flex: 0 0 34px;
 }
 
@@ -1788,7 +1788,7 @@
 }
 
 .li-content-price-ul .li-content-price-li>div {
-	margin-right: 40px;
+	margin-right: 30px;
 	padding: 8px 0;
 	line-height: 100%;
 	font-size: 14px;
@@ -1800,8 +1800,8 @@
 .li-content-price-ul .li-content-price-li>div:first-child {
 	color: #999;
 	font-weight: 500;
-	/* flex: 0 0 97px; */
-	min-width: 120px;
+	flex: 0 0 80px;
+	/* min-width: 120px; */
 }
 
 /* 订舱 */
