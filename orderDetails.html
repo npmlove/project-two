@@ -49,26 +49,39 @@
 						<a href="./orderList.html">订单管理</a>
 						<img alt="图片" src="./img/arrow_details.png" />
 						<div>订单详情</div>
-						<div>订单号：16948476392</div>
+						<div>订单号：{{detailsArr.orderNo}}</div>
 					</div>
 					<div class="order-details-step">
-						<div class="order-details-step-btn order-details-step-active"><img alt="图片" src="./img/orderDetails_check.png">下单</div>
-						<div class="order-details-step-btn order-details-step-check">待平台确认</div>
-						<div class="order-details-step-btn">货物进仓</div>
-						<div>
-							<div class="order-details-step-btn">提单操作</div>
-							<div class="order-details-step-btn">进仓数据确认</div>
+						<div :class="{'order-details-step-active': detailsArr.status > 1 ? true : false, 'order-details-step-check': detailsArr.status == 1 ? true : false,}" class="order-details-step-btn">
+							<img v-if="detailsArr.status > 1" alt="图片" src="./img/orderDetails_check.png">下单
 						</div>
-						<div>
-							<div class="order-details-step-btn">提单已生成</div>
-							<div class="order-details-step-btn">报关操作</div>
+						<div :class="{'order-details-step-active': detailsArr.status > 3 ? true : false, 'order-details-step-check': detailsArr.status == 3 ? true : false,}" class="order-details-step-btn">
+							<img v-if="detailsArr.status > 3" alt="图片" src="./img/orderDetails_check.png">平台审核
 						</div>
-						<div>
-							<div class="order-details-step-btn">海关放行</div>
-							<div class="order-details-step-btn">报关完成</div>
+						<div :class="{'order-details-step-active': detailsArr.status > 9 ? true : false, 'order-details-step-check': detailsArr.status == 9 ? true : false,}" class="order-details-step-btn">
+							<img v-if="detailsArr.status > 9" alt="图片" src="./img/orderDetails_check.png">货物进仓
 						</div>
-						<div class="order-details-step-btn">货物起运</div>
-						<div class="order-details-step-btn">货物到达</div>
+						<div :class="{'order-details-step-active': detailsArr.status > 13 ? true : false, 'order-details-step-check': detailsArr.status == 13 ? true : false,}" class="order-details-step-btn">
+							<img v-if="detailsArr.status > 13" alt="图片" src="./img/orderDetails_check.png">进仓数据
+						</div>
+						<div :class="{'order-details-step-active': detailsArr.status > 17 ? true : false, 'order-details-step-check': detailsArr.status == 17 ? true : false,}" class="order-details-step-btn">
+							<img v-if="detailsArr.status > 17" alt="图片" src="./img/orderDetails_check.png">数据确认
+						</div>
+						<div :class="{'order-details-step-active': detailsArr.status > 21 ? true : false, 'order-details-step-check': detailsArr.status == 21 ? true : false,}" class="order-details-step-btn">
+							<img v-if="detailsArr.status > 21" alt="图片" src="./img/orderDetails_check.png">平台操作
+						</div>
+						<div :class="{'order-details-step-active': (detailsArr.status > 25 || detailsArr.status > 27 || detailsArr.status > 29) ? true : false, 'order-details-step-check': (detailsArr.status == 25 || detailsArr.status == 27 || detailsArr.status == 29) ? true : false,}" class="order-details-step-btn">
+							<img v-if="detailsArr.status > 25 || detailsArr.status > 27 || detailsArr.status > 29" alt="图片" src="./img/orderDetails_check.png">卡口放行
+						</div>
+						<div :class="{'order-details-step-active': (detailsArr.status > 31 || detailsArr.status > 33) ? true : false, 'order-details-step-check': (detailsArr.status == 31 || detailsArr.status == 33) ? true : false,}" class="order-details-step-btn">
+							<img v-if="detailsArr.status > 31 || detailsArr.status > 33" alt="图片" src="./img/orderDetails_check.png">安检通过
+						</div>
+						<div :class="{'order-details-step-active': detailsArr.status > 37 ? true : false, 'order-details-step-check': detailsArr.status == 37 ? true : false,}" class="order-details-step-btn">
+							<img v-if="detailsArr.status > 37" alt="图片" src="./img/orderDetails_check.png">货物起运
+						</div>
+						<div :class="{'order-details-step-active': detailsArr.status > 41 ? true : false, 'order-details-step-check': detailsArr.status == 41 ? true : false,}" class="order-details-step-btn">
+							<img v-if="detailsArr.status > 41" alt="图片" src="./img/orderDetails_check.png">货物到达
+						</div>
 					</div>
 					<div class="order-details-table">
 						<div class="order-details-list">
@@ -128,33 +141,29 @@
 							<div  v-if="detailsArr.status != '5'" class="details-table-list" style="margin-top: 0;">
 								<div class="table-list-title-arr">
 									<div class="list-title-arr-left">
-										<div>上海浦东机场(PVG)</div>
+										<div>{{detailsArr.polName}}({{detailsArr.pol}})</div>
 										<div style="margin: 0 20px;"><img alt="图片" style="width: 16px;height: 16px;" src="./img/icon2.png" /></div>
-										<div>洛杉矶国际机场(LAX)</div>
+										<div>{{detailsArr.podName}}({{detailsArr.pod}})</div>
 									</div>
-									<div class="list-title-arr-right">运单号：074-47235871</div>
+									<div v-if="detailsArr.waybillNo" class="list-title-arr-right">运单号：{{detailsArr.waybillNo}}</div>
 								</div>
 								<div class="list-route-icon">
-									<img alt="tupian" src="./img/routeIcon.png" />
-									<div class="list-route-icon-title">东方航空</div>
-									<div class="list-route-icon-date">2021-09-12  周六</div>
+									<img v-if="detailsArr.logoPath" alt="tupian" :src="detailsArr.logoPath" />
+									<div class="list-route-icon-title">{{detailsArr.airCompanyName}}</div>
+									<div class="list-route-icon-date">{{detailsArr.departureDate}}  周六</div>
 								</div>
 								<div class="list-arr-route">
 									<div class="list-arr-route-yitong">
 										<div class="list-arr-route-neirong">
-											<div>PVG</div>
-											<div>上海浦东国际机场</div>
+											<div>{{detailsArr.pol}}</div>
+											<div>{{detailsArr.polName}}</div>
 										</div>
 										<div class="list-arr-route-neirong">
-											<div>SGN</div>
-											<div>胡志明机场</div>
-										</div>
-										<div class="list-arr-route-neirong">
-											<div>LAX</div>
-											<div>洛杉矶国际机场</div>
+											<div>{{detailsArr.pod}}</div>
+											<div>{{detailsArr.podName}}</div>
 										</div>
 									</div>
-									<div class="list-arr-route-jiaqian">单价：30元/kg</div>
+									<div class="list-arr-route-jiaqian">单价：{{detailsArr.bookingPrice}}元/kg</div>
 								</div>
 							</div>
 							<div class="details-table-list">
@@ -162,25 +171,36 @@
 								<div class="details-table-tab">
 									<div class="details-table-tab-title">订舱信息</div>
 									<div class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs"><span>品名：</span>呼吸机</div>
-										<div class="details-table-tabs"><span>类型：</span>普货</div>
-										<div class="details-table-tabs"><span>件数：</span>7PCS</div>
-										<div class="details-table-tabs"><span>体积：</span>0.119CBM</div>
+										<div class="details-table-tabs"><span>品名：</span>{{detailsArr.cargoName}}</div>
+										<div v-if="detailsArr.cargoType == '1'" class="details-table-tabs"><span>类型：</span>普货</div>
+										<div v-if="detailsArr.cargoType == '2'" class="details-table-tabs"><span>类型：</span>化工品</div>
+										<div v-if="detailsArr.cargoType == '3'" class="details-table-tabs"><span>类型：</span>危险品</div>
+										<div v-if="detailsArr.cargoType == '4'" class="details-table-tabs"><span>类型：</span>防疫物资</div>
+										<div class="details-table-tabs"><span>件数：</span>{{detailsArr.bookingPiece}}PCS</div>
+										<div class="details-table-tabs"><span>体积：</span>{{detailsArr.bookingCbm}}CBM</div>
 									</div>
 									<div class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs"><span>重量：</span>130KGS</div>
-										<div class="details-table-tabs"><span>比重：</span>1:592</div>
-										<div class="details-table-tabs"><span>计费重：</span>200KGS</div>
+										<div class="details-table-tabs"><span>重量：</span>{{detailsArr.bookingWeight}}KG</div>
+										<div class="details-table-tabs"><span>比重：</span>1:{{detailsArr.bookingVwr}}</div>
+										<div class="details-table-tabs"><span>计费重：</span>{{detailsArr.bookingCw}}KG</div>
 									</div>
 								</div>
 							</div>
-							<div class="details-table-list">
+							<div v-if="(detailsArr.cclType != '1') || detailsArr.isPickUp == '2'" class="details-table-list">
 								<div class="details-table-title">服务产品</div>
 								<div class="details-table-tab">
 									<div class="details-table-tab-title">国内提货</div>
 									<div class="details-table-details">
 										<div class="details-table-tabs"><span>提货联系人：</span>王丽</div>
 										<div class="details-table-tabs"><span>提货地址：</span>浙江省温州市江明区石峰大道112号</div>
+										<div class="details-table-tabs"><span>联系电话：</span>1874630273</div>
+									</div>
+								</div>
+								<div class="details-table-tab">
+									<div class="details-table-tab-title">清关服务</div>
+									<div class="details-table-details">
+										<div class="details-table-tabs"><span>送货地址：</span>王丽</div>
+										<div class="details-table-tabs"><span>送货联系人：</span>浙江省温州市江明区石峰大道112号</div>
 										<div class="details-table-tabs"><span>联系电话：</span>1874630273</div>
 									</div>
 								</div>
@@ -191,30 +211,19 @@
 							<div class="booking-price borderEFEFEF bakFFFFFF">
 								<div class="booking-price-item">
 									<div class="booking-price-item-name">国内段</div>
-									<div class="booking-price-item-list">
-										<div>空运费</div>
-										<div><span style="margin-right: 30px;">28*300</span><span>￥8400</span></div>
-									</div>
-									<div class="booking-price-item-list">
-										<div>报关费</div>
-										<div><span>￥50</span></div>
-									</div>
-									<div class="booking-price-item-list">
-										<div>信息费</div>
-										<div><span>￥50</span></div>
-									</div>
-									<div class="booking-price-item-list">
-										<div>制单费</div>
-										<div><span>￥50</span></div>
+									<div v-for="(item,index) in detailsArr.orderPriceList" class="booking-price-item-list">
+										<div>{{item.expenseName}}</div>
+										<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{detailsArr.bookingPrice}}*{{detailsArr.bookingCw}}</span><span>￥{{detailsArr.bookingPrice*detailsArr.bookingCw}}</span></div>
+										<div v-else>￥{{item.price}}</span></div>
 									</div>
 								</div>
 								<div class="booking-price-total">
 									<div>CNY</div>
-									<div>￥8550</div>
+									<div>￥{{totalArOrgn.amount}}</div>
 								</div>
 							</div>
 							<div style="margin-top: 20px;">
-								<button class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
+								<button v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
 							</div>
 						</div>
 					</div>
@@ -249,7 +258,9 @@
 				loading: false,
 				menuIndex: 0,
 				orderId: '',
-				detailsArr: {}
+				detailsArr: {},
+				statusSubmit: [17,37,33,31,29,5,9,27],
+				totalArOrgn: {}
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -271,6 +282,7 @@
 						var data = data.data
 						if(data.code == 200){
 							this.detailsArr = data.data
+							this.totalArOrgn = JSON.parse(this.detailsArr.totalArOrgn)[0]
 						}
 					})
 				},

@@ -717,9 +717,23 @@
 			},
 			methods: {
 				initOrderCountList() {
+					var json = {
+						orderNo: this.orderNo,
+						waybillNo: this.waybillNo,
+						inboundNo: this.inboundNo,
+						pol: this.pol,
+						pod: this.pod,
+						airCompanyCode: this.airCompanyCode,
+						departureDate1: this.departureDate == '' ? '' : this.departureDate[0],
+						departureDate2: this.departureDate == '' ? '' : this.departureDate[1],
+						typeCode: this.typeCode == '全部订单' ? '' : this.typeCode,
+						pageNum: this.pageNum,
+						pageSize: this.pageSize
+					}
+					json = toData(json)
 					axios({
 						method: 'get',
-						url: webIp+serviceApi.orderCountList+'?typeCode='+8,
+						url: webIp+serviceApi.orderCountList+'?'+json,
 						headers: {
 							'tokenId': localStorage.getItem('tokenId')
 						}
@@ -732,6 +746,7 @@
 				},
 				tabClickData() {
 					this.initData()
+					this.initOrderCountList()
 				},
 				initData() {
 					var json = {
@@ -771,7 +786,7 @@
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
-							this.userInfo = data.data
+							this.userInfo = data.data.tportalUser
 						}
 					})
 				},
@@ -833,6 +848,7 @@
 				},
 				searchClick() {
 					this.initData()
+					this.initOrderCountList()
 				},
 				restClick() {
 					this.orderNo = ''
@@ -845,6 +861,7 @@
 					this.pageNum = 1
 					this.pageSize  = 2
 					this.initData()
+					this.initOrderCountList()
 				},
 				handleCurrentChange(val) {
 					console.log(val)

@@ -100,7 +100,7 @@
 						<div class="login-title">手机号找回密码</div>
 						<div class="login-content input-content" style="margin: 40px 37px 0;">
 							<div class="input-item">
-								<input v-model="tel" @focus="isError = false" placeholder="手机号找回密码" class="input-inner input-icon1" type="text" />
+								<input v-model="tel" maxlength="11" @focus="isError = false" placeholder="手机号找回密码" class="input-inner input-icon1" type="text" />
 							</div>
 							<div class="input-item com-top30">
 								<input v-model="verificationCode" @focus="isError = false" placeholder="请输入验证码" class="input-inner input-icon3 com-padding-right100" type="text" />

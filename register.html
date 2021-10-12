@@ -101,7 +101,7 @@
 						<div class="login-title" style="padding-top: 40px;">绑定手机号</div>
 						<div class="login-content input-content" style="margin: 30px 37px 0;">
 							<div class="input-item com-bottom10">
-								<input v-model="tel" @focus="isError = false" placeholder="请输入手机号码" class="input-inner input-icon1" type="text" />
+								<input v-model="tel" maxlength="11" @focus="isError = false" placeholder="请输入手机号码" class="input-inner input-icon1" type="text" />
 							</div>
 							<div class="input-item com-bottom10">
 								<input v-model="registerCode" @focus="isError = false" placeholder="请输入验证码" class="input-inner input-icon3 com-padding-right100" type="text" />
@@ -220,15 +220,16 @@
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
-							localStorage.setItem('wxOpenId',data.data.tportalUser.wechatOpenId)
-							localStorage.setItem('tokenId',data.data.tokenId)
 							axios({
 								method: 'get',
 								url: webIp+serviceApi.userUserInfo+'?openId='+data.data.tportalUser.wechatOpenId
 							}).then((user) => {
 								var user = user.data
 								if(user.code == 200){
-									localStorage.setItem('userInfo',JSON.stringify(user.data))
+									localStorage.setItem('userInfo',JSON.stringify(user.data.tportalUser))
+									localStorage.setItem('wxOpenId',user.data.tportalUser.wechatOpenId)
+									localStorage.setItem('tokenId',user.data.tokenId)
+									localStorage.setItem('certificationBody',user.data.tportalUser.certificationBody)
 									window.location.href = './index.html'
 								}
 							})

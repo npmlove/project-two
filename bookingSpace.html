@@ -89,7 +89,7 @@
 									<li @click="cargoTypeClick(3)" :class="{radio_li_active: cargoType == '3'}" class="radio-li">危险品</li>
 									<li @click="cargoTypeClick(4)" :class="{radio_li_active: cargoType == '4'}" class="radio-li">防疫物资</li>
 								</ul>
-								<div class="booking-item-name">货物类型</div>
+								<div class="booking-item-name">包装类型</div>
 								<ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 20px;">
 									<li @click="packageTypeClick(1)" :class="{radio_li_active: packageType == '1'}" class="radio-li">散货</li>
 									<li @click="packageTypeClick(2)" :class="{radio_li_active: packageType == '2'}" class="radio-li">托盘</li>
@@ -156,7 +156,7 @@
 										<div class="booking-form-item">
 											<label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货地址</label>
 											<div class="booking-form-item-content">
-												<input v-model="pickUpAddress" placeholder="请填写提货地址" class="booking-form-input" type="text" style="width: 450px;"/>
+												<input v-model="pickUpAddress" maxlength="50" placeholder="请填写提货地址" class="booking-form-input" type="text" style="width: 450px;"/>
 											</div>
 										</div>
 									</div>
@@ -164,7 +164,7 @@
 										<div class="booking-form-item">
 											<label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货联系人</label>
 											<div class="booking-form-item-content">
-												<input v-model="pickUpContacts" placeholder="请填写提货联系人" class="booking-form-input" type="text" style="width: 450px;"/>
+												<input v-model="pickUpContacts" maxlength="15" placeholder="请填写提货联系人" class="booking-form-input" type="text" style="width: 450px;"/>
 											</div>
 										</div>
 									</div>
@@ -195,7 +195,7 @@
 										<div class="booking-form-item">
 											<label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>送货地址</label>
 											<div class="booking-form-item-content">
-												<input v-model="deliveryAddress" placeholder="请填写送货地址" class="booking-form-input" type="text" style="width: 450px;"/>
+												<input v-model="deliveryAddress" maxlength="200" placeholder="请填写送货地址" class="booking-form-input" type="text" style="width: 450px;"/>
 											</div>
 										</div>
 									</div>
@@ -203,7 +203,7 @@
 										<div class="booking-form-item">
 											<label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>送货联系人</label>
 											<div class="booking-form-item-content">
-												<input v-model="deliveryContacts" placeholder="请填写送货联系人" class="booking-form-input" type="text" style="width: 450px;"/>
+												<input v-model="deliveryContacts" maxlength="50" placeholder="请填写送货联系人" class="booking-form-input" type="text" style="width: 450px;"/>
 											</div>
 										</div>
 									</div>
