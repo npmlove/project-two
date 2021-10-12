@@ -114,7 +114,13 @@
 								<div class="list-route-icon">
 									<img alt="tupian" src="./img/routeIcon.png" />
 									<div class="list-route-icon-title">东方航空</div>
-									<div class="list-route-icon-date color227">2021-09-12  周六</div>
+									<div v-if="detailsArr.dow == '1'" class="list-route-icon-date color227">2021-09-12  周六</div>
+									<div v-if="detailsArr.dow == '2'" class="list-route-icon-date color227">2021-09-12  周六</div>
+									<div v-if="detailsArr.dow == '3'" class="list-route-icon-date color227">2021-09-12  周六</div>
+									<div v-if="detailsArr.dow == '4'" class="list-route-icon-date color227">2021-09-12  周六</div>
+									<div v-if="detailsArr.dow == '5'" class="list-route-icon-date color227">2021-09-12  周六</div>
+									<div v-if="detailsArr.dow == '6'" class="list-route-icon-date color227">2021-09-12  周六</div>
+									<div v-if="detailsArr.dow == '7'" class="list-route-icon-date color227">2021-09-12  周六</div>
 								</div>
 								<div class="list-arr-route">
 									<div class="list-arr-route-yitong">
@@ -150,7 +156,13 @@
 								<div class="list-route-icon">
 									<img v-if="detailsArr.logoPath" alt="tupian" :src="detailsArr.logoPath" />
 									<div class="list-route-icon-title">{{detailsArr.airCompanyName}}</div>
-									<div class="list-route-icon-date">{{detailsArr.departureDate}}  周六</div>
+									<div v-if="detailsArr.dow == '1'" class="list-route-icon-date">{{detailsArr.departureDate}}  周一</div>
+									<div v-if="detailsArr.dow == '2'" class="list-route-icon-date">{{detailsArr.departureDate}}  周二</div>
+									<div v-if="detailsArr.dow == '3'" class="list-route-icon-date">{{detailsArr.departureDate}}  周三</div>
+									<div v-if="detailsArr.dow == '4'" class="list-route-icon-date">{{detailsArr.departureDate}}  周四</div>
+									<div v-if="detailsArr.dow == '5'" class="list-route-icon-date">{{detailsArr.departureDate}}  周五</div>
+									<div v-if="detailsArr.dow == '6'" class="list-route-icon-date">{{detailsArr.departureDate}}  周六</div>
+									<div v-if="detailsArr.dow == '7'" class="list-route-icon-date">{{detailsArr.departureDate}}  周日</div>
 								</div>
 								<div class="list-arr-route">
 									<div class="list-arr-route-yitong">
@@ -188,20 +200,20 @@
 							</div>
 							<div v-if="(detailsArr.cclType != '1') || detailsArr.isPickUp == '2'" class="details-table-list">
 								<div class="details-table-title">服务产品</div>
-								<div class="details-table-tab">
+								<div v-if="detailsArr.isPickUp == '2'" class="details-table-tab">
 									<div class="details-table-tab-title">国内提货</div>
 									<div class="details-table-details">
-										<div class="details-table-tabs"><span>提货联系人：</span>王丽</div>
-										<div class="details-table-tabs"><span>提货地址：</span>浙江省温州市江明区石峰大道112号</div>
-										<div class="details-table-tabs"><span>联系电话：</span>1874630273</div>
+										<div class="details-table-tabs"><span>提货联系人：</span>{{detailsArr.pickUpAddress}}</div>
+										<div class="details-table-tabs"><span>提货地址：</span>{{detailsArr.pickUpContacts}}</div>
+										<div class="details-table-tabs"><span>联系电话：</span>{{detailsArr.pickUpTel}}</div>
 									</div>
 								</div>
-								<div class="details-table-tab">
+								<div v-if="(detailsArr.cclType != '1')" class="details-table-tab">
 									<div class="details-table-tab-title">清关服务</div>
 									<div class="details-table-details">
-										<div class="details-table-tabs"><span>送货地址：</span>王丽</div>
-										<div class="details-table-tabs"><span>送货联系人：</span>浙江省温州市江明区石峰大道112号</div>
-										<div class="details-table-tabs"><span>联系电话：</span>1874630273</div>
+										<div class="details-table-tabs"><span>送货地址：</span>{{detailsArr.deliveryAddress}}</div>
+										<div class="details-table-tabs"><span>送货联系人：</span>{{detailsArr.deliveryContacts}}</div>
+										<div class="details-table-tabs"><span>联系电话：</span>{{detailsArr.deliveryTel}}</div>
 									</div>
 								</div>
 							</div>
