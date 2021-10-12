@@ -94,7 +94,7 @@
 									<li @click="packageTypeClick(1)" :class="{radio_li_active: packageType == '1'}" class="radio-li">散货</li>
 									<li @click="packageTypeClick(2)" :class="{radio_li_active: packageType == '2'}" class="radio-li">托盘</li>
 								</ul>
-								<div v-for="(item,index) in trayDetail" :key="index" class="booking-form-line">
+								<div v-if="packageType == '2'" v-for="(item,index) in trayDetail" :key="index" class="booking-form-line">
 									<div class="booking-form-item">
 										<label class="booking-form-item-label"><span style="color: #F00;">*</span>托盘数量</label>
 										<div class="booking-form-item-content">
@@ -125,7 +125,7 @@
 									</div>
 									<img v-if="trayDetail.length > 1" @click="trayDeleteClick(index)" style="height: 22px;margin-left: 20px;margin-top: 4px;cursor: pointer;" alt="图片" src="./img/lajixiang.png" />
 								</div>
-								<button v-if="trayDetail.length != 10" @click="trayAddClick" class="box-btn btn-prprimary com-width100" style="margin-left: 30px;">添加</button>
+								<button v-if="(trayDetail.length != 10) && packageType == '2'" @click="trayAddClick" class="box-btn btn-prprimary com-width100" style="margin-left: 30px;">添加</button>
 							</div>
 							<div class="booking-item borderEFEFEF bakFFFFFF">
 								<div class="booking-item-name">其他服务</div>
@@ -448,19 +448,21 @@
 						this.$message.error('请输入品名')
 						return
 					}
-					for(var i = 0; i < this.trayDetail.length; i++){
-						if(this.trayDetail[i].trayNumber == ''){
-							this.$message.error('请输入托盘数量')
-							return
-						}else if(this.trayDetail[i].traySize == ''){
-							this.$message.error('请输入托盘尺寸长度')
-							return
-						}else if(this.trayDetail[i].trayWidth == ''){
-							this.$message.error('请输入托盘尺寸宽度')
-							return
-						}else if(this.trayDetail[i].trayHeight == ''){
-							this.$message.error('请输入托盘尺寸高度')
-							return
+					if(this.packageType == '2'){
+						for(var i = 0; i < this.trayDetail.length; i++){
+							if(this.trayDetail[i].trayNumber == ''){
+								this.$message.error('请输入托盘数量')
+								return
+							}else if(this.trayDetail[i].traySize == ''){
+								this.$message.error('请输入托盘尺寸长度')
+								return
+							}else if(this.trayDetail[i].trayWidth == ''){
+								this.$message.error('请输入托盘尺寸宽度')
+								return
+							}else if(this.trayDetail[i].trayHeight == ''){
+								this.$message.error('请输入托盘尺寸高度')
+								return
+							}
 						}
 					}
 					if(this.isPickUp == '2'){
@@ -583,6 +585,7 @@
 					this.chargedWeight = Math.ceil(this.bookingWeight/this.bookingCbm)
 					this.bookingCw = (parseInt(this.bookingCbm)*this.weightPrice) > this.bookingWeight ? (parseInt(this.bookingCbm)*this.weightPrice) : this.bookingWeight
 					var newLength = this.proportionArr.baseRatesList.length-1
+					
 					for(var i = 0; i < this.proportionArr.baseRatesList.length; i++){
 						if(this.chargedWeight < this.proportionArr.baseRatesList[i].vwr){
 							if(this.bookingWeight < 45){
@@ -612,6 +615,7 @@
 							}else if(this.bookingWeight < 500){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel3) > Number(this.proportionArr.baseRatesList[i].ratesLevel3)){
 									this.chargedKey = '300+'
+									
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel3
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
@@ -640,49 +644,49 @@
 							if(this.bookingWeight < 45){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesN) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel0)){
 									this.chargedKey = 'N'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesN
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesN
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 100){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel1) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel1)){
 									this.chargedKey = '45+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel1
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel1
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 300){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel2) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel2)){
 									this.chargedKey = '100+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel2
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel2
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 500){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel3) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel3)){
 									this.chargedKey = '300+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel3
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel3
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 1000){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel4) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel4)){
 									this.chargedKey = '500+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel4
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel4
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(1000 <= this.bookingWeight){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel5) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel5)){
 									this.chargedKey = '1000+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel5
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel5
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
 									this.chargedKey = 'M'
 								}
 							}
