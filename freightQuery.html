@@ -666,7 +666,7 @@
 						pol: this.pol,
 						twoLetterCode: codeArr.toString(),
 						vwr: isNaN(Math.ceil(parseInt(this.weight)/parseInt(this.volume))) ? '' : Math.ceil(parseInt(this.weight)/parseInt(this.volume)),
-						chargedWeight: this.chargedWeight
+						chargedWeight: chargedWeight
 					}
 					data = toData(data)
 					axios({
