@@ -276,7 +276,7 @@
 									<div class="booking-price-item-name">国内段</div>
 									<div class="booking-price-item-list">
 										<div>空运费</div>
-										<div><span style="margin-right: 30px;">{{chargedJiaqian}}*{{chargedWeight}}</span><span>￥{{chargedJiaqian*chargedWeight}}</span></div>
+										<div><span style="margin-right: 30px;">{{chargedJiaqian}}*{{bookingCw}}</span><span>￥{{chargedJiaqian*bookingCw}}</span></div>
 									</div>
 									<div v-for="(item,index) in newOtherFeeMap" :key="index" class="booking-price-item-list">
 										<div>{{item.feesName}}</div>
@@ -506,7 +506,7 @@
 					var jq = {
 						expenseName: '空运费',
 						price: this.chargedJiaqian,
-						quantity: this.chargedWeight,
+						quantity: this.bookingCw,
 						currency: '1'
 					}
 					orderPriceList.push(jq)
@@ -717,7 +717,7 @@
 					for(var i = 0; i < this.newOtherFeeMap.length; i++){
 						this.totolPrice += Number(this.newOtherFeeMap[i].fees)
 					}
-					this.totolPrice = this.totolPrice + this.chargedJiaqian * this.chargedWeight
+					this.totolPrice = this.totolPrice + this.chargedJiaqian * this.bookingCw
 				},
 				//品名
 				cargoTypeClick(val){

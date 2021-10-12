@@ -72,7 +72,7 @@
 					</div>
 					<div class="order-details-table">
 						<div class="order-details-list">
-							<div class="details-table-list" style="margin-top: 0;">
+							<div v-if="detailsArr.status == '5'" class="details-table-list" style="margin-top: 0;">
 								<div class="table-list-title-arr-title">非常抱歉，您预定的仓位暂无，已为您推荐了其他方案，请尽快确认</div>
 								<div class="color9995" style="color: #999999;font-size: 14px;padding: 20px 20px 0 20px;">订舱信息</div>
 								<div class="list-route-icon">
@@ -125,7 +125,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="details-table-list">
+							<div  v-if="detailsArr.status != '5'" class="details-table-list" style="margin-top: 0;">
 								<div class="table-list-title-arr">
 									<div class="list-title-arr-left">
 										<div>上海浦东机场(PVG)</div>

@@ -27,6 +27,8 @@ const serviceApi = {
 	searchByPage: publicWeb+'/t-airport/noAuth/searchByPage',
 	//二字代码查询分页
 	twoCodeSearchByPage: publicWeb+'/es/noAuth/getAirCompany',
+	//二字代码查询分页
+	companySearchByPage: publicWeb+'/t-air-company/noAuth/searchByPage',
 	//航线优选接口
 	searchPreferred: publicWeb+'/t-airline-preferred/noAuth/searchPreferAirline',
 	//手机短信
