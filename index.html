@@ -48,8 +48,14 @@
 				<div class="banner-carousel">
 					<div class="swiper-container lunbo-swiper" style="height: 380px;overflow: hidden;">
 					    <div class="swiper-wrapper">
-					    	${bannerContent}
+					    	<!-- ${bannerContent} -->
+							<!-- <div class="swiper-slide banner-wrapper">
+								<a style="background-image: url(./img/banner1.png); background-repeat: no-repeat; background-size: 100% 100%; background-position: center center; display: block; width: 100%; height: 380px;"></a>
+							</div> -->
 						</div>
+						<!-- 如果需要导航按钮 -->
+						<div class="swiper-button-prev swiper-button-prev1 hide"></div>
+						<div class="swiper-button-next swiper-button-next1 hide"></div>
 					    <!-- 如果需要分页器 -->
 					    <div class="swiper-pagination"></div>
 					</div>
@@ -236,8 +242,8 @@
 							</div>
 						</div>
 						<!-- 如果需要导航按钮 -->
-						<div class="swiper-button-prev"></div>
-						<div class="swiper-button-next"></div>
+						<div class="swiper-button-prev swiper-button-prev2"></div>
+						<div class="swiper-button-next swiper-button-next2"></div>
 					</div>
 				</div>
 			</div>
@@ -667,28 +673,43 @@
 				this.muSearchByPage()
 			},
 			mounted() {
-				new Swiper('.lunbo-swiper', {
+				var mySwiper = new Swiper('.lunbo-swiper', {
 					loop: true,
 					autoplay: true,
-					delay: 5000,
+					delay: 1000,
+					autoplay: {
+						pauseOnMouseEnter: true
+					},
+					// 如果需要前进后退按钮
+					navigation: {
+						nextEl: '.swiper-button-next1',
+						prevEl: '.swiper-button-prev1',
+					},
 					// 如果需要分页器
 					pagination: {
 						el: '.swiper-pagination',
 						clickable: true,
 					}
 				})
+				mySwiper.el.onmouseover = function(){
+					mySwiper.autoplay.stop();
+					mySwiper.navigation.$nextEl.removeClass('hide');
+					mySwiper.navigation.$prevEl.removeClass('hide');
+				}
+				mySwiper.el.onmouseout = function(){
+					mySwiper.autoplay.start();
+					mySwiper.navigation.$nextEl.addClass('hide');
+					mySwiper.navigation.$prevEl.addClass('hide');
+				}
 				var _this = this
-				setTimeout(() => {
-					_this.isShowBanner = true
-				}, 3000)
 				new Swiper('.jingpin-swiper', {
 					loop: false,
 					slidesPerView: 3,
 					spaceBetween: 20,
 					// 如果需要前进后退按钮
 					navigation: {
-						nextEl: '.swiper-button-next',
-						prevEl: '.swiper-button-prev',
+						nextEl: '.swiper-button-next2',
+						prevEl: '.swiper-button-prev2',
 					},
 				})
 				document.getElementById('cityShowId').style.visibility = 'visible'

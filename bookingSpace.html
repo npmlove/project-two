@@ -211,7 +211,7 @@
 										<div class="booking-form-item">
 											<label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
 											<div class="booking-form-item-content">
-												<input v-model="deliveryTel" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="11" placeholder="请填写联系电话" class="booking-form-input" type="text" style="width: 450px;"/>
+												<input v-model="deliveryTel" maxlength="20" placeholder="请填写联系电话" class="booking-form-input" type="text" style="width: 450px;"/>
 											</div>
 										</div>
 									</div>
@@ -484,7 +484,7 @@
 						this.pickUpContacts = ''
 						this.pickUpTel = ''
 					}
-					if(this.isPickUp != '1'){
+					if(this.cclType != '1'){
 						if(this.deliveryAddress == ''){
 							this.$message.error('请输入清关服务送货地址')
 							return
@@ -493,9 +493,6 @@
 							return
 						}else if(this.deliveryTel == ''){
 							this.$message.error('请输入清关服务联系电话')
-							return
-						}else if(!reg.test(this.deliveryTel)){
-							this.$message.error('请输入有效的清关服务联系电话')
 							return
 						}
 					} else {

@@ -812,7 +812,9 @@
 				//获取二字码
 				initTwoCode() {
 					var jsonData = {
-						keyWord: this.airCompanyCode
+						keyWord: this.airCompanyCode,
+						pageNum: 1,
+						pageSize: 10
 					}
 					jsonData = toData(jsonData)
 					axios({

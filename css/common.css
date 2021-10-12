@@ -151,6 +151,8 @@
 	right: 0;
 	left: 0;
 	transform: none;
+	height: 30px;
+	align-items: center;
 }
 
 .banner-content .swiper-pagination-bullets .swiper-pagination-bullet {
@@ -788,7 +790,9 @@
 }
 
 .boutique-swiper .swiper-button-prev,
-.boutique-swiper .swiper-container-rtl .swiper-button-next {
+.boutique-swiper .swiper-container-rtl .swiper-button-next,
+.banner-carousel .swiper-button-prev,
+.banner-carousel .swiper-container-rtl .swiper-button-next{
 	background-image: url(../img/botton_prev.png);
 	width: 60px;
 	height: 60px;
@@ -797,12 +801,16 @@
 }
 
 .boutique-swiper .swiper-button-next:after,
-.boutique-swiper .swiper-container-rtl .swiper-button-prev:after {
+.boutique-swiper .swiper-container-rtl .swiper-button-prev:after,
+.banner-carousel .swiper-button-next:after,
+.banner-carousel .swiper-container-rtl .swiper-button-prev:after{
 	content: ' ';
 }
 
 .boutique-swiper .swiper-button-next,
-.boutique-swiper .swiper-container-rtl .swiper-button-prev {
+.boutique-swiper .swiper-container-rtl .swiper-button-prev,
+.banner-carousel .swiper-button-next,
+.banner-carousel .swiper-container-rtl .swiper-button-prev{
 	background-image: url(../img/button_next.png);
 	width: 60px;
 	height: 60px;
@@ -811,7 +819,9 @@
 }
 
 .boutique-swiper .swiper-button-prev:after,
-.boutique-swiper .swiper-container-rtl .swiper-button-next:after {
+.boutique-swiper .swiper-container-rtl .swiper-button-next:after,
+.banner-carousel  .swiper-button-prev:after,
+.banner-carousel .swiper-container-rtl .swiper-button-next:after,{
 	content: ' ';
 }
 

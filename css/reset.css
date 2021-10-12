@@ -468,3 +468,9 @@ textarea::-webkit-input-placeholder {
 .el-tabs__nav .el-tabs__item:hover{
 	color: #2273CB !important;
 }
+.swiper-container .hide{
+  opacity:0;
+}
+.swiper-button-prev:after, .swiper-container-rtl .swiper-button-next:after{
+	content: '';
+}
