@@ -218,7 +218,8 @@
 				},
 				//立即查询
 				submitQuery() {
-					if(!this.trackSearchInput || (this.trackSearchInput != 11)){
+					if(!this.trackSearchInput || (this.trackSearchInput.length != 11)){
+						this.$message.error('请输入有效的运单号')
 						return
 					}
 					this.initData()
