@@ -512,14 +512,16 @@
 						currency: '1'
 					}
 					orderPriceList.push(jq)
-					for(var q = 0; q < this.newOtherFeeMap.length; q++){
-						var mapJson = {
-							expenseName: this.newOtherFeeMap[q].feesName,
-							price: this.newOtherFeeMap[q].fees,
-							quantity: '1',
-							currency: '1'
+					if(this.newOtherFeeMap){
+						for(var q = 0; q < this.newOtherFeeMap.length; q++){
+							var mapJson = {
+								expenseName: this.newOtherFeeMap[q].feesName,
+								price: this.newOtherFeeMap[q].fees,
+								quantity: '1',
+								currency: '1'
+							}
+							orderPriceList.push(mapJson)
 						}
-						orderPriceList.push(mapJson)
 					}
 					if(this.customsType == '2'){
 						var bg = {
