@@ -55,7 +55,7 @@
 										<label class="booking-form-item-label"><span style="color: #F00;">*</span>件数</label>
 										<div class="booking-form-item-content">
 											<!-- <div class="booking-form-tips-left">PCS</div> -->
-											<input v-model="bookingPiece" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="4" class="booking-form-input" type="text" />
+											<input v-model="bookingPiece" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="9" class="booking-form-input" type="text" />
 											<div class="booking-form-tips-right">PCS</div>
 										</div>
 									</div>
@@ -69,7 +69,7 @@
 									<div class="booking-form-item">
 										<label class="booking-form-item-label"><span style="color: #F00;">*</span>体积</label>
 										<div class="booking-form-item-content">
-											<input v-model="bookingCbm" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="4" class="booking-form-input" type="text" />
+											<input v-model="bookingCbm" @blur="bookingCbmBlur" onkeyup="value=value.replace(/[^\d\.]/g, '')" maxlength="9" style="width: 120px;" class="booking-form-input" type="text" />
 											<div class="booking-form-tips-right">CBM</div>
 										</div>
 									</div>
@@ -423,8 +423,14 @@
 				},
 				bookingCbm() {
 					if(this.bookingCbm && this.bookingWeight){
-						this.huowuDanjia()
-						this.feiyongJisuan()
+						var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
+						if(!reg.test(this.bookingCbm) && (this.bookingCbm != '')){
+							this.$message.error('体积最大输入四位正整数，小数保留四位')
+							this.chargedJiaqian = ''
+						}else{
+							this.huowuDanjia()
+							this.feiyongJisuan()
+						}
 					}else{
 						this.chargedWeight = ''
 						this.chargedValue = ''
@@ -581,6 +587,12 @@
 							window.location.href = './orderList.html'
 						}
 					})
+				},
+				bookingCbmBlur() {
+					var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
+					if(!reg.test(this.bookingCbm) && (this.bookingCbm != '')){
+						this.$message.error('体积最大输入四位正整数，小数保留四位')
+					}
 				},
 				// 货物单价
 				huowuDanjia() {
