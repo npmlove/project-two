@@ -741,8 +741,10 @@
 							this.newOtherFeeMap = JSON.parse(this.otherFeeMap[key])
 						}
 					}
-					for(var i = 0; i < this.newOtherFeeMap.length; i++){
-						this.totolPrice += Number(this.newOtherFeeMap[i].fees)
+					if(this.newOtherFeeMap){
+						for(var i = 0; i < this.newOtherFeeMap.length; i++){
+							this.totolPrice += Number(this.newOtherFeeMap[i].fees)
+						}
 					}
 					this.totolPrice = this.totolPrice + this.chargedJiaqian * this.bookingCw
 				},
