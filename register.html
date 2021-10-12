@@ -221,6 +221,7 @@
 						var data = data.data
 						if(data.code == 200){
 							localStorage.setItem('wxOpenId',data.data.tportalUser.wechatOpenId)
+							localStorage.setItem('tokenId',data.data.tokenId)
 							axios({
 								method: 'get',
 								url: webIp+serviceApi.userUserInfo+'?openId='+data.data.tportalUser.wechatOpenId

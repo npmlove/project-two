@@ -102,7 +102,8 @@
 						<div v-if="typeImg" class="login-title">微信扫码登录/注册</div>
 						<div v-if="!typeImg" class="login-title">账号登录</div>
 						<div v-if="typeImg" class="login-content">
-							<div class="qcode"><img alt="图片" :src="imgQrCode" /></div>
+							<div v-if="shixiao" class="qcode"><img alt="图片" :src="imgQrCode" /></div>
+							<div v-else class="qcode" style="width: 150px;height: 150px;text-align: center;font-size: 0;margin: 0 auto;line-height: 150px;background-color: rgba(153, 153, 153, 0.05);border-radius: 10px;"><img @click="shuaxinClick" alt="图片" src="./img/shuaxin.png" style="width: 42px;height: 42px;cursor: pointer;"/></div>
 							<div class="sao">请使用微信扫描二维码</div>
 							<div class="gong">关注“17订舱”公众号</div>
 						</div>
@@ -156,7 +157,10 @@
 				errorText: '请输入',
 				openId: '',
 				tel: '',
-				password: ''
+				password: '',
+				shixiao: true,
+				yzmTime: 60,
+				yzmInterval: null,
 			},
 			created() {
 				this.uuid = localStorage.getItem('dcUuid')
@@ -172,8 +176,26 @@
 					this.initQrCode()
 				},60000)
 				this.initWebSocket()
+				this.daojishi()
 			},
 			methods: {
+				shuaxinClick() {
+					this.shixiao = true
+					this.initWebSocket()
+					this.daojishi()
+				},
+				daojishi() {
+					this.yzmInterval = setInterval(() => {
+						if (this.yzmTime > 0 && this.yzmTime <= 60) {
+							this.yzmTime --
+						} else {
+							this.yzmTime = 60
+							this.shixiao = false
+							clearInterval(this.yzmInterval)
+							this.yzmInterval = null;
+						}
+					}, 1000)
+				},
 				submitClick() {
 					var reg = /^(1[3456789])\d{9}$/
 					var regpass = /^[0-9A-Za-z]{6,20}$/ 
@@ -236,7 +258,17 @@
 						window.location.href = './register.html?openId='+data.openId
 					}else if(data.type == '1'){
 						localStorage.setItem('wxOpenId',data.openId)
-						window.location.href = './index.html'
+						axios({
+							method: 'get',
+							url: webIp+serviceApi.userUserInfo+'?openId='+data.openId
+						}).then((user) => {
+							var user = user.data
+							if(user.code == 200){
+								localStorage.setItem('userInfo',JSON.stringify(user.data))
+								localStorage.setItem('tokenId',user.data.tokenId)
+								window.location.href = './index.html'
+							}
+						})
 					}
 				},
 				send: function () {
