@@ -392,7 +392,8 @@
 				newOtherFeeMap: [],
 				totolPrice: '',
 				dateTabActive: '',
-				bookingCw: ''
+				bookingCw: '',
+				hangxianId: ''
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -417,6 +418,7 @@
 						this.chargedValue = ''
 						this.chargedKey = ''
 						this.chargedJiaqian = ''
+						this.hangxianId = ''
 					}
 				},
 				bookingCbm() {
@@ -428,6 +430,7 @@
 						this.chargedValue = ''
 						this.chargedKey = ''
 						this.chargedJiaqian = ''
+						this.hangxianId = ''
 					}
 				}
 			},
@@ -559,7 +562,7 @@
 					}
 					
 					var json = {
-						airlineAgentId: this.airlineIdA,
+						airlineAgentId: this.hangxianId,
 						order: order,
 						orderPriceList: orderPriceList
 					}
@@ -589,49 +592,60 @@
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesN) > Number(this.proportionArr.baseRatesList[i].ratesLevel0)){
 									this.chargedKey = 'N'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesN
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdN
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 100){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel1) > Number(this.proportionArr.baseRatesList[i].ratesLevel1)){
 									this.chargedKey = '45+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel1
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel1
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 300){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel2) > Number(this.proportionArr.baseRatesList[i].ratesLevel2)){
 									this.chargedKey = '100+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel2
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel2
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 500){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel3) > Number(this.proportionArr.baseRatesList[i].ratesLevel3)){
 									this.chargedKey = '300+'
-									
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel3
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel3
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 1000){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel4) > Number(this.proportionArr.baseRatesList[i].ratesLevel4)){
 									this.chargedKey = '500+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel4
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel4
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(1000 <= this.bookingWeight){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel5) > Number(this.proportionArr.baseRatesList[i].ratesLevel5)){
 									this.chargedKey = '1000+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel5
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel5
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}
@@ -642,48 +656,60 @@
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesN) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel0)){
 									this.chargedKey = 'N'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesN
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdN
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 100){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel1) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel1)){
 									this.chargedKey = '45+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel1
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel1
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 300){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel2) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel2)){
 									this.chargedKey = '100+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel2
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel2
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 500){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel3) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel3)){
 									this.chargedKey = '300+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel3
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel3
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingWeight < 1000){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel4) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel4)){
 									this.chargedKey = '500+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel4
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel4
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(1000 <= this.bookingWeight){
 								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel5) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel5)){
 									this.chargedKey = '1000+'
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel5
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel5
 								}else{
 									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}
