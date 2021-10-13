@@ -276,7 +276,7 @@
 									<div class="booking-price-item-name">国内段</div>
 									<div class="booking-price-item-list">
 										<div>空运费</div>
-										<div><span style="margin-right: 30px;">{{chargedJiaqian}}*{{bookingCw}}</span><span>￥{{chargedJiaqian*bookingCw}}</span></div>
+										<div><span style="margin-right: 30px;">{{chargedJiaqian}}*{{bookingCw}}</span><span>￥{{Math.ceil(chargedJiaqian*bookingCw)}}</span></div>
 									</div>
 									<div v-for="(item,index) in newOtherFeeMap" :key="index" class="booking-price-item-list">
 										<div>{{item.feesName}}</div>
@@ -289,8 +289,8 @@
 								</div>
 								<div class="booking-price-total">
 									<div>CNY</div>
-									<div v-if="customsType == '2'">￥{{totolPrice+100}}</div>
-									<div v-else>￥{{totolPrice}}</div>
+									<div v-if="customsType == '2'">￥{{Math.ceil(totolPrice)+100}}</div>
+									<div v-else>￥{{Math.ceil(totolPrice)}}</div>
 								</div>
 							</div>
 							<!-- <div class="booking-price borderEFEFEF bakFFFFFF">
@@ -585,6 +585,8 @@
 						var data = data.data
 						if(data.code == 200){
 							window.location.href = './orderList.html'
+						}else {
+							this.$message.error(data.message)
 						}
 					})
 				},
@@ -597,7 +599,7 @@
 				// 货物单价
 				huowuDanjia() {
 					this.chargedWeight = Math.ceil(this.bookingWeight/this.bookingCbm)
-					this.bookingCw = (parseInt(this.bookingCbm)*this.weightPrice) > this.bookingWeight ? (parseInt(this.bookingCbm)*this.weightPrice) : this.bookingWeight
+					this.bookingCw = (this.bookingCbm*this.weightPrice) > this.bookingWeight ? Math.ceil(this.bookingCbm*this.weightPrice) : Math.ceil(this.bookingWeight)
 					var newLength = this.proportionArr.baseRatesList.length-1
 					
 					for(var i = 0; i < this.proportionArr.baseRatesList.length; i++){
