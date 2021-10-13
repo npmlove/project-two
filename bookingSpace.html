@@ -271,7 +271,7 @@
 									<div>时效：{{proportionArr.shortDuration}}天</div>
 								</div>
 							</div>
-							<div v-if="chargedJiaqian" class="booking-price borderEFEFEF bakFFFFFF">
+							<div v-if="chargedJiaqian == '0' || chargedJiaqian" class="booking-price borderEFEFEF bakFFFFFF">
 								<div class="booking-price-item">
 									<div class="booking-price-item-name">国内段</div>
 									<div class="booking-price-item-list">
@@ -306,7 +306,7 @@
 									<div>$100</div>
 								</div>
 							</div> -->
-							<div v-if="chargedJiaqian">
+							<div v-if="chargedJiaqian == '0' || chargedJiaqian">
 								<button @click="submitClick" style="width: 100%;font-size: 18px;" class="box-btn btn-prprimary com-height50">提交订单</button>
 							</div>
 						</div>
