@@ -30,15 +30,15 @@ const serviceApi = {
 	//微信公众号获取二维码
 	noAuthQrCode: publicWeb+'/noAuth/getQRCode',
 	//注册
-	userRegister: publicWeb+'/t-portal-user/register',
+	userRegister: publicWeb+'/t-portal-user/noAuth/register',
 	//获取用户基本信息
 	userUserInfo: publicWeb+'/t-portal-user/getUserInfo',
 	//登录
-	userLogin: publicWeb+'/t-portal-user/login',
+	userLogin: publicWeb+'/t-portal-user/noAuth/login',
 	//修改用户信息
 	userUpdateUserInfo: publicWeb+'/t-portal-user/updateUserInfo',
 	//验证码验证
-	userVerification: publicWeb+'/t-portal-user/verification',
+	userVerification: publicWeb+'/t-portal-user/noAuth/verification',
 	//运价查询
 	noAuthSearchBaseRates: publicWeb+'/es/noAuth/searchBaseRates',
 	//每周最低运价

@@ -801,7 +801,10 @@
 				initUserInfo(){
 					axios({
 						method: 'get',
-						url: webIp+serviceApi.userUserInfo+'?openId='+this.openId
+						url: webIp+serviceApi.userUserInfo+'?openId='+this.openId,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){

@@ -167,7 +167,8 @@
 				verificationCode: '',
 				verificationType: 3,
 				password: '',
-				newPassword: ''
+				newPassword: '',
+				tokenId: ''
 			},
 			mounted() {
 				
@@ -200,6 +201,7 @@
 							var data = data.data
 							if(data.code == 200){
 								this.isForm = false
+								this.tokenId = data.data.tokenId
 							}else{
 								this.isError = true
 								this.errorText = data.message
@@ -223,7 +225,10 @@
 						axios({
 							method: 'post',
 							url: webIp+serviceApi.userUpdateUserInfo,
-							data: data
+							data: data,
+							headers: {
+								'tokenId': this.tokenId
+							}
 						}).then((data) =>{
 							var data = data.data
 							if(data.code == 200){
