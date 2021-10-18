@@ -243,8 +243,8 @@
 									<div class="booking-price-item-name">国内段</div>
 									<div v-for="(item,index) in detailsArr.orderPriceList" class="booking-price-item-list">
 										<div>{{item.expenseName}}</div>
-										<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{detailsArr.bookingPrice}}*{{detailsArr.bookingCw}}</span><span>￥{{detailsArr.bookingPrice*detailsArr.bookingCw}}</span></div>
-										<div v-else>￥{{item.price}}</span></div>
+										<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+										<div v-else><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
 									</div>
 								</div>
 								<div class="booking-price-total">
