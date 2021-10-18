@@ -4,7 +4,7 @@ var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境
 
 
 //开发环境
-// var webIp = 'https://17dc.shenghuoq.com'
+// var webIp = 'http://10.8.0.14:6679'
 // var webIp = 'http://10.8.0.1'
 // var publicWeb = '/back/dcPortal/faw'
 
@@ -54,7 +54,9 @@ const serviceApi = {
 	//统计分类的订单列表数目
 	orderCountList: publicWeb+'/t-order/countList',
 	//查询订单详情
-	orderSearchDetail: publicWeb+'/t-order/searchDetail'
+	orderSearchDetail: publicWeb+'/t-order/searchDetail',
+	//执行订单
+	orderExecuteOrder: publicWeb+'/t-order/executeOrder'
 }
 
 

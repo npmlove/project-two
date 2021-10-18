@@ -817,6 +817,8 @@
 						if(data.code == 200){
 							this.proportionArr = data.data
 							this.otherFeeMap = data.data.otherFeeMap
+						}else{
+							this.$message.error(data.message)
 						}
 					})
 				},

@@ -20,6 +20,14 @@
 		<script src="./js/vue.js"></script>
 		<script src="./js/axios.min.js"></script>
 		<script src="./js/element-ui.js"></script>
+		<style>
+			.orderOptionsList{
+				border-bottom: 1px dashed #EFEFEF;
+			}
+			.orderOptionsList:last-child{
+				border-bottom: 0;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="app" style="font-size: 0;">
@@ -89,58 +97,63 @@
 								<div class="table-list-title-arr-title">非常抱歉，您预定的仓位暂无，已为您推荐了其他方案，请尽快确认</div>
 								<div class="color9995" style="color: #999999;font-size: 14px;padding: 20px 20px 0 20px;">订舱信息</div>
 								<div class="list-route-icon">
-									<img style="opacity: 0.5;" alt="tupian" src="./img/routeIcon.png" />
-									<div class="list-route-icon-title color9995">东方航空</div>
-									<div class="list-route-icon-date color9995">2021-09-12  周六</div>
+									<img v-if="detailsArr.logoPath" style="opacity: 0.5;" alt="tupian" :src="detailsArr.logoPath" />
+									<div class="list-route-icon-title color9995">{{detailsArr.airCompanyName}}</div>
+									<div v-if="detailsArr.dow == '1'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周一</div>
+									<div v-if="detailsArr.dow == '2'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周二</div>
+									<div v-if="detailsArr.dow == '3'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周三</div>
+									<div v-if="detailsArr.dow == '4'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周四</div>
+									<div v-if="detailsArr.dow == '5'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周五</div>
+									<div v-if="detailsArr.dow == '6'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周六</div>
+									<div v-if="detailsArr.dow == '7'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周日</div>
 								</div>
 								<div class="list-arr-route border-btm-da">
 									<div class="list-arr-route-yitong">
 										<div class="list-arr-route-neirong">
-											<div class="color9995">PVG</div>
-											<div class="color9995">上海浦东国际机场</div>
+											<div class="color9995">{{detailsArr.pol}}</div>
+											<div class="color9995">{{detailsArr.polName}}</div>
 										</div>
 										<div class="list-arr-route-neirong">
-											<div class="color9995">SGN</div>
-											<div class="color9995">胡志明机场</div>
-										</div>
-										<div class="list-arr-route-neirong">
-											<div class="color9995">LAX</div>
-											<div class="color9995">洛杉矶国际机场</div>
+											<div class="color9995">{{detailsArr.pod}}</div>
+											<div class="color9995">{{detailsArr.podName}}</div>
 										</div>
 									</div>
-									<div class="list-arr-route-jiaqian color9995">单价：30元/kg</div>
+									<div class="list-arr-route-jiaqian color9995">单价：{{detailsArr.bookingPrice}}元/kg</div>
 								</div>
 								<div class="tuijianhangxian">推荐航线</div>
-								<div class="list-route-icon">
-									<img alt="tupian" src="./img/routeIcon.png" />
-									<div class="list-route-icon-title">东方航空</div>
-									<div v-if="detailsArr.dow == '1'" class="list-route-icon-date color227">2021-09-12  周六</div>
-									<div v-if="detailsArr.dow == '2'" class="list-route-icon-date color227">2021-09-12  周六</div>
-									<div v-if="detailsArr.dow == '3'" class="list-route-icon-date color227">2021-09-12  周六</div>
-									<div v-if="detailsArr.dow == '4'" class="list-route-icon-date color227">2021-09-12  周六</div>
-									<div v-if="detailsArr.dow == '5'" class="list-route-icon-date color227">2021-09-12  周六</div>
-									<div v-if="detailsArr.dow == '6'" class="list-route-icon-date color227">2021-09-12  周六</div>
-									<div v-if="detailsArr.dow == '7'" class="list-route-icon-date color227">2021-09-12  周六</div>
-								</div>
-								<div class="list-arr-route">
-									<div class="list-arr-route-yitong">
-										<div class="list-arr-route-neirong">
-											<div>PVG</div>
-											<div>上海浦东国际机场</div>
-										</div>
-										<div class="list-arr-route-neirong">
-											<div>SGN</div>
-											<div>胡志明机场</div>
-										</div>
-										<div class="list-arr-route-neirong">
-											<div>LAX</div>
-											<div>洛杉矶国际机场</div>
-										</div>
+								<div class="orderOptionsList" v-for="(item,index) in orderOptionsList" :key="index">
+									<div class="list-route-icon">
+										<img v-if="item.logoPath" alt="tupian" :src="item.logoPath" />
+										<div class="list-route-icon-title">{{item.airCompanyName}}</div>
+										<div v-if="item.dow == '1'" class="list-route-icon-date color227">{{item.departureDate}}  周一</div>
+										<div v-if="item.dow == '2'" class="list-route-icon-date color227">{{item.departureDate}}  周二</div>
+										<div v-if="item.dow == '3'" class="list-route-icon-date color227">{{item.departureDate}}  周三</div>
+										<div v-if="item.dow == '4'" class="list-route-icon-date color227">{{item.departureDate}}  周四</div>
+										<div v-if="item.dow == '5'" class="list-route-icon-date color227">{{item.departureDate}}  周五</div>
+										<div v-if="item.dow == '6'" class="list-route-icon-date color227">{{item.departureDate}}  周六</div>
+										<div v-if="item.dow == '7'" class="list-route-icon-date color227">{{item.departureDate}}  周日</div>
 									</div>
-									<div class="list-tuijian-feiyong">
-										<div class="yunfei">空运费：￥500</div>
-										<div class="danjia">单价：30元/kg</div>
-										<button class="box-btn btn-prprimary com-height50" style="font-size: 18px;padding: 0 20px;">选用该方案</button>
+									<div class="list-arr-route" style="position: relative;">
+										<div class="list-arr-route-yitong">
+											<div class="list-arr-route-neirong">
+												<div>{{detailsArr.pol}}</div>
+												<div>{{detailsArr.polName}}</div>
+											</div>
+											<div class="list-arr-route-neirong">
+												<div>{{detailsArr.pod}}</div>
+												<div>{{detailsArr.podName}}</div>
+											</div>
+										</div>
+										<div v-if="item.fullLeg.split(',').length > 2" style="position: absolute;top: 0;left: 142px;">
+											<el-tooltip class="item" effect="dark" :content="item.fullLeg" placement="top-start">
+												<a>中转</a>
+											</el-tooltip>
+										</div>
+										<div class="list-tuijian-feiyong" style="margin-top: -55px;">
+											<div class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</div>
+											<div class="danjia" style="margin-bottom: 15px;">单价：{{item.bookingPrice}}元/kg</div>
+											<button @click="submitBtn('方案',item)" class="box-btn btn-prprimary com-height50" style="font-size: 18px;padding: 0 20px;">选用该方案</button>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -164,7 +177,7 @@
 									<div v-if="detailsArr.dow == '6'" class="list-route-icon-date">{{detailsArr.departureDate}}  周六</div>
 									<div v-if="detailsArr.dow == '7'" class="list-route-icon-date">{{detailsArr.departureDate}}  周日</div>
 								</div>
-								<div class="list-arr-route">
+								<div class="list-arr-route" style="position: relative;">
 									<div class="list-arr-route-yitong">
 										<div class="list-arr-route-neirong">
 											<div>{{detailsArr.pol}}</div>
@@ -174,6 +187,11 @@
 											<div>{{detailsArr.pod}}</div>
 											<div>{{detailsArr.podName}}</div>
 										</div>
+									</div>
+									<div v-if="detailsArr.legCount > 1" style="position: absolute;top: 0;left: 142px;">
+										<el-tooltip class="item" effect="dark" :content="detailsArr.fullLeg" placement="top-start">
+											<a>中转</a>
+										</el-tooltip>
 									</div>
 									<div class="list-arr-route-jiaqian">单价：{{detailsArr.bookingPrice}}元/kg</div>
 								</div>
@@ -235,7 +253,7 @@
 								</div>
 							</div>
 							<div style="margin-top: 20px;">
-								<button v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
+								<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
 							</div>
 						</div>
 					</div>
@@ -271,8 +289,9 @@
 				menuIndex: 0,
 				orderId: '',
 				detailsArr: {},
-				statusSubmit: [17,37,33,31,29,5,9,27],
-				totalArOrgn: {}
+				statusSubmit: [5,9,3],
+				totalArOrgn: {},
+				orderOptionsList: []
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -282,6 +301,81 @@
 				this.orderSearchDetail()
 			},
 			methods: {
+				submitBtn(type,item) {
+					if(type == '方案'){
+						console.log(item)
+						var data = {
+							order: {
+								activityCodeDoing: this.detailsArr.activityCodeDoing,
+								activityCodeDone: this.detailsArr.activityCodeDone,
+								status: this.detailsArr.status,
+								id: this.detailsArr.id,
+								agentId: item.agentId,
+								agentName: item.agentName,
+								airCompanyCode: item.airCompanyCode,
+								airCompanyName: item.airCompanyName,
+								bookingPrice: item.bookingPrice,
+								bubblePoint: item.bubblePoint,
+								departureDate: item.departureDate,
+								dow: item.dow,
+								flightNo: item.flightNo,
+								fullLeg: item.fullLeg,
+								orderId: item.orderId,
+								pod: item.pod,
+								pol: item.pol,
+								sortNo: item.sortNo
+							},
+							ctrlMap: {
+								ctrlFlag: 1
+							}
+						}
+						axios({
+							method: 'post',
+							url: webIp+serviceApi.orderExecuteOrder,
+							data: data,
+							headers: {
+								'tokenId': localStorage.getItem('tokenId')
+							}
+						}).then((data) =>{
+							var data = data.data
+							if(data.code == 200){
+								window.location.href = './orderList.html'
+							}else{
+								this.$message.error(data.message)
+							}
+						})
+					}else if(type == '取消'){
+						var data = {
+							order: {
+								activityCodeDoing: this.detailsArr.activityCodeDoing,
+								activityCodeDone: this.detailsArr.activityCodeDone,
+								status: this.detailsArr.status,
+								id: this.detailsArr.id
+							},
+							ctrlMap: {
+								ctrlFlag: 2
+							}
+						}
+						axios({
+							method: 'post',
+							url: webIp+serviceApi.orderExecuteOrder,
+							data: data,
+							headers: {
+								'tokenId': localStorage.getItem('tokenId')
+							}
+						}).then((data) =>{
+							var data = data.data
+							if(data.code == 200){
+								window.location.href = './orderList.html'
+							}else{
+								this.$message.error(data.message)
+							}
+						})
+					}
+				},
+				
+				
+				
 				//获取详情
 				orderSearchDetail() {
 					axios({
@@ -294,6 +388,9 @@
 						var data = data.data
 						if(data.code == 200){
 							this.detailsArr = data.data
+							if(data.data.orderOptionsList){
+								this.orderOptionsList = data.data.orderOptionsList
+							}
 							this.totalArOrgn = JSON.parse(this.detailsArr.totalArOrgn)[0]
 						}
 					})
@@ -310,3 +407,4 @@
 		})
 	</script>
 </html>
+
