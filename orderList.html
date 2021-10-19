@@ -177,7 +177,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
 												</div>
 											</div>
 										</li>
@@ -234,7 +234,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
 												</div>
 											</div>
 										</li>
@@ -291,7 +291,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
 												</div>
 											</div>
 										</li>
@@ -357,7 +357,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
 												</div>
 											</div>
 										</li>
@@ -414,7 +414,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
 												</div>
 											</div>
 										</li>
@@ -471,7 +471,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
 												</div>
 											</div>
 										</li>
@@ -528,7 +528,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
 												</div>
 											</div>
 										</li>
@@ -585,7 +585,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
 												</div>
 											</div>
 										</li>
@@ -642,7 +642,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
 												</div>
 											</div>
 										</li>
@@ -743,6 +743,9 @@
 							}
 						}
 						price = price.substring(0, price.length - 1)
+						return price
+					}else{
+						var price = 0
 						return price
 					}
 				},
