@@ -59,36 +59,68 @@
 						<div>订单详情</div>
 						<div>订单号：{{detailsArr.orderNo}}</div>
 					</div>
-					<div class="order-details-step">
-						<div :class="{'order-details-step-active': detailsArr.status > 1 ? true : false, 'order-details-step-check': detailsArr.status == 1 ? true : false,}" class="order-details-step-btn">
+					<div v-if="detailsArr.status != '39'" class="order-details-step">
+						<div :class="{'order-details-step-active': status > 1 ? true : false, 'order-details-step-check': status == 1 ? true : false,}" class="order-details-step-btn">
+							<img v-if="status > 1" alt="图片" src="./img/orderDetails_check.png">下单
+						</div>
+						<div :class="{'order-details-step-active': status > 3 ? true : false, 'order-details-step-check': status == 3 ? true : false,}" class="order-details-step-btn">
+							<img v-if="status > 3" alt="图片" src="./img/orderDetails_check.png">平台审核
+						</div>
+						<div :class="{'order-details-step-active': status > 9 ? true : false, 'order-details-step-check': status == 9 ? true : false,}" class="order-details-step-btn">
+							<img v-if="status > 9" alt="图片" src="./img/orderDetails_check.png">货物进仓
+						</div>
+						<div :class="{'order-details-step-active': status > 13 ? true : false, 'order-details-step-check': status == 13 ? true : false,}" class="order-details-step-btn">
+							<img v-if="status > 13" alt="图片" src="./img/orderDetails_check.png">进仓数据
+						</div>
+						<div :class="{'order-details-step-active': status > 17 ? true : false, 'order-details-step-check': status == 17 ? true : false,}" class="order-details-step-btn">
+							<img v-if="status > 17" alt="图片" src="./img/orderDetails_check.png">数据确认
+						</div>
+						<div :class="{'order-details-step-active': status > 21 ? true : false, 'order-details-step-check': status == 21 ? true : false,}" class="order-details-step-btn">
+							<img v-if="status > 21" alt="图片" src="./img/orderDetails_check.png">平台操作
+						</div>
+						<div :class="{'order-details-step-active': (status > 25 || status > 27 || status > 29) ? true : false, 'order-details-step-check': (status == 25 || status == 27 || status == 29) ? true : false,}" class="order-details-step-btn">
+							<img v-if="status > 25 || status > 27 || status > 29" alt="图片" src="./img/orderDetails_check.png">卡口放行
+						</div>
+						<div :class="{'order-details-step-active': (status > 31 || status > 33) ? true : false, 'order-details-step-check': (status == 31 || status == 33) ? true : false,}" class="order-details-step-btn">
+							<img v-if="status > 31 || status > 33" alt="图片" src="./img/orderDetails_check.png">安检通过
+						</div>
+						<div :class="{'order-details-step-active': status > 37 ? true : false, 'order-details-step-check': status == 37 ? true : false,}" class="order-details-step-btn">
+							<img v-if="status > 37" alt="图片" src="./img/orderDetails_check.png">货物起运
+						</div>
+						<div :class="{'order-details-step-active': status > 41 ? true : false, 'order-details-step-check': status == 41 ? true : false,}" class="order-details-step-btn">
+							<img v-if="status > 41" alt="图片" src="./img/orderDetails_check.png">货物到达
+						</div>
+					</div>
+					<div v-if="detailsArr.status == '39'" class="order-details-step">
+						<div v-if="status >= 1" :class="{'order-details-step-active': detailsArr.status > 1 ? true : false, 'order-details-step-check': detailsArr.status == 1 ? true : false,}" class="order-details-step-btn">
 							<img v-if="detailsArr.status > 1" alt="图片" src="./img/orderDetails_check.png">下单
 						</div>
-						<div :class="{'order-details-step-active': detailsArr.status > 3 ? true : false, 'order-details-step-check': detailsArr.status == 3 ? true : false,}" class="order-details-step-btn">
+						<div v-if="status >= 3" :class="{'order-details-step-active': detailsArr.status > 3 ? true : false, 'order-details-step-check': detailsArr.status == 3 ? true : false,}" class="order-details-step-btn">
 							<img v-if="detailsArr.status > 3" alt="图片" src="./img/orderDetails_check.png">平台审核
 						</div>
-						<div :class="{'order-details-step-active': detailsArr.status > 9 ? true : false, 'order-details-step-check': detailsArr.status == 9 ? true : false,}" class="order-details-step-btn">
+						<div v-if="status >= 9" :class="{'order-details-step-active': detailsArr.status > 9 ? true : false, 'order-details-step-check': detailsArr.status == 9 ? true : false,}" class="order-details-step-btn">
 							<img v-if="detailsArr.status > 9" alt="图片" src="./img/orderDetails_check.png">货物进仓
 						</div>
-						<div :class="{'order-details-step-active': detailsArr.status > 13 ? true : false, 'order-details-step-check': detailsArr.status == 13 ? true : false,}" class="order-details-step-btn">
+						<div v-if="status >= 13" :class="{'order-details-step-active': detailsArr.status > 13 ? true : false, 'order-details-step-check': detailsArr.status == 13 ? true : false,}" class="order-details-step-btn">
 							<img v-if="detailsArr.status > 13" alt="图片" src="./img/orderDetails_check.png">进仓数据
 						</div>
-						<div :class="{'order-details-step-active': detailsArr.status > 17 ? true : false, 'order-details-step-check': detailsArr.status == 17 ? true : false,}" class="order-details-step-btn">
+						<div v-if="status >= 17" :class="{'order-details-step-active': detailsArr.status > 17 ? true : false, 'order-details-step-check': detailsArr.status == 17 ? true : false,}" class="order-details-step-btn">
 							<img v-if="detailsArr.status > 17" alt="图片" src="./img/orderDetails_check.png">数据确认
 						</div>
-						<div :class="{'order-details-step-active': detailsArr.status > 21 ? true : false, 'order-details-step-check': detailsArr.status == 21 ? true : false,}" class="order-details-step-btn">
+						<div v-if="status >= 21" :class="{'order-details-step-active': detailsArr.status > 21 ? true : false, 'order-details-step-check': detailsArr.status == 21 ? true : false,}" class="order-details-step-btn">
 							<img v-if="detailsArr.status > 21" alt="图片" src="./img/orderDetails_check.png">平台操作
 						</div>
-						<div :class="{'order-details-step-active': (detailsArr.status > 25 || detailsArr.status > 27 || detailsArr.status > 29) ? true : false, 'order-details-step-check': (detailsArr.status == 25 || detailsArr.status == 27 || detailsArr.status == 29) ? true : false,}" class="order-details-step-btn">
+						<div v-if="(status >= 25 || status >= 27 || status >= 29)" :class="{'order-details-step-active': (detailsArr.status > 25 || detailsArr.status > 27 || detailsArr.status > 29) ? true : false, 'order-details-step-check': (detailsArr.status == 25 || detailsArr.status == 27 || detailsArr.status == 29) ? true : false,}" class="order-details-step-btn">
 							<img v-if="detailsArr.status > 25 || detailsArr.status > 27 || detailsArr.status > 29" alt="图片" src="./img/orderDetails_check.png">卡口放行
 						</div>
-						<div :class="{'order-details-step-active': (detailsArr.status > 31 || detailsArr.status > 33) ? true : false, 'order-details-step-check': (detailsArr.status == 31 || detailsArr.status == 33) ? true : false,}" class="order-details-step-btn">
+						<div v-if="(status >= 31 || status >= 33)" :class="{'order-details-step-active': (detailsArr.status > 31 || detailsArr.status > 33) ? true : false, 'order-details-step-check': (detailsArr.status == 31 || detailsArr.status == 33) ? true : false,}" class="order-details-step-btn">
 							<img v-if="detailsArr.status > 31 || detailsArr.status > 33" alt="图片" src="./img/orderDetails_check.png">安检通过
 						</div>
-						<div :class="{'order-details-step-active': detailsArr.status > 37 ? true : false, 'order-details-step-check': detailsArr.status == 37 ? true : false,}" class="order-details-step-btn">
+						<div v-if="status >= 37" :class="{'order-details-step-active': detailsArr.status > 37 ? true : false, 'order-details-step-check': detailsArr.status == 37 ? true : false,}" class="order-details-step-btn">
 							<img v-if="detailsArr.status > 37" alt="图片" src="./img/orderDetails_check.png">货物起运
 						</div>
-						<div :class="{'order-details-step-active': detailsArr.status > 41 ? true : false, 'order-details-step-check': detailsArr.status == 41 ? true : false,}" class="order-details-step-btn">
-							<img v-if="detailsArr.status > 41" alt="图片" src="./img/orderDetails_check.png">货物到达
+						<div class="order-details-step-btn order-details-step-active">
+							<img  alt="图片" src="./img/orderDetails_check.png">订单取消
 						</div>
 					</div>
 					<div class="order-details-table">
@@ -215,6 +247,46 @@
 										<div class="details-table-tabs"><span>计费重：</span>{{detailsArr.bookingCw}}KG</div>
 									</div>
 								</div>
+								<div v-if="detailsArr.status >= '17' && (detailsArr.status != '39')" class="details-table-tab">
+									<div class="details-table-tab-title">进仓数据</div>
+									<div class="details-table-details" style="display: flex;">
+										<div class="details-table-tabs"><span>件数：</span>{{detailsArr.inboundPiece}}PCS</div>
+										<div class="details-table-tabs"><span>体积：</span>{{detailsArr.inboundCbm}}CBM</div>
+										<div class="details-table-tabs"><span>重量：</span>{{detailsArr.inboundWeight}}KGS</div>
+										<div class="details-table-tabs"><span>比重：</span>1:{{detailsArr.inboundVwr}}</div>
+										<div class="details-table-tabs"><span>计费重：</span>{{detailsArr.inboundCw}}KGS</div>
+										<div v-if="detailsArr.bubblePoint == '10'" class="details-table-tabs"><span>分泡比例：</span>不分泡</div>
+										<div v-if="detailsArr.bubblePoint == '1'" class="details-table-tabs"><span>分泡比例：</span>1/9</div>
+										<div v-if="detailsArr.bubblePoint == '2'" class="details-table-tabs"><span>分泡比例：</span>2/8</div>
+										<div v-if="detailsArr.bubblePoint == '3'" class="details-table-tabs"><span>分泡比例：</span>3/7</div>
+										<div v-if="detailsArr.bubblePoint == '4'" class="details-table-tabs"><span>分泡比例：</span>4/6</div>
+										<div v-if="detailsArr.bubblePoint == '5'" class="details-table-tabs"><span>分泡比例：</span>5/5</div>
+										<div v-if="detailsArr.bubblePoint == '6'" class="details-table-tabs"><span>分泡比例：</span>6/4</div>
+										<div v-if="detailsArr.bubblePoint == '7'" class="details-table-tabs"><span>分泡比例：</span>7/3</div>
+										<div v-if="detailsArr.bubblePoint == '8'" class="details-table-tabs"><span>分泡比例：</span>8/2</div>
+										<div v-if="detailsArr.bubblePoint == '9'" class="details-table-tabs"><span>分泡比例：</span>9/1</div>
+									</div>
+									<div class="booking" style="margin-top: 20px;">
+										<ul class="booking-proportion-ul" style="font-size: 14px;">
+											<li class="booking-proportion-item">
+												<div>件数PCS</div>
+												<div>体积CBM</div>
+												<div>重量KGS</div>
+												<div>货物尺寸CM</div>
+												<div>包装方式</div>
+												<div>外箱情况</div>
+											</li>
+											<li v-for="(item,index) in orderCargoDetailList" class="booking-proportion-item">
+												<div>{{item.piece}}</div>
+												<div>{{item.cbm}}</div>
+												<div>{{item.weight}}</div>
+												<div>{{item.cargoSize}}</div>
+												<div>{{item.packing}}</div>
+												<div>{{item.outerBox}}</div>
+											</li>
+										</ul>
+									</div>
+								</div>
 							</div>
 							<div v-if="(detailsArr.cclType != '1') || detailsArr.isPickUp == '2'" class="details-table-list">
 								<div class="details-table-title">服务产品</div>
@@ -237,23 +309,45 @@
 							</div>
 						</div>
 						<div class="order-details-table-zhangdan">
-							<div class="details-table-zhangdan-title">账单明细</div>
-							<div class="booking-price borderEFEFEF bakFFFFFF">
-								<div class="booking-price-item">
-									<div class="booking-price-item-name">国内段</div>
-									<div v-for="(item,index) in detailsArr.orderPriceList" class="booking-price-item-list">
-										<div>{{item.expenseName}}</div>
-										<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
-										<div v-else><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+							<div v-if="guonerArr.length > 0">
+								<div class="details-table-zhangdan-title">账单明细</div>
+								<div class="booking-price borderEFEFEF bakFFFFFF">
+									<div class="booking-price-item">
+										<div class="booking-price-item-name">国内段</div>
+										<div v-for="(item,index) in guonerArr" class="booking-price-item-list">
+											<div>{{item.expenseName}}</div>
+											<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+											<div v-else><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+										</div>
+									</div>
+									<div class="booking-price-total">
+										<div></div>
+										<div>{{guonerJiaqian}}</div>
 									</div>
 								</div>
-								<div class="booking-price-total">
-									<div>CNY</div>
-									<div>￥{{totalArOrgn.amount}}</div>
+								<div style="margin-top: 20px;">
+									<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
 								</div>
 							</div>
-							<div style="margin-top: 20px;">
-								<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
+							<div v-if="guowaiArr.length > 0">
+								<div class="details-table-zhangdan-title">账单明细</div>
+								<div class="booking-price borderEFEFEF bakFFFFFF">
+									<div class="booking-price-item">
+										<div class="booking-price-item-name">国外段</div>
+										<div v-for="(item,index) in guowaiArr" class="booking-price-item-list">
+											<div>{{item.expenseName}}</div>
+											<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+											<div v-else><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+										</div>
+									</div>
+									<div class="booking-price-total">
+										<div></div>
+										<div>{{guowaiJiaqian}}</div>
+									</div>
+								</div>
+								<div style="margin-top: 20px;">
+									<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -291,7 +385,14 @@
 				detailsArr: {},
 				statusSubmit: [5,9,3],
 				totalArOrgn: {},
-				orderOptionsList: []
+				orderOptionsList: [],
+				guonerArr: [],
+				guonerJiaqian: 0,
+				guowaiArr: [],
+				guowaiJiaqian: 0,
+				preStatus: '',
+				status: '',
+				orderCargoDetailList: []
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -373,9 +474,39 @@
 						})
 					}
 				},
-				
-				
-				
+				//账单转化
+				priceType1(json) {
+				  if(json){
+				    var arr = JSON.parse(json)
+				    var price = ''
+				    for(var i = 0; i < arr.length; i++){
+				      if(arr[i].currency == '1'){
+				        price += '￥'+arr[i].amount+'+'
+				      }
+				    }
+				    price = price.substring(0, price.length - 1)
+				    return price
+				  }
+				},
+				priceType2(json) {
+				  if(json){
+				    var arr = JSON.parse(json)
+				    var price = ''
+				    for(var i = 0; i < arr.length; i++){
+				      if(arr[i].currency == '2'){
+				        price += 'HK$'+arr[i].amount+'+'
+				      }else if(arr[i].currency == '3'){
+				        price += '$'+arr[i].amount+'+'
+				      }else if(arr[i].currency == '4'){
+				        price += '€'+arr[i].amount+'+'
+				      }else if(arr[i].currency == '5'){
+				        price += '￡'+arr[i].amount+'+'
+				      }
+				    }
+				    price = price.substring(0, price.length - 1)
+				    return price
+				  }
+				},
 				//获取详情
 				orderSearchDetail() {
 					axios({
@@ -391,7 +522,23 @@
 							if(data.data.orderOptionsList){
 								this.orderOptionsList = data.data.orderOptionsList
 							}
-							this.totalArOrgn = JSON.parse(this.detailsArr.totalArOrgn)[0]
+							this.guonerArr = []
+							this.guowaiArr = []
+							for(var i = 0; i < this.detailsArr.orderPriceList.length; i++){
+								if(this.detailsArr.orderPriceList[i].currency == '1'){
+									this.guonerArr.push(this.detailsArr.orderPriceList[i])
+								}else{
+									this.guowaiArr.push(this.detailsArr.orderPriceList[i])
+								}
+							}
+							this.guonerJiaqian = this.priceType1(this.detailsArr.totalArOrgn)
+							this.guowaiJiaqian = this.priceType2(this.detailsArr.totalArOrgn)
+							if(this.detailsArr.status == 39){
+								this.status = this.detailsArr.preStatus
+							}else{
+								this.status = this.detailsArr.status
+							}
+							this.orderCargoDetailList = this.detailsArr.orderCargoDetailList
 						}
 					})
 				},
