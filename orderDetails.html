@@ -250,11 +250,13 @@
 								<div v-if="detailsArr.status >= '17' && (detailsArr.status != '39')" class="details-table-tab">
 									<div class="details-table-tab-title">进仓数据</div>
 									<div class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs"><span>件数：</span>{{detailsArr.inboundPiece}}PCS</div>
-										<div class="details-table-tabs"><span>体积：</span>{{detailsArr.inboundCbm}}CBM</div>
-										<div class="details-table-tabs"><span>重量：</span>{{detailsArr.inboundWeight}}KGS</div>
-										<div class="details-table-tabs"><span>比重：</span>1:{{detailsArr.inboundVwr}}</div>
-										<div class="details-table-tabs"><span>计费重：</span>{{detailsArr.inboundCw}}KGS</div>
+										<div class="details-table-tabs"><span style="flex: 0 0 42px;">件数：</span>{{detailsArr.inboundPiece}}PCS</div>
+										<div class="details-table-tabs"><span style="flex: 0 0 42px;">体积：</span>{{detailsArr.inboundCbm}}CBM</div>
+										<div class="details-table-tabs"><span style="flex: 0 0 42px;">重量：</span>{{detailsArr.inboundWeight}}KGS</div>
+									</div>
+									<div class="details-table-details" style="display: flex;">
+										<div class="details-table-tabs"><span style="flex: 0 0 42px;">比重：</span>1:{{detailsArr.inboundVwr}}</div>
+										<div class="details-table-tabs"><span style="flex: 0 0 70px;">计费重：</span>{{detailsArr.inboundCw}}KGS</div>
 										<div v-if="detailsArr.bubblePoint == '10'" class="details-table-tabs"><span>分泡比例：</span>不分泡</div>
 										<div v-if="detailsArr.bubblePoint == '1'" class="details-table-tabs"><span>分泡比例：</span>1/9</div>
 										<div v-if="detailsArr.bubblePoint == '2'" class="details-table-tabs"><span>分泡比例：</span>2/8</div>
