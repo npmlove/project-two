@@ -268,7 +268,7 @@
 										<div v-if="detailsArr.bubblePoint == '8'" class="details-table-tabs"><span>分泡比例：</span>8/2</div>
 										<div v-if="detailsArr.bubblePoint == '9'" class="details-table-tabs"><span>分泡比例：</span>9/1</div>
 									</div>
-									<div class="booking" style="margin-top: 20px;">
+									<div v-if="orderCargoDetailList.length > 0" class="booking" style="margin-top: 20px;">
 										<ul class="booking-proportion-ul" style="font-size: 14px;">
 											<li class="booking-proportion-item">
 												<div>件数PCS</div>
