@@ -281,8 +281,11 @@
 												<div>{{item.cbm}}</div>
 												<div>{{item.weight}}</div>
 												<div>{{item.cargoSize}}</div>
-												<div>{{item.packing}}</div>
-												<div>{{item.outerBox}}</div>
+												<div v-if="item.packing == '1'">纸箱</div>
+												<div v-if="item.packing == '2'">夹板箱</div>
+												<div v-if="item.packing == '3'">托盘</div>
+												<div v-if="item.outerBox == '1'">正常</div>
+												<div v-if="item.outerBox == '2'">异常</div>
 											</li>
 										</ul>
 									</div>
