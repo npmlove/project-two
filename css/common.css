@@ -507,6 +507,7 @@
 .group-radio-ul {
 	display: flex;
 	font-size: 12px;
+	align-items: center;
 }
 
 .group-radio-ul .radio-li {
