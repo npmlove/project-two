@@ -56,7 +56,9 @@ const serviceApi = {
 	//查询订单详情
 	orderSearchDetail: publicWeb+'/t-order/searchDetail',
 	//执行订单
-	orderExecuteOrder: publicWeb+'/t-order/executeOrder'
+	orderExecuteOrder: publicWeb+'/t-order/executeOrder',
+	//是否磁性
+	orderIsMagnetic: publicWeb+'/t-order/isMagnetic'
 }
 
 
