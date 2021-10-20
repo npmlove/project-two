@@ -1,3 +1,6 @@
+.order-list-manage .el-tabs__nav.is-top > div:nth-of-type(9){
+	color: #F00 !important;
+}
 /* 顶部logo模块 */
 .header {
 	width: 1200px;
