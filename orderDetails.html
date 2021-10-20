@@ -256,7 +256,7 @@
 										<div class="details-table-tabs"><span>计费重：</span>{{detailsArr.bookingCw}}KG</div>
 									</div>
 								</div>
-								<div v-if="detailsArr.preStatus >= '17'" class="details-table-tab">
+								<div v-if="detailsArr.inboundPiece" class="details-table-tab">
 									<div class="details-table-tab-title">进仓数据</div>
 									<div class="details-table-details" style="display: flex;">
 										<div class="details-table-tabs"><span style="flex: 0 0 42px;">件数：</span>{{detailsArr.inboundPiece}}PCS</div>
