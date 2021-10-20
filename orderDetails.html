@@ -351,6 +351,7 @@
 								</div>
 								<div style="margin-top: 20px;">
 									<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
+									<button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据待确认</button>
 								</div>
 							</div>
 							<div v-if="guowaiArr.length > 0">
@@ -371,6 +372,7 @@
 								</div>
 								<div style="margin-top: 20px;">
 									<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
+									<button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据待确认</button>
 								</div>
 							</div>
 						</div>
@@ -480,6 +482,33 @@
 							},
 							ctrlMap: {
 								ctrlFlag: 2
+							}
+						}
+						axios({
+							method: 'post',
+							url: webIp+serviceApi.orderExecuteOrder,
+							data: data,
+							headers: {
+								'tokenId': localStorage.getItem('tokenId')
+							}
+						}).then((data) =>{
+							var data = data.data
+							if(data.code == 200){
+								window.location.href = './orderList.html'
+							}else{
+								this.$message.error(data.message)
+							}
+						})
+					}else if(type == '进仓'){
+						var data = {
+							order: {
+								activityCodeDoing: this.detailsArr.activityCodeDoing,
+								activityCodeDone: this.detailsArr.activityCodeDone,
+								status: this.detailsArr.status,
+								id: this.detailsArr.id
+							},
+							ctrlMap: {
+								ctrlFlag: 1
 							}
 						}
 						axios({
