@@ -889,12 +889,17 @@
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
-							this.dataArr = []
-							for(var i = 0; i < data.data.records.length; i++){
-								data.data.records[i].timeOutA = this.countTime1(i,data.data.records[i].updateTime)
-								this.dataArr.push(data.data.records[i])
+							if(data.data.records == null){
+								this.dataArr = []
+								this.total = 0
+							}else{
+								this.dataArr = []
+								for(var i = 0; i < data.data.records.length; i++){
+									data.data.records[i].timeOutA = this.countTime1(i,data.data.records[i].updateTime)
+									this.dataArr.push(data.data.records[i])
+								}
+								this.total = data.data.total
 							}
-							this.total = data.data.total
 						}else{
 							this.$message.error(data.message)
 						}
