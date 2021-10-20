@@ -461,6 +461,10 @@
 				//用户下单
 				submitClick() {
 					var reg = /^(1[3456789])\d{9}$/
+					if(this.totolPrice == '0' || this.chargedJiaqian == '0'){
+						this.$message.error('货物计费量未达标，请重新填写')
+						return
+					}
 					if(!this.bookingPiece){
 						this.$message.error('请输入件数')
 						return
