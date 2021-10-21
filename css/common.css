@@ -2549,12 +2549,13 @@
 	padding: 20px 0;
 }
 .order-details-step .order-details-step-btn{
-	width: 93px;
+	/* width: 93px; */
 	height: 36px;
 	border: 1px solid #999999;
 	color: #666666;
 	line-height: 36px;
 	text-align: center;
+	padding: 0 10px;
 }
 .order-details-step .order-details-step-active{
 	border-color: #2273CB;

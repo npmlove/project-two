@@ -68,68 +68,9 @@
 						<div>订单详情</div>
 						<div>订单号：{{detailsArr.orderNo}}</div>
 					</div>
-					<div v-if="detailsArr.status != '39'" class="order-details-step">
-						<div :class="{'order-details-step-active': status > 1 ? true : false, 'order-details-step-check': status == 1 ? true : false,}" class="order-details-step-btn">
-							<img v-if="status > 1" alt="图片" src="./img/orderDetails_check.png">下单
-						</div>
-						<div :class="{'order-details-step-active': status > 3 ? true : false, 'order-details-step-check': status == 3 ? true : false,}" class="order-details-step-btn">
-							<img v-if="status > 3" alt="图片" src="./img/orderDetails_check.png">平台审核
-						</div>
-						<div :class="{'order-details-step-active': status > 9 ? true : false, 'order-details-step-check': status == 9 ? true : false,}" class="order-details-step-btn">
-							<img v-if="status > 9" alt="图片" src="./img/orderDetails_check.png">货物进仓
-						</div>
-						<div :class="{'order-details-step-active': status > 13 ? true : false, 'order-details-step-check': status == 13 ? true : false,}" class="order-details-step-btn">
-							<img v-if="status > 13" alt="图片" src="./img/orderDetails_check.png">进仓数据
-						</div>
-						<div :class="{'order-details-step-active': status > 17 ? true : false, 'order-details-step-check': status == 17 ? true : false,}" class="order-details-step-btn">
-							<img v-if="status > 17" alt="图片" src="./img/orderDetails_check.png">数据确认
-						</div>
-						<div :class="{'order-details-step-active': status > 21 ? true : false, 'order-details-step-check': status == 21 ? true : false,}" class="order-details-step-btn">
-							<img v-if="status > 21" alt="图片" src="./img/orderDetails_check.png">平台操作
-						</div>
-						<div :class="{'order-details-step-active': (status > 25 || status > 27 || status > 29) ? true : false, 'order-details-step-check': (status == 25 || status == 27 || status == 29) ? true : false,}" class="order-details-step-btn">
-							<img v-if="status > 25 || status > 27 || status > 29" alt="图片" src="./img/orderDetails_check.png">卡口放行
-						</div>
-						<div :class="{'order-details-step-active': (status > 31 || status > 33) ? true : false, 'order-details-step-check': (status == 31 || status == 33) ? true : false,}" class="order-details-step-btn">
-							<img v-if="status > 31 || status > 33" alt="图片" src="./img/orderDetails_check.png">安检通过
-						</div>
-						<div :class="{'order-details-step-active': status > 37 ? true : false, 'order-details-step-check': status == 37 ? true : false,}" class="order-details-step-btn">
-							<img v-if="status > 37" alt="图片" src="./img/orderDetails_check.png">货物起运
-						</div>
-						<div :class="{'order-details-step-active': status > 41 ? true : false, 'order-details-step-check': status == 41 ? true : false,}" class="order-details-step-btn">
-							<img v-if="status > 41" alt="图片" src="./img/orderDetails_check.png">货物到达
-						</div>
-					</div>
-					<div v-if="detailsArr.status == '39'" class="order-details-step">
-						<div v-if="status >= 1" :class="{'order-details-step-active': detailsArr.status > 1 ? true : false, 'order-details-step-check': detailsArr.status == 1 ? true : false,}" class="order-details-step-btn">
-							<img v-if="detailsArr.status > 1" alt="图片" src="./img/orderDetails_check.png">下单
-						</div>
-						<div v-if="status >= 3" :class="{'order-details-step-active': detailsArr.status > 3 ? true : false, 'order-details-step-check': detailsArr.status == 3 ? true : false,}" class="order-details-step-btn">
-							<img v-if="detailsArr.status > 3" alt="图片" src="./img/orderDetails_check.png">平台审核
-						</div>
-						<div v-if="status >= 9" :class="{'order-details-step-active': detailsArr.status > 9 ? true : false, 'order-details-step-check': detailsArr.status == 9 ? true : false,}" class="order-details-step-btn">
-							<img v-if="detailsArr.status > 9" alt="图片" src="./img/orderDetails_check.png">货物进仓
-						</div>
-						<div v-if="status >= 13" :class="{'order-details-step-active': detailsArr.status > 13 ? true : false, 'order-details-step-check': detailsArr.status == 13 ? true : false,}" class="order-details-step-btn">
-							<img v-if="detailsArr.status > 13" alt="图片" src="./img/orderDetails_check.png">进仓数据
-						</div>
-						<div v-if="status >= 17" :class="{'order-details-step-active': detailsArr.status > 17 ? true : false, 'order-details-step-check': detailsArr.status == 17 ? true : false,}" class="order-details-step-btn">
-							<img v-if="detailsArr.status > 17" alt="图片" src="./img/orderDetails_check.png">数据确认
-						</div>
-						<div v-if="status >= 21" :class="{'order-details-step-active': detailsArr.status > 21 ? true : false, 'order-details-step-check': detailsArr.status == 21 ? true : false,}" class="order-details-step-btn">
-							<img v-if="detailsArr.status > 21" alt="图片" src="./img/orderDetails_check.png">平台操作
-						</div>
-						<div v-if="(status >= 25 || status >= 27 || status >= 29)" :class="{'order-details-step-active': (detailsArr.status > 25 || detailsArr.status > 27 || detailsArr.status > 29) ? true : false, 'order-details-step-check': (detailsArr.status == 25 || detailsArr.status == 27 || detailsArr.status == 29) ? true : false,}" class="order-details-step-btn">
-							<img v-if="detailsArr.status > 25 || detailsArr.status > 27 || detailsArr.status > 29" alt="图片" src="./img/orderDetails_check.png">卡口放行
-						</div>
-						<div v-if="(status >= 31 || status >= 33)" :class="{'order-details-step-active': (detailsArr.status > 31 || detailsArr.status > 33) ? true : false, 'order-details-step-check': (detailsArr.status == 31 || detailsArr.status == 33) ? true : false,}" class="order-details-step-btn">
-							<img v-if="detailsArr.status > 31 || detailsArr.status > 33" alt="图片" src="./img/orderDetails_check.png">安检通过
-						</div>
-						<div v-if="status >= 37" :class="{'order-details-step-active': detailsArr.status > 37 ? true : false, 'order-details-step-check': detailsArr.status == 37 ? true : false,}" class="order-details-step-btn">
-							<img v-if="detailsArr.status > 37" alt="图片" src="./img/orderDetails_check.png">货物起运
-						</div>
-						<div class="order-details-step-btn order-details-step-active">
-							<img  alt="图片" src="./img/orderDetails_check.png">订单取消
+					<div class="order-details-step">
+						<div v-for="(item,index) in activityFlowVOList" :class="{'order-details-step-active': item.position == 1 ? true : false, 'order-details-step-check': item.position == 2 ? true : false}" :key="index" class="order-details-step-btn">
+							<img v-if="item.position == 1" alt="图片" src="./img/orderDetails_check.png">{{item.desc}}
 						</div>
 					</div>
 					<div class="order-details-table">
@@ -419,7 +360,8 @@
 				preStatus: '',
 				status: '',
 				orderCargoDetailList: [],
-				orderAttachmentList: []
+				orderAttachmentList: [],
+				activityFlowVOList: []
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -594,6 +536,7 @@
 							}
 							this.orderCargoDetailList = this.detailsArr.orderCargoDetailList
 							this.orderAttachmentList = this.detailsArr.orderAttachmentList
+							this.activityFlowVOList = this.detailsArr.activityFlowVOList
 						}
 					})
 				},
