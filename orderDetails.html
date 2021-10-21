@@ -131,8 +131,16 @@
 												<a>中转</a>
 											</el-tooltip>
 										</div>
-										<div class="list-tuijian-feiyong" style="margin-top: -55px;">
-											<div class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</div>
+										<div class="list-tuijian-feiyong" style="margin-top: -55px;text-align: right;">
+											<!-- <el-tooltip placement="bottom">
+												<div slot="content">
+													<div>333</div>
+													<div>333</div>
+													<div>333</div>
+												</div>
+												<a class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</a>
+											</el-tooltip> -->
+											<a class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</a>
 											<div class="danjia" style="margin-bottom: 15px;">单价：{{item.bookingPrice}}元/kg</div>
 											<button @click="submitBtn('方案',item)" class="box-btn btn-prprimary com-height50" style="font-size: 18px;padding: 0 20px;">选用该方案</button>
 										</div>
