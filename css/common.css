@@ -2544,9 +2544,10 @@
 	border: 1px solid #EFEFEF;
 	box-sizing: border-box;
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
-	padding: 20px 0;
+	padding: 20px 0 0;
 }
 .order-details-step .order-details-step-btn{
 	/* width: 93px; */
@@ -2556,6 +2557,7 @@
 	line-height: 36px;
 	text-align: center;
 	padding: 0 10px;
+	margin-bottom: 20px;
 }
 .order-details-step .order-details-step-active{
 	border-color: #2273CB;
