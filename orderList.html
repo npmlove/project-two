@@ -176,11 +176,27 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div class="nav-wrap-route-remarks">
+													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else class="nav-wrap-route-remarks">
+														<label v-if="item.status == '17'">订仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
 														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-if="item.status == '17'" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label>进仓数据</label>
+														<label>{{item.cargoName}}</label>
+														<label :style="{color: item.inboundPiece == item.bookingPiece ? '#333' : '#F00'}">{{item.inboundPiece}}PCS</label>
+														<label :style="{color: item.inboundCbm == item.bookingCbm ? '#333' : '#F00'}">{{item.inboundCbm}}CMB</label>
+														<label :style="{color: item.inboundWeight == item.bookingWeight ? '#333' : '#F00'}">{{item.inboundWeight}}KG</label>
 														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
 												</div>
@@ -236,7 +252,14 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div class="nav-wrap-route-remarks">
+													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else class="nav-wrap-route-remarks">
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
@@ -293,7 +316,14 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div class="nav-wrap-route-remarks">
+													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else class="nav-wrap-route-remarks">
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
@@ -350,15 +380,22 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div class="nav-wrap-route-remarks">
-														<label>订仓数据</label>
+													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else class="nav-wrap-route-remarks">
+														<label v-if="item.status == '17'">订仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
 														<label>{{item.bookingWeight}}KG</label>
 														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
-													<div v-if="item.statusDesc == '进仓数据待确认'" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+													<div v-if="item.status == '17'" class="nav-wrap-route-remarks" style="margin-top: 10px;">
 														<label>进仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label :style="{color: item.inboundPiece == item.bookingPiece ? '#333' : '#F00'}">{{item.inboundPiece}}PCS</label>
@@ -416,7 +453,15 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div class="nav-wrap-route-remarks">
+													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else class="nav-wrap-route-remarks">
+														<label v-if="item.status == '17'">订仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
@@ -473,7 +518,15 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div class="nav-wrap-route-remarks">
+													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else class="nav-wrap-route-remarks">
+														<label v-if="item.status == '17'">订仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
@@ -530,7 +583,15 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div class="nav-wrap-route-remarks">
+													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else class="nav-wrap-route-remarks">
+														<label v-if="item.status == '17'">订仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
@@ -587,7 +648,15 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div class="nav-wrap-route-remarks">
+													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else class="nav-wrap-route-remarks">
+														<label v-if="item.status == '17'">订仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
@@ -647,7 +716,15 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div class="nav-wrap-route-remarks">
+													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else class="nav-wrap-route-remarks">
+														<label v-if="item.status == '17'">订仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
