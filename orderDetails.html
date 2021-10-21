@@ -69,7 +69,7 @@
 						<div>订单号：{{detailsArr.orderNo}}</div>
 					</div>
 					<div class="order-details-step">
-						<div v-for="(item,index) in activityFlowVOList" :class="{'order-details-step-active': item.position == 1 ? true : false, 'order-details-step-check': item.position == 2 ? true : false}" :key="index" class="order-details-step-btn">
+						<div v-for="(item,index) in activityFlowVOList" :class="{'order-details-step-active': item.position == 1 ? true : false, 'order-details-step-check': item.position == 2 ? true : false, 'order-details-spte-bak': item.position == 2 && item.state == 1 ? true : false}" :key="index" class="order-details-step-btn">
 							<img v-if="item.position == 1" alt="图片" src="./img/orderDetails_check.png">{{item.desc}}
 						</div>
 					</div>

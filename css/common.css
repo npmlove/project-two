@@ -2566,6 +2566,10 @@
 	border-color: #2273CB;
 	color: #FFF;
 }
+.order-details-step .order-details-spte-bak{
+	background-color: #F00;
+	border-color: #F00;
+}
 .order-details-step .order-details-step-btn img{
 	width: 14px;
 	height: 14px;
