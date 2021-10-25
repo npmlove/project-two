@@ -418,8 +418,11 @@
 							var data = data.data
 							if(data.code == 200){
 								window.location.href = './orderList.html'
+							}else if(data.code == -200){
+								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
+								
 							}
 						})
 					}else if(type == '取消'){
@@ -445,8 +448,11 @@
 							var data = data.data
 							if(data.code == 200){
 								window.location.href = './orderList.html'
+							}else if(data.code == -200){
+								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
+								
 							}
 						})
 					}else if(type == '进仓'){
@@ -475,8 +481,11 @@
 							var data = data.data
 							if(data.code == 200){
 								window.location.href = './orderList.html'
+							}else if(data.code == -200){
+								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
+								
 							}
 						})
 					}
@@ -548,6 +557,11 @@
 							this.orderCargoDetailList = this.detailsArr.orderCargoDetailList
 							this.orderAttachmentList = this.detailsArr.orderAttachmentList
 							this.activityFlowVOList = this.detailsArr.activityFlowVOList
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+							
 						}
 					})
 				},

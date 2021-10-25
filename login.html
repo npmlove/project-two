@@ -271,7 +271,10 @@
 						localStorage.setItem('wxOpenId',data.openId)
 						axios({
 							method: 'get',
-							url: webIp+serviceApi.userUserInfo+'?openId='+data.openId
+							url: webIp+serviceApi.userUserInfo+'?openId='+data.openId,
+							headers: {
+								'tokenId': data.tokenId
+							}
 						}).then((user) => {
 							var user = user.data
 							if(user.code == 200){

@@ -231,7 +231,10 @@
 						if(data.code == 200){
 							axios({
 								method: 'get',
-								url: webIp+serviceApi.userUserInfo+'?openId='+data.data.tportalUser.wechatOpenId
+								url: webIp+serviceApi.userUserInfo+'?openId='+data.data.tportalUser.wechatOpenId,
+								headers: {
+									'tokenId': data.data.tokenId
+								}
 							}).then((user) => {
 								var user = user.data
 								if(user.code == 200){

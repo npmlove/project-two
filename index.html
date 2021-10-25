@@ -82,7 +82,7 @@
 									<div class="search-box-input">
 										<div class="search-item">
 											<div class="search-item-input search-item-icon1" style="position: relative;">
-												<input @input="qiSearchByPage" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input" type="text" placeholder="输入起飞港"/>
+												<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input" type="text" placeholder="输入起飞港"/>
 												<div v-show="qiShowState" style="display: none;" class="open-warp-router">
 													<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>
 													<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
@@ -95,7 +95,7 @@
 											</div>
 											<div class="search-item-arrow"></div>
 											<div class="search-item-input search-item-icon3" style="position: relative;">
-												<input @input="muSearchByPage" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input" type="text" placeholder="输入目的港"/>
+												<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input" type="text" placeholder="输入目的港"/>
 												<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>
 												<div v-show="muShowState" style="display: none;" class="open-warp-router">
 													<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>
@@ -853,7 +853,10 @@
 						}
 					}
 				},
-				qiSearchByPage() {
+				qiSearchByPage(val) {
+					if(val == ''){
+						return
+					}
 					var jsonData = {
 						keyWord: this.qiSearchInput,
 						type: this.qiSearchInput ? '' : '1'
@@ -869,7 +872,10 @@
 						}
 					})
 				},
-				muSearchByPage() {
+				muSearchByPage(val) {
+					if(val == ''){
+						return
+					}
 					var jsonData = {
 						keyWord: this.muSearchInput,
 						type: this.muSearchInput ? '' : '2'

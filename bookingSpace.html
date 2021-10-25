@@ -462,8 +462,11 @@
 						var data = data.data
 						if(data.code == 200){
 							this.isMagnetic = data.data
-						}else {
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
 							this.$message.error(data.message)
+							
 						}
 					})
 				},
@@ -615,8 +618,11 @@
 						var data = data.data
 						if(data.code == 200){
 							window.location.href = './orderList.html'
-						}else {
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
 							this.$message.error(data.message)
+							
 						}
 					})
 				},
@@ -848,8 +854,11 @@
 						if(data.code == 200){
 							this.proportionArr = data.data
 							this.otherFeeMap = data.data.otherFeeMap
+						}else if(data.code == -200){
+							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
+							
 						}
 					})
 				},

@@ -133,7 +133,7 @@
 									<div class="form-item">
 										<label>计费重</label>
 										<div class="form-item-owrt">
-											<div v-if="volume && weight" class="item-owrt-text">{{(parseInt(volume)*weightPrice) > weight ? (parseInt(volume)*weightPrice) : weight}}KG</div>
+											<div v-if="volume && weight" class="item-owrt-text">{{Math.ceil(Number(volume)*weightPrice) > weight ? Math.ceil(Number(volume)*weightPrice) : weight}}KG</div>
 											<div v-else class="item-owrt-text">---</div>
 										</div>
 									</div>
@@ -666,7 +666,7 @@
 				initData(){
 					var codeArr = JSON.parse(JSON.stringify(this.twoLetterCode1))
 					if(this.volume && this.weight){
-						var chargedWeight = (parseInt(this.volume)*this.weightPrice) > this.weight ? (parseInt(this.volume)*this.weightPrice) : this.weight
+						var chargedWeight = Math.ceil(Number(this.volume)*this.weightPrice) > this.weight ? Math.ceil(Number(this.volume)*this.weightPrice) : this.weight
 					}else{
 						var chargedWeight = ''
 					}
