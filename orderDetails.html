@@ -282,10 +282,10 @@
 							</div>
 						</div>
 						<div class="order-details-table-zhangdan">
-							<div v-if="guonerArr.length > 0">
+							<div>
 								<div class="details-table-zhangdan-title">账单明细</div>
 								<div class="booking-price borderEFEFEF bakFFFFFF">
-									<div class="booking-price-item">
+									<div v-if="guonerArr.length > 0" class="booking-price-item">
 										<div class="booking-price-item-name">国内段</div>
 										<div v-for="(item,index) in guonerArr" class="booking-price-item-list">
 											<div>{{item.expenseName}}</div>
