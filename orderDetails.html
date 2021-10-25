@@ -140,7 +140,7 @@
 												</div>
 												<a class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</a>
 											</el-tooltip> -->
-											<a class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</a>
+											<a class="yunfei">空运费：￥{{toPriceTotal(item)}}</a>
 											<div class="danjia" style="margin-bottom: 15px;">单价：{{item.bookingPrice}}元/kg</div>
 											<button @click="submitBtn('方案',item)" class="box-btn btn-prprimary com-height50" style="font-size: 18px;padding: 0 20px;">选用该方案</button>
 										</div>
@@ -379,6 +379,11 @@
 				this.orderSearchDetail()
 			},
 			methods: {
+				toPriceTotal(item) {
+					var num = Math.ceil((item.bubblePoint/10*this.detailsArr.bookingCw+(1-item.bubblePoint/10)*this.detailsArr.bookingWeight))
+					var price = num * item.bookingPrice
+					return price
+				},
 				submitBtn(type,item) {
 					if(type == '方案'){
 						console.log(item)
