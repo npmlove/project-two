@@ -432,22 +432,7 @@
 					}
 				},
 				bookingCbm() {
-					if(this.bookingCbm && this.bookingWeight){
-						var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
-						if(!reg.test(this.bookingCbm) && (this.bookingCbm != '')){
-							this.$message.error('体积最大输入四位正整数，小数保留四位')
-							this.chargedJiaqian = ''
-						}else{
-							this.huowuDanjia()
-							this.feiyongJisuan()
-						}
-					}else{
-						this.chargedWeight = ''
-						this.chargedValue = ''
-						this.chargedKey = ''
-						this.chargedJiaqian = ''
-						this.hangxianId = ''
-					}
+					
 				}
 			},
 			methods: {
@@ -630,6 +615,24 @@
 					var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
 					if(!reg.test(this.bookingCbm) && (this.bookingCbm != '')){
 						this.$message.error('体积最大输入四位正整数，小数保留四位')
+						return
+					}else{
+						if(this.bookingCbm && this.bookingWeight){
+							var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
+							if(!reg.test(this.bookingCbm) && (this.bookingCbm != '')){
+								this.$message.error('体积最大输入四位正整数，小数保留四位')
+								this.chargedJiaqian = ''
+							}else{
+								this.huowuDanjia()
+								this.feiyongJisuan()
+							}
+						}else{
+							this.chargedWeight = ''
+							this.chargedValue = ''
+							this.chargedKey = ''
+							this.chargedJiaqian = ''
+							this.hangxianId = ''
+						}
 					}
 				},
 				// 货物单价
