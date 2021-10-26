@@ -42,7 +42,17 @@
 					</a>
 					<div class="logo-title"></div>
 				</div>
-				<div @click="loginClick" class="header-user">登录</div>
+				<div v-if="userInfo" class="header-userInfo">
+					<img @mousemove="showHeaderMenu(1)" class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<div v-show="headerMenu" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" style="display: none;" class="header-userInfo-menu">
+						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
+						<div @click="tuiChu" class="header-bak">退出</div>
+					</div>
+				</div>
+				<div v-else @click="loginClick" class="header-user">登录</div>
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
@@ -57,16 +67,16 @@
 				<div class="banner-carousel">
 					<div class="swiper-container lunbo-swiper" style="height: 380px;overflow: hidden;">
 					    <div class="swiper-wrapper">
-					    	<!-- ${bannerContent} -->
-							<div class="swiper-slide banner-wrapper">
-								<a style="background-image: url(./img/banner1.png); background-repeat: no-repeat; background-size: 100% 100%; background-position: center center; display: block; width: 100%; height: 380px;"></a>
+					    	${bannerContent}
+							<!-- <div class="swiper-slide banner-wrapper">
+								<a style="background-image: url(./img/banner1.png); background-repeat: no-repeat; background-size: cover; background-position: center center; display: block; width: 100%; height: 380px;"></a>
 							</div>
 							<div class="swiper-slide banner-wrapper">
-								<a style="background-image: url(./img/banner1.png); background-repeat: no-repeat; background-size: 100% 100%; background-position: center center; display: block; width: 100%; height: 380px;"></a>
+								<a style="background-image: url(./img/banner1.png); background-repeat: no-repeat; background-size: cover; background-position: center center; display: block; width: 100%; height: 380px;"></a>
 							</div>
 							<div class="swiper-slide banner-wrapper">
-								<a style="background-image: url(./img/banner1.png); background-repeat: no-repeat; background-size: 100% 100%; background-position: center center; display: block; width: 100%; height: 380px;"></a>
-							</div>
+								<a style="background-image: url(./img/banner1.png); background-repeat: no-repeat; background-size: cover; background-position: center center; display: block; width: 100%; height: 380px;"></a>
+							</div> -->
 						</div>
 						<!-- 如果需要导航按钮 -->
 						<div class="swiper-button-prev swiper-button-prev1 hide"></div>
@@ -672,7 +682,9 @@
 				],
 				nullImage: './img/null.png',
 				trackSearchInput: '',
-				isShowYundan: false
+				isShowYundan: false,
+				userInfo: '',
+				headerMenu: false
 			},
 			computed: {
 				swiper() {
@@ -683,7 +695,9 @@
 				if(!localStorage.getItem('wxOpenId')){
 					window.location.href = './login.html'
 				}
-				
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				}
 				this.qiSearchByPage()
 				this.muSearchByPage()
 			},
@@ -699,6 +713,16 @@
 					navigation: {
 						nextEl: '.swiper-button-next1',
 						prevEl: '.swiper-button-prev1',
+					},
+					on: {
+						paginationRender: function() {
+							const pages = document.getElementsByClassName('swiper-pagination-bullet')
+							for (let i = 0; i < pages.length; i++) {
+								pages[i].onmouseover = function(e) {
+									e.target.click()
+								}
+							}
+						}
 					},
 					// 如果需要分页器
 					pagination: {
@@ -735,6 +759,17 @@
 				// this.muSearchInput = this.muPageArr[0].threeLetterCode
 			},
 			methods: {
+				showHeaderMenu(type) {
+					if(type == 1){
+						this.headerMenu = true
+					}else {
+						this.headerMenu = false
+					}
+				},
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
+				},
 				trackSearch() {
 					if(!this.trackSearchInput){
 						this.isShowYundan = true
