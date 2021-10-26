@@ -71,7 +71,7 @@
 									<div class="booking-form-item">
 										<label class="booking-form-item-label"><span style="color: #F00;">*</span>重量</label>
 										<div class="booking-form-item-content">
-											<input v-model="bookingWeight" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="6" class="booking-form-input" type="text" />
+											<input v-model="bookingWeight" @blur="bookingWeightBlur" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="6" class="booking-form-input" type="text" />
 											<div class="booking-form-tips-right">KG</div>
 										</div>
 									</div>
@@ -413,27 +413,16 @@
 				this.cargoTypeA = getQueryVariable('cargoType')
 				this.dowA = getQueryVariable('dow')
 				this.dateTabActive = getQueryVariable('date')
+				this.bookingPiece = Number(getQueryVariable('bookingPiece'))
+				this.bookingWeight = Number(getQueryVariable('bookingWeight'))
+				this.bookingCbm = Number(getQueryVariable('bookingCbm'))
 				this.initHangxian()
-			},
-			mounted() {
-				
-			},
-			watch:{
-				bookingWeight() {
-					if(this.bookingCbm && this.bookingWeight){
-						this.huowuDanjia()
-						this.feiyongJisuan()
-					}else{
-						this.chargedWeight = ''
-						this.chargedValue = ''
-						this.chargedKey = ''
-						this.chargedJiaqian = ''
-						this.hangxianId = ''
-					}
-				},
-				bookingCbm() {
-					
+				if(this.bookingWeight && this.bookingCbm){
+					setTimeout(() => {
+						this.bookingWeightBlur()
+					},1000)
 				}
+				// this.bookingCbmBlur()
 			},
 			methods: {
 				cargoNameBlur() {
@@ -611,6 +600,18 @@
 						}
 					})
 				},
+				bookingWeightBlur() {
+					if(this.bookingCbm && this.bookingWeight){
+						this.huowuDanjia()
+						this.feiyongJisuan()
+					}else{
+						this.chargedWeight = ''
+						this.chargedValue = ''
+						this.chargedKey = ''
+						this.chargedJiaqian = ''
+						this.hangxianId = ''
+					}
+				},
 				bookingCbmBlur() {
 					var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
 					if(!reg.test(this.bookingCbm) && (this.bookingCbm != '')){
@@ -644,68 +645,69 @@
 					
 					for(var i = 0; i < this.proportionArr.baseRatesList.length; i++){
 						if(this.chargedWeight < this.proportionArr.baseRatesList[i].vwr){
+							var index = i == 0 ? 0 : i-1
 							if(this.bookingCw < 45){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesN) > Number(this.proportionArr.baseRatesList[i].ratesLevel0)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesN) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)){
 									this.chargedKey = 'N'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesN
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdN
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesN
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdN
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingCw < 100){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel1) > Number(this.proportionArr.baseRatesList[i].ratesLevel1)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesLevel1) > Number(this.proportionArr.baseRatesList[index].ratesLevel1)){
 									this.chargedKey = '45+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel1
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel1
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel1
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel1
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingCw < 300){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel2) > Number(this.proportionArr.baseRatesList[i].ratesLevel2)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesLevel2) > Number(this.proportionArr.baseRatesList[index].ratesLevel2)){
 									this.chargedKey = '100+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel2
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel2
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel2
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel2
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingCw < 500){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel3) > Number(this.proportionArr.baseRatesList[i].ratesLevel3)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesLevel3) > Number(this.proportionArr.baseRatesList[index].ratesLevel3)){
 									this.chargedKey = '300+'
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel3
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel3
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel3
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel3
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(this.bookingCw < 1000){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel4) > Number(this.proportionArr.baseRatesList[i].ratesLevel4)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesLevel4) > Number(this.proportionArr.baseRatesList[index].ratesLevel4)){
 									this.chargedKey = '500+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel4
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel4
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel4
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel4
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}else if(1000 <= this.bookingCw){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel5) > Number(this.proportionArr.baseRatesList[i].ratesLevel5)){
+								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesLevel5) > Number(this.proportionArr.baseRatesList[index].ratesLevel5)){
 									this.chargedKey = '1000+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel5
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel5
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel5
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel5
 								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
+									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
+									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
 									this.chargedKey = 'M'
 								}
 							}
-							this.chargedValue = this.proportionArr.baseRatesList[i].vwr
+							this.chargedValue = this.proportionArr.baseRatesList[index].vwr
 							return
 						}else{
 							if(this.bookingCw < 45){
@@ -770,7 +772,6 @@
 								}
 							}
 							this.chargedValue = this.proportionArr.baseRatesList[newLength].vwr
-							return
 						}
 					}
 				},

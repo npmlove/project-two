@@ -678,7 +678,7 @@
 						pod: this.pod,
 						pol: this.pol,
 						twoLetterCode: codeArr.toString(),
-						vwr: isNaN(Math.ceil(parseInt(this.weight)/parseInt(this.volume))) ? '' : Math.ceil(parseInt(this.weight)/parseInt(this.volume)),
+						vwr: isNaN(Math.ceil((this.weight)/(this.volume))) ? '' : Math.ceil((this.weight)/(this.volume)),
 						chargedWeight: chargedWeight
 					}
 					data = toData(data)
@@ -767,7 +767,7 @@
 					}else{
 						var dow = this.dow == 0 ? 7 : this.dow
 						var aircraftRadioName = this.aircraftRadioName == '散货' ? 1 : 2
-						window.location.href = './bookingSpace.html?airlineId='+id+'&cargoType='+aircraftRadioName+'&dow='+dow+'&date='+this.bookingDate
+						window.location.href = './bookingSpace.html?airlineId='+id+'&cargoType='+aircraftRadioName+'&dow='+dow+'&date='+this.bookingDate+'&bookingPiece='+this.piece+'&bookingWeight='+this.weight+'&bookingCbm='+this.volume
 					}
 					
 				},
