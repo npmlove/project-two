@@ -379,16 +379,32 @@
 				status: '',
 				orderCargoDetailList: [],
 				orderAttachmentList: [],
-				activityFlowVOList: []
+				activityFlowVOList: [],
+				userInfo: '',
+				headerMenu: false
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
 					window.location.href = './login.html'
 				}
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				}
 				this.orderId = getQueryVariable('orderId')
 				this.orderSearchDetail()
 			},
 			methods: {
+				showHeaderMenu(type) {
+					if(type == 1){
+						this.headerMenu = true
+					}else {
+						this.headerMenu = false
+					}
+				},
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
+				},
 				toPriceTotal(item) {
 					var num = Math.ceil((item.bubblePoint/10*this.detailsArr.bookingCw+(1-item.bubblePoint/10)*this.detailsArr.bookingWeight))
 					var price = num * item.bookingPrice
@@ -589,6 +605,11 @@
 				// muen
 				menuClick(index) {
 					this.menuIndex = index
+					if(index == 0){
+						window.location.href = './index.html'
+					}else if(index == 3){
+						window.location.href = './about_us.html'
+					}
 				}
 			}
 		})

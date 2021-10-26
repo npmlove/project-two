@@ -2896,8 +2896,58 @@
 	text-align: right;
 }
 
-
-
+.about-us .about-us-img{
+	width: 100%;
+	min-width: 1200px;
+	height: 300px;
+	background-image: url(../img/beijing.png);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+.about-us .about-content{
+	background: #FFFFFF;
+	box-shadow: 0px 4px 20px 0px rgba(51, 51, 51, 0.1);
+	width: 960px;
+	min-width: 960px;
+	margin: 0 auto;
+	padding: 0 50px;
+	box-sizing: border-box;
+	margin-top: -30px;
+	margin-bottom: 150px;
+}
+.about-us .about-content-title{
+	font-size: 18px;
+	font-weight: bold;
+	color: #333333;
+	line-height: 100%;
+	padding: 30px 0 10px 40px;
+	border-bottom: 1px solid rgba(239, 239, 239, 1);
+}
+.about-us .about-content-content{
+	display: flex;
+	padding: 40px;
+	justify-content: space-between;
+	align-items: center;
+}
+.about-us .about-content-content .about-content-img{
+	flex: 0 0 220px;
+}
+.about-us .about-content-content .about-content-img img{
+	width: 220px;
+	height: 220px;
+}
+.about-us .about-content-content .about-content-text{
+	flex: 0 0 410px;
+	font-size: 14px;
+	font-family: PingFang SC;
+	font-weight: 500;
+	color: #333333;
+}
+/* .about-us .about-us-img img{
+	width: 100%;
+	height: 300px;
+} */
 
 
 

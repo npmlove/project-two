@@ -823,6 +823,11 @@
 				},
 				menuClick(index) {
 					this.menuIndex = index
+					if(index == 0){
+						window.location.href = './index.html'
+					}else if(index == 3){
+						window.location.href = './about_us.html'
+					}
 				},
 				searchTopClick(index) {
 					this.searchTopIndex = index
