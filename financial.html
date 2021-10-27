@@ -2,8 +2,462 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="format-detection" content="telephone=no,address=no,email=no">
+		<meta name="applicable-device" content="pc,mobile">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Cache-Control" content="no-transform">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="renderer" content="webkit">
+		<meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+		<meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+		<link rel='icon' href='./img/favicon.ico' type='image/x-icon' />
+		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+		<link rel="stylesheet" href="./css/element-ui-min.css">
+		<link rel="stylesheet" href="./css/reset.css" />
+		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/vue.js"></script>
+		<script src="./js/axios.min.js"></script>
+		<script src="./js/element-ui.js"></script>
+		<script>
+			var _hmt = _hmt || [];
+			(function() {
+				var hm = document.createElement("script");
+				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
+				var s = document.getElementsByTagName("script")[0]; 
+				s.parentNode.insertBefore(hm, s);
+			})();
+		</script>
 	</head>
 	<body>
+		<div id="app" style="font-size: 0;">
+			<!-- 头部 -->
+			<div class="header">
+				<div class="header-img">
+					<a href="./index.html">
+						<!-- <img class="logo" src="./img/logo.png" /> -->
+						<div class="logo"></div>
+					</a>
+					<div class="logo-title"></div>
+				</div>
+				<div v-if="userInfo" class="header-userInfo">
+					<img @mousemove="showHeaderMenu(1)" class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<div v-show="headerMenu" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" style="display: none;" class="header-userInfo-menu">
+						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
+						<div @click="tuiChu" class="header-bak">退出</div>
+					</div>
+				</div>
+				<div v-else @click="loginClick" class="header-user">登录</div>
+			</div>
+			<div class="header-menu">
+				<ul class="header-menu-list com-width">
+					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
+					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+				</ul>
+			</div>
+			<!-- 订单管理 -->
+			<div class="order-list">
+				<div class="com-width order-list-content">
+					<div class="order-list-userInfo">
+						<div class="list-userInfo-menu">
+							<div class="userInfo-touxiang-list">
+								<div class="userInfo-touxiang-img">
+									<img alt="图片" :src="userInfo.headImgUrl" />
+								</div>
+								<div class="userInfo-huanyin">欢迎您{{userInfo.nickname}}</div>
+								<div class="userInfo-youxiang">设置邮箱</div>
+							</div>
+							<ul class="userInfo-menu-list">
+								<li><a>企业信息</a></li>
+								<li><a href="./orderList.html">订单管理</a></li>
+								<li class="menu-list-active"><a href="./financial.html">财务管理</a></li>
+							</ul>
+						</div>
+						<div class="list-userInfo-customer">
+							<div class="userInfo-customer"><div>您的专属客服:</div><div>nana</div></div>
+							<div class="userInfo-customer"><div>欢迎致电:</div><div>13567862626</div></div>
+						</div>
+					</div>
+					<div class="order-list-manage">
+						<div class="order-list-manage-title">财务管理</div>
+						<div class="order-list-from">
+							<el-form :inline="true" size="medium" label-width="100px" class="demo-form-inline">
+								<div class="content-search-normal">
+									<el-form-item label="航班日期">
+										<el-date-picker
+											v-model="departureDate"
+											type="daterange"
+											style="width: 255px;"
+											range-separator="至"
+											start-placeholder="起始日期"
+											value-format="yyyy-MM-dd"
+											end-placeholder="结束日期">
+										</el-date-picker>
+									</el-form-item>
+									<el-form-item>
+										<el-button @click="searchClick" size="medium" type="primary" icon="el-icon-search">查询</el-button>
+										<el-button @click="restClick" size="medium" type="primary">清空</el-button>
+									</el-form-item>
+								</div>
+							</el-form>
+						</div>
+						<div class="tabs__nav-wrap">
+							<el-tabs v-model="typeCode" type="border-card" @tab-click="tabClickData">
+							    <el-tab-pane label="发票开具" name="发票开具">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
+										<li @click="orderClick(item.id)" v-for="(item,index) in dataArr" :key="item.orderNo" class="nav-wrap-li">
+											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
+												<div style="display: flex;">
+													<div>订单号：{{item.orderNo}}</div>
+													<div style="margin-left: 20px;">预订日期：{{item.orderTime}}</div>
+												</div>
+												<div v-if="item.status == '5'" style="color: #F00;margin-right: 20px;">确认倒计时：{{countTime(index,item.updateTime)}} {{item.timeOutA}}</div>
+											</div>
+											<div class="nav-wrap-content">
+												<div class="nav-wrap-route">
+													<div class="nav-wrap-logo">
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：{{item.departureDate}}</div>
+													</div>
+													<div class="nav-wrap-route-content">
+														<div class="nav-wrap-route-info">
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
+														</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-info">
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
+														</div>
+													</div>
+													<div v-if="item.bookingPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label v-if="item.showDif">订舱数据</label>
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-if="item.showDif && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label>进仓数据</label>
+														<label>{{item.cargoName}}</label>
+														<label :style="{color: item.inboundPiece == item.bookingPiece ? '#333' : '#F00'}">{{item.inboundPiece}}PCS</label>
+														<label :style="{color: item.inboundCbm == item.bookingCbm ? '#333' : '#F00'}">{{item.inboundCbm}}CMB</label>
+														<label :style="{color: item.inboundWeight == item.bookingWeight ? '#333' : '#F00'}">{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else-if="item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+												</div>
+												<div class="nav-wrap-right">
+													<div class="nav-wrap-text">
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
+													</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+									<div v-if="total != '0'" style="text-align: right;">
+										<el-pagination
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
+										  :page-size="pageSize"
+										  layout="total, prev, pager, next, jumper"
+										  :total="total">
+										</el-pagination>
+									</div>
+								</el-tab-pane>
+							    <el-tab-pane label="发票信息" name="发票信息">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
+										<li @click="orderClick(item.id)" v-for="(item,index) in dataArr" :key="item.orderNo" class="nav-wrap-li">
+											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
+												<div style="display: flex;">
+													<div>订单号：{{item.orderNo}}</div>
+													<div style="margin-left: 20px;">预订日期：{{item.orderTime}}</div>
+												</div>
+												<div v-if="item.status == '5'" style="color: #F00;margin-right: 20px;">确认倒计时：{{countTime(index,item.updateTime)}} {{item.timeOutA}}</div>
+											</div>
+											<div class="nav-wrap-content">
+												<div class="nav-wrap-route">
+													<div class="nav-wrap-logo">
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：{{item.departureDate}}</div>
+													</div>
+													<div class="nav-wrap-route-content">
+														<div class="nav-wrap-route-info">
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
+														</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-info">
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
+														</div>
+													</div>
+													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+												</div>
+												<div class="nav-wrap-right">
+													<div class="nav-wrap-text">
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
+													</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+									<div v-if="total != '0'" style="text-align: right;">
+										<el-pagination
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
+										  :page-size="pageSize"
+										  layout="total, prev, pager, next, jumper"
+										  :total="total">
+										</el-pagination>
+									</div>
+								</el-tab-pane>
+							    <el-tab-pane label="财务核销" name="财务核销">
+									<div v-if="total == '0'" style="text-align: center;">
+										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
+										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
+									</div>
+									<ul v-if="total != '0'" class="nav-wrap-ul">
+										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
+											<div class="nav-wrap-order">
+												<div>订单号：{{item.orderNo}}</div>
+												<div>预订日期：{{item.orderTime}}</div>
+											</div>
+											<div class="nav-wrap-content">
+												<div class="nav-wrap-route">
+													<div class="nav-wrap-logo">
+														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
+														<div>{{item.airCompanyName}}</div>
+														<div>出发日期：{{item.departureDate}}</div>
+													</div>
+													<div class="nav-wrap-route-content">
+														<div class="nav-wrap-route-info">
+															<div>{{item.pol}}</div>
+															<div>{{item.polName}}</div>
+														</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-info">
+															<div>{{item.pod}}</div>
+															<div>{{item.podName}}</div>
+														</div>
+													</div>
+													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else class="nav-wrap-route-remarks">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.bookingPiece}}PCS</label>
+														<label>{{item.bookingCbm}}CMB</label>
+														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+												</div>
+												<div class="nav-wrap-right">
+													<div class="nav-wrap-text">
+														<div>{{item.statusDesc}}</div>
+														<div>订舱单价 ￥{{item.bookingPrice}}</div>
+													</div>
+												</div>
+											</div>
+										</li>
+									</ul>
+									<div v-if="total != '0'" style="text-align: right;">
+										<el-pagination
+										  @current-change="handleCurrentChange"
+										  :current-page="pageNum"
+										  :page-size="pageSize"
+										  layout="total, prev, pager, next, jumper"
+										  :total="total">
+										</el-pagination>
+									</div>
+								</el-tab-pane>
+							</el-tabs>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- 尾部 -->
+			<div class="footer">
+				<div class="com-width">
+					<div class="footer-content">
+						<div class="footer-label">
+							<div class="footer-cool" style="margin-bottom: 10px;">
+								<span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
+							</div>
+							<!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
+								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
+								<span>沪公网备XXXXXXXXXXXXX号</span>
+							</div> -->
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+						</div>
+						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
+	<script src="./service/index.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				loading: false,
+				menuIndex: 0,
+				userInfo: {},
+				openId: '',
+				headerMenu: false,
+				pageNum: 1,
+				pageSize: 10,
+				departureDate: '',
+				typeCode: '发票开具',
+				total: 0,
+				dataArr: []
+			},
+			created() {
+				if(!localStorage.getItem('wxOpenId')){
+					window.location.href = './login.html'
+				}
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				}
+				this.openId = localStorage.getItem('wxOpenId')
+				this.initUserInfo()
+				this.initData()
+			},
+			methods: {
+				tabClickData() {
+					this.initData()
+				},
+				initData() {
+					var json = {
+						departureDate1: this.departureDate == '' ? '' : this.departureDate[0],
+						departureDate2: this.departureDate == '' ? '' : this.departureDate[1],
+						pageNum: this.pageNum,
+						pageSize: this.pageSize
+					}
+					json = toData(json)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.orderSearchByPage+'?'+json,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							if(data.data.records == null){
+								this.dataArr = []
+								this.total = 0
+							}else{
+								this.dataArr = data.data.records
+								this.total = data.data.total
+							}
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
+				initUserInfo(){
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.userUserInfo+'?openId='+this.openId,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.userInfo = data.data.tportalUser
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
+				searchClick() {
+					this.initData()
+				},
+				restClick() {
+					this.departureDate = ''
+					this.pageNum = 1
+					this.pageSize  = 10
+					this.initData()
+				},
+				handleCurrentChange(val) {
+					this.pageNum = val
+					this.initData()
+				},
+				showHeaderMenu(type) {
+					if(type == 1){
+						this.headerMenu = true
+					} else {
+						this.headerMenu = false
+					}
+				},
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
+				},
+				//登录
+				loginClick() {
+					window.location.href = './login.html'
+				},
+				// muen
+				menuClick(index) {
+					this.menuIndex = index
+					if(index == 0){
+						window.location.href = './index.html'
+					}else if(index == 3){
+						window.location.href = './about_us.html'
+					}
+				}
+			}
+		})
+	</script>
 </html>
