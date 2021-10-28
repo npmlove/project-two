@@ -474,3 +474,10 @@ textarea::-webkit-input-placeholder {
 .swiper-button-prev:after, .swiper-container-rtl .swiper-button-next:after{
 	content: '';
 }
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+	background-color: #2273CB;
+	border-color: #2273CB;
+}
+.border-btm-solid{
+	border-bottom: 1px solid #EFEFEF;
+}

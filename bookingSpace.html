@@ -428,9 +428,9 @@
 				this.cargoTypeA = getQueryVariable('cargoType')
 				this.dowA = getQueryVariable('dow')
 				this.dateTabActive = getQueryVariable('date')
-				this.bookingPiece = Number(getQueryVariable('bookingPiece'))
-				this.bookingWeight = Number(getQueryVariable('bookingWeight'))
-				this.bookingCbm = Number(getQueryVariable('bookingCbm'))
+				this.bookingPiece = Number(getQueryVariable('bookingPiece')) || ''
+				this.bookingWeight = Number(getQueryVariable('bookingWeight')) || ''
+				this.bookingCbm = Number(getQueryVariable('bookingCbm')) || ''
 				this.initHangxian()
 				if(this.bookingWeight && this.bookingCbm){
 					setTimeout(() => {
