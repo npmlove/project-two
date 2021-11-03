@@ -230,30 +230,36 @@
 									<div style="color: #999;font-size: 18px;font-weight: 100;margin-bottom: 20px;">发票信息</div>
 									<el-table
 										class="financial-table"
-										:data="tableData"
+										:data="tableData2"
+										@selection-change="invoiceInfosChange"
 										stripe
 										style="width: 100%">
 										<el-table-column type="selection" width="50"></el-table-column>
-										<el-table-column prop="orderid" label="发票号" min-width="120"></el-table-column>
-										<el-table-column prop="date" label="航班日期" min-width="120"></el-table-column>
-										<el-table-column prop="zhangdan" label="最晚付款日期" min-width="180"></el-table-column>
-										<el-table-column prop="hangxian" label="总金额" min-width="120"></el-table-column>
-										<el-table-column prop="price" label="发票抬头" min-width="120"></el-table-column>
-										<el-table-column prop="status" label="公司地址及电话" min-width="120"></el-table-column>
-										<el-table-column prop="id" label="收件人" min-width="60"></el-table-column>
+										<el-table-column prop="invoiceNumbers" label="发票号" min-width="120"></el-table-column>
+										<el-table-column prop="departureDate" label="航班日期" min-width="100"></el-table-column>
+										<el-table-column label="最晚付款日期" min-width="100">
+											<template slot-scope="scope">
+												<div v-for="(item,index) in scope.row.billInfos" v-if="index == 0" :key="index">{{item.departureDate}}</div>
+											</template>
+										</el-table-column>
+										<el-table-column prop="applyAmount" label="总金额" min-width="100"></el-table-column>
+										<el-table-column prop="invoiceTitle" label="发票抬头" min-width="120"></el-table-column>
+										<el-table-column prop="companyAddress" label="公司地址" min-width="120"></el-table-column>
+										<el-table-column prop="companyTel" label="电话" min-width="120"></el-table-column>
+										<el-table-column prop="recipient" label="收件人" min-width="60"></el-table-column>
 									</el-table>
-									<div class="financial-table-price">总金额：<span>￥8550</span></div>
+									<div class="financial-table-price">总金额：<span>￥{{invoiceInfosPrice}}</span></div>
 									<div style="color: #999;font-size: 18px;font-weight: 100;margin-bottom: 20px;margin-top: 20px;">发票详情</div>
 									<el-table
 										class="financial-table"
-										:data="tableData"
+										:data="invoiceInfosArr"
 										stripe
 										style="width: 100%">
-										<el-table-column prop="id" label="发票号" min-width="120"></el-table-column>
-										<el-table-column prop="orderid" label="运单号" min-width="120"></el-table-column>
-										<el-table-column prop="date" label="航班日期" min-width="120"></el-table-column>
+										<el-table-column prop="invoiceNumbers" label="发票号" min-width="120"></el-table-column>
+										<el-table-column prop="waybillNo" label="运单号" min-width="120"></el-table-column>
+										<el-table-column prop="departureDate" label="航班日期" min-width="120"></el-table-column>
 										<el-table-column prop="zhangdan" label="最晚付款日期" min-width="120"></el-table-column>
-										<el-table-column prop="price" label="总金额" min-width="120"></el-table-column>
+										<el-table-column prop="billAmountCny" label="总金额" min-width="120"></el-table-column>
 									</el-table>
 								</el-tab-pane>
 							    <el-tab-pane label="财务核销" name="财务核销">
@@ -308,14 +314,10 @@
 				userInfo: {},
 				openId: '',
 				headerMenu: false,
-				pageNum: 1,
-				pageSize: 10,
 				departureDate1: '',
 				departureDate2: '',
 				departureDate3: '',
 				typeCode: '发票开具',
-				total: 0,
-				dataArr: [],
 				invoiceType: '',
 				invoiceTypeOpt: [
 					{
@@ -332,6 +334,7 @@
 					}
 				],
 				tableData: [],
+				//发票开具
 				tableData1: [],
 				billAmountCnyTotal: 0,
 				billAmountCnyArr: [],
@@ -340,7 +343,11 @@
 				invoiceTitleJson: {},
 				recipient: '',
 				recipientOpt: [],
-				recipientJson: {}
+				recipientJson: {},
+				//发票信息
+				tableData2: [],
+				invoiceInfosPrice: 0,
+				invoiceInfosArr: []
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -412,6 +419,19 @@
 						this.$message.error('正在开发请稍后再试')
 					}
 				},
+				invoiceInfosChange(val) {
+					console.log(val)
+					this.invoiceInfosPrice = 0
+					this.invoiceInfosArr = []
+					if(val.length > 0){
+						for(var i = 0; i < val.length; i++){
+							this.invoiceInfosPrice += val[i].applyAmount
+							for(var q = 0; q < val[i].billInfos.length; q++){
+								this.invoiceInfosArr.push(val[i].billInfos[q])
+							}
+						}
+					}
+				},
 				selectionChange(val) {
 					this.billAmountCnyArr = val
 					this.billAmountCnyTotal = 0
@@ -472,6 +492,32 @@
 					this.typeCode = e.paneName
 					this.initList()
 				},
+				initInvoiceInfos() {
+					var json = {
+						startDepartureDate: this.departureDate2 == '' ? '' : this.departureDate2[0],
+						endDepartureDate: this.departureDate2 == '' ? '' : this.departureDate2[1]
+					}
+					json = toData(json)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.invoiceInfos+'?'+json,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.tableData2 = data.data
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
+				
+				
+				
 				initList() {
 					var json = {
 						startDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[0],
@@ -514,7 +560,13 @@
 					})
 				},
 				searchClick() {
-					this.initList()
+					if(this.typeCode == '发票开具'){
+						this.initList()
+					}else if(this.typeCode == '发票信息'){
+						this.initInvoiceInfos()
+					}else if(this.typeCode == '财务核销'){
+						this.departureDate3 = ''
+					}
 				},
 				restClick() {
 					if(this.typeCode == '发票开具'){

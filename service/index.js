@@ -68,7 +68,9 @@ const serviceApi = {
 	//查询当前用户快递信息列表
 	expressInfoList: publicWeb+'/t-portal-express-info/list',
 	//开票申请
-	invoiceApply: publicWeb+'/t-invoice-apply/invoiceApply'
+	invoiceApply: publicWeb+'/t-invoice-apply/invoiceApply',
+	//发票信息
+	invoiceInfos: publicWeb+'/t-invoice-apply/invoiceInfos'
 }
 
 
