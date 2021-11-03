@@ -58,7 +58,17 @@ const serviceApi = {
 	//执行订单
 	orderExecuteOrder: publicWeb+'/t-order/executeOrder',
 	//是否磁性
-	orderIsMagnetic: publicWeb+'/t-order/isMagnetic'
+	orderIsMagnetic: publicWeb+'/t-order/isMagnetic',
+	//确认账单
+	billConfirmBill: publicWeb+'/t-bill/confirmBill',
+	//已确认费用账单列表
+	billList: publicWeb+'/t-bill/list',
+	//查询当前用户开票信息列表
+	invoiceInfoList: publicWeb+'/t-portal-invoice-info/list',
+	//查询当前用户快递信息列表
+	expressInfoList: publicWeb+'/t-portal-express-info/list',
+	//开票申请
+	invoiceApply: publicWeb+'/t-invoice-apply/invoiceApply'
 }
 
 

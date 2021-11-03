@@ -311,6 +311,7 @@
 								<div style="margin-top: 20px;">
 									<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
 									<button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据确认</button>
+									<button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">账单已生成，请确认</button>
 								</div>
 							</div>
 							<div v-if="guowaiArr.length > 0">
@@ -338,6 +339,16 @@
 					</div>
 				</div>
 			</div>
+			<el-dialog title="账单" :visible.sync="dialogFormVisible" width="1240px">
+				<div v-for="(item,index) in billInfos">
+					<embed v-if="billInfosIndex == index" :src="webIp+item.pdfPath" style=" width: 1200PX; height: 600px; " />
+				</div>
+				<div slot="footer" class="dialog-footer" style="text-align: center;">
+					<el-button>导出账单</el-button>
+					<el-button @click="zhangDanClick" type="primary">账单无误，我已确认</el-button>
+					<el-button>下一张账单</el-button>
+				</div>
+			</el-dialog>
 			
 			<!-- 尾部 -->
 			<div class="footer">
@@ -364,6 +375,7 @@
 		new Vue({
 			el: '#app',
 			data: {
+				webIp: 'http://10.8.0.1',
 				loading: false,
 				menuIndex: 0,
 				orderId: '',
@@ -381,7 +393,12 @@
 				orderAttachmentList: [],
 				activityFlowVOList: [],
 				userInfo: '',
-				headerMenu: false
+				headerMenu: false,
+				isTbcBillVO: false,
+				billInfosIndex: 0,
+				billInfos: [],
+				tbcBillVO: {},
+				dialogFormVisible: false
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -394,6 +411,30 @@
 				this.orderSearchDetail()
 			},
 			methods: {
+				zhangDanClick() {
+					var data = {
+						billId: this.billInfos[this.billInfosIndex].billId
+					}
+					axios({
+						method: 'post',
+						url: webIp+serviceApi.billConfirmBill,
+						data: data,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.dialogFormVisible = false
+							this.orderSearchDetail()
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+							
+						}
+					})
+				},
 				showHeaderMenu(type) {
 					if(type == 1){
 						this.headerMenu = true
@@ -521,6 +562,8 @@
 								
 							}
 						})
+					}else if(type == '账单'){
+						this.dialogFormVisible = true
 					}
 				},
 				//账单转化
@@ -590,6 +633,20 @@
 							this.orderCargoDetailList = this.detailsArr.orderCargoDetailList
 							this.orderAttachmentList = this.detailsArr.orderAttachmentList
 							this.activityFlowVOList = this.detailsArr.activityFlowVOList
+							if(this.detailsArr.tbcBillVO == null){
+								this.isTbcBillVO = false
+							} else {
+								this.isTbcBillVO = true
+								this.tbcBillVO = this.detailsArr.tbcBillVO
+								this.billInfos = this.detailsArr.tbcBillVO.billInfos
+								for(var q = 0; q < this.billInfos.length; q++){
+									if(this.billInfos[q].status == 0){
+										this.isTbcBillVO = true
+									}else {
+										this.isTbcBillVO = false
+									}
+								}
+							}
 						}else if(data.code == -200){
 							window.location.href = './login.html'
 						}else{
