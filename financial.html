@@ -238,9 +238,9 @@
 										<el-table-column prop="invoiceNumbers" label="发票号" min-width="120"></el-table-column>
 										<el-table-column prop="departureDate" label="航班日期" min-width="100"></el-table-column>
 										<el-table-column label="最晚付款日期" min-width="100">
-											<template slot-scope="scope">
+											<!-- <template slot-scope="scope">
 												<div v-for="(item,index) in scope.row.billInfos" v-if="index == 0" :key="index">{{item.departureDate}}</div>
-											</template>
+											</template> -->
 										</el-table-column>
 										<el-table-column prop="applyAmount" label="总金额" min-width="100"></el-table-column>
 										<el-table-column prop="invoiceTitle" label="发票抬头" min-width="120"></el-table-column>
@@ -364,6 +364,10 @@
 			},
 			methods: {
 				InvoicingClick(type) {
+					if(type == '票据'){
+						this.$message.error('正在开发请稍后再试')
+						return
+					}
 					if(this.billAmountCnyArr.length == 0){
 						this.$message.error('请选择开票数据')
 						return
@@ -415,12 +419,9 @@
 								this.$message.error(data.message)
 							}
 						})
-					}else if(type == '票据'){
-						this.$message.error('正在开发请稍后再试')
 					}
 				},
 				invoiceInfosChange(val) {
-					console.log(val)
 					this.invoiceInfosPrice = 0
 					this.invoiceInfosArr = []
 					if(val.length > 0){
@@ -490,7 +491,13 @@
 				},
 				tabClickData(e) {
 					this.typeCode = e.paneName
-					this.initList()
+					if(this.typeCode == '发票开具'){
+						this.initList()
+					}else if(this.typeCode == '发票信息'){
+						this.initInvoiceInfos()
+					}else if(this.typeCode == '财务核销'){
+						this.departureDate3 = ''
+					}
 				},
 				initInvoiceInfos() {
 					var json = {

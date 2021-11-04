@@ -308,13 +308,8 @@
 										<div>{{guonerJiaqian}}</div>
 									</div>
 								</div>
-								<div style="margin-top: 20px;">
-									<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
-									<button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据确认</button>
-									<button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">账单已生成，请确认</button>
-								</div>
 							</div>
-							<div v-if="guowaiArr.length > 0">
+							<div v-if="guowaiArr.length > 0" style="margin-top: 20px;">
 								<div class="details-table-zhangdan-title">账单明细</div>
 								<div class="booking-price borderEFEFEF bakFFFFFF">
 									<div class="booking-price-item">
@@ -330,10 +325,12 @@
 										<div>{{guowaiJiaqian}}</div>
 									</div>
 								</div>
-								<div style="margin-top: 20px;">
-									<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
-									<button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据确认</button>
-								</div>
+								
+							</div>
+							<div style="margin-top: 20px;">
+								<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
+								<button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据确认</button>
+								<button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">账单已生成，请确认</button>
 							</div>
 						</div>
 					</div>
