@@ -49,9 +49,9 @@
 					</a>
 					<div class="logo-title"></div>
 				</div>
-				<div v-if="userInfo" class="header-userInfo">
-					<img @mousemove="showHeaderMenu(1)" class="header-imgUrl" :src="userInfo.headImgUrl" />
-					<div v-show="headerMenu" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" style="display: none;" class="header-userInfo-menu">
+				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
 						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
 						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
@@ -325,7 +325,6 @@
 										<div>{{guowaiJiaqian}}</div>
 									</div>
 								</div>
-								
 							</div>
 							<div style="margin-top: 20px;">
 								<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
@@ -341,7 +340,7 @@
 					<embed v-if="billInfosIndex == index" :src="webIp+item.pdfPath" style=" width: 1200PX; height: 600px; " />
 				</div>
 				<div slot="footer" class="dialog-footer" style="text-align: center;">
-					<el-button @click="importPdf">导出账单</el-button>
+					<!-- <el-button @click="importPdf">导出账单</el-button> -->
 					<el-button @click="zhangDanClick" type="primary">账单无误，我已确认</el-button>
 					<el-button @click="nextStep">下一张账单（{{(billInfosIndex+1)}}/{{billInfos.length}}）</el-button>
 				</div>
@@ -359,7 +358,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
