@@ -70,7 +70,9 @@ const serviceApi = {
 	//开票申请
 	invoiceApply: publicWeb+'/t-invoice-apply/invoiceApply',
 	//发票信息
-	invoiceInfos: publicWeb+'/t-invoice-apply/invoiceInfos'
+	invoiceInfos: publicWeb+'/t-invoice-apply/invoiceInfos',
+	//导出账单
+	billImportBillPdf: publicWeb+'/t-bill/importBillPdf'
 }
 
 
