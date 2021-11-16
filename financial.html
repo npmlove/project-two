@@ -207,7 +207,7 @@
 														</div>
 														<div style="margin-top: 10px;">
 															<el-form-item label="收件人">
-															    <el-select v-model="recipient" placeholder="请选择收件人" clearable filterable>
+															    <el-select v-model="recipient" @change="expressInfoChange" placeholder="请选择收件人" clearable filterable>
 															    	<el-option 
 															    		v-for="(item,index) in recipientOpt" 
 															    		:key="item.id" 
@@ -448,6 +448,13 @@
 					for(var q = 0; q < this.invoiceTitleOpt.length; q++){
 						if(e == this.invoiceTitleOpt[q].invoiceTitle){
 							this.invoiceTitleJson = this.invoiceTitleOpt[q]
+						}
+					}
+				},
+                expressInfoChange(e) {
+					for(var q = 0; q < this.recipientOpt.length; q++){
+						if(e == this.recipientOpt[q].recipient){
+							this.recipientJson = this.recipientOpt[q]
 						}
 					}
 				},
