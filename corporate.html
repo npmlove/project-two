@@ -297,6 +297,7 @@
 					}
 				},
                 expressInfoChange(e) {
+                    console.log(e)
                     for(var q = 0; q < this.recipientOpt.length; q++){
                         if(e == this.recipientOpt[q].recipient){
                             this.recipientJson = this.recipientOpt[q]
