@@ -44,7 +44,7 @@ const serviceApi = {
 	//每周最低运价
 	noAuthSearchWeekRates: publicWeb+'/es/noAuth/searchWeekRates',
 	//按运单查询
-	trackSearchWeekRates: publicWeb+'/t-track/noAuth/queryByAWB',
+	trackSearchWeekRates: publicWeb+'/t-track/queryByAWB',
 	//指定航线、货物类型、周几的运价查询
 	hangxianSearchBaseRates: publicWeb+'/es/searchBaseRates',
 	//用户下单

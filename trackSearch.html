@@ -243,6 +243,9 @@
 					axios({
 						method: 'get',
 						url: webIp+serviceApi.trackSearchWeekRates+'?'+jsonData,
+                        headers: {
+                            'tokenId': localStorage.getItem('tokenId')
+                        }
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
