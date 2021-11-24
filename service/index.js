@@ -58,7 +58,9 @@ const serviceApi = {
 	//执行订单
 	orderExecuteOrder: publicWeb+'/t-order/executeOrder',
 	//是否磁性
-	orderIsMagnetic: publicWeb+'/t-order/isMagnetic'
+	orderIsMagnetic: publicWeb+'/t-order/isMagnetic',
+
+    orderIsMagnetic1:dopajsu
 }
 
 
