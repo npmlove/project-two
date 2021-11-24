@@ -60,7 +60,6 @@ const serviceApi = {
 	//是否磁性
 	orderIsMagnetic: publicWeb+'/t-order/isMagnetic',
 
-    orderIsMagnetic1:dopajsu
 }
 
 
