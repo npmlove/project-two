@@ -42,9 +42,9 @@
 					</a>
 					<div class="logo-title"></div>
 				</div>
-				<div v-if="userInfo" class="header-userInfo">
-					<img @mousemove="showHeaderMenu(1)" class="header-imgUrl" :src="userInfo.headImgUrl" />
-					<div v-show="headerMenu" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" style="display: none;" class="header-userInfo-menu">
+				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
 						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
 						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>

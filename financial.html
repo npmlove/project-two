@@ -41,9 +41,9 @@
 					</a>
 					<div class="logo-title"></div>
 				</div>
-				<div v-if="userInfo" class="header-userInfo">
-					<img @mousemove="showHeaderMenu(1)" class="header-imgUrl" :src="userInfo.headImgUrl" />
-					<div v-show="headerMenu" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" style="display: none;" class="header-userInfo-menu">
+				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
 						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
 						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
@@ -74,7 +74,7 @@
 								<div class="userInfo-youxiang">设置邮箱</div>
 							</div>
 							<ul class="userInfo-menu-list">
-								<li><a>企业信息</a></li>
+								<li><a href="./corporate.html">企业信息</a></li>
 								<li><a href="./orderList.html">订单管理</a></li>
 								<li class="menu-list-active"><a href="./financial.html">财务管理</a></li>
 							</ul>
@@ -91,7 +91,28 @@
 								<div class="content-search-normal">
 									<el-form-item label="航班日期">
 										<el-date-picker
-											v-model="departureDate"
+											v-if="typeCode == '发票开具'"
+											v-model="departureDate1"
+											type="daterange"
+											style="width: 255px;"
+											range-separator="至"
+											start-placeholder="起始日期"
+											value-format="yyyy-MM-dd"
+											end-placeholder="结束日期">
+										</el-date-picker>
+										<el-date-picker
+											v-if="typeCode == '发票信息'"
+											v-model="departureDate2"
+											type="daterange"
+											style="width: 255px;"
+											range-separator="至"
+											start-placeholder="起始日期"
+											value-format="yyyy-MM-dd"
+											end-placeholder="结束日期">
+										</el-date-picker>
+										<el-date-picker
+											v-if="typeCode == '财务核销'"
+											v-model="departureDate3"
 											type="daterange"
 											style="width: 255px;"
 											range-separator="至"
@@ -110,208 +131,152 @@
 						<div class="tabs__nav-wrap">
 							<el-tabs v-model="typeCode" type="border-card" @tab-click="tabClickData">
 							    <el-tab-pane label="发票开具" name="发票开具">
-									<div v-if="total == '0'" style="text-align: center;">
-										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
-										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
-									</div>
-									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick(item.id)" v-for="(item,index) in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
-												<div style="display: flex;">
-													<div>订单号：{{item.orderNo}}</div>
-													<div style="margin-left: 20px;">预订日期：{{item.orderTime}}</div>
-												</div>
-												<div v-if="item.status == '5'" style="color: #F00;margin-right: 20px;">确认倒计时：{{countTime(index,item.updateTime)}} {{item.timeOutA}}</div>
-											</div>
-											<div class="nav-wrap-content">
-												<div class="nav-wrap-route">
-													<div class="nav-wrap-logo">
-														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
-														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：{{item.departureDate}}</div>
-													</div>
-													<div class="nav-wrap-route-content">
-														<div class="nav-wrap-route-info">
-															<div>{{item.pol}}</div>
-															<div>{{item.polName}}</div>
-														</div>
-														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
-														<div class="nav-wrap-route-info">
-															<div>{{item.pod}}</div>
-															<div>{{item.podName}}</div>
-														</div>
-													</div>
-													<div v-if="item.bookingPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
-														<label v-if="item.showDif">订舱数据</label>
-														<label>{{item.cargoName}}</label>
-														<label>{{item.bookingPiece}}PCS</label>
-														<label>{{item.bookingCbm}}CMB</label>
-														<label>{{item.bookingWeight}}KG</label>
-														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
-													</div>
-													<div v-if="item.showDif && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
-														<label>进仓数据</label>
-														<label>{{item.cargoName}}</label>
-														<label :style="{color: item.inboundPiece == item.bookingPiece ? '#333' : '#F00'}">{{item.inboundPiece}}PCS</label>
-														<label :style="{color: item.inboundCbm == item.bookingCbm ? '#333' : '#F00'}">{{item.inboundCbm}}CMB</label>
-														<label :style="{color: item.inboundWeight == item.bookingWeight ? '#333' : '#F00'}">{{item.inboundWeight}}KG</label>
-														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
-													</div>
-													<div v-else-if="item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
-														<label>{{item.cargoName}}</label>
-														<label>{{item.inboundPiece}}PCS</label>
-														<label>{{item.inboundCbm}}CMB</label>
-														<label>{{item.inboundWeight}}KG</label>
-														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
-													</div>
-												</div>
-												<div class="nav-wrap-right">
-													<div class="nav-wrap-text">
-														<div>{{item.statusDesc}}</div>
-														<div>订舱单价 ￥{{item.bookingPrice}}</div>
-													</div>
+									<div class="financial-invoice">
+										<div class="financial-invoice-table">
+											<el-table
+												class="financial-table"
+												:data="tableData1"
+												@selection-change="selectionChange"
+												stripe
+												style="width: 100%">
+												<el-table-column type="selection" width="50"></el-table-column>
+												<el-table-column prop="waybillNo" label="运单号" min-width="120"></el-table-column>
+												<el-table-column prop="departureDate" label="航班日期" min-width="100"></el-table-column>
+												<el-table-column prop="reconciliationUnit" label="对账单位" min-width="180"></el-table-column>
+												<el-table-column prop="fullLeg" label="航线" min-width="120"></el-table-column>
+												<el-table-column prop="billAmountCny" label="订单总金额" min-width="100"></el-table-column>
+											</el-table>
+											<div class="financial-merge">
+												<div class="financial-merge-price">总金额：<span>￥{{billAmountCnyTotal}}</span></div>
+												<div class="financial-merge-list">
+													<div @click="InvoicingClick('合并')" class="financial-merge-btn">合并开票</div>
+													<div @click="InvoicingClick('单独')" class="financial-merge-btn">单独开票</div>
+													<div @click="InvoicingClick('票据')" class="financial-merge-btn">DEBIT NOTE</div>
 												</div>
 											</div>
-										</li>
-									</ul>
-									<div v-if="total != '0'" style="text-align: right;">
-										<el-pagination
-										  @current-change="handleCurrentChange"
-										  :current-page="pageNum"
-										  :page-size="pageSize"
-										  layout="total, prev, pager, next, jumper"
-										  :total="total">
-										</el-pagination>
+										</div>
+										<div class="financial-invoice-bill">
+											<div v-if="billAmountCnyArr.length > 0" class="invoice-bill-item">
+												<div class="invoice-bill-item-title">开票账单</div>
+												<div class="invoice-bill-item-details">
+													<div v-for="(item,index) in billAmountCnyArr" :key="index" class="bill-order" style="margin-bottom: 10px;">
+														<div class="bill-order-text1">
+															<div>运单号：{{item.waybillNo}}</div>
+															<div>￥{{item.billAmountCny}}</div>
+														</div>
+														<div class="bill-order-text2">
+															<div>{{item.fullLeg}}</div>
+															<div>{{item.departureDate}}</div>
+														</div>
+													</div>
+													<div class="bill-price">总金额：<span>￥{{billAmountCnyTotal}}</span></div>
+												</div>
+											</div>
+											<div class="invoice-bill-item">
+												<div class="invoice-bill-item-title">开票信息</div>
+												<div class="invoice-bill-item-details">
+													<el-form :inline="false" size="mini" label-width="60px" class="demo-form-inline">
+														<div class="border-btm-solid">
+															<el-form-item label="发票类型">
+															    <el-select v-model="invoiceType" placeholder="请选择发票类型" clearable filterable>
+															    	<el-option 
+															    		v-for="(item,index) in invoiceTypeOpt" 
+															    		:key="item.Name" 
+																		:label="item.Name"
+															    		:value="item.Value">
+															    	</el-option>
+															    </el-select>
+															</el-form-item>
+														</div>
+														<div class="border-btm-solid" style="margin-top: 10px;">
+															<el-form-item label="发票抬头">
+															    <el-select v-model="invoiceTitle" @change="invoiceTitleChange" placeholder="请选择发票抬头" clearable filterable>
+															    	<el-option 
+															    		v-for="(item,index) in invoiceTitleOpt" 
+															    		:key="item.id" 
+																		:label="item.invoiceTitle"
+															    		:value="item.invoiceTitle">
+															    	</el-option>
+															    </el-select>
+															</el-form-item>
+															<el-form-item label="纳税人识别号" class="form-label-style"><div>{{invoiceTitleJson.dutyParagraph}}</div></el-form-item>
+															<el-form-item label="公司地址"><div>{{invoiceTitleJson.companyAddress}}</div></el-form-item>
+															<el-form-item label="公司电话"><div>{{invoiceTitleJson.companyTel}}</div></el-form-item>
+															<el-form-item label="开户行"><div>{{invoiceTitleJson.accountBank}}</div></el-form-item>
+															<el-form-item label="银行账号"><div>{{invoiceTitleJson.bankAccount}}</div></el-form-item>
+														</div>
+														<div style="margin-top: 10px;">
+															<el-form-item label="收件人">
+															    <el-select v-model="recipient" @change="expressInfoChange" placeholder="请选择收件人" clearable filterable>
+															    	<el-option 
+															    		v-for="(item,index) in recipientOpt" 
+															    		:key="item.id" 
+																		:label="item.recipient"
+															    		:value="item.recipient">
+															    	</el-option>
+															    </el-select>
+															</el-form-item>
+															<el-form-item label="联系电话"><div>{{recipientJson.recipientTel}}</div></el-form-item>
+															<el-form-item label="邮箱"><div>{{recipientJson.recipientEmail}}</div></el-form-item>
+															<el-form-item label="邮寄地址"><div>{{recipientJson.recipientAddress}}</div></el-form-item>
+														</div>
+													</el-form>
+												</div>
+											</div>
+										</div>
 									</div>
 								</el-tab-pane>
 							    <el-tab-pane label="发票信息" name="发票信息">
-									<div v-if="total == '0'" style="text-align: center;">
-										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
-										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
-									</div>
-									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick(item.id)" v-for="(item,index) in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
-												<div style="display: flex;">
-													<div>订单号：{{item.orderNo}}</div>
-													<div style="margin-left: 20px;">预订日期：{{item.orderTime}}</div>
-												</div>
-												<div v-if="item.status == '5'" style="color: #F00;margin-right: 20px;">确认倒计时：{{countTime(index,item.updateTime)}} {{item.timeOutA}}</div>
-											</div>
-											<div class="nav-wrap-content">
-												<div class="nav-wrap-route">
-													<div class="nav-wrap-logo">
-														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
-														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：{{item.departureDate}}</div>
-													</div>
-													<div class="nav-wrap-route-content">
-														<div class="nav-wrap-route-info">
-															<div>{{item.pol}}</div>
-															<div>{{item.polName}}</div>
-														</div>
-														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
-														<div class="nav-wrap-route-info">
-															<div>{{item.pod}}</div>
-															<div>{{item.podName}}</div>
-														</div>
-													</div>
-													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
-														<label>{{item.cargoName}}</label>
-														<label>{{item.inboundPiece}}PCS</label>
-														<label>{{item.inboundCbm}}CMB</label>
-														<label>{{item.inboundWeight}}KG</label>
-														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
-													</div>
-													<div v-else class="nav-wrap-route-remarks">
-														<label>{{item.cargoName}}</label>
-														<label>{{item.bookingPiece}}PCS</label>
-														<label>{{item.bookingCbm}}CMB</label>
-														<label>{{item.bookingWeight}}KG</label>
-														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
-													</div>
-												</div>
-												<div class="nav-wrap-right">
-													<div class="nav-wrap-text">
-														<div>{{item.statusDesc}}</div>
-														<div>订舱单价 ￥{{item.bookingPrice}}</div>
-													</div>
-												</div>
-											</div>
-										</li>
-									</ul>
-									<div v-if="total != '0'" style="text-align: right;">
-										<el-pagination
-										  @current-change="handleCurrentChange"
-										  :current-page="pageNum"
-										  :page-size="pageSize"
-										  layout="total, prev, pager, next, jumper"
-										  :total="total">
-										</el-pagination>
-									</div>
+									<div style="color: #999;font-size: 18px;font-weight: 100;margin-bottom: 20px;">发票信息</div>
+									<el-table
+										class="financial-table"
+										:data="tableData2"
+										@selection-change="invoiceInfosChange"
+										stripe
+										style="width: 100%">
+										<el-table-column type="selection" width="50"></el-table-column>
+										<el-table-column prop="invoiceNumbers" label="发票号" min-width="120"></el-table-column>
+										<el-table-column prop="departureDate" label="航班日期" min-width="100"></el-table-column>
+										<el-table-column label="最晚付款日期" min-width="100">
+											<!-- <template slot-scope="scope">
+												<div v-for="(item,index) in scope.row.billInfos" v-if="index == 0" :key="index">{{item.departureDate}}</div>
+											</template> -->
+										</el-table-column>
+										<el-table-column prop="applyAmount" label="总金额" min-width="100"></el-table-column>
+										<el-table-column prop="invoiceTitle" label="发票抬头" min-width="120"></el-table-column>
+										<el-table-column prop="companyAddress" label="公司地址" min-width="120"></el-table-column>
+										<el-table-column prop="companyTel" label="电话" min-width="120"></el-table-column>
+										<el-table-column prop="recipient" label="收件人" min-width="60"></el-table-column>
+									</el-table>
+									<div class="financial-table-price">总金额：<span>￥{{invoiceInfosPrice}}</span></div>
+									<div style="color: #999;font-size: 18px;font-weight: 100;margin-bottom: 20px;margin-top: 20px;">发票详情</div>
+									<el-table
+										class="financial-table"
+										:data="invoiceInfosArr"
+										stripe
+										style="width: 100%">
+										<el-table-column prop="invoiceNumbers" label="发票号" min-width="120"></el-table-column>
+										<el-table-column prop="waybillNo" label="运单号" min-width="120"></el-table-column>
+										<el-table-column prop="departureDate" label="航班日期" min-width="120"></el-table-column>
+										<el-table-column prop="zhangdan" label="最晚付款日期" min-width="120"></el-table-column>
+										<el-table-column prop="billAmountCny" label="总金额" min-width="120"></el-table-column>
+									</el-table>
 								</el-tab-pane>
 							    <el-tab-pane label="财务核销" name="财务核销">
-									<div v-if="total == '0'" style="text-align: center;">
-										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
-										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
-									</div>
-									<ul v-if="total != '0'" class="nav-wrap-ul">
-										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order">
-												<div>订单号：{{item.orderNo}}</div>
-												<div>预订日期：{{item.orderTime}}</div>
-											</div>
-											<div class="nav-wrap-content">
-												<div class="nav-wrap-route">
-													<div class="nav-wrap-logo">
-														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
-														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：{{item.departureDate}}</div>
-													</div>
-													<div class="nav-wrap-route-content">
-														<div class="nav-wrap-route-info">
-															<div>{{item.pol}}</div>
-															<div>{{item.polName}}</div>
-														</div>
-														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
-														<div class="nav-wrap-route-info">
-															<div>{{item.pod}}</div>
-															<div>{{item.podName}}</div>
-														</div>
-													</div>
-													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
-														<label>{{item.cargoName}}</label>
-														<label>{{item.inboundPiece}}PCS</label>
-														<label>{{item.inboundCbm}}CMB</label>
-														<label>{{item.inboundWeight}}KG</label>
-														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
-													</div>
-													<div v-else class="nav-wrap-route-remarks">
-														<label>{{item.cargoName}}</label>
-														<label>{{item.bookingPiece}}PCS</label>
-														<label>{{item.bookingCbm}}CMB</label>
-														<label>{{item.bookingWeight}}KG</label>
-														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
-													</div>
-												</div>
-												<div class="nav-wrap-right">
-													<div class="nav-wrap-text">
-														<div>{{item.statusDesc}}</div>
-														<div>订舱单价 ￥{{item.bookingPrice}}</div>
-													</div>
-												</div>
-											</div>
-										</li>
-									</ul>
-									<div v-if="total != '0'" style="text-align: right;">
-										<el-pagination
-										  @current-change="handleCurrentChange"
-										  :current-page="pageNum"
-										  :page-size="pageSize"
-										  layout="total, prev, pager, next, jumper"
-										  :total="total">
-										</el-pagination>
-									</div>
+									<el-table
+										class="financial-table"
+									    :data="tableData"
+									    stripe
+									    style="width: 100%">
+									    <el-table-column prop="id" label="序号" min-width="50"></el-table-column>
+									    <el-table-column prop="orderid" label="运单号" min-width="120"></el-table-column>
+									    <el-table-column prop="date" label="航班日期" min-width="120"></el-table-column>
+										<el-table-column prop="zhangdan" label="对账单位" min-width="180"></el-table-column>
+										<el-table-column prop="hangxian" label="航线" min-width="120"></el-table-column>
+										<el-table-column prop="price" label="订单总金额" min-width="120"></el-table-column>
+										<el-table-column prop="status" label="核销状态" min-width="120"></el-table-column>
+									</el-table>
+									<div class="financial-table-price">总金额：<span>￥8550</span></div>
 								</el-tab-pane>
 							</el-tabs>
 						</div>
@@ -349,12 +314,40 @@
 				userInfo: {},
 				openId: '',
 				headerMenu: false,
-				pageNum: 1,
-				pageSize: 10,
-				departureDate: '',
+				departureDate1: '',
+				departureDate2: '',
+				departureDate3: '',
 				typeCode: '发票开具',
-				total: 0,
-				dataArr: []
+				invoiceType: '',
+				invoiceTypeOpt: [
+					{
+						Name: '增值税电子普通发票',
+						Value: '0'
+					},
+					{
+						Name: '增值税普通发票',
+						Value: '1'
+					},
+					{
+						Name: '增值税专用发票',
+						Value: '2'
+					}
+				],
+				tableData: [],
+				//发票开具
+				tableData1: [],
+				billAmountCnyTotal: 0,
+				billAmountCnyArr: [],
+				invoiceTitle: '',
+				invoiceTitleOpt: [],
+				invoiceTitleJson: {},
+				recipient: '',
+				recipientOpt: [],
+				recipientJson: {},
+				//发票信息
+				tableData2: [],
+				invoiceInfosPrice: 0,
+				invoiceInfosArr: []
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -365,36 +358,198 @@
 				}
 				this.openId = localStorage.getItem('wxOpenId')
 				this.initUserInfo()
-				this.initData()
+				this.initInvoiceInfoList()
+				this.initExpressInfoList()
+				this.initList()
 			},
 			methods: {
-				tabClickData() {
-					this.initData()
-				},
-				initData() {
-					var json = {
-						departureDate1: this.departureDate == '' ? '' : this.departureDate[0],
-						departureDate2: this.departureDate == '' ? '' : this.departureDate[1],
-						pageNum: this.pageNum,
-						pageSize: this.pageSize
+				InvoicingClick(type) {
+					if(type == '票据'){
+						this.$message.error('正在开发请稍后再试')
+						return
 					}
-					json = toData(json)
+					if(this.billAmountCnyArr.length == 0){
+						this.$message.error('请选择开票数据')
+						return
+					}else if(!this.invoiceType){
+						this.$message.error('请选择发票类型')
+						return
+					}else if(!this.invoiceTitle){
+						this.$message.error('请选择发票抬头')
+						return
+					}else if(!this.recipient){
+						this.$message.error('请选择收件人')
+						return
+					}
+					if(type == '合并' || type == '单独'){
+						var billIds = []
+						for(var i = 0; i < this.billAmountCnyArr.length; i++){
+							billIds.push(this.billAmountCnyArr[i].id)
+						}
+						var data = {
+							accountBank: this.invoiceTitleJson.accountBank,
+							applyAmount: this.billAmountCnyTotal,
+							bankAccount: this.invoiceTitleJson.bankAccount,
+							billIds: billIds,
+							companyAddress: this.invoiceTitleJson.companyAddress,
+							companyTel: this.invoiceTitleJson.companyTel,
+							dutyParagraph: this.invoiceTitleJson.dutyParagraph,
+							invoiceTitle: this.invoiceTitleJson.invoiceTitle,
+                            expressInfoId: this.invoiceTitleJson.id,
+							invoiceType: this.invoiceType,
+							merge: type == '合并' ? 0 : 1,
+							recipient: this.recipientJson.recipient,
+							recipientAddress: this.recipientJson.recipientAddress,
+							recipientEmail: this.recipientJson.recipientEmail,
+							recipientTel: this.recipientJson.recipientTel
+						}
+						axios({
+							method: 'post',
+							url: webIp+serviceApi.invoiceApply,
+							data: data,
+							headers: {
+								'tokenId': localStorage.getItem('tokenId')
+							}
+						}).then((data) =>{
+							var data = data.data
+							if(data.code == 200){
+								this.initList()
+								this.$message.success('开票成功')
+							}else if(data.code == -200){
+								window.location.href = './login.html'
+							}else{
+								this.$message.error(data.message)
+							}
+						})
+					}
+				},
+				invoiceInfosChange(val) {
+					this.invoiceInfosPrice = 0
+					this.invoiceInfosArr = []
+					if(val.length > 0){
+						for(var i = 0; i < val.length; i++){
+							this.invoiceInfosPrice += val[i].applyAmount
+							for(var q = 0; q < val[i].billInfos.length; q++){
+								this.invoiceInfosArr.push(val[i].billInfos[q])
+							}
+						}
+					}
+				},
+				selectionChange(val) {
+					this.billAmountCnyArr = val
+					this.billAmountCnyTotal = 0
+					if(val.length > 0){
+						for(var i = 0; i < val.length; i++){
+							this.billAmountCnyTotal += val[i].billAmountCny
+						}
+					}
+				},
+				invoiceTitleChange(e) {
+					for(var q = 0; q < this.invoiceTitleOpt.length; q++){
+						if(e == this.invoiceTitleOpt[q].invoiceTitle){
+							this.invoiceTitleJson = this.invoiceTitleOpt[q]
+						}
+					}
+				},
+                expressInfoChange(e) {
+					for(var q = 0; q < this.recipientOpt.length; q++){
+						if(e == this.recipientOpt[q].recipient){
+							this.recipientJson = this.recipientOpt[q]
+						}
+					}
+				},
+				initInvoiceInfoList() {
 					axios({
 						method: 'get',
-						url: webIp+serviceApi.orderSearchByPage+'?'+json,
+						url: webIp+serviceApi.invoiceInfoList,
 						headers: {
 							'tokenId': localStorage.getItem('tokenId')
 						}
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
-							if(data.data.records == null){
-								this.dataArr = []
-								this.total = 0
-							}else{
-								this.dataArr = data.data.records
-								this.total = data.data.total
-							}
+							this.invoiceTitleOpt = data.data
+							this.invoiceTitle = data.data[0].invoiceTitle
+							this.invoiceTitleJson = data.data[0]
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
+				initExpressInfoList() {
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.expressInfoList,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.recipientOpt = data.data
+							this.recipient = data.data[0].recipient
+							this.recipientJson = data.data[0]
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
+				tabClickData(e) {
+					this.typeCode = e.paneName
+					if(this.typeCode == '发票开具'){
+						this.initList()
+					}else if(this.typeCode == '发票信息'){
+						this.initInvoiceInfos()
+					}else if(this.typeCode == '财务核销'){
+						this.departureDate3 = ''
+					}
+				},
+				initInvoiceInfos() {
+					var json = {
+						startDepartureDate: this.departureDate2 == '' ? '' : this.departureDate2[0],
+						endDepartureDate: this.departureDate2 == '' ? '' : this.departureDate2[1]
+					}
+					json = toData(json)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.invoiceInfos+'?'+json,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.tableData2 = data.data
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
+				
+				
+				
+				initList() {
+					var json = {
+						startDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[0],
+						endDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[1]
+					}
+					json = toData(json)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.billList+'?'+json,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.tableData1 = data.data
 						}else if(data.code == -200){
 							window.location.href = './login.html'
 						}else{
@@ -421,17 +576,23 @@
 					})
 				},
 				searchClick() {
-					this.initData()
+					if(this.typeCode == '发票开具'){
+						this.initList()
+					}else if(this.typeCode == '发票信息'){
+						this.initInvoiceInfos()
+					}else if(this.typeCode == '财务核销'){
+						this.departureDate3 = ''
+					}
 				},
 				restClick() {
-					this.departureDate = ''
-					this.pageNum = 1
-					this.pageSize  = 10
-					this.initData()
-				},
-				handleCurrentChange(val) {
-					this.pageNum = val
-					this.initData()
+					if(this.typeCode == '发票开具'){
+						this.departureDate1 = ''
+					}else if(this.typeCode == '发票信息'){
+						this.departureDate2 = ''
+					}else if(this.typeCode == '财务核销'){
+						this.departureDate3 = ''
+					}
+					this.initList()
 				},
 				showHeaderMenu(type) {
 					if(type == 1){

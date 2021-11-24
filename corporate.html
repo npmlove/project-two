@@ -2,8 +2,469 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="format-detection" content="telephone=no,address=no,email=no">
+		<meta name="applicable-device" content="pc,mobile">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Cache-Control" content="no-transform">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="renderer" content="webkit">
+		<meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+		<meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+		<link rel='icon' href='./img/favicon.ico' type='image/x-icon' />
+		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+		<link rel="stylesheet" href="./css/element-ui-min.css">
+		<link rel="stylesheet" href="./css/reset.css" />
+		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/vue.js"></script>
+		<script src="./js/axios.min.js"></script>
+		<script src="./js/element-ui.js"></script>
+		<script>
+			var _hmt = _hmt || [];
+			(function() {
+				var hm = document.createElement("script");
+				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
+				var s = document.getElementsByTagName("script")[0]; 
+				s.parentNode.insertBefore(hm, s);
+			})();
+		</script>
 	</head>
 	<body>
+		<div id="app" style="font-size: 0;">
+			<!-- 头部 -->
+			<div class="header">
+				<div class="header-img">
+					<a href="./index.html">
+						<!-- <img class="logo" src="./img/logo.png" /> -->
+						<div class="logo"></div>
+					</a>
+					<div class="logo-title"></div>
+				</div>
+				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
+						<div @click="tuiChu" class="header-bak">退出</div>
+					</div>
+				</div>
+				<div v-else @click="loginClick" class="header-user">登录</div>
+			</div>
+			<div class="header-menu">
+				<ul class="header-menu-list com-width">
+					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
+					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+				</ul>
+			</div>
+			<!-- 订单管理 -->
+			<div class="order-list">
+				<div class="com-width order-list-content">
+					<div class="order-list-userInfo">
+						<div class="list-userInfo-menu">
+							<div class="userInfo-touxiang-list">
+								<div class="userInfo-touxiang-img">
+									<img alt="图片" :src="userInfo.headImgUrl" />
+								</div>
+								<div class="userInfo-huanyin">欢迎您{{userInfo.nickname}}</div>
+								<div class="userInfo-youxiang">设置邮箱</div>
+							</div>
+							<ul class="userInfo-menu-list">
+								<li class="menu-list-active"><a href="./corporate.html">企业信息</a></li>
+								<li><a href="./orderList.html">订单管理</a></li>
+								<li><a href="./financial.html">财务管理</a></li>
+							</ul>
+						</div>
+						<div class="list-userInfo-customer">
+							<div class="userInfo-customer"><div>您的专属客服:</div><div>nana</div></div>
+							<div class="userInfo-customer"><div>欢迎致电:</div><div>13567862626</div></div>
+						</div>
+					</div>
+					<div class="order-list-manage">
+						<div class="order-list-manage-title">企业认证</div>
+						<div class="tabs__nav-wrap">
+							<el-tabs v-model="typeCode" type="border-card" @tab-click="tabClickData">
+							    <el-tab-pane label="发票开具" name="发票开具">
+									<div class="financial-invoice">
+										<div class="financial-invoice-table">
+											<el-table
+												class="financial-table"
+												:data="tableData1"
+												@selection-change="selectionChange"
+												stripe
+												style="width: 100%">
+												<el-table-column type="selection" width="50"></el-table-column>
+												<el-table-column prop="waybillNo" label="运单号" min-width="120"></el-table-column>
+												<el-table-column prop="departureDate" label="航班日期" min-width="100"></el-table-column>
+												<el-table-column prop="reconciliationUnit" label="对账单位" min-width="180"></el-table-column>
+												<el-table-column prop="fullLeg" label="航线" min-width="120"></el-table-column>
+												<el-table-column prop="billAmountCny" label="订单总金额" min-width="100"></el-table-column>
+											</el-table>
+										</div>
+									</div>
+								</el-tab-pane>
+							    <el-tab-pane label="发票信息" name="发票信息">
+									<el-table
+										class="financial-table"
+										:data="tableData2"
+										@selection-change="invoiceInfosChange"
+										stripe
+										style="width: 100%">
+										<el-table-column type="selection" width="50"></el-table-column>
+										<el-table-column prop="invoiceNumbers" label="发票号" min-width="120"></el-table-column>
+										<el-table-column prop="departureDate" label="航班日期" min-width="100"></el-table-column>
+										<el-table-column prop="applyAmount" label="总金额" min-width="100"></el-table-column>
+										<el-table-column prop="invoiceTitle" label="发票抬头" min-width="120"></el-table-column>
+										<el-table-column prop="companyAddress" label="公司地址" min-width="120"></el-table-column>
+										<el-table-column prop="companyTel" label="电话" min-width="120"></el-table-column>
+										<el-table-column prop="recipient" label="收件人" min-width="60"></el-table-column>
+									</el-table>
+								</el-tab-pane>
+							</el-tabs>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- 尾部 -->
+			<div class="footer">
+				<div class="com-width">
+					<div class="footer-content">
+						<div class="footer-label">
+							<div class="footer-cool" style="margin-bottom: 10px;">
+								<span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
+							</div>
+							<!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
+								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
+								<span>沪公网备XXXXXXXXXXXXX号</span>
+							</div> -->
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+						</div>
+						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
+	<script src="./service/index.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				loading: false,
+				menuIndex: 0,
+				userInfo: {},
+				openId: '',
+				headerMenu: false,
+				departureDate1: '',
+				departureDate2: '',
+				departureDate3: '',
+				typeCode: '发票开具',
+				invoiceType: '',
+				invoiceTypeOpt: [
+					{
+						Name: '增值税电子普通发票',
+						Value: '0'
+					},
+					{
+						Name: '增值税普通发票',
+						Value: '1'
+					},
+					{
+						Name: '增值税专用发票',
+						Value: '2'
+					}
+				],
+				tableData: [],
+				//发票开具
+				tableData1: [],
+				billAmountCnyTotal: 0,
+				billAmountCnyArr: [],
+				invoiceTitle: '',
+				invoiceTitleOpt: [],
+				invoiceTitleJson: {},
+				recipient: '',
+				recipientOpt: [],
+				recipientJson: {},
+				//发票信息
+				tableData2: [],
+				invoiceInfosPrice: 0,
+				invoiceInfosArr: []
+			},
+			created() {
+				if(!localStorage.getItem('wxOpenId')){
+					window.location.href = './login.html'
+				}
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				}
+				this.openId = localStorage.getItem('wxOpenId')
+				this.initUserInfo()
+				this.initInvoiceInfoList()
+				this.initExpressInfoList()
+				this.initList()
+			},
+			methods: {
+				InvoicingClick(type) {
+					if(type == '票据'){
+						this.$message.error('正在开发请稍后再试')
+						return
+					}
+					if(this.billAmountCnyArr.length == 0){
+						this.$message.error('请选择开票数据')
+						return
+					}else if(!this.invoiceType){
+						this.$message.error('请选择发票类型')
+						return
+					}else if(!this.invoiceTitle){
+						this.$message.error('请选择发票抬头')
+						return
+					}else if(!this.recipient){
+						this.$message.error('请选择收件人')
+						return
+					}
+					if(type == '合并' || type == '单独'){
+						var billIds = []
+						for(var i = 0; i < this.billAmountCnyArr.length; i++){
+							billIds.push(this.billAmountCnyArr[i].id)
+						}
+						var data = {
+							accountBank: this.invoiceTitleJson.accountBank,
+							applyAmount: this.billAmountCnyTotal,
+							bankAccount: this.invoiceTitleJson.bankAccount,
+							billIds: billIds,
+							companyAddress: this.invoiceTitleJson.companyAddress,
+							companyTel: this.invoiceTitleJson.companyTel,
+							dutyParagraph: this.invoiceTitleJson.dutyParagraph,
+							invoiceTitle: this.invoiceTitleJson.invoiceTitle,
+							invoiceType: this.invoiceType,
+							merge: type == '合并' ? 0 : 1,
+							recipient: this.recipientJson.recipient,
+							recipientAddress: this.recipientJson.recipientAddress,
+							recipientEmail: this.recipientJson.recipientEmail,
+							recipientTel: this.recipientJson.recipientTel
+						}
+						axios({
+							method: 'post',
+							url: webIp+serviceApi.invoiceApply,
+							data: data,
+							headers: {
+								'tokenId': localStorage.getItem('tokenId')
+							}
+						}).then((data) =>{
+							var data = data.data
+							if(data.code == 200){
+								this.initList()
+								this.$message.success('开票成功')
+							}else if(data.code == -200){
+								window.location.href = './login.html'
+							}else{
+								this.$message.error(data.message)
+							}
+						})
+					}
+				},
+				invoiceInfosChange(val) {
+					this.invoiceInfosPrice = 0
+					this.invoiceInfosArr = []
+					if(val.length > 0){
+						for(var i = 0; i < val.length; i++){
+							this.invoiceInfosPrice += val[i].applyAmount
+							for(var q = 0; q < val[i].billInfos.length; q++){
+								this.invoiceInfosArr.push(val[i].billInfos[q])
+							}
+						}
+					}
+				},
+				selectionChange(val) {
+					this.billAmountCnyArr = val
+					this.billAmountCnyTotal = 0
+					if(val.length > 0){
+						for(var i = 0; i < val.length; i++){
+							this.billAmountCnyTotal += val[i].billAmountCny
+						}
+					}
+				},
+				invoiceTitleChange(e) {
+					for(var q = 0; q < this.invoiceTitleOpt.length; q++){
+						if(e == this.invoiceTitleOpt[q].invoiceTitle){
+							this.invoiceTitleJson = this.invoiceTitleOpt[q]
+						}
+					}
+				},
+                expressInfoChange(e) {
+                    console.log(e)
+                    for(var q = 0; q < this.recipientOpt.length; q++){
+                        if(e == this.recipientOpt[q].recipient){
+                            this.recipientJson = this.recipientOpt[q]
+                        }
+                    }
+                },
+				initInvoiceInfoList() {
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.invoiceInfoList,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.invoiceTitleOpt = data.data
+							this.invoiceTitle = data.data[0].invoiceTitle
+							this.invoiceTitleJson = data.data[0]
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
+				initExpressInfoList() {
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.expressInfoList,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.recipientOpt = data.data
+							this.recipient = data.data[0].recipient
+							this.recipientJson = data.data[0]
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
+				tabClickData(e) {
+					this.typeCode = e.paneName
+					if(this.typeCode == '发票开具'){
+						this.initList()
+					}else if(this.typeCode == '发票信息'){
+						this.initInvoiceInfos()
+					}else if(this.typeCode == '财务核销'){
+						this.departureDate3 = ''
+					}
+				},
+				initInvoiceInfos() {
+					var json = {
+						startDepartureDate: this.departureDate2 == '' ? '' : this.departureDate2[0],
+						endDepartureDate: this.departureDate2 == '' ? '' : this.departureDate2[1]
+					}
+					json = toData(json)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.invoiceInfos+'?'+json,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.tableData2 = data.data
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
+				
+				
+				
+				initList() {
+					var json = {
+						startDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[0],
+						endDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[1]
+					}
+					json = toData(json)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.billList+'?'+json,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.tableData1 = data.data
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
+				initUserInfo(){
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.userUserInfo+'?openId='+this.openId,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.userInfo = data.data.tportalUser
+						}else if(data.code == -200){
+							window.location.href = './login.html'
+						}else{
+							this.$message.error(data.message)
+						}
+					})
+				},
+				searchClick() {
+					if(this.typeCode == '发票开具'){
+						this.initList()
+					}else if(this.typeCode == '发票信息'){
+						this.initInvoiceInfos()
+					}else if(this.typeCode == '财务核销'){
+						this.departureDate3 = ''
+					}
+				},
+				restClick() {
+					if(this.typeCode == '发票开具'){
+						this.departureDate1 = ''
+					}else if(this.typeCode == '发票信息'){
+						this.departureDate2 = ''
+					}else if(this.typeCode == '财务核销'){
+						this.departureDate3 = ''
+					}
+					this.initList()
+				},
+				showHeaderMenu(type) {
+					if(type == 1){
+						this.headerMenu = true
+					} else {
+						this.headerMenu = false
+					}
+				},
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
+				},
+				//登录
+				loginClick() {
+					window.location.href = './login.html'
+				},
+				// muen
+				menuClick(index) {
+					this.menuIndex = index
+					if(index == 0){
+						window.location.href = './index.html'
+					}else if(index == 3){
+						window.location.href = './about_us.html'
+					}
+				}
+			}
+		})
+	</script>
 </html>

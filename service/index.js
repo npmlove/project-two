@@ -44,7 +44,7 @@ const serviceApi = {
 	//每周最低运价
 	noAuthSearchWeekRates: publicWeb+'/es/noAuth/searchWeekRates',
 	//按运单查询
-	trackSearchWeekRates: publicWeb+'/t-track/noAuth/queryByAWB',
+	trackSearchWeekRates: publicWeb+'/t-track/queryByAWB',
 	//指定航线、货物类型、周几的运价查询
 	hangxianSearchBaseRates: publicWeb+'/es/searchBaseRates',
 	//用户下单
@@ -59,7 +59,20 @@ const serviceApi = {
 	orderExecuteOrder: publicWeb+'/t-order/executeOrder',
 	//是否磁性
 	orderIsMagnetic: publicWeb+'/t-order/isMagnetic',
-
+	//确认账单
+	billConfirmBill: publicWeb+'/t-bill/confirmBill',
+	//已确认费用账单列表
+	billList: publicWeb+'/t-bill/list',
+	//查询当前用户开票信息列表
+	invoiceInfoList: publicWeb+'/t-portal-invoice-info/list',
+	//查询当前用户快递信息列表
+	expressInfoList: publicWeb+'/t-portal-express-info/list',
+	//开票申请
+	invoiceApply: publicWeb+'/t-invoice-apply/invoiceApply',
+	//发票信息
+	invoiceInfos: publicWeb+'/t-invoice-apply/invoiceInfos',
+	//导出账单
+	billImportBillPdf: publicWeb+'/t-bill/importBillPdf'
 }
 
 

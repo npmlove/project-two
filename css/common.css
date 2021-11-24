@@ -2948,15 +2948,145 @@
 	width: 100%;
 	height: 300px;
 } */
+.financial-table th, .financial-table td{
+	padding: 8px 0;
+	text-align: center;
+}
+.financial-table th > .cell{
+	font-weight: 400;
+	color: #999999;
+}
+.financial-table-price{
+	color: #333333;
+	font-size: 14px;
+	font-weight: 500;
+	margin-top: 20px;
+	display: flex;
+	align-items: center;
+}
+.financial-table-price > span{
+	color: #FF9914;
+	font-size: 24px;
+	font-weight: bold;
+}
+	
+.financial-invoice{
+	display: flex;
+	justify-content: space-between;
+}
+.financial-invoice .financial-invoice-table{
+	flex: 0 0 678px;
+	width: 678px;
+}
+.financial-invoice .financial-invoice-bill{
+	flex: 0 0 260px;
+	width: 260px;
+}
+.invoice-bill-item{
+	background: #FFFFFF;
+	border: 1px solid #EFEFEF;
+	box-sizing: border-box;
+	margin-bottom: 10px;
+}
+.invoice-bill-item .invoice-bill-item-title{
+	font-size: 16px;
+	color: #333333;
+	line-height: 100%;
+	text-align: center;
+	padding: 20px 0;
+	border-bottom: 1px dashed  rgba(153, 153, 153, 0.2);
+}
+.invoice-bill-item .invoice-bill-item-details{
+	padding: 20px;
+	box-sizing: border-box;
+}
+.invoice-bill-item .invoice-bill-item-details .bill-order{
+	background: #F8FBFD;
+	padding: 10px;
+}
+.invoice-bill-item .invoice-bill-item-details .bill-order .bill-order-text1{
+	font-size: 12px;
+	color: #333;
+	display: flex;
+	justify-content: space-between;
+	line-height: 100%;
+	margin-bottom: 10px;
+}
+.invoice-bill-item .invoice-bill-item-details .bill-order .bill-order-text2{
+	font-size: 12px;
+	color: #999;
+	display: flex;
+	justify-content: space-between;
+	line-height: 100%;
+}
+.invoice-bill-item .invoice-bill-item-details .bill-price{
+	display: flex;
+	align-items: center;
+	font-size: 12px;
+	margin-top: 20px;
+}
+.invoice-bill-item .invoice-bill-item-details .bill-price span{
+	font-size: 14px;
+	font-family: PingFang SC;
+	font-weight: bold;
+	color: #FF9914;
+}
+.invoice-bill-item-details .el-form-item__label{
+	font-size: 12px;
+}
+.invoice-bill-item-details .el-form-item--mini{
+	margin-bottom: 10px;
+}
+.invoice-bill-item-details .el-input--mini .el-input__inner{
+	font-size: 12px;
+}
+.invoice-bill-item-details .form-label-style .el-form-item__label{
+	height: 28px;
+	line-height: 14px !important;
+	text-align: left !important;
+}
 
+.financial-merge{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 30px;
+}
+.financial-merge .financial-merge-price{
+	font-size: 14px;
+	font-family: PingFang SC;
+	font-weight: 500;
+	color: #333333;
+}
+.financial-merge .financial-merge-price span{
+	font-weight: bold;
+	color: #FF9914;
+	font-size: 24px;
+}
 
-
-
-
-
-
-
-
+.financial-merge .financial-merge-list{
+	display: flex;
+}
+.financial-merge .financial-merge-list .financial-merge-btn{
+	width: 130px;
+	height: 45px;
+	font-size: 16px;
+	font-weight: 400;
+	text-align: center;
+	line-height: 45px;
+	box-sizing: border-box;
+	border: 1px solid #2273CB;
+	color: #2273CB;
+	margin-right: 20px;
+	cursor: pointer;
+}
+.financial-merge .financial-merge-list .financial-merge-btn:nth-of-type(1){
+	color: #FFF;
+	background-color: #2273CB;
+}
+.financial-merge .financial-merge-list .financial-merge-btn:nth-of-type(3){
+	margin-right: 0;
+}
 
 
 
