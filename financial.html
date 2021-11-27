@@ -25,7 +25,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -179,9 +179,9 @@
 														<div class="border-btm-solid">
 															<el-form-item label="发票类型">
 															    <el-select v-model="invoiceType" placeholder="请选择发票类型" clearable filterable>
-															    	<el-option 
-															    		v-for="(item,index) in invoiceTypeOpt" 
-															    		:key="item.Name" 
+															    	<el-option
+															    		v-for="(item,index) in invoiceTypeOpt"
+															    		:key="item.Name"
 																		:label="item.Name"
 															    		:value="item.Value">
 															    	</el-option>
@@ -191,9 +191,9 @@
 														<div class="border-btm-solid" style="margin-top: 10px;">
 															<el-form-item label="发票抬头">
 															    <el-select v-model="invoiceTitle" @change="invoiceTitleChange" placeholder="请选择发票抬头" clearable filterable>
-															    	<el-option 
-															    		v-for="(item,index) in invoiceTitleOpt" 
-															    		:key="item.id" 
+															    	<el-option
+															    		v-for="(item,index) in invoiceTitleOpt"
+															    		:key="item.id"
 																		:label="item.invoiceTitle"
 															    		:value="item.invoiceTitle">
 															    	</el-option>
@@ -208,9 +208,9 @@
 														<div style="margin-top: 10px;">
 															<el-form-item label="收件人">
 															    <el-select v-model="recipient" @change="expressInfoChange" placeholder="请选择收件人" clearable filterable>
-															    	<el-option 
-															    		v-for="(item,index) in recipientOpt" 
-															    		:key="item.id" 
+															    	<el-option
+															    		v-for="(item,index) in recipientOpt"
+															    		:key="item.id"
 																		:label="item.recipient"
 															    		:value="item.recipient">
 															    	</el-option>
@@ -283,7 +283,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -296,7 +296,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
@@ -531,9 +531,9 @@
 						}
 					})
 				},
-				
-				
-				
+
+
+
 				initList() {
 					var json = {
 						startDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[0],
@@ -614,6 +614,8 @@
 					this.menuIndex = index
 					if(index == 0){
 						window.location.href = './index.html'
+					}else if(index == 1){
+						window.location.href = './orderList.html'
 					}else if(index == 3){
 						window.location.href = './about_us.html'
 					}

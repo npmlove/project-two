@@ -25,7 +25,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -332,7 +332,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -345,7 +345,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
@@ -466,7 +466,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -543,7 +543,7 @@
 						this.deliveryTel = ''
 					}
 					var orderPriceList = []
-					
+
 					var jq = {
 						expenseName: '空运费',
 						price: this.chargedJiaqian,
@@ -601,7 +601,7 @@
 						longDuration: this.proportionArr.longDuration,
 						fullLeg: this.proportionArr.fullLeg
 					}
-					
+
 					var json = {
 						airlineAgentId: this.hangxianId,
 						order: order,
@@ -622,7 +622,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -667,8 +667,8 @@
 					this.chargedWeight = Math.ceil(this.bookingWeight/this.bookingCbm)
 					this.bookingCw = (this.bookingCbm*this.weightPrice) > this.bookingWeight ? Math.ceil(this.bookingCbm*this.weightPrice) : Math.ceil(this.bookingWeight)
 					var newLength = this.proportionArr.baseRatesList.length-1
-					// var newBili = 
-					
+					// var newBili =
+
 					for(var i = 0; i < this.proportionArr.baseRatesList.length; i++){
 						if(this.chargedWeight < this.proportionArr.baseRatesList[i].vwr){
 							var index = i == 0 ? 0 : i-1
@@ -888,7 +888,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -901,6 +901,8 @@
 					this.menuIndex = index
 					if(index == 0){
 						window.location.href = './index.html'
+					}else if(index == 1){
+						window.location.href = './orderList.html'
 					}else if(index == 3){
 						window.location.href = './about_us.html'
 					}

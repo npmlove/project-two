@@ -25,7 +25,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -94,15 +94,15 @@
 											<el-input v-model="orderNo" onkeyup="value=value.replace(/[^\d\w]/g, '')" maxlength="15" placeholder="请输入订单号" style="width: 140px;"></el-input>
 										</el-form-item>
 										<el-form-item label="运单号">
-											<el-input v-model="waybillNo" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="11" placeholder="请输入运单号" style="width: 140px;"></el-input>
+											<el-input v-model="waybillNo" onkeyup="value=value.replace(/[^-\d]/g, '')" maxlength="11" placeholder="请输入运单号" style="width: 140px;"></el-input>
 										</el-form-item>
 										<el-form-item label="进仓编号" label-width="75px">
 											<el-input v-model="inboundNo" placeholder="请输入进仓编号" style="width: 140px;"></el-input>
 										</el-form-item>
 										<el-form-item label="航线">
 											<el-select v-model="pol" placeholder="起运港" :remote-method="polMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 90px;">
-												<el-option 
-													v-for="(item,index) in polOpt" 
+												<el-option
+													v-for="(item,index) in polOpt"
 													:disabled="pod == item.threeLetterCode"
 													:key="item.threeLetterCode" :value="item.threeLetterCode">
 													<span>{{item.threeLetterCode}}</span>
@@ -111,8 +111,8 @@
 											</el-select>
 											<div style="display: inline-block;background-image: url(./img/jiantou.png);margin: 0 5px;width: 16px;height: 30px;vertical-align: top;background-size: 16px 16px;background-repeat: no-repeat;background-position: center;"></div>
 											<el-select v-model="pod" placeholder="目的港" :remote-method="podMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 90px;">
-												<el-option 
-													v-for="(item,index) in podOpt" 
+												<el-option
+													v-for="(item,index) in podOpt"
 													:disabled="pol == item.threeLetterCode"
 													:key="item.threeLetterCode" :value="item.threeLetterCode">
 													<span>{{item.threeLetterCode}}</span>
@@ -124,9 +124,9 @@
 									<div>
 										<el-form-item label="航司">
 											<el-select v-model="airCompanyCode" placeholder="航司代码" :remote-method="companyMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 140px;">
-												<el-option 
-													v-for="item in airCompanyCodeOpt" 
-													:key="item.airCompanyCode" 
+												<el-option
+													v-for="item in airCompanyCodeOpt"
+													:key="item.airCompanyCode"
 													:value="item.airCompanyCode">
 												  <span>{{item.airCompanyCode}}</span>
 												  <span style="margin-left: 5px;">{{item.name}}</span>
@@ -164,6 +164,7 @@
 											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
 												<div style="display: flex;">
 													<div>订单号：{{item.orderNo}}</div>
+													<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
 													<div style="margin-left: 20px;">预订日期：{{item.orderTime}}</div>
 												</div>
 												<div v-if="item.status == '5'" style="color: #F00;margin-right: 20px;">确认倒计时：{{countTime(index,item.updateTime)}} {{item.timeOutA}}</div>
@@ -783,7 +784,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -796,7 +797,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
@@ -810,7 +811,7 @@
 			el: '#app',
 			data: {
 				loading: false,
-				menuIndex: 0,
+				menuIndex: 1,
 				userInfo: {},
 				openId: '',
 				orderNo: '',
@@ -869,14 +870,14 @@
 					//获取当前时间
 					var date = new Date();
 					var now = date.getTime();
-				
+
 					//设置截止时间
 					var endDate = new Date(totalTime);
 					var end = endDate.getTime()+24*60*60*1000;
-				
+
 					//时间差
 					var leftTime = end-now;
-				
+
 					//定义变量 d,h,m,s保存倒计时的时间
 					var h , m , s;
 					if (leftTime > 0) {
@@ -895,21 +896,21 @@
 						this.dataArr[index].timeOutA = nn
 					},1000);
 					// return h +'时'+ m +'分'+ s +'秒'
-					
+
 				},
 				//倒计时
 				countTime1(index,totalTime) {
 					//获取当前时间
 					var date = new Date();
 					var now = date.getTime();
-				
+
 					//设置截止时间
 					var endDate = new Date(totalTime);
 					var end = endDate.getTime()+24*60*60*1000;
-				
+
 					//时间差
 					var leftTime = end-now;
-				
+
 					//定义变量 d,h,m,s保存倒计时的时间
 					var h , m , s;
 					if (leftTime > 0) {
@@ -923,7 +924,7 @@
 					m = m > 9 ? m : '0'+m
 					s = s > 9 ? s : '0'+s
 					return h +'时'+ m +'分'+ s +'秒'
-					
+
 				},
 				priceType(json) {
 					if(json){
@@ -976,7 +977,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -1023,7 +1024,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -1042,7 +1043,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -1145,6 +1146,8 @@
 					this.menuIndex = index
 					if(index == 0){
 						window.location.href = './index.html'
+					}else if(index == 1){
+						window.location.href = './orderList.html'
 					}else if(index == 3){
 						window.location.href = './about_us.html'
 					}

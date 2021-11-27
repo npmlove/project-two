@@ -33,7 +33,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -293,7 +293,7 @@
 						</div>
 						<div class="order-details-table-zhangdan">
 							<div>
-								<div class="details-table-zhangdan-title">账单明细</div>
+								<div class="details-table-zhangdan-title">预计账单</div>
 								<div class="booking-price borderEFEFEF bakFFFFFF">
 									<div v-if="guonerArr.length > 0" class="booking-price-item">
 										<div class="booking-price-item-name">国内段</div>
@@ -345,7 +345,7 @@
 					<el-button @click="nextStep">下一张账单（{{(billInfosIndex+1)}}/{{billInfos.length}}）</el-button>
 				</div>
 			</el-dialog>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -426,7 +426,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -457,7 +457,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -522,7 +522,7 @@
 								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
-								
+
 							}
 						})
 					}else if(type == '取消'){
@@ -552,7 +552,7 @@
 								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
-								
+
 							}
 						})
 					}else if(type == '进仓'){
@@ -585,7 +585,7 @@
 								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
-								
+
 							}
 						})
 					}else if(type == '账单'){
@@ -678,7 +678,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -691,6 +691,8 @@
 					this.menuIndex = index
 					if(index == 0){
 						window.location.href = './index.html'
+					}else if(index == 1){
+						window.location.href = './orderList.html'
 					}else if(index == 3){
 						window.location.href = './about_us.html'
 					}
@@ -699,4 +701,3 @@
 		})
 	</script>
 </html>
-

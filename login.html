@@ -93,7 +93,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -145,7 +145,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
@@ -207,7 +207,7 @@
 				},
 				submitClick() {
 					var reg = /^(1[3456789])\d{9}$/
-					var regpass = /^[0-9A-Za-z]{6,20}$/ 
+					var regpass = /^[0-9A-Za-z]{6,20}$/
 					if(!reg.test(this.tel)){
 						this.isError = true
 						this.errorText = '请输入有效的手机号码'
@@ -240,9 +240,9 @@
 						}
 					})
 				},
-				
-				
-				
+
+
+
 				initWebSocket: function () {
 					if(typeof(WebSocket) === "undefined"){
 						alert("您的浏览器不支持socket")

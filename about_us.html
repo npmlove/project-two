@@ -25,7 +25,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -67,12 +67,16 @@
 				<div class="about-content">
 					<div class="about-content-title">公司简介</div>
 					<div class="about-content-content">
-						<div class="about-content-img"><img alt="tupian" src="./img/banner2.png"></div>
+						<div class="about-content-img">
+							<div class="left-bar-type"></div>
+							<img alt="tupian" src="./img/about.png">
+							<div class="right-bar-type"></div>
+						</div>
 						<div class="about-content-text">上海傲晔物流科技有限公司（简称“17订舱”）成立于2021年，是领先的集极速订舱、在线报关、航班跟踪、舱单生成功能于一身的国际货运智能化数字服务平台。公司融合人工智能、大数据等数字化技术研发出多款货运云系统和工具产品，集合各大航空公司优势航线、整合业内资源，依托全线平价产品、专业的服务方案、高效的反馈机制，为国际货运企业提供专业、高效、贴心的服务。</div>
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -85,7 +89,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
@@ -131,6 +135,8 @@
 					this.menuIndex = index
 					if(index == 0){
 						window.location.href = './index.html'
+					}else if(index == 1){
+						window.location.href = './orderList.html'
 					}else if(index == 3){
 						window.location.href = './about_us.html'
 					}

@@ -25,7 +25,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -63,7 +63,7 @@
 			</div>
 			<!-- 查询内容 -->
 			<div class="modify-flight" style="margin-top: 0;padding-top: 0;">
-				<div>
+				<!-- <div> -->
 					<div class="modify-search-box" style="background-color: #FFF;padding-bottom: 20px;margin-bottom: 20px;">
 						<div class="modify-search-img"></div>
 						<div class="modify-search-form">
@@ -225,7 +225,7 @@
 							</table>
 						</div>
 					</div>
-					<div class="modify-flight-bar com-width">
+					<div class="modify-flight-bar com-width modify-flight-bar-top">
 						<div class="flight-bar-box">
 							<div class="flight-bar-input">
 								<el-select v-model="twoLetterCode1" @change="selectChange" multiple collapse-tags placeholder="请选择航司">
@@ -253,8 +253,8 @@
 							</li>
 						</ul>
 					</div>
-				</div>
-				
+				<!-- </div> -->
+
 				<div class="modify-result-wrapper com-width">
 					<div v-if="priceArr.length == 0" style="width: 100%;text-align: center;padding: 20px;">
 						<img alt="图片" style="width: 262px;height: 201px;" src="./img/null.png" />
@@ -289,7 +289,7 @@
 								</div>
 								<div class="wrapper-li-content-right" style="position: relative;">
 									<div v-if="item.amount" style="position: absolute;font-size: 14px;right: 0;top: -16px;">
-										<div>运价</div>
+										<div>预估运价</div>
 										<div style="font-size: 16px;margin-top: 5px;color: #FF9914;font-weight: bold;">￥{{item.amount}}</div>
 									</div>
 									<ul class="li-content-price-ul">
@@ -341,7 +341,7 @@
 					</ul>
 				</div>
 			</div>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -354,7 +354,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
@@ -400,8 +400,8 @@
 				weekDatePrice: [],
 				isShowMore: false,
 				distanceArr: [
-					{name: 'M', value: 'N'},
-					{name: 'N', value: 'M'},
+					// {name: 'M', value: 'N'},
+					// {name: 'N', value: 'M'},
 					{name: '45+', value: '45'},
 					{name: '100+', value: '100'},
 					{name: '300+', value: '300'},
@@ -438,11 +438,11 @@
 				}
 				this.currentDayWeekDate = isDateCurrent1(this.currentDayWeekDate)
 				this.dateArr = this.currentDayWeekDate.slice(0,7)
-				
+
 				this.currentDay = formatDate(myDate.toLocaleDateString())
 				this.bookingDate = this.currentDay
 				this.dateTabActive = this.splitDate(this.currentDay)
-				
+
 				var mmWeek = []
 				for(var i = 0; i < getMm.length; i++){
 					mmWeek.push(getWeekDay(getMm[i]).slice(-7))
@@ -618,7 +618,7 @@
 						return
 					}
 					this.initData()
-					
+
 				},
 				selectChange() {
 					this.initData()
@@ -795,7 +795,7 @@
 						var aircraftRadioName = this.aircraftRadioName == '散货' ? 1 : 2
 						window.location.href = './bookingSpace.html?airlineId='+id+'&cargoType='+aircraftRadioName+'&dow='+dow+'&date='+this.bookingDate+'&bookingPiece='+this.piece+'&bookingWeight='+this.weight+'&bookingCbm='+this.volume
 					}
-					
+
 				},
 				dateItemClick(index,date) {
 					this.bookingDate = date
@@ -819,6 +819,8 @@
 					this.menuIndex = index
 					if(index == 0){
 						window.location.href = './index.html'
+					}else if(index == 1){
+						window.location.href = './orderList.html'
 					}else if(index == 3){
 						window.location.href = './about_us.html'
 					}

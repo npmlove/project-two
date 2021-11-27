@@ -4,13 +4,13 @@ var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境
 
 
 //开发环境
-// var webIp = 'http://10.8.0.14:6679'
-// var webIp = 'http://10.8.0.1'
-// var publicWeb = '/back/dcPortal/faw'
-
-//测试环境或生成环境
-var webIp = ''
+var webIp = 'http://10.8.0.14:6679'
+var webIp = 'http://10.8.0.1'
 var publicWeb = '/back/dcPortal/faw'
+
+// //测试环境或生成环境
+// var webIp = ''
+// var publicWeb = '/back/dcPortal/faw'
 
 
 //接口
@@ -174,7 +174,7 @@ function getWeekDay(data) {
 	var dateString = formatDate(data);//当天的日期，例如2020-2-28
 	var presentDate = new Date(dateString);
 	var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 21;
- 
+
 	return Array.from(new Array(21), function (val, index) {
 		return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
 	});
@@ -207,4 +207,3 @@ function getNowM() {
 	}
 	return current_month;
 }
-

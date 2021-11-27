@@ -68,7 +68,7 @@
 					<div class="swiper-container lunbo-swiper" style="height: 380px;overflow: hidden;">
 					    <div class="swiper-wrapper">
 					    	<!-- ${{bannerContent}} -->
-							<div class="swiper-slide banner-wrapper">
+							<!-- <div class="swiper-slide banner-wrapper">
 								<a style="background-image: url(./img/banner1.png); background-repeat: no-repeat; background-size: cover; background-position: center center; display: block; width: 100%; height: 380px;"></a>
 							</div>
 							<div class="swiper-slide banner-wrapper">
@@ -76,7 +76,7 @@
 							</div>
 							<div class="swiper-slide banner-wrapper">
 								<a style="background-image: url(./img/banner1.png); background-repeat: no-repeat; background-size: cover; background-position: center center; display: block; width: 100%; height: 380px;"></a>
-							</div>
+							</div> -->
 						</div>
 						<!-- 如果需要导航按钮 -->
 						<div class="swiper-button-prev swiper-button-prev1 hide"></div>
@@ -88,7 +88,7 @@
 				<!-- 搜索 -->
 				<div class="mod-search">
 					<div class="pos-search">
-						<!-- <div class="mod-search-top">
+						<div class="mod-search-top">
 							<div class="s_tab">
 								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">智能订舱</div>
 								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">快捷粘贴</div>
@@ -136,61 +136,7 @@
 									</div>
 								</div>
 							</div>
-						</div> -->
-						<div class="mod-search-top">
-							<div class="s_tab">
-								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">AI查价</div>
-								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">体积计算</div>
-							</div>
-							<div class="search-box">
-								<div class="search-box-input-ai" v-if="searchTopIndex == 0">
-									<textarea class="box-input box-textarea" type="textarea" placeholder="输入询价信息，AI智能识别起始港、目的港、件毛体、一键查询航线价格">
-									</textarea>
-									<div class="search-item">
-										<div class="search-item-input search-item-icon1" style="position: relative;">
-											<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input banner-box-border" type="text" placeholder="起飞港"/>
-											<div v-show="qiShowState" style="display: none;" class="open-warp-router">
-												<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>
-												<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
-													<span>{{item.threeLetterCode}}</span>
-													<span>{{item.name}}</span>
-													<span>{{item.city}}</span>
-													<span>{{item.country}}</span>
-												</div>
-											</div>
-										</div>
-										<div class="search-item-arrow"></div>
-										<div class="search-item-input search-item-icon3" style="position: relative;">
-											<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input banner-box-border" type="text" placeholder="目的港"/>
-											<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>
-											<div v-show="muShowState" style="display: none;" class="open-warp-router">
-												<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>
-												<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
-													<span>{{item.threeLetterCode}}</span>
-													<span>{{item.name}}</span>
-													<span>{{item.city}}</span>
-													<span>{{item.country}}</span>
-												</div>
-											</div>
-										</div>
-										<button @click="searchClose" class="box-btn btn-close" style="flex: 0 0 80px;marginLeft: 25px;">一键清除</button>
-										<button @click="freightQueryClick(1)" style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary">立即查询</button>
-									</div>
-								</div>
-								<div class="search-box-input-volume" v-if="searchTopIndex == 1">
-									<textarea type="textarea" placeholder="输入尺寸信息上传带有尺寸信息的图片，AI智能识别，一键计算货物总体积"></textarea>
-									<div class="search-box-volume-base">
-										<div class="volume-file">
-											<input type="file">
-											<img src="./img/volume-file.png" alt="">
-											<span>点击上传</span>
-										</div>
-										<button style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary" @click="intelligentComputing">智能计算</button>
-									</div>
-								</div>
-							</div>
 						</div>
-
 						<div class="mod-search-bottom com-top30">
 							<div class="s_tab s_tab_bak_color">
 								<div @click="searchBottomClick(0)" :class="{s_tab_current: searchBottomIndex == 0}" class="s_tab_nocurrent">运单查询</div>
@@ -813,13 +759,6 @@
 				// this.muSearchInput = this.muPageArr[0].threeLetterCode
 			},
 			methods: {
-				intelligentComputing() {
-					window.location.href = './intelligentComputing.html';
-				},
-				searchClose() {
-					this.qiSearchInput = '';
-					this.muSearchInput = '';
-				},
 				showHeaderMenu(type) {
 					if(type == 1){
 						this.headerMenu = true

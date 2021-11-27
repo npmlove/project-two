@@ -25,7 +25,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -61,7 +61,7 @@
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
-			
+
 			<!-- 运价查询 -->
 			<div class="modify-search-box">
 				<div class="modify-search-img"></div>
@@ -86,7 +86,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="com-width track-details rest-table">
 				<div style="font-size: 16px;font-weight: 400;color: #999;">货物基本信息</div>
 				<el-table :data="tableData1" border stripe style="width: 100%">
@@ -101,7 +101,7 @@
 					<el-table-column prop="cargoWeight" label="重量" width="180"></el-table-column>
 					<el-table-column prop="cargoStatus" label="最新状态"></el-table-column>
 				</el-table>
-				
+
 				<div style="font-size: 16px;font-weight: 400;color: #999;margin-top: 20px;">航班信息</div>
 				<el-table :data="tableData2" border stripe style="width: 100%;">
 					<template slot="empty">
@@ -115,7 +115,7 @@
 					<el-table-column prop="filghtDestination" label="航班目的港" width="180"></el-table-column>
 					<el-table-column prop="remarks" label="其他信息"></el-table-column>
 				</el-table>
-				
+
 				<div style="font-size: 16px;font-weight: 400;color: #999;margin-top: 20px;">状态信息</div>
 				<el-table :data="tableData3" border stripe style="width: 100%;">
 					<template slot="empty">
@@ -134,8 +134,8 @@
 					<el-table-column prop="statusTime" label="状态时间" width="180"></el-table-column>
 					<el-table-column prop="statusDescription" label="状态描述"></el-table-column>
 				</el-table>
-				
-				
+
+
 				<!-- <el-tabs v-model="activeName" type="border-card">
 				    <el-tab-pane label="货物基本信息" name="first">
 						<el-table :data="tableData1" border stripe style="width: 100%">
@@ -174,7 +174,7 @@
 					</el-tab-pane>
 				</el-tabs> -->
 			</div>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -187,7 +187,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
@@ -276,6 +276,8 @@
 					this.menuIndex = index
 					if(index == 0){
 						window.location.href = './index.html'
+					}else if(index == 1){
+						window.location.href = './orderList.html'
 					}else if(index == 3){
 						window.location.href = './about_us.html'
 					}
