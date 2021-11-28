@@ -130,8 +130,75 @@
         </div>
       </div>
       <div class="intelligent-computing-search com-width">
-        <div class="takeOff"></div>
+        <div class="computing-search-input-box">
+          <img src="./img/icon1.png" alt="">
+          <input type="text" @input="qiSearchByPage" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="pol" placeholder="起飞港" />
+          <div v-show="qiShowState" style="display: none;" class="open-warp-router">
+            <div v-if="!pol" class="open-warp-router-hot">热门机场</div>
+            <div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
+              <span>{{item.threeLetterCode}}</span>
+              <span>{{item.name}}</span>
+              <span>{{item.city}}</span>
+              <span>{{item.country}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="computing-search-segmentation"></div>
+        <div class="computing-search-input-box">
+          <img src="./img/icon3.png" alt="">
+          <input type="text" @input="muSearchByPage" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="pod" placeholder="目的港" />
+          <div v-show="muShowState" style="display: none;" class="open-warp-router">
+            <div v-if="!pod" class="open-warp-router-hot">热门机场</div>
+            <div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
+              <span>{{item.threeLetterCode}}</span>
+              <span>{{item.name}}</span>
+              <span>{{item.city}}</span>
+              <span>{{item.country}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="computing-search-list">
+          <span>件</span>
+          <input maxlength="4" v-model="piece" onkeyup="value=value.replace(/[^\d]/g, '')"  type="text" placeholder="PCS" />
+        </div>
+        <div class="computing-search-list">
+          <span>重量</span>
+          <input maxlength="6" v-model="weight" onkeyup="value=value.replace(/[^\d]/g, '')" type="text" placeholder="KG" />
+        </div>
+        <div class="computing-search-list">
+          <span>体积</span>
+          <input maxlength="4" v-model="volume" onkeyup="value=value.replace(/[^\d\.]/g, '')" type="text" placeholder="CBM" />
+        </div>
+        <div class="computing-search-result">
+          <div class="name">货物比重</div>
+          <div class="total" v-if="((Math.ceil(weight/volume)) != 'Infinity') && !isNaN(Math.ceil(weight/volume)) && weight && volume">1:{{Math.ceil(weight/volume)}}</div>
+          <div class="total" v-else>0</div>
+        </div>
+        <div class="computing-search-result">
+          <div class="name">计费重</div>
+          <div class="total" v-if="volume && weight">{{Math.ceil(Number(volume)*weightPrice) > weight ? Math.ceil(Number(volume)*weightPrice) : weight}}KG</div>
+          <div class="total" v-else>0KG</div>
+        </div>
+        <button type="button" class="computing-search-enquiry" @click="enquiry">一键询价</button>
       </div>
+      <!-- 尾部 -->
+			<div class="footer">
+				<div class="com-width">
+					<div class="footer-content">
+						<div class="footer-label">
+							<div class="footer-cool" style="margin-bottom: 10px;">
+								<span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
+							</div>
+							<!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
+								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
+								<span>沪公网备XXXXXXXXXXXXX号</span>
+							</div> -->
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
+						</div>
+						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
+					</div>
+				</div>
+			</div>
     </div>
   </body>
   <script src="./service/index.js"></script>
@@ -142,6 +209,17 @@
         userInfo: '',
         headerMenu: false,
         menuIndex: 0,
+        pod: '',
+				pol: '',
+        qiPageArr: [],
+				qiShowState: false,
+				muPageArr: [],
+				muShowState: false,
+        twoLetterCode1: [],
+        piece: '',
+        volume: '',
+        weight: '',
+        weightPrice: 167,
       },
       created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -150,8 +228,154 @@
 				if(localStorage.getItem('userInfo')){
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 				}
+        this.qiSearchByPage();
+        this.muSearchByPage();
 			},
       methods: {
+        enquiry() {
+          window.location.href = `./freightQuery.html?qi=${this.pol}&mu=${this.pod}&piece=${this.piece}&volume=${this.volume}&weight=${this.weight}`;
+        },
+        //获取运价查询
+				initData(){
+					var codeArr = JSON.parse(JSON.stringify(this.twoLetterCode1))
+					if(this.volume && this.weight){
+						var chargedWeight = Math.ceil(Number(this.volume)*this.weightPrice) > this.weight ? Math.ceil(Number(this.volume)*this.weightPrice) : this.weight
+					}else{
+						var chargedWeight = ''
+					}
+					var data = {
+						cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
+						dow: this.dow == 0 ? 7 : this.dow,
+						pageNum: this.pageNum,
+						pageSize: this.pageSize,
+						pod: this.pod,
+						pol: this.pol,
+						twoLetterCode: codeArr.toString(),
+						vwr: isNaN(Math.ceil((this.weight)/(this.volume))) ? '' : Math.ceil((this.weight)/(this.volume)),
+						chargedWeight: chargedWeight
+					}
+					data = toData(data)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.noAuthSearchBaseRates+'?'+data
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.weekDatePrice = []
+							for(var q = 0; q < data.data.weekRatesVOS.length; q++){
+								this.weekDatePrice.push(data.data.weekRatesVOS[q].value)
+							}
+							this.priceArr = data.data.freightQueryVOS
+							if(this.priceArr == null){
+								this.priceArr = []
+								return
+							}
+							for(var i = 0; i < this.priceArr.length; i++){
+								this.priceArr[i].sortMTop = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','top')
+								this.priceArr[i].sortMBottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','bottom')
+								this.priceArr[i].sort45Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'45','top')
+								this.priceArr[i].sort45Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'45','bottom')
+								this.priceArr[i].sort100Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'100','top')
+								this.priceArr[i].sort100Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'100','bottom')
+								this.priceArr[i].sort300Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'300','top')
+								this.priceArr[i].sort300Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'300','bottom')
+								this.priceArr[i].sort500Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'500','top')
+								this.priceArr[i].sort500Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'500','bottom')
+								this.priceArr[i].sort1000Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'1000','top')
+								this.priceArr[i].sort1000Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'1000','bottom')
+							}
+						}else{
+							this.priceArr = []
+						}
+					})
+				},
+        //获取二字码
+				initTwoCode() {
+					var jsonData = {
+						cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
+						dow: this.dow == 0 ? 7 : this.dow,
+						pod: this.pod,
+						pol: this.pol,
+						vwr: isNaN(Math.ceil(this.weight/this.volume)) ? '' : Math.ceil(this.weight/this.volume)
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.twoCodeSearchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.twoCodeArr = data.data
+						}
+					})
+				},
+        openCityClick(type, item) {
+					if (type == 1) {
+						this.pol = item.threeLetterCode
+					} else if(type == 2) {
+						this.pod = item.threeLetterCode
+					}
+					this.initData()
+					this.initTwoCode()
+					this.twoLetterCode1 = []
+				},
+        //起始港
+				showCityList(type, state) {
+					if (type == 1) {
+						if (state) {
+							this.qiSearchByPage()
+							this.qiShowState = state //显示下拉列表
+						} else {
+							this.qiShowState = state //隐藏下拉框
+						}
+					} else if(type == 2) {
+						if (state) {
+							this.muSearchByPage()
+							this.muShowState = state //显示下拉列表
+						} else {
+							this.muShowState = state //隐藏下拉框
+						}
+					} else if(type == 3) {
+						if (state) {
+							this.initTwoCode()
+							this.twoLetterCodeStatus = state //显示下拉列表
+						} else {
+							this.twoLetterCodeStatus = state //隐藏下拉框
+						}
+					}
+				},
+        muSearchByPage() {
+					var jsonData = {
+						keyWord: this.pod,
+						type: this.pod ? '' : '2'
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.searchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.muPageArr = data.data
+						}
+					})
+				},
+        qiSearchByPage() {
+					var jsonData = {
+						keyWord: this.pol,
+						type: this.pol ? '' : '1'
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.searchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.qiPageArr = data.data
+						}
+					})
+				},
         showHeaderMenu(type) {
 					if(type == 1){
 						this.headerMenu = true
