@@ -138,7 +138,7 @@
 										</div>
 										<div v-if="item.fullLeg.split(',').length > 2" style="position: absolute;top: 0;left: 142px;">
 											<el-tooltip class="item" effect="dark" :content="item.fullLeg" placement="top-start">
-												<a>{{item.flightNo}}</a>
+												<a>{{item.firstHub}}</a>
 											</el-tooltip>
 										</div>
 										<div class="list-tuijian-feiyong" style="margin-top: -55px;text-align: right;">
@@ -190,7 +190,7 @@
 									</div>
 									<div v-if="detailsArr.legCount > 1" style="position: absolute;top: 0;left: 142px;">
 										<el-tooltip class="item" effect="dark" :content="detailsArr.fullLeg" placement="top-start">
-											<a>{{detailsArr.flightNo}}</a>
+											<a>{{detailsArr.firstHub}}</a>
 										</el-tooltip>
 									</div>
 									<div class="list-arr-route-jiaqian">单价：{{detailsArr.bookingPrice}}元/kg</div>
@@ -495,6 +495,7 @@
 								departureDate: item.departureDate,
 								dow: item.dow,
 								flightNo: item.flightNo,
+								firstHub: item.firstHub,
 								fullLeg: item.fullLeg,
 								orderId: item.orderId,
 								pod: item.pod,
