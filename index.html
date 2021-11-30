@@ -88,55 +88,6 @@
 				<!-- 搜索 -->
 				<div class="mod-search">
 					<div class="pos-search">
-						<!-- <div class="mod-search-top">
-							<div class="s_tab">
-								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">智能订舱</div>
-								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">快捷粘贴</div>
-							</div>
-							<div class="search-box">
-								<div v-if="searchTopIndex == 0">
-									<div class="search-box-input">
-										<div class="search-item">
-											<div class="search-item-input search-item-icon1" style="position: relative;">
-												<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input" type="text" placeholder="输入起飞港"/>
-												<div v-show="qiShowState" style="display: none;" class="open-warp-router">
-													<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>
-													<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
-														<span>{{item.threeLetterCode}}</span>
-														<span>{{item.name}}</span>
-														<span>{{item.city}}</span>
-														<span>{{item.country}}</span>
-													</div>
-												</div>
-											</div>
-											<div class="search-item-arrow"></div>
-											<div class="search-item-input search-item-icon3" style="position: relative;">
-												<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input" type="text" placeholder="输入目的港"/>
-												<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>
-												<div v-show="muShowState" style="display: none;" class="open-warp-router">
-													<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>
-													<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
-														<span>{{item.threeLetterCode}}</span>
-														<span>{{item.name}}</span>
-														<span>{{item.city}}</span>
-														<span>{{item.country}}</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<button @click="freightQueryClick(1)" class="box-btn btn-prprimary">立即查询</button>
-									</div>
-									<div class="search-san-tip">支持城市，港口，三字码输入</div>
-								</div>
-								<div v-if="searchTopIndex == 1">
-									<div class="search-box-input">
-										<textarea v-model="pasteInput" class="box-input box-textarea" type="textarea" placeholder="复制粘贴，自动识别关键字，快速获取报价方案。例如  PVG-LAX">
-										</textarea>
-										<button @click="freightQueryClick(2)" class="box-btn btn-prprimary">立即查询</button>
-									</div>
-								</div>
-							</div>
-						</div> -->
 						<div class="mod-search-top">
 							<div class="s_tab">
 								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">AI查价</div>
@@ -144,7 +95,7 @@
 							</div>
 							<div class="search-box">
 								<div class="search-box-input-ai" v-if="searchTopIndex == 0">
-									<textarea class="box-input box-textarea" type="textarea" placeholder="输入询价信息，AI智能识别起始港、目的港、件毛体、一键查询航线价格">
+									<textarea v-model="aiStr" class="box-input box-textarea" type="textarea" placeholder="输入询价信息，AI智能识别起始港、目的港、件毛体、一键查询航线价格">
 									</textarea>
 									<div class="search-item">
 										<div class="search-item-input search-item-icon1" style="position: relative;">
@@ -178,7 +129,7 @@
 									</div>
 								</div>
 								<div class="search-box-input-volume" v-if="searchTopIndex == 1">
-									<textarea type="textarea" placeholder="输入尺寸信息上传带有尺寸信息的图片，AI智能识别，一键计算货物总体积"></textarea>
+									<textarea type="textarea" v-model="volumeConetn" placeholder="请输入体积信息，多个体积请换行输入或以逗号分割"></textarea>
 									<div class="search-box-volume-base">
 										<div class="volume-file">
 											<input type="file">
@@ -738,7 +689,9 @@
 				trackSearchInput: '',
 				isShowYundan: false,
 				userInfo: '',
-				headerMenu: false
+				headerMenu: false,
+				aiStr: '',
+				volumeConetn: ''
 			},
 			computed: {
 				swiper() {
@@ -814,7 +767,7 @@
 			},
 			methods: {
 				intelligentComputing() {
-					window.location.href = './intelligentComputing.html';
+					window.location.href = `./intelligentComputing.html?volumeConetn=${this.volumeConetn}`;
 				},
 				searchClose() {
 					this.qiSearchInput = '';
@@ -845,16 +798,45 @@
 				freightQueryClick(type) {
 					if(type == '1'){
 						var boxText = /^[\u4e00-\u9fa5]+$/
-						if(!this.muSearchInput){
-							this.isShowGang = true
-							this.gangText = '请选择目的港'
-							return
-						}else if(boxText.test(this.muSearchInput)){
-							this.isShowGang = true
-							this.gangText = '请选择三字码'
-							return
+						if (this.aiStr) {
+							let str = '';
+							if (this.qiSearchInput) {
+								str += this.qiSearchInput;
+							}
+							if (this.muSearchInput) {
+								if(str) {
+									str += `-${this.muSearchInput}`;
+								} else {
+									str += this.muSearchInput;
+								}
+							}
+							axios({
+								method: 'post',
+								url: webIp+serviceApi.aiStringIdentify,
+								data: {
+									str: str ? `${str}/${this.aiStr}`: this.aiStr
+								}
+							}).then(res => {
+								let data = res.data;
+								if (data.code == 200) {
+									window.location.href = './freightQuery.html?qi='+data.data.pol+'&mu='+data.data.pod+'&volume='+data.data.volume;
+								}
+							});
+						} else {
+							if(!this.muSearchInput){
+								this.isShowGang = true
+								this.gangText = '请选择目的港'
+								return
+							} else if(boxText.test(this.muSearchInput)){
+								this.isShowGang = true
+								this.gangText = '请选择三字码'
+								return
+							}
+							window.location.href = './freightQuery.html?qi='+this.qiSearchInput+'&mu='+this.muSearchInput
 						}
-						window.location.href = './freightQuery.html?qi='+this.qiSearchInput+'&mu='+this.muSearchInput
+
+
+
 					}else if(type == '2'){
 						if(!this.pasteInput){
 							return

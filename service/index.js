@@ -4,7 +4,7 @@ var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境
 
 
 //开发环境
-var webIp = 'http://10.8.0.14:6679'
+var webIp = 'http://10.8.0.1:6679'
 var webIp = 'http://10.8.0.1'
 var publicWeb = '/back/dcPortal/faw'
 
@@ -17,6 +17,8 @@ var publicWeb = '/back/dcPortal/faw'
 const serviceApi = {
 	// 首页Banner广告展示
 	showBanners: publicWeb+'/t-banner/noAuth/showBanners',
+	// 首页AI文字解析,获取查价所需数据
+	aiStringIdentify: '/track/identify/stringIdentify',
 	//三字代码查询分页
 	searchByPage: publicWeb+'/t-airport/noAuth/searchByPage',
 	//二字代码查询分页
@@ -72,7 +74,9 @@ const serviceApi = {
 	//发票信息
 	invoiceInfos: publicWeb+'/t-invoice-apply/invoiceInfos',
 	//导出账单
-	billImportBillPdf: publicWeb+'/t-bill/importBillPdf'
+	billImportBillPdf: publicWeb+'/t-bill/importBillPdf',
+	// 体积计算
+	stringcal: '/track/volcalculate/stringcal'
 }
 
 

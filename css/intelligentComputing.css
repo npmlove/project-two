@@ -39,9 +39,13 @@
   padding: 10px 20px 20px 20px;
   position: relative;
 }
-.intelligent-computing-box .box-left .box-left-content ul{
+.intelligent-computing-box .box-left .box-left-content textarea{
   height: 245px;
+  width: 100%;
   overflow-y: auto;
+  font-size: 12px;
+  color: #333333;
+  line-height: 22px;
 }
 .intelligent-computing-box .box-left .box-left-content li {
   font-size: 12px;

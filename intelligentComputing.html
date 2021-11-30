@@ -68,63 +68,27 @@
           <div class="box-left">
             <div class="box-left-title">输入结果</div>
             <div class="box-left-content">
-              <ul>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-                <li>1234545</li>
-              </ul>
+              <textarea name="name" v-model="textStr" placeholder="请输入体积信息，多个体积请换行输入或以逗号分割"></textarea>
               <div class="box-left-content-base">
                 <div class="file">
                   <input type="file">
                   <img src="./img/volume-file.png" alt="">
                   <span>点我上传</span>
                 </div>
-                <button class="box-btn btn-close" style="flex: 0 0 80px;">一键清除</button>
-                <button style="flex: 0 0 80px;marginLeft: 20px;" class="box-btn btn-prprimary">立即查询</button>
+                <button class="box-btn btn-close" @click="keyRemove" style="flex: 0 0 80px;">一键清除</button>
+                <button style="flex: 0 0 80px;marginLeft: 20px;" @click="inquire" class="box-btn btn-prprimary">立即查询</button>
               </div>
             </div>
           </div>
           <div class="box-right">
             <div class="box-right-title">识别结果</div>
             <div class="box-right-content">
-              <ul>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
-                <li>已识别体积字符串为：420*110*60*2 || 计算结果为：5544000</li>
+              <ul v-if="multipliers">
+                <li v-for="(item,index) in multipliers.multipliers" :key="index">{{item}}</li>
               </ul>
-              <div class="total">共找到：6组数据;</div>
-              <div class="result">换算结果为：27.0276 CBM;</div>
-              <div class="monery">20.09 <span>CBM</span></div>
+              <div class="total">{{multipliers && multipliers.totalNum}}</div>
+              <div class="result">{{multipliers && multipliers.totalVal}}</div>
+              <div class="monery">{{(multipliers && multipliers.totalVal.replace(/[^0-9|.]/ig,"")) || 0}} <span>CBM</span></div>
             </div>
           </div>
         </div>
@@ -220,6 +184,8 @@
         volume: '',
         weight: '',
         weightPrice: 167,
+        textStr: '',
+        multipliers: null
       },
       created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -228,10 +194,35 @@
 				if(localStorage.getItem('userInfo')){
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 				}
+        this.textStr = getQueryVariable('volumeConetn');
+        if (this.textStr) {
+          this.inquire();
+        }
         this.qiSearchByPage();
         this.muSearchByPage();
 			},
       methods: {
+        keyRemove() {
+          this.textStr = '';
+        },
+        inquire() {
+          // if (!this.textStr) {
+          //   return false;
+          // }
+          axios({
+            method: 'post',
+            url: webIp+serviceApi.stringcal,
+            data: {
+              textStr: this.textStr
+            }
+          }).then(res => {
+            let data = res.data;
+            if (data.code == 200) {
+              this.multipliers = data.data;
+            }
+
+          });
+        },
         enquiry() {
           window.location.href = `./freightQuery.html?qi=${this.pol}&mu=${this.pod}&piece=${this.piece}&volume=${this.volume}&weight=${this.weight}`;
         },
