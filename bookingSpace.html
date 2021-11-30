@@ -283,7 +283,7 @@
 										<div>{{proportionArr.pol}}</div>
 										<div>{{proportionArr.polName}}</div>
 									</div>
-									<div class="booking-flight-route-tips">直达</div>
+									<div class="booking-flight-route-tips">{{proportionArr.legCount == '1' ? '直达' : proportionArr.firstHub}}</div>
 									<div class="booking-flight-route-item">
 										<div>{{proportionArr.pod}}</div>
 										<div>{{proportionArr.podName}}</div>

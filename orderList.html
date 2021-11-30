@@ -173,7 +173,10 @@
 												<div class="nav-wrap-route">
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
-														<div>{{item.airCompanyName}}</div>
+														<div>
+															{{item.airCompanyName}}
+															<span style="marginLeft:5px;">{{item.airCompanyCode}}</span>
+														</div>
 														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
@@ -181,7 +184,7 @@
 															<div>{{item.pol}}</div>
 															<div>{{item.polName}}</div>
 														</div>
-														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : item.firstHub}}</div>
 														<div class="nav-wrap-route-info">
 															<div>{{item.pod}}</div>
 															<div>{{item.podName}}</div>
