@@ -25,10 +25,67 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
+		<style>
+			/* 模态框样式 */
+			.modal-footer{
+				display: flex;
+				justify-content: space-around;
+			}
+			.modal-contont{
+				margin: 0 20px ;
+				color: black;
+				font-size: 16px;
+			}
+			.modal-header{
+				display: flex;
+				justify-content: space-between;
+				text-align: right;
+				align-items: center;
+			}
+			.modal-header-image{
+				height: 100px;
+
+			}
+			.modal-p{
+				display: flex;
+				height: 100px;
+				flex-direction: column;
+				justify-content: space-around;
+			}
+			.modal-h2{
+				text-align: center;
+				font-style:oblique;
+				text-decoration: underline ;
+				font-size: 30px;
+				margin-top: 30px;
+				margin-bottom: 30px;
+			}
+			.modal-flex{
+				display: flex;
+				align-items: center;
+				margin-top: 5px;
+			}
+			.modal-flex>div:nth-child(1){
+				width: 120px;
+				font-weight: 600;
+			}
+			.modal-h3{
+				margin: 10px 0;
+				color: black;
+				font-weight: 600;
+			}
+			.modal-weight{
+				font-weight: 600;
+				color: black;
+			}
+			.modal-margin-5>p{
+				margin-top: 5px;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="app" style="font-size: 0;">
@@ -61,7 +118,102 @@
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
-			<!-- 订单管理 -->
+			<el-dialog
+				:visible.sync="noteBoolen"
+				width="60%"
+				top='2vh'
+				:before-close="handleClose">
+				<div class="modal-contont">
+					<div class="modal-header">
+						<div>
+							<el-image class="modal-header-image" :src= "iconImage" ></el-image>
+						</div>
+						<div class='modal-p'>
+							<P>Shanghai Feilaida Supply Chain Management Co., Ltd.</P>
+							<P>Building L3B, Hongqiao World Center, Lane 1588, Zhuguang Road, Qingpu District, Shanghai</P>
+							<P>TEL：+86 21 51119991</P>
+						</div>
+					</div>
+					<h2 class="modal-h2">  DEBIT NOTE</h3>
+				</div>
+				<div class="modal-flex">
+					<div>TO:</div>
+					 <el-input v-model="modalTo" maxlength='300'  size='mini' placeholder="Please enter The name of the company"></el-input>
+				</div>
+				<div class="modal-flex">
+					<div>MAWB NO.:  </div>
+					<div>999-61194092</div>
+				</div>
+				<div class="modal-flex">
+					<div>Issue date:  </div>
+					<div>2021/11/04 </div>
+				</div>
+				<div class="modal-flex">
+					<div>Area code:</div>
+					 <el-input v-model="modalArea" maxlength='20' size='mini' placeholder="Please enter "></el-input>
+				</div>
+				<div class="modal-flex">
+					<div>Tel:</div>
+					 <el-input v-model="modalTel" maxlength='20' size='mini' placeholder="Please enter "></el-input>
+				</div>
+				<p class="modal-h3">Ref.: Air consigement 28pcs/370.0kg/3.307cbm from PVG to LAX, Chargeable weight 551kg</p>
+				<el-table
+					:data="modalTableData"
+					border
+					size='mini'
+					style="width: 100%">
+						<el-table-column
+							prop="Description"
+							label="Description"
+							width="180">
+						</el-table-column>
+						<el-table-column
+							prop="UnitPrice"
+							label="Unit Price"
+							width="180">
+						</el-table-column>
+
+						<el-table-column
+							prop="ChargeableWeight"
+							label="Chargeable weight">
+						</el-table-column>
+						<el-table-column
+								prop="Amount"
+								label="Amount"
+								width="180">
+						</el-table-column>
+				</el-table>
+				<h3 class="modal-h3" style="text-decoration: underline ;font-style:oblique;"> Say:  Thirty Nine Thousand Four Hundred Forty Nine Yuan And Fifty Cents Only.</h3>
+				<div class="modal-margin-5">
+					<p class="modal-weight"> BANK INFORMATION,</p>
+
+					<p>
+						<span class="modal-weight">PAYEE’S BANK:</span>
+						<span>  BANK OF CHINA ，SHANGHAI  BR.</span>
+					</p>
+
+					<p>200MID YINCHENG ROAD, PUDONG AREA SHANGHAI CHINA</p>
+
+					<p>
+						<span class="modal-weight">SWIFT ADDRESS: </span>
+						<span>  BKCHCNBJ300.</span>
+					</p>
+
+					 <p>
+						<span class="modal-weight">PAYEE’S NAME:  </span>
+						<span>SHANGHAI  LXC GLOBAL LOGISTICS CO.,LIMITED</span>
+					</p>
+					<p>
+						<span class="modal-weight">PAYEE’S A/C:  </span>
+						<span>446859239397</span>
+					</p>
+				</div>
+				<span slot="footer" class="modal-footer">
+					<el-button type="primary" size='small' @click="noteBoolen = false">确认开具 DEBIT NOTE 并导出PDF</el-button>
+					<el-button  size='small' @click="noteBoolen = false">取消</el-button>
+				</span>
+			</el-dialog>
+			<!-- 财务管理 -->
 			<div class="order-list">
 				<div class="com-width order-list-content">
 					<div class="order-list-userInfo">
@@ -128,6 +280,7 @@
 								</div>
 							</el-form>
 						</div>
+
 						<div class="tabs__nav-wrap">
 							<el-tabs v-model="typeCode" type="border-card" @tab-click="tabClickData">
 							    <el-tab-pane label="发票开具" name="发票开具">
@@ -140,18 +293,19 @@
 												stripe
 												style="width: 100%">
 												<el-table-column type="selection" width="50"></el-table-column>
-												<el-table-column prop="waybillNo" label="运单号" min-width="120"></el-table-column>
+												<el-table-column prop="waybillNo" label="运单号" min-width="140"></el-table-column>
 												<el-table-column prop="departureDate" label="航班日期" min-width="100"></el-table-column>
 												<el-table-column prop="reconciliationUnit" label="对账单位" min-width="180"></el-table-column>
 												<el-table-column prop="fullLeg" label="航线" min-width="120"></el-table-column>
 												<el-table-column prop="billAmountCny" label="订单总金额" min-width="100"></el-table-column>
 											</el-table>
+
 											<div class="financial-merge">
 												<div class="financial-merge-price">总金额：<span>￥{{billAmountCnyTotal}}</span></div>
 												<div class="financial-merge-list">
 													<div @click="InvoicingClick('合并')" class="financial-merge-btn">合并开票</div>
 													<div @click="InvoicingClick('单独')" class="financial-merge-btn">单独开票</div>
-													<div @click="InvoicingClick('票据')" class="financial-merge-btn">DEBIT NOTE</div>
+													<!-- <div @click="InvoicingClick('票据')" class="financial-merge-btn">DEBIT NOTE</div> -->
 												</div>
 											</div>
 										</div>
@@ -179,9 +333,9 @@
 														<div class="border-btm-solid">
 															<el-form-item label="发票类型">
 															    <el-select v-model="invoiceType" placeholder="请选择发票类型" clearable filterable>
-															    	<el-option 
-															    		v-for="(item,index) in invoiceTypeOpt" 
-															    		:key="item.Name" 
+															    	<el-option
+															    		v-for="(item,index) in invoiceTypeOpt"
+															    		:key="item.Name"
 																		:label="item.Name"
 															    		:value="item.Value">
 															    	</el-option>
@@ -191,9 +345,9 @@
 														<div class="border-btm-solid" style="margin-top: 10px;">
 															<el-form-item label="发票抬头">
 															    <el-select v-model="invoiceTitle" @change="invoiceTitleChange" placeholder="请选择发票抬头" clearable filterable>
-															    	<el-option 
-															    		v-for="(item,index) in invoiceTitleOpt" 
-															    		:key="item.id" 
+															    	<el-option
+															    		v-for="(item,index) in invoiceTitleOpt"
+															    		:key="item.id"
 																		:label="item.invoiceTitle"
 															    		:value="item.invoiceTitle">
 															    	</el-option>
@@ -208,9 +362,9 @@
 														<div style="margin-top: 10px;">
 															<el-form-item label="收件人">
 															    <el-select v-model="recipient" @change="expressInfoChange" placeholder="请选择收件人" clearable filterable>
-															    	<el-option 
-															    		v-for="(item,index) in recipientOpt" 
-															    		:key="item.id" 
+															    	<el-option
+															    		v-for="(item,index) in recipientOpt"
+															    		:key="item.id"
 																		:label="item.recipient"
 															    		:value="item.recipient">
 															    	</el-option>
@@ -235,12 +389,37 @@
 										stripe
 										style="width: 100%">
 										<el-table-column type="selection" width="50"></el-table-column>
-										<el-table-column prop="invoiceNumbers" label="发票号" min-width="120"></el-table-column>
-										<el-table-column prop="departureDate" label="航班日期" min-width="100"></el-table-column>
-										<el-table-column label="最晚付款日期" min-width="100">
-											<!-- <template slot-scope="scope">
-												<div v-for="(item,index) in scope.row.billInfos" v-if="index == 0" :key="index">{{item.departureDate}}</div>
-											</template> -->
+										<el-table-column  label="发票号" min-width="120">
+											<template slot-scope="scope"  >
+												<el-popover trigger="hover" placement="top" v-if ="scope.row.invoiceNumbers" >
+													<p style="width: auto;" v-for ="(item,index) in scope.row.invoiceNumbers" :key='index' > {{ item }}</p>
+													<div slot="reference" class="name-wrapper">
+														<el-tag size="medium">{{ scope.row.tempInvoicePop }}</el-tag>
+													</div>
+												</el-popover>
+											</template>
+										</el-table-column>
+										<el-table-column  label="运单号" min-width="120">
+											<template slot-scope="scope"  >
+												<el-popover trigger="hover" placement="top" v-if='scope.row.waybillNo'  >
+													<p style="width: auto;" v-for ="(item,index) in scope.row.billInfos" :key='index' > {{ item.waybillNo }}</p>
+													<div slot="reference" class="name-wrapper">
+														<el-tag size="medium">{{ scope.row.waybillNo }}</el-tag>
+													</div>
+												</el-popover>
+											</template>
+										</el-table-column>
+										<el-table-column   label="航班日期" min-width="100">
+											<template slot-scope="scope"  >
+												<el-popover trigger="hover" placement="top" v-if='scope.row.departureDate'  >
+													<p style="width: auto;" v-for ="(item,index) in scope.row.billInfos" :key='index' > {{ item.departureDate }}</p>
+													<div slot="reference" class="name-wrapper">
+														<el-tag size="medium">{{ scope.row.departureDate }}</el-tag>
+													</div>
+												</el-popover>
+											</template>
+										</el-table-column>
+										<!-- <el-table-column label="最晚付款日期" min-width="120"> -->
 										</el-table-column>
 										<el-table-column prop="applyAmount" label="总金额" min-width="100"></el-table-column>
 										<el-table-column prop="invoiceTitle" label="发票抬头" min-width="120"></el-table-column>
@@ -255,8 +434,16 @@
 										:data="invoiceInfosArr"
 										stripe
 										style="width: 100%">
-										<el-table-column prop="invoiceNumbers" label="发票号" min-width="120"></el-table-column>
-										<el-table-column prop="waybillNo" label="运单号" min-width="120"></el-table-column>
+										<el-table-column prop="invoiceNumbers" label="发票号" min-width="120">
+											<template slot-scope="scope">
+												<div v-for='(item,index) in scope.row.invoiceNumbers' :key="index" >
+													{{item}}
+												</div>
+											</template>
+										</el-table-column>
+										<el-table-column prop="waybillNo" label="运单号" min-width="120">
+
+										</el-table-column>
 										<el-table-column prop="departureDate" label="航班日期" min-width="120"></el-table-column>
 										<el-table-column prop="zhangdan" label="最晚付款日期" min-width="120"></el-table-column>
 										<el-table-column prop="billAmountCny" label="总金额" min-width="120"></el-table-column>
@@ -269,21 +456,28 @@
 									    stripe
 									    style="width: 100%">
 									    <el-table-column prop="id" label="序号" min-width="50"></el-table-column>
-									    <el-table-column prop="orderid" label="运单号" min-width="120"></el-table-column>
-									    <el-table-column prop="date" label="航班日期" min-width="120"></el-table-column>
-										<el-table-column prop="zhangdan" label="对账单位" min-width="180"></el-table-column>
-										<el-table-column prop="hangxian" label="航线" min-width="120"></el-table-column>
-										<el-table-column prop="price" label="订单总金额" min-width="120"></el-table-column>
-										<el-table-column prop="status" label="核销状态" min-width="120"></el-table-column>
+									    <el-table-column prop="orderNo" label="运单号" min-width="120"></el-table-column>
+									    <el-table-column prop="departureDate" label="航班日期" min-width="120"></el-table-column>
+										<el-table-column prop="reconciliationUnit" label="对账单位" min-width="180"></el-table-column>
+										<el-table-column prop="polAndPod" label="航线" min-width="120"></el-table-column>
+										<el-table-column prop="totalArCny" label="订单总金额" min-width="120"></el-table-column>
+										<el-table-column prop="status" label="核销状态" min-width="120">
+											<template  slot-scope="scope">
+												<span  v-if='scope.row.rcvWriteOffStatus == 6 || scope.row.rcvWriteOffStatus == 7 || scope.row.rcvWriteOffStatus == 8 '  type="text" size="small">已核销</span>
+												<span  v-if='scope.row.rcvWriteOffStatus == 3  || scope.row.rcvWriteOffStatus == 4 ||scope.row.rcvWriteOffStatus == 5'  type="text" size="small">部分核销</span>
+												<span  v-if='scope.row.rcvWriteOffStatus == 0  || scope.row.rcvWriteOffStatus == 1 ||scope.row.rcvWriteOffStatus == 2'  type="text" size="small">未核销</span>
+
+											  </template>
+										</el-table-column>
 									</el-table>
-									<div class="financial-table-price">总金额：<span>￥8550</span></div>
+									<div class="financial-table-price">总金额：<span>￥{{tableDataTotalCny}}</span></div>
 								</el-tab-pane>
 							</el-tabs>
 						</div>
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -296,7 +490,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
@@ -309,7 +503,45 @@
 		new Vue({
 			el: '#app',
 			data: {
+				noteBoolen:false,
+				tableDataTotalCny:'',
+				modalTel:'',
+				modalTo:'',
+				modalArea:"",
+				modalTableData:[
+					{
+						Description:'Air freight',
+						UnitPrice:'¥69.5',
+						ChargeableWeight:'551.0',
+						Amount:"¥38294.5"
+					},
+					{
+						Description:'Other local charges',
+						UnitPrice:'¥155.0',
+						ChargeableWeight:'1.0',
+						Amount:"¥155.0"
+					},
+					{
+						Description:'Custom declaration charges',
+						UnitPrice:'¥300.0',
+						ChargeableWeight:'1.0',
+						Amount:"¥300.0"
+					},
+					{
+						Description:'Pick up charges',
+						UnitPrice:'¥700.0',
+						ChargeableWeight:'1.0',
+						Amount:"¥700.0"
+					},
+					{
+						Description:'TOTAL',
+						UnitPrice:'',
+						ChargeableWeight:'',
+						Amount:"¥39449.5"
+					},
+				],
 				loading: false,
+				iconImage:'./img/modal-header.png',
 				menuIndex: 0,
 				userInfo: {},
 				openId: '',
@@ -318,7 +550,7 @@
 				departureDate2: '',
 				departureDate3: '',
 				typeCode: '发票开具',
-				invoiceType: '',
+				invoiceType: '增值税电子普通发票',
 				invoiceTypeOpt: [
 					{
 						Name: '增值税电子普通发票',
@@ -346,6 +578,8 @@
 				recipientJson: {},
 				//发票信息
 				tableData2: [],
+				tempInvoicePop:'',
+				tempDeparturePop:'',
 				invoiceInfosPrice: 0,
 				invoiceInfosArr: []
 			},
@@ -365,7 +599,15 @@
 			methods: {
 				InvoicingClick(type) {
 					if(type == '票据'){
-						this.$message.error('正在开发请稍后再试')
+						if(this.billAmountCnyArr.length == 0){
+
+							this.$message.error('请选择开票数据')
+						}else if(this.billAmountCnyArr.length == 2){
+							this.$message.error('开具DEBIT NOTE仅单选，请重新勾选')
+						}else if(this.billAmountCnyArr.length == 1){
+							console.log(this.billAmountCnyArr[0])
+							this.noteBoolen = true
+						}
 						return
 					}
 					if(this.billAmountCnyArr.length == 0){
@@ -434,6 +676,13 @@
 							}
 						}
 					}
+					for(let i in this.invoiceInfosArr){
+						if(this.invoiceInfosArr[i].invoiceNumbers && this.invoiceInfosArr[i].invoiceNumbers.indexOf(',') != -1){
+							this.invoiceInfosArr[i].invoiceNumbers =	this.invoiceInfosArr[i].invoiceNumbers.split(",").slice(0,-1)
+						}
+
+					}
+					console.log(this.invoiceInfosArr)
 				},
 				selectionChange(val) {
 					this.billAmountCnyArr = val
@@ -443,6 +692,7 @@
 							this.billAmountCnyTotal += val[i].billAmountCny
 						}
 					}
+
 				},
 				invoiceTitleChange(e) {
 					for(var q = 0; q < this.invoiceTitleOpt.length; q++){
@@ -505,8 +755,10 @@
 					}else if(this.typeCode == '发票信息'){
 						this.initInvoiceInfos()
 					}else if(this.typeCode == '财务核销'){
-						this.departureDate3 = ''
+						// this.departureDate3 = ''
+						this.verification()
 					}
+
 				},
 				initInvoiceInfos() {
 					var json = {
@@ -523,7 +775,22 @@
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
-							this.tableData2 = data.data
+							let tempData = data.data
+
+							for(let i in tempData){
+
+								if( tempData[i].invoiceNumbers && tempData[i].invoiceNumbers.indexOf(',') != -1){
+									tempData[i].invoiceNumbers = tempData[i].invoiceNumbers.split(",").slice(0,-1)
+									tempData[i].tempInvoicePop = tempData[i].invoiceNumbers.pop()
+								}
+								// if( tempData[i].departureDate.indexOf(',') != -1){
+								// 	tempData[i].departureDate = tempData[i].departureDate.split(",").slice(0,-1)
+								// 	tempData[i].tempDeparturePop = tempData[i].tempDeparturePop.pop()
+								// }
+
+							}
+							this.tableData2 = tempData
+							console.log(tempData)
 						}else if(data.code == -200){
 							window.location.href = './login.html'
 						}else{
@@ -531,9 +798,9 @@
 						}
 					})
 				},
-				
-				
-				
+
+
+
 				initList() {
 					var json = {
 						startDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[0],
@@ -550,12 +817,16 @@
 						var data = data.data
 						if(data.code == 200){
 							this.tableData1 = data.data
+
 						}else if(data.code == -200){
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
 						}
 					})
+				},
+				handleClose(){
+					this.noteBoolen = false
 				},
 				initUserInfo(){
 					axios({
@@ -581,8 +852,31 @@
 					}else if(this.typeCode == '发票信息'){
 						this.initInvoiceInfos()
 					}else if(this.typeCode == '财务核销'){
-						this.departureDate3 = ''
+						// this.departureDate3 = ''
+						this.verification()
 					}
+				},
+				// 账务核销
+				verification(){
+					let params = {
+						startDepartureDate: this.departureDate3 == '' ? '' : this.departureDate3[0],
+						endDepartureDate: this.departureDate3 == '' ? '' : this.departureDate3[1]
+					}
+					axios({
+							method: 'post',
+							url: webIp+serviceApi.searchByPage,
+							data: params,
+							headers: {
+								'tokenId': localStorage.getItem('tokenId')
+							}
+						}).then(res=>{
+							let data = res.data ;
+
+							if(data.code == 200){
+								this.tableData = data.data.page.records
+								this.tableDataTotalCny = data.data.totalCny
+							}
+						} )
 				},
 				restClick() {
 					if(this.typeCode == '发票开具'){
@@ -614,6 +908,8 @@
 					this.menuIndex = index
 					if(index == 0){
 						window.location.href = './index.html'
+					}else if(index == 1){
+						window.location.href = './orderList.html'
 					}else if(index == 3){
 						window.location.href = './about_us.html'
 					}

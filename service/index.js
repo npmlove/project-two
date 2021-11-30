@@ -12,11 +12,17 @@ var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortalTest/user/' //开发�
 var webIp = ''
 var publicWeb = '/back/dcPortalTest/faw'
 
+// //测试环境或生成环境
+// var webIp = ''
+// var publicWeb = '/back/dcPortal/faw'
+
 
 //接口
 const serviceApi = {
 	// 首页Banner广告展示
 	showBanners: publicWeb+'/t-banner/noAuth/showBanners',
+	// 首页AI文字解析,获取查价所需数据
+	aiStringIdentify: '/track/identify/stringIdentify',
 	//三字代码查询分页
 	searchByPage: publicWeb+'/t-airport/noAuth/searchByPage',
 	//二字代码查询分页
@@ -72,7 +78,9 @@ const serviceApi = {
 	//发票信息
 	invoiceInfos: publicWeb+'/t-invoice-apply/invoiceInfos',
 	//导出账单
-	billImportBillPdf: publicWeb+'/t-bill/importBillPdf'
+	billImportBillPdf: publicWeb+'/t-bill/importBillPdf',
+	// 体积计算
+	stringcal: '/track/volcalculate/stringcal'
 }
 
 
@@ -174,7 +182,7 @@ function getWeekDay(data) {
 	var dateString = formatDate(data);//当天的日期，例如2020-2-28
 	var presentDate = new Date(dateString);
 	var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 21;
- 
+
 	return Array.from(new Array(21), function (val, index) {
 		return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
 	});
@@ -207,4 +215,3 @@ function getNowM() {
 	}
 	return current_month;
 }
-

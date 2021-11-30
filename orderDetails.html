@@ -33,7 +33,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -90,7 +90,7 @@
 								<div class="color9995" style="color: #999999;font-size: 14px;padding: 20px 20px 0 20px;">订舱信息</div>
 								<div class="list-route-icon">
 									<img v-if="detailsArr.logoPath" style="opacity: 0.5;" alt="tupian" :src="detailsArr.logoPath" />
-									<div class="list-route-icon-title color9995">{{detailsArr.airCompanyName}}</div>
+									<div class="list-route-icon-title color9995">{{detailsArr.airCompanyName}}<span style="marginLeft:5px;">{{detailsArr.airCompanyCode}}</div>
 									<div v-if="detailsArr.dow == '1'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周一</div>
 									<div v-if="detailsArr.dow == '2'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周二</div>
 									<div v-if="detailsArr.dow == '3'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周三</div>
@@ -116,7 +116,7 @@
 								<div class="orderOptionsList" v-for="(item,index) in orderOptionsList" :key="index">
 									<div class="list-route-icon">
 										<img v-if="item.logoPath" alt="tupian" :src="item.logoPath" />
-										<div class="list-route-icon-title">{{item.airCompanyName}}</div>
+										<div class="list-route-icon-title">{{item.airCompanyName}}<span style="marginLeft:5px;">{{item.airCompanyCode}}</span></div>
 										<div v-if="item.dow == '1'" class="list-route-icon-date color227">{{item.departureDate}}  周一</div>
 										<div v-if="item.dow == '2'" class="list-route-icon-date color227">{{item.departureDate}}  周二</div>
 										<div v-if="item.dow == '3'" class="list-route-icon-date color227">{{item.departureDate}}  周三</div>
@@ -138,7 +138,7 @@
 										</div>
 										<div v-if="item.fullLeg.split(',').length > 2" style="position: absolute;top: 0;left: 142px;">
 											<el-tooltip class="item" effect="dark" :content="item.fullLeg" placement="top-start">
-												<a>中转</a>
+												<a>{{item.flightNo}}</a>
 											</el-tooltip>
 										</div>
 										<div class="list-tuijian-feiyong" style="margin-top: -55px;text-align: right;">
@@ -168,7 +168,7 @@
 								</div>
 								<div class="list-route-icon">
 									<img v-if="detailsArr.logoPath" alt="tupian" :src="detailsArr.logoPath" />
-									<div class="list-route-icon-title">{{detailsArr.airCompanyName}}</div>
+									<div class="list-route-icon-title">{{detailsArr.airCompanyName}}<span style="marginLeft:5px;">{{detailsArr.airCompanyCode}}</div>
 									<div v-if="detailsArr.dow == '1'" class="list-route-icon-date">{{detailsArr.departureDate}}  周一</div>
 									<div v-if="detailsArr.dow == '2'" class="list-route-icon-date">{{detailsArr.departureDate}}  周二</div>
 									<div v-if="detailsArr.dow == '3'" class="list-route-icon-date">{{detailsArr.departureDate}}  周三</div>
@@ -190,7 +190,7 @@
 									</div>
 									<div v-if="detailsArr.legCount > 1" style="position: absolute;top: 0;left: 142px;">
 										<el-tooltip class="item" effect="dark" :content="detailsArr.fullLeg" placement="top-start">
-											<a>中转</a>
+											<a>{{detailsArr.flightNo}}</a>
 										</el-tooltip>
 									</div>
 									<div class="list-arr-route-jiaqian">单价：{{detailsArr.bookingPrice}}元/kg</div>
@@ -293,7 +293,7 @@
 						</div>
 						<div class="order-details-table-zhangdan">
 							<div>
-								<div class="details-table-zhangdan-title">账单明细</div>
+								<div class="details-table-zhangdan-title">预计账单</div>
 								<div class="booking-price borderEFEFEF bakFFFFFF">
 									<div v-if="guonerArr.length > 0" class="booking-price-item">
 										<div class="booking-price-item-name">国内段</div>
@@ -345,7 +345,7 @@
 					<el-button @click="nextStep">下一张账单（{{(billInfosIndex+1)}}/{{billInfos.length}}）</el-button>
 				</div>
 			</el-dialog>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -426,7 +426,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -457,7 +457,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -522,7 +522,7 @@
 								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
-								
+
 							}
 						})
 					}else if(type == '取消'){
@@ -552,7 +552,7 @@
 								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
-								
+
 							}
 						})
 					}else if(type == '进仓'){
@@ -585,7 +585,7 @@
 								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
-								
+
 							}
 						})
 					}else if(type == '账单'){
@@ -678,7 +678,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -691,6 +691,8 @@
 					this.menuIndex = index
 					if(index == 0){
 						window.location.href = './index.html'
+					}else if(index == 1){
+						window.location.href = './orderList.html'
 					}else if(index == 3){
 						window.location.href = './about_us.html'
 					}
@@ -699,4 +701,3 @@
 		})
 	</script>
 </html>
-
