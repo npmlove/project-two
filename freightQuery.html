@@ -265,7 +265,11 @@
 							<div class="wrapper-li-content">
 								<div class="wrapper-li-content-left">
 									<div class="wrapper-li-tags" style="justify-content: space-between;">
-										<div style="width: auto;font-size: 12px;display: flex;align-items: center;"><img alt="图片" v-if="item.logoPath" style="margin-right: 10px;height: 20px;width: auto;" :src="item.logoPath" />{{item.name}}</div>
+										<div style="width: auto;font-size: 12px;display: flex;align-items: center;">
+											<img alt="图片" v-if="item.logoPath" style="margin-right: 10px;height: 20px;width: auto;" :src="item.logoPath" />
+											{{item.name}}
+											<span style="marginLeft:10px;">{{item.airCompanyCode}}</span>
+										</div>
 										<div style="display: flex;width: auto;flex: 0 0 130px;justify-content: flex-end;">
 											<div v-if="item.legCount == '1'" class="li-tag1">时效快</div>
 											<div v-if="item.tag" class="li-tag2">价格低</div>
@@ -296,8 +300,8 @@
 										<li v-for="(childerItem,childerIndex) in item.rates" :key="childerIndex" class="li-content-price-li">
 											<!-- <div v-if="childerIndex == 0">{{childerItem.vwrLow}}CMB < {{childerItem.vwrHigh}}</div> -->
 											<div>1:{{childerItem.vwr}}</div>
-											<div :style="{color: item.amountTitle == 'M' ? '#ff9914' : '#333'}">{{childerItem.ratesLevel0}}</div>
-											<div :style="{color: item.amountTitle == 'N' ? '#ff9914' : '#333'}">{{childerItem.ratesN}}</div>
+											<!-- <div :style="{color: item.amountTitle == 'M' ? '#ff9914' : '#333'}">{{childerItem.ratesLevel0}}</div>
+											<div :style="{color: item.amountTitle == 'N' ? '#ff9914' : '#333'}">{{childerItem.ratesN}}</div> -->
 											<div :style="{color: item.amountTitle == '45+' ? '#ff9914' : '#333'}">{{childerItem.ratesLevel1}}</div>
 											<div :style="{color: item.amountTitle == '100+' ? '#ff9914' : '#333'}">{{childerItem.ratesLevel2}}</div>
 											<div :style="{color: item.amountTitle == '300+' ? '#ff9914' : '#333'}">{{childerItem.ratesLevel3}}</div>
@@ -428,11 +432,11 @@
 				var myDate = new Date()
 				this.currWeekDate = myDate.getDay()
 				this.dow = myDate.getDay()
-				this.pol = getQueryVariable('qi')
-				this.pod = getQueryVariable('mu')
-				this.piece = getQueryVariable('piece');
-				this.volume = getQueryVariable('volume');
-				this.weight = getQueryVariable('weight');
+				this.pol = getQueryVariable('qi') || '';
+				this.pod = getQueryVariable('mu') || '';
+				this.piece = getQueryVariable('piece') || '';
+				this.volume = getQueryVariable('volume') || '';
+				this.weight = getQueryVariable('weight') || '';
 				this.initData()
 				var getMm = getNowM()
 				this.currentDayWeekDate = getWeekDay1(myDate.toLocaleDateString())
