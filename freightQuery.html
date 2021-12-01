@@ -321,9 +321,9 @@
 									<li>杂费说明</li>
 									<li>航班信息</li>
 								</ul>
-								<div class="result-wrapper-shouqi">收起</div>
+								<div class="result-wrapper-shouqi" @click="shrink(item,index)">{{item.isShow ? '收起' : '展开'}}</div>
 							</div>
-							<div class="result-wrapper-content">
+							<div class="result-wrapper-content"  v-if="item.isShow">
 								<div class="wrapper-content-item">
 									<div class="wrapper-content-item-text">
 										<label>中转/直飞：</label>{{item.legCount == 1 ? '直达' : '中转'}}
@@ -480,6 +480,12 @@
 				this.initTwoCode()
 			},
 			methods: {
+				shrink(item,index) {
+					this.$set(this.priceArr,index,{
+						...item,
+						isShow: !item.isShow
+					})
+				},
 				showHeaderMenu(type) {
 					if(type == 1){
 						this.headerMenu = true
@@ -760,6 +766,7 @@
 								this.actDay = false;
 							}
 							for(var i = 0; i < this.priceArr.length; i++){
+								this.priceArr[i].isShow = false;
 								this.priceArr[i].sortMTop = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','top')
 								this.priceArr[i].sortMBottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','bottom')
 								this.priceArr[i].sort45Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'45','top')
