@@ -80,7 +80,16 @@ const serviceApi = {
 	//导出账单
 	billImportBillPdf: publicWeb+'/t-bill/importBillPdf',
 	// 体积计算
-	stringcal: '/track/volcalculate/stringcal'
+	stringcal: '/track/volcalculate/stringcal',
+	//新增or修改开票信息
+	invoiceInfoSaveOrUpdate: publicWeb+'/t-portal-invoice-info/saveOrUpdate',
+	// 删除开票信息
+	deleInvoice:  publicWeb+'/t-portal-invoice-info/delete',
+	//新增or修改开票邮寄信息
+	expressInfoSaveOrUpdate: publicWeb+'/t-portal-express-info/saveOrUpdate',
+	// 删除用户快递信息
+	deleExpress:  publicWeb+'/t-portal-express-info/delete',
+
 }
 
 
