@@ -168,7 +168,7 @@
 					<div v-show="!isShowMore" class="modify-flight-date com-width">
 						<ul class="modify-date-tabs">
 							<li v-for="(item,index) in dateArr" :key="index" :class="{'modify-date-tab-active': dateTabActive == splitDate(item.date)}" class="modify-date-tab">
-								<div   @click="dateItemClick(item.dow,item.date)">
+								<div @click="dateItemClick(item.dow,item.date)">
 									<div v-if="item.dow == 1" class="date">{{splitDate(item.date)}}  周一</div>
 									<div v-if="item.dow == 2" class="date">{{splitDate(item.date)}}  周二</div>
 									<div v-if="item.dow == 3" class="date">{{splitDate(item.date)}}  周三</div>
@@ -321,9 +321,9 @@
 									<li>杂费说明</li>
 									<li>航班信息</li>
 								</ul>
-								<div class="result-wrapper-shouqi">收起</div>
+								<div class="result-wrapper-shouqi" @click="shrink(item,index)">{{item.isShow ? '收起' : '展开'}}</div>
 							</div>
-							<div class="result-wrapper-content">
+							<div class="result-wrapper-content"  v-if="item.isShow">
 								<div class="wrapper-content-item">
 									<div class="wrapper-content-item-text">
 										<label>中转/直飞：</label>{{item.legCount == 1 ? '直达' : '中转'}}
@@ -418,7 +418,8 @@
 				isIndexDay: 0,
 				bookingDate: '',
 				userInfo: '',
-				headerMenu: false
+				headerMenu: false,
+				actDay: true
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -437,7 +438,7 @@
 				this.piece = getQueryVariable('piece') || '';
 				this.volume = getQueryVariable('volume') || '';
 				this.weight = getQueryVariable('weight') || '';
-				this.initData()
+
 				var getMm = getNowM()
 				this.currentDayWeekDate = getWeekDay1(myDate.toLocaleDateString())
 				if(this.currWeekDate == 0){
@@ -473,11 +474,18 @@
 					this.dateMoreArr.push(arr)
 				}
 				this.dateMoreArr = this.dateMoreArr.splice(this.isIndexDay,this.isIndexDay+2)
+				this.initData()
 				this.qiSearchByPage()
 				this.muSearchByPage()
 				this.initTwoCode()
 			},
 			methods: {
+				shrink(item,index) {
+					this.$set(this.priceArr,index,{
+						...item,
+						isShow: !item.isShow
+					})
+				},
 				showHeaderMenu(type) {
 					if(type == 1){
 						this.headerMenu = true
@@ -696,16 +704,22 @@
 					})
 				},
 				//获取运价查询
-				initData(){
+				initData(len = 0){
 					var codeArr = JSON.parse(JSON.stringify(this.twoLetterCode1))
 					if(this.volume && this.weight){
 						var chargedWeight = Math.ceil(Number(this.volume)*this.weightPrice) > this.weight ? Math.ceil(Number(this.volume)*this.weightPrice) : this.weight
 					}else{
 						var chargedWeight = ''
 					}
+					let dow = '';
+					if (this.actDay) {
+						dow = this.dateArr[len].dow == 0 ? 7 : this.dateArr[len].dow;
+					} else {
+						dow = this.dow == 0 ? 7 : this.dow;
+					}
 					var data = {
 						cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
-						dow: this.dow == 0 ? 7 : this.dow,
+						dow: dow,
 						pageNum: this.pageNum,
 						pageSize: this.pageSize,
 						pod: this.pod,
@@ -726,11 +740,33 @@
 								this.weekDatePrice.push(data.data.weekRatesVOS[q].value)
 							}
 							this.priceArr = data.data.freightQueryVOS
-							if(this.priceArr == null){
+							if(data.data.freightQueryVOS == null){
 								this.priceArr = []
+								if (this.actDay && len < 6) {
+									len += 1;
+									this.initData(len);
+								}
+								if (this.actDay && len == 6) {
+									this.actDay = false;
+									this.bookingDate = this.dateArr[len].date;
+									this.dateTabActive = this.splitDate(this.dateArr[len].date);
+									this.dow = this.dateArr[len].dow;
+									this.initTwoCode()
+									this.twoLetterCode1 = [];
+								}
 								return
+							} else {
+								if (this.actDay) {
+									this.bookingDate = this.dateArr[len].date;
+									this.dateTabActive = this.splitDate(this.dateArr[len].date);
+									this.dow = this.dateArr[len].dow;
+									this.initTwoCode()
+									this.twoLetterCode1 = [];
+								}
+								this.actDay = false;
 							}
 							for(var i = 0; i < this.priceArr.length; i++){
+								this.priceArr[i].isShow = false;
 								this.priceArr[i].sortMTop = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','top')
 								this.priceArr[i].sortMBottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','bottom')
 								this.priceArr[i].sort45Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'45','top')
