@@ -17,6 +17,7 @@
 		<link rel="stylesheet" href="./css/element-ui-min.css">
 		<link rel="stylesheet" href="./css/reset.css" />
 		<link rel="stylesheet" href="./css/common.css" />
+		<link rel="stylesheet" href="./css/freightQuery.css" />
 		<script src="./js/vue.js"></script>
 		<script src="./js/axios.min.js"></script>
 		<script src="./js/element-ui.js"></script>
@@ -31,7 +32,7 @@
 		</script>
 	</head>
 	<body>
-		<div id="app" style="font-size: 0;">
+		<div id="app" >
 			<!-- 头部 -->
 			<div class="header">
 				<div class="header-img">
@@ -317,30 +318,55 @@
 							</div>
 							<div class="result-wrapper-tabs">
 								<ul class="result-wrapper-tabs-ul">
-									<li class="result-wrapper-tabs-active">普货政策</li>
-									<li>杂费说明</li>
-									<li>航班信息</li>
+									<li :class="[item.isShowType==1?'result-wrapper-tabs-active':'']" @click="typeChange(item,index,1)">普货政策</li>
+									<li :class="[item.isShowType==2?'result-wrapper-tabs-active':'']" @click="typeChange(item,index,2)">航班信息</li>
 								</ul>
 								<div class="result-wrapper-shouqi" @click="shrink(item,index)">{{item.isShow ? '收起' : '展开'}}</div>
 							</div>
-							<div class="result-wrapper-content"  v-if="item.isShow">
-								<div class="wrapper-content-item">
-									<div class="wrapper-content-item-text">
-										<label>中转/直飞：</label>{{item.legCount == 1 ? '直达' : '中转'}}
+							<template v-if="item.isShow">
+								<div class="result-wrapper-content"  v-if="item.isShowType==1">
+									<div class="wrapper-content-item">
+										<div class="wrapper-content-item-text">
+											<label>中转/直飞：</label>{{item.legCount == 1 ? '直达' : '中转'}}
+										</div>
+										<div class="wrapper-content-item-text">
+											<label>备注：</label>{{item.remark}}
+										</div>
 									</div>
-									<div class="wrapper-content-item-text">
-										<label>备注：</label>{{item.remark}}
+									<div class="wrapper-content-item">
+										<div class="wrapper-content-item-text">
+											<label>化工品包装要求（能接）：</label>托盘、散货
+										</div>
+										<div class="wrapper-content-item-text">
+											<label>其他政策：</label>重货，泡货价格另议
+										</div>
 									</div>
 								</div>
-								<div class="wrapper-content-item">
-									<div class="wrapper-content-item-text">
-										<label>化工品包装要求（能接）：</label>托盘、散货
-									</div>
-									<div class="wrapper-content-item-text">
-										<label>其他政策：</label>重货，泡货价格另议
-									</div>
-								</div>
+								<div class="result-wrapper-content flightInof"   v-if="item.isShowType==2">
+										<div class="listContent" v-for="(ite,index) in item.legDetail" :key="index">
+											<div class="title">
+												<span>首城航班</span>
+												<span>{{ite.startRouteName}}</span>
+											</div>
+											<div class="diyTable">
+												<div class="diyTableTitle pub">
+													<div>航班号</div>
+													<div>运输工具</div>
+													<div>起运时间</div>
+													<div>到达时间</div>
+													<div>班期</div>
+												</div>
+												<div class="diyTableList pub" v-for="(it,ind) in ite.childerTable" :key="ind+'s'">
+													<div>{{it.vehicleId?it.vehicleId:"无"}}</div>
+													<div>{{it.vehicleType?it.vehicleType:"无"}}</div>
+													<div>{{it.etd?it.etd:"无"}}</div>
+													<div>{{it.eta?it.eta:"无"}}</div>
+													<div>{{it.vehicleId?it.vehicleId:"无"}}</div>
+												</div>
+											</div>
+										</div>
 							</div>
+							</template>
 						</li>
 					</ul>
 				</div>
@@ -480,6 +506,13 @@
 				this.initTwoCode()
 			},
 			methods: {
+				typeChange(item,index,value){
+					this.$set(this.priceArr,index,{
+						...item,
+						isShowType: value,
+						isShow:true
+					})
+				},
 				shrink(item,index) {
 					this.$set(this.priceArr,index,{
 						...item,
@@ -766,7 +799,9 @@
 								this.actDay = false;
 							}
 							for(var i = 0; i < this.priceArr.length; i++){
+								this.priceArr[i].legDetail = this.priceArr[i].legDetail?JSON.parse(this.priceArr[i].legDetail):[]
 								this.priceArr[i].isShow = false;
+								this.priceArr[i].isShowType = 1;
 								this.priceArr[i].sortMTop = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','top')
 								this.priceArr[i].sortMBottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','bottom')
 								this.priceArr[i].sort45Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'45','top')
@@ -780,6 +815,7 @@
 								this.priceArr[i].sort1000Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'1000','top')
 								this.priceArr[i].sort1000Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'1000','bottom')
 							}
+							// debugger
 						}else{
 							this.priceArr = []
 						}

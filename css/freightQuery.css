@@ -1,0 +1,59 @@
+.flightInof{
+    padding: 0 85px;
+    box-sizing: border-box;
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+.listContent{
+    width: 47%;
+    position: relative;
+    margin-bottom: 20px;
+}
+.diyTable{
+    position: relative;
+}
+.listContent:nth-child(2n+1) > .diyTable:after{
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 110px;
+    background: #EBEBEB;
+    right: -30px;
+    top: 0;
+}
+.pub{
+    display: flex;
+    border-bottom: 1px solid #EBEBEB;
+
+}
+.pub >div{
+    width: 25%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+}
+.title{
+    margin-bottom: 30px;
+    font-size: 14px;
+    margin-left: 30px;
+}
+.title>span:nth-of-type(1){
+    font-weight: 500;
+    color: #333333;
+    margin-right: 35px;
+}
+.title>span:nth-of-type(2){
+    font-weight: bold;
+    color: #2273CB;
+}
+.diyTableTitle{
+    color: #666666;
+    padding: 10px 0;
+}
+.diyTableList{
+    color: #333333;
+    padding: 20px 0;
+}
