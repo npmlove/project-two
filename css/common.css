@@ -1662,9 +1662,9 @@
 .modify-date-tab-active {
 	background-color: #2273CB;
 }
-.modify-date-tab-noactive {
-	background-color: #eeeeee;
-}
+/*.modify-date-tab-noactive {*/
+/*	background-color: #eeeeee;*/
+/*}*/
 
 
 .modify-date-tab-active .date {
@@ -1675,10 +1675,10 @@
 	color: #FFF;
 }
 .modify-date-tab-noactive  .price{
-	color: #FFF;
+	color: #eeeeee;
 }
 .modify-date-tab-noactive  .date{
-	color: #FFF;
+	color: #eeeeee;
 }
 .modify-more-date {
 	font-size: 14px;

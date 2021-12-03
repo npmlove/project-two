@@ -225,11 +225,10 @@
             </tr>
             <tr v-for="(item,index) in dateMoreArr" :key="index">
               <td :class="{default_color: childerItem.currentDay,default_active: currentDay == childerItem.date}"
-                  :style="{background:!weekDatePrice[childerIndex]?'#eeeeee':''}"
                   v-for="(childerItem,childerIndex) in item" :key="childerIndex">
                 <div v-if="childerItem.currentDay" @click="dateClick(childerItem.date,childerIndex)" >
-                  <div>{{splitDate(childerItem.date)}}</div>
-                  <div v-if="0 == index" style="font-size: 12px;color: #2273CB;">
+                  <div :style="{fontSize: '12px',color:!weekDatePrice[childerIndex]?'#999':'#2273CB'}">{{splitDate(childerItem.date)}}</div>
+                  <div v-if="0 == index" :style="{fontSize: '12px',color:!weekDatePrice[childerIndex]?'#999':'#2273CB'}">
                     <span v-if="weekDatePrice[childerIndex]">￥{{weekDatePrice[childerIndex]}}</span>
                     <span v-else>无航班</span>
                   </div>
@@ -237,7 +236,7 @@
                     <div v-if="weekDatePrice[childerIndex]" style="font-size: 12px;color: #FF9914;"><span
                       style="color: #333;">参考价</span>￥{{weekDatePrice[childerIndex]}}
                     </div>
-                    <div v-else style="font-size: 12px;color: #FF9914;">无航班</div>
+                    <div v-else :style="{fontSize: '12px',color:!weekDatePrice[childerIndex]?'#999':'#FF9914'}">无航班</div>
                   </div>
                   <div v-else-if="childerItem.currentDay" style="font-size: 12px;">可占仓</div>
                 </div>
