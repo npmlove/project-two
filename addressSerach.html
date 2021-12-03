@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <meta name="applicable-device" content="pc,mobile">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="renderer" content="webkit">
+  <meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+  <meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+  <link rel='icon' href='./img/favicon.ico' type='image/x-icon'/>
+  <title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+  <!-- <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/7.0.0/swiper-bundle.min.css"> -->
+  <link rel="stylesheet" href="./css/swiper-bundle.min.css"/>
+  <link rel="stylesheet" href="./css/reset.css"/>
+  <link rel="stylesheet" href="./css/common.css"/>
+  <script src="./js/vue.js"></script>
+  <script src="./js/axios.min.js"></script>
+  <script src="./js/swiper-bundle.min.js"></script>
+  <script>
+      var _hmt = _hmt || [];
+      (function () {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+      })();
+  </script>
+  <style>
+      #tenMap{
+          /*地图(容器)显示大小*/
+          width:100vw;
+          height:calc(100vh - 120px);
+          box-sizing: border-box;
+      }
+  </style>
+</head>
+<body>
+<div id="app">
+  <!-- 头部 -->
+  <div class="header">
+    <div class="header-img">
+      <a href="./index.html">
+        <div class="logo"></div>
+      </a>
+      <div class="logo-title"></div>
+    </div>
+    <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+      <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+      <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+        <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+        <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+        <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+        <div class="header-bak"><a href="./financial.html">财务管理</a></div>
+        <div @click="tuiChu" class="header-bak">退出</div>
+      </div>
+    </div>
+    <div v-else @click="loginClick" class="header-user">登录</div>
+  </div>
+  <div class="header-menu">
+    <ul class="header-menu-list com-width">
+      <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+      <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
+      <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+      <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+    </ul>
+  </div>
+  <div class="tenMap" id="tenMap">
+  </div>
+</div>
+</body>
+<script src="./service/index.js"></script>
+<script src="https://map.qq.com/api/gljs?v=1.exp&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            menuIndex: 2,
+            userInfo: '',
+            headerMenu: false
+        },
+        created() {
+            if(!localStorage.getItem('wxOpenId')){
+                window.location.href = './login.html'
+            }
+            if(localStorage.getItem('userInfo')){
+                this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+            }
+        },
+        mounted(){
+            this.$nextTick(()=>{
+                this.initMap()
+            })
+
+        },
+        methods: {
+            initMap() {
+                //定义地图中心点坐标
+                var center = new TMap.LatLng(39.984120, 116.307484)
+                //定义map变量，调用 TMap.Map() 构造函数创建地图
+                var map = new TMap.Map(document.getElementById('tenMap'), {
+                    center: center,//设置地图中心点坐标
+                    zoom: 17.2,   //设置地图缩放级别
+                    pitch: 43.5,  //设置俯仰角
+                    rotation: 45    //设置地图旋转角度
+                });
+            },
+            showHeaderMenu(type) {
+                if(type == 1){
+                    this.headerMenu = true
+                }else {
+                    this.headerMenu = false
+                }
+            },
+            tuiChu() {
+                localStorage.clear()
+                window.location.href = './login.html'
+            },
+            //登录
+            loginClick() {
+                window.location.href = './login.html'
+            },
+            // muen
+            menuClick(index) {
+                this.menuIndex = index
+                if(index == 0){
+                    window.location.href = './index.html'
+                }else if(index == 1){
+                    window.location.href = './orderList.html'
+                }else if(index == 2){
+                    window.location.href = './addressSerach.html'
+                }else if(index == 3){
+                    window.location.href = './about_us.html'
+                }
+            }
+        }
+    })
+</script>
+</html>

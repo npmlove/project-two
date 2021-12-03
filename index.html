@@ -30,6 +30,33 @@
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
+		<style>
+			.tips{
+				position: relative;
+				background: #FFFFFF;
+				border-radius: 5px 5px 5px 5px;
+				opacity: 1;
+				font-size: 10px;
+				font-weight: bold;
+				color: #333333;
+				padding: 0 10px;
+				height: 25px;
+				line-height: 25px;
+				margin-left: 40px;
+				margin-bottom: 10px;
+			}
+			.tips:before{
+				content: "";
+				position: absolute;
+				width: 11px;
+				height: 11px;
+				background: #FFFFFF;
+				opacity: 1;
+				top: 45%;
+				left: -7px;
+				transform: rotate(45deg) translateY(-50%);
+			}
+		</style>
 	</head>
 	<body>
 		<div id="app">
@@ -57,7 +84,7 @@
 				<ul class="header-menu-list com-width">
 					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
 					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
-					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+					 <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
@@ -145,6 +172,7 @@
 							<div class="s_tab s_tab_bak_color">
 								<div @click="searchBottomClick(0)" :class="{s_tab_current: searchBottomIndex == 0}" class="s_tab_nocurrent">运单查询</div>
 								<!-- <div @click="searchBottomClick(1)" :class="{s_tab_current: searchBottomIndex == 1}" class="s_tab_nocurrent">航班查询</div> -->
+								<div class="tips">全网航班，动态掌握</div>
 							</div>
 							<div class="search-box" style="padding: 15px 10px 0 10px">
 								<div v-if="searchBottomIndex == 0" class="search-box-input" style="position: relative;">
@@ -873,8 +901,10 @@
 						window.location.href = './index.html';
 					} else if (index == 1) {
 						window.location.href = './orderList.html';
-					} else if(index == 3){
-						window.location.href = './about_us.html';
+					}else if(index == 2){
+						window.location.href = './addressSerach.html'
+					}else if(index == 3){
+						window.location.href = './about_us.html'
 					}
 				},
 				searchTopClick(index) {
