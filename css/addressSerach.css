@@ -98,3 +98,10 @@
     font-weight: 500;
     color: #999999;
 }
+.listBox > .list > div > p{
+    margin-bottom: 10px;
+}
+.listBox > .list > div > p > span{
+    color: #333333;
+    margin-left: 10px;
+}
