@@ -88,7 +88,6 @@
     flex: 1;
     position: relative;
     display: flex;
-    align-items: center;
     border-radius: 5px 5px 5px 5px;
     opacity: 1;
     border: 1px solid #EFEFEF;
@@ -97,4 +96,41 @@
     font-size: 12px;
     font-weight: 500;
     color: #999999;
+    margin-bottom: 10px;
+}
+.listBox > .list > div{
+    margin-right: 20px;
+}
+.listBox > .list > div > p{
+    margin-bottom: 10px;
+}
+.listBox > .list > div > p > span{
+    color: #333333;
+    margin-left: 10px;
+}
+.list > .location{
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    width: 24px;
+    height: 24px;
+}
+.list > .active{
+    position: absolute;
+    bottom: 17px;
+    right: 0;
+    width: 100px;
+    height: 80px;
+    background-image: url("../img/active.png");
+    text-align: center;
+    line-height: 90px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.list > .active >span:nth-child(1){
+    color: #FF9914;
+}
+.list > .active >span:nth-child(2){
+    color: #FF9914;
+    font-size: 24px;
 }
