@@ -266,7 +266,7 @@
               </el-option>
             </el-select>
           </div>
-          <div class="flight-bar-input" v-show="!dateShow">
+          <div class="flight-bar-input" v-if="!dateShow">
             <el-select v-model="dateValue" @change="selectChange(2)" collapse-tags placeholder="请选择日期">
               <el-option
                 v-for="(item,index) in dateArr"

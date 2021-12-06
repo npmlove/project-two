@@ -45,17 +45,6 @@
 				margin-left: 40px;
 				margin-bottom: 10px;
 			}
-			.tips:before{
-				content: "";
-				position: absolute;
-				width: 11px;
-				height: 11px;
-				background: #FFFFFF;
-				opacity: 1;
-				top: 45%;
-				left: -7px;
-				transform: rotate(45deg) translateY(-50%);
-			}
 		</style>
 	</head>
 	<body>
@@ -171,8 +160,7 @@
 						<div class="mod-search-bottom com-top20">
 							<div class="s_tab s_tab_bak_color">
 								<div @click="searchBottomClick(0)" :class="{s_tab_current: searchBottomIndex == 0}" class="s_tab_nocurrent">运单查询</div>
-								<!-- <div @click="searchBottomClick(1)" :class="{s_tab_current: searchBottomIndex == 1}" class="s_tab_nocurrent">航班查询</div> -->
-								<div class="tips">全网航班，动态掌握</div>
+								<div @click="searchBottomClick(1)" :class="{s_tab_current: searchBottomIndex == 1}" class="s_tab_nocurrent">航班查询</div>
 							</div>
 							<div class="search-box" style="padding: 15px 10px 0 10px">
 								<div v-if="searchBottomIndex == 0" class="search-box-input" style="position: relative;">
@@ -181,8 +169,8 @@
 									<div v-show="isShowYundan" style="position: absolute;bottom: -15px;font-size: 12px;color: #F00;display: none;">请输入11位的运单号</div>
 								</div>
 								<div v-if="searchBottomIndex == 1" class="search-box-input">
-									<input v-model="searchYunDan" class="box-input" type="text" placeholder="全网航班查询，航班信息全掌握" style="width: 300px;" />
-									<button class="box-btn btn-warning">立即查询</button>
+									<input v-model="flightSearch" class="box-input" type="text" placeholder="全网航班,动态掌握" style="width: 300px;" />
+									<button  @click="jumpFlight" class="box-btn btn-warning">立即查询</button>
 								</div>
 								<div class="search-tips">
 									<div class="qcode">
@@ -722,7 +710,8 @@
 				userInfo: '',
 				headerMenu: false,
 				aiStr: '',
-				volumeConetn: ''
+				volumeConetn: '',
+				flightSearch: ''
 			},
 			computed: {
 				swiper() {
@@ -797,6 +786,9 @@
 				// this.muSearchInput = this.muPageArr[0].threeLetterCode
 			},
 			methods: {
+				jumpFlight(){
+					window.location.href = `./flightSearch.html?serach=${this.flightSearch}`;
+				},
 				intelligentComputing() {
 					window.location.href = `./intelligentComputing.html?volumeConetn=${this.volumeConetn}`;
 				},
