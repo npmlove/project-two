@@ -1,0 +1,228 @@
+
+.modify-search-img{
+    background-image: url("../img/flightSearch.png");
+}
+.search{
+    min-width: 1200px;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.searchBtn{
+    width: 130px;
+    height: 50px;
+    background: #2273CB;
+    font-size: 16px;
+    font-weight: 500;
+    color: #FFFFFF;
+}
+.searchBox{
+    flex: 1;
+    height: 50px;
+    background: #F4F4F4;
+    margin-right: 30px;
+    display: flex;
+    align-items: center;
+}
+.searchBox div{
+    padding: 0 15px;
+    position: relative;
+    height: 30px;
+    border-right: 1px solid #FFFFFF;
+    line-height: 30px;
+}
+.searchBox input{
+    flex: 1;
+    position: relative;
+    background: #F4F4F4;
+    margin-left: 15px;
+}
+.infoDetail{
+    width: 1200px;
+    /*height: 253px;*/
+    background: #FFFFFF;
+    border: 1px solid #EFEFEF;
+}
+.flightNumber{
+    margin: 0 auto;
+    width: 400px;
+    height: 60px;
+    background: #2273CB;
+    border-radius: 0 0 38px 38px;
+    font-size: 24px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+    line-height: 60px;
+}
+.startEnd{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.startEnd > .info{
+    margin: 0 auto;
+    width: 33.33%;
+    text-align: center;
+}
+.startEnd > .info >div:nth-child(1){
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+
+}
+.startEnd > .info >div:nth-child(2){
+     font-size: 24px;
+     font-weight: bold;
+     color: #000000;
+    margin: 30px 0 20px 0;
+}
+.startEnd > .info >div:nth-child(3){
+    font-size: 12px;
+    font-weight: 500;
+    color: #999999;
+}
+.startEnd > .info >div:nth-child(4){
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+}
+.startEnd > .info >div:nth-child(5){
+    font-size: 14px;
+    font-weight: 800;
+    color: #2273CB;
+    margin-top: 20px;
+}
+.startEnd > .center{
+    width: 33.33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+.startEnd > .center > .line{
+    width:400px;
+    height:1px;
+    text-align:center;
+    border-bottom:1px dashed #999999;
+    position: relative;
+
+}
+.startEnd > .center > .line:before{
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: -10px;
+    left: -20px;
+    background-image: url("../img/addressStart.png");
+    background-repeat: no-repeat;
+}
+.startEnd > .center > .line:after{
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: -20px;
+    width: 20px;
+    height: 20px;
+    background-image: url("../img/addressEnd.png");
+    background-repeat: no-repeat;
+}
+.startEnd > .center > p{
+    flex: 1;
+    font-size: 12px;
+    font-weight: 500;
+    color: #999999;
+    text-align: center;
+    margin-top: 5px;
+}
+.infoList{
+    background: #FFFFFF;
+    border: 1px solid #EFEFEF;
+    margin-top: 20px;
+
+}
+.infoList > .title{
+    flex: 1;
+    height: 40px;
+    line-height: 40px;
+    background: #F4F4F4;
+    border: 1px solid #EFEFEF;
+}
+.listTable{
+    padding: 0 50px;
+    box-sizing: border-box;
+}
+.listTable > .tableTitle{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 500;
+    color: #666666;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.pub > div{
+   flex: 1;
+}
+.pub > div > p{
+    font-size: 14px;
+
+    font-weight: bold;
+    color: #333333;
+}
+.tableList{
+    display: flex;
+    min-height: 60px;
+    align-items: center;
+    border: 1px solid #EFEFEF;
+    margin-bottom: 20px;
+
+}
+.date{
+    padding-left: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000;
+}
+.startList{
+    display: flex;
+    flex: 1;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #333333;
+    margin-top: 10px;
+}
+.startList > div:nth-child(1){
+    width: 50%;
+}
+.startList > div:nth-child(2){
+    width: 50%;
+    height: 1px;
+    background: #2273CB;
+    margin-right: 20px;
+
+}
+.centerList > .startList:nth-child(1){
+    width:40%;
+}
+.centerList > .startList:nth-child(2){
+    width: 60%;
+    height: 1px;
+    background: #2273CB;
+    margin-right: 20px;
+
+}
+#Map{
+    flex: 1;
+    height: 460px;
+    margin-top: 20px;
+}
+
+
+

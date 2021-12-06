@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport"
@@ -15,16 +15,13 @@
   <meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
   <link rel='icon' href='./img/favicon.ico' type='image/x-icon'/>
   <title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
-  <!-- <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/7.0.0/swiper-bundle.min.css"> -->
-  <link rel="stylesheet" href="./css/swiper-bundle.min.css"/>
+  <link rel="stylesheet" href="./css/element-ui-min.css">
   <link rel="stylesheet" href="./css/reset.css"/>
   <link rel="stylesheet" href="./css/common.css"/>
-  <link rel="stylesheet" href="./css/addressSerach.css"/>
+  <link rel="stylesheet" href="./css/flightSearch.css"/>
   <script src="./js/vue.js"></script>
   <script src="./js/axios.min.js"></script>
-  <script src="./js/swiper-bundle.min.js"></script>
-  <script type="text/javascript"
-          src="https://webapi.amap.com/maps?v=1.4.14&key=07536db46b52555c8782a4e5667fee2d"></script>
+  <script src="./js/element-ui.js"></script>
   <script>
       var _hmt = _hmt || [];
       (function () {
@@ -41,6 +38,7 @@
   <div class="header">
     <div class="header-img">
       <a href="./index.html">
+        <!-- <img class="logo" src="./img/logo.png" /> -->
         <div class="logo"></div>
       </a>
       <div class="logo-title"></div>
@@ -61,56 +59,139 @@
     <ul class="header-menu-list com-width">
       <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
       <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
-      <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+      <!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
       <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
     </ul>
   </div>
-  <div class="Map" id="Map">
-    <div class="searchBox">
-      <div class="search">
-        <input placeholder="地址、城市、机场、港口、FBA仓库..."/>
-        <div class="btn">
-          <img src="img/search.png">
+  <!-- 查询内容 -->
+  <div class="modify-flight" style="margin-top: 0;padding-top: 0;">
+    <div class="modify-search-box" style="background-color: #FFF;padding-bottom: 20px;margin-bottom: 20px;">
+        <div class="modify-search-img"></div>
+        <div class="modify-search-form search">
+          <div class="searchBox">
+            <div>航班号</div>
+            <input class="searchInput" v-model="searchValue" placeholder="请输入" />
+          </div>
+
+          <button @click="submitQuery" class="searchBtn btn-prprimary">立即查询</button>
         </div>
       </div>
-      <!--      <div class="searchList">-->
-      <!--          <div class="dataList" v-for="item in 5">-->
-      <!--            China,Chongqing,重庆-->
-      <!--          </div>-->
-      <!--      </div>-->
-      <div class="listBox">
-        <div class="title">
-          <div>该地址附近的机场：</div>
-          <div>
-            推荐数量：<span>50条</span>
+    <div class="com-width">
+      <div class="infoDetail">
+        <div class="flightNumber">
+          航班号：454564564
+        </div>
+        <div class="startEnd">
+          <div class="start info">
+            <div>PVG</div>
+            <div>上海浦东国际机场</div>
+            <div>2021年12月01日（星期三）</div>
+            <div>08：50</div>
+            <div>起飞</div>
+          </div>
+          <div class="center">
+            <div class="line"></div>
+            <p>总飞行时间2小时3分</p>
+          </div>
+          <div class="end info">
+            <div>PVG</div>
+            <div>上海浦东国际机场</div>
+            <div>2021年12月01日（星期三）</div>
+            <div>08：50</div>
+            <div>起飞</div>
           </div>
         </div>
-        <div class="list">
-          <div>
-            <p>代码:<span>ckg</span></p>
-            <p>国家:<span>ckg</span></p>
-            <p>城市:<span>ckg</span></p>
-            <p>邮编:<span>ckg</span></p>
-            <p>推荐指数:111</p>
-          </div>
-          <div></div>
-        </div>
-
       </div>
     </div>
+    <div class="com-width">
+      <div id="Map"></div>
+    </div>
+    <div class="com-width">
+      <div class="infoList">
+        <div class="title">历史航班</div>
+        <div class="listTable">
+          <div class="tableTitle pub">
+            <div class="date">日期</div>
+            <div>离港</div>
+            <div>飞行时间</div>
+            <div>到港</div>
+          </div>
+          <div class="tableList pub">
+            <div class="date">2020-01-23</div>
+            <div>
+              <p>08:21</p>
+              <div class="startList">
+                <div>Shanghai——PVG</div>
+                <div></div>
+              </div>
 
+            </div>
+            <div>
+              <div style="color: #999999;">2小时24分</div>
+              <div class="startList">
+                <div style="width: 30%">
+                  <img src="img/aircraft.png" style="width: 20px;height: 20px;margin-left: 15px;">
+                </div>
+                <div style="width: 70%"></div>
+              </div>
+            </div>
+            <div>
+              <p>08:21</p>
+              <div class="startList">
+                <div>Shanghai——PVG</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modify-result-wrapper com-width">
+      <div  style="width: 100%;text-align: center;padding: 20px;">
+        <img alt="图片" style="width: 262px;height: 201px;" src="./img/null.png"/>
+        <div style="color: #999;font-size: 14px;margin-top: 20px;">暂无数据</div>
+      </div>
+    </div>
   </div>
 
+  <!-- 尾部 -->
+  <div class="footer">
+    <div class="com-width">
+      <div class="footer-content">
+        <div class="footer-label">
+          <div class="footer-cool" style="margin-bottom: 10px;">
+            <span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank"
+                                                                               href="./yingyezhizhaoImg.html"
+                                                                               class="yingyezhizhao">营业执照</a></span>
+          </div>
+          <!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
+            <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
+            <span>沪公网备XXXXXXXXXXXXX号</span>
+          </div> -->
+          <div class="footer-ipc">上海傲晔物流科技有限公司 丨 上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
+        </div>
+        <div class="footer-img"><img alt="图片" src="./img/qcode.png"/></div>
+      </div>
+    </div>
+  </div>
 </div>
 </body>
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.14&key=07536db46b52555c8782a4e5667fee2d"></script>
 <script src="./service/index.js"></script>
 <script>
     new Vue({
         el: '#app',
         data: {
-            menuIndex: 2,
+            //菜单
+            menuArr: [
+                {name: '首页'},
+                {name: '订单跟踪'},
+                {name: '行业咨询'},
+                {name: '关于我们'}
+            ],
+            menuIndex: 0,
             userInfo: '',
-            headerMenu: false
+            headerMenu: false,
+            searchValue:""
         },
         created() {
             if (!localStorage.getItem('wxOpenId')) {
@@ -120,8 +201,8 @@
                 this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
             }
         },
-        mounted() {
-            this.$nextTick(() => {
+        mounted(){
+            this.$nextTick(()=>{
                 this.initMap()
             })
 
@@ -134,22 +215,26 @@
                 googleLayer = new AMap.TileLayer({
                     // 图块取图地址
                     getTileUrl: 'https://17dc.shenghuoq.com/map/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=[x]&y=[y]&z=[z]&s=Galil',
-                    zIndex: 9
+                    zIndex: 999
                 });
                 let Sate = new AMap.TileLayer.Satellite();
                 var map = new AMap.Map('Map', {
                     zoom: 1,
                     viewMode: '2D',
                     center: [116.408075, 39.950187],
-                    layers: [googleLayer, Sate]
+                    layers:[googleLayer,Sate]
                 });
 
 
+
+            },
+            submitQuery(){
+
             },
             showHeaderMenu(type) {
-                if (type == 1) {
+                if(type == 1){
                     this.headerMenu = true
-                } else {
+                }else {
                     this.headerMenu = false
                 }
             },
@@ -164,13 +249,13 @@
             // muen
             menuClick(index) {
                 this.menuIndex = index
-                if (index == 0) {
+                if(index == 0){
                     window.location.href = './index.html'
-                } else if (index == 1) {
+                }else if(index == 1){
                     window.location.href = './orderList.html'
-                } else if (index == 2) {
+                }else if(index == 2){
                     window.location.href = './addressSerach.html'
-                } else if (index == 3) {
+                }else if(index == 3){
                     window.location.href = './about_us.html'
                 }
             }
