@@ -1970,6 +1970,7 @@
 
 .wrapper-li-content-right .li-content-price-ul {
 	height: 150px;
+	overflow-y: auto;
 }
 
 .li-content-price-ul .li-content-price-li {
