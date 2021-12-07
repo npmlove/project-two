@@ -209,7 +209,6 @@
                         //这里发送一个心跳，后端收到后，返回一个心跳消息
                         if (self.socket.readyState == 1) {
                             //如果连接正常
-                            console.log("ping")
                             self.socket.send("ping");
                         } else {
                             //否则重连
@@ -231,6 +230,7 @@
 						if (this.yzmTime > 0 && this.yzmTime <= 60) {
 							this.yzmTime --
 						} else {
+                            this.socket.close()
 							this.yzmTime = 60
 							this.shixiao = false
 							clearInterval(this.yzmInterval)
@@ -292,7 +292,7 @@
 				},
 				open: function () {
 					console.log("socket连接成功")
-                    this.start();
+                    // this.start();
 				},
 				error: function () {
 					console.log("连接错误")
@@ -300,7 +300,7 @@
 				getMessage: function (msg) {
                     if (msg.data=="pong"){
                         //心跳重置
-                        this.reset();
+                        // this.reset();
                         return;
                     }
 					var data = JSON.parse(msg.data)
