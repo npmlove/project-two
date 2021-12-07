@@ -89,6 +89,8 @@ const serviceApi = {
 	expressInfoSaveOrUpdate: publicWeb+'/t-portal-express-info/saveOrUpdate',
 	// 删除用户快递信息
 	deleExpress:  publicWeb+'/t-portal-express-info/delete',
+	//查询航司当前情况,获取位置等
+	airLineSearch: '/track/airLine/Track',
 
 }
 
