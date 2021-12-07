@@ -227,7 +227,9 @@
 					this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
 					this.isShowYundan = false
 					if(this.trackSearchInput.match(/-/g) && this.trackSearchInput.match(/-/g).length > 1 ){
-						this.trackSearchInput = this.trackSearchInput.slice(0,this.trackSearchInput.length-1)
+						let sr = this.trackSearchInput.split("");
+						sr.splice(this.trackSearchInput.lastIndexOf('-'),1)
+						this.trackSearchInput=sr.join("");
 					}
 					if(isNaN(this.trackSearchInput) && this.trackSearchInput.indexOf('-')!=3){
 						this.trackSearchInput = this.trackSearchInput.replace('-',"")
