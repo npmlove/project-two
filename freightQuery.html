@@ -281,7 +281,7 @@
           </div>
           <!-- <div class="flight-bar-btn"><button @click="submitQuery" class="box-btn btn-prprimary com-width60">确认</button></div> -->
         </div>
-        <ul class="flight-bar-ul">
+        <ul class="flight-bar-ul" :style="{marginLeft:!dateShow?'200px':'400px'}">
           <li v-for="(item,index) in distanceArr" :key="index" class="flight-bar-li">
             <div v-if="index != 0" class="flight-bar-arrow1">
               <img alt="图片" @click="sortClick(item.value,'top')" class="flight-bar-arrow1-img"
@@ -398,8 +398,8 @@
             <div class="result-wrapper-content flightInof" v-if="item.isShowType==2">
               <div class="listContent" v-for="(ite,index) in item.legDetail" :key="index">
                 <div class="title">
-                  <span>首城航班</span>
-                  <span>{{ite.startRouteName}}</span>
+                  <span>首程航班</span>
+                  <span>{{ite.startRouteName}} —— {{ite.endRouteName}}</span>
                 </div>
                 <div class="diyTable">
                   <div class="diyTableTitle pub">
@@ -410,10 +410,10 @@
 
                   </div>
                   <div class="diyTableList pub" v-for="(it,ind) in ite.childerTable" :key="ind+'s'">
-                    <div>{{it.vehicleId ? it.vehicleId : "无"}}</div>
-                    <div>{{it.vehicleType ? selectVehicleType(it.vehicleType) : "无"}}</div>
-                    <div>{{it.etd ? it.etd : "无"}}</div>
-                    <div>{{it.eta ? it.eta : "无"}}</div>
+                    <div>{{it.vehicleId ? it.vehicleId : "——"}}</div>
+                    <div>{{it.vehicleType ? selectVehicleType(it.vehicleType) : "——"}}</div>
+                    <div>{{it.etd ? it.etd : "——"}}</div>
+                    <div>{{it.eta ? it.eta : "——"}}</div>
                   </div>
                 </div>
               </div>
@@ -588,10 +588,10 @@
                             num = this.$refs.dateTwo.clientHeight + 20
                         }
                         // console.log(this.$refs.diyTop.offsetTop,num)
-                        if (this.$refs.diyTop.offsetTop >= 250 + num) {
+                        if (this.$refs.diyTop.offsetTop > 150 + num ) {
                             this.dateShow = false;
                         }
-                        if (this.$refs.diyTop.offsetTop <= 250 - num && !this.dateShow) {
+                        if (this.$refs.diyTop.offsetTop < 125  && !this.dateShow) {
                             this.dateShow = true;
                         }
                     });
