@@ -200,14 +200,27 @@
             if (localStorage.getItem('userInfo')) {
                 this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
             }
+            this.getData()
         },
         mounted(){
             this.$nextTick(()=>{
                 this.initMap()
             })
 
+
         },
         methods: {
+            getData(){
+                axios({
+                    method: 'post',
+                    url: webIp + serviceApi.airLineSearch,
+                    data: {
+                        airLineId: "CKS9205"
+                    }
+                }).then((data) => {
+                    debugger
+                })
+            },
             initMap() {
                 //叠加谷歌地图
                 var googleLayer = null;
