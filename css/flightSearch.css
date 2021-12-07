@@ -171,7 +171,7 @@
 }
 .pub > div > p{
     font-size: 14px;
-
+    position: relative;
     font-weight: bold;
     color: #333333;
 }
@@ -222,6 +222,13 @@
     flex: 1;
     height: 460px;
     margin-top: 20px;
+}
+.tig{
+    position: relative;
+    font-size: 10px;
+    font-weight: 800;
+    color: #F41928 !important;
+    bottom: 5px;
 }
 
 
