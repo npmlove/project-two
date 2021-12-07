@@ -209,6 +209,7 @@
                         //这里发送一个心跳，后端收到后，返回一个心跳消息
                         if (self.socket.readyState == 1) {
                             //如果连接正常
+                            console.log("ping")
                             self.socket.send("ping");
                         } else {
                             //否则重连
