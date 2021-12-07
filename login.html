@@ -210,7 +210,6 @@
                         if (self.socket.readyState == 1) {
                             //如果连接正常
                             self.socket.send("ping");
-                            console.log("ping")
                         } else {
                             //否则重连
                             // self.reconnect();
@@ -298,9 +297,11 @@
 					console.log("连接错误")
 				},
 				getMessage: function (msg) {
-                    //心跳重置
-                    //this.reset();
-                    console.log(msg)
+                    if (msg.data=="pong"){
+                        //心跳重置
+                        this.reset();
+                        return;
+                    }
 					var data = JSON.parse(msg.data)
 					if(data.type == '0'){
 						window.location.href = './register.html?openId='+data.openId
