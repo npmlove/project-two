@@ -186,39 +186,36 @@
 				},60000)
 				this.initWebSocket()
 				this.daojishi()
-                this.heartCheckMethod()
 			},
 			methods: {
-                heartCheckFun(){
+                reset() {
+                    //重置心跳
                     var that = this;
-                    //心跳检测,每20s心跳一次
-                    that.heartCheck = {
-                        timeout: 20000,
-                        timeoutObj: null,
-                        serverTimeoutObj: null,
-                        reset: function(){
-                            clearTimeout(this.timeoutObj);
-                            clearTimeout(this.serverTimeoutObj);
-                            return this;
-                        },
-                        start: function(){
-                            var self = this;
-                            this.timeoutObj = setTimeout(function(){
-                                //这里发送一个心跳，后端收到后，返回一个心跳消息，
-                                //onmessage拿到返回的心跳就说明连接正常
-                                that.socket.send("ping")
-                                console.info("客户端发送心跳");
-                                self.serverTimeoutObj = setTimeout(function(){//如果超过一定时间还没重置，说明后端主动断开了
-                                    that.socket.close();//如果onclose会执行reconnect，我们执行ws.close()就行了.如果直接执行reconnect 会触发onclose导致重连两次
-                                }, self.timeout)
-                            }, this.timeout)
-                        }
-                    }
+                    //清除时间
+                    clearTimeout(that.timeoutObj);
+                    clearTimeout(that.serverTimeoutObj);
+                    //重启心跳
+                    that.start();
                 },
-                heartCheckMethod(){
-                    setInterval(()=>{
-                        this.heartCheckFun.reset().start()
-                    },20000)
+                start() {
+                    //开启心跳
+                    var self = this;
+                    self.timeoutObj && clearTimeout(self.timeoutObj);
+                    self.serverTimeoutObj && clearTimeout(self.serverTimeoutObj);
+                    self.timeoutObj = setTimeout(function() {
+                        //这里发送一个心跳，后端收到后，返回一个心跳消息
+                        if (self.socket.readyState == 1) {
+                            //如果连接正常
+                            self.socket.send("ping");
+                        } else {
+                            //否则重连
+                            // self.reconnect();
+                        }
+                        self.serverTimeoutObj = setTimeout(function() {
+                            //超时关闭
+                            self.socket.close();
+                        }, self.timeout);
+                    }, self.timeout);
                 },
 				shuaxinClick() {
 					this.shixiao = true
@@ -291,11 +288,14 @@
 				},
 				open: function () {
 					console.log("socket连接成功")
+                    this.start();
 				},
 				error: function () {
 					console.log("连接错误")
 				},
 				getMessage: function (msg) {
+                    //心跳重置
+                    //this.reset();
                     console.log(msg)
 					var data = JSON.parse(msg.data)
 					if(data.type == '0'){
