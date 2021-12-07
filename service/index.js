@@ -91,6 +91,10 @@ const serviceApi = {
 	deleExpress:  publicWeb+'/t-portal-express-info/delete',
 	//查询航司当前情况,获取位置等
 	airLineSearch: '/track/airLine/trackFlight',
+	//通过地点关键词搜索附近机场
+	searchAirport:'/track/place/search-airport/',
+
+
 
 }
 

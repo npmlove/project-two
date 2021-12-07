@@ -3,6 +3,7 @@
     width:100vw;
     height:calc(100vh - 120px);
     box-sizing: border-box;
+    position: relative;
 }
 .searchBox{
     flex: 1;
@@ -45,6 +46,8 @@
 
     box-sizing: border-box;
     background: #FFFFFF;
+    max-height: 150px;
+    overflow-y: auto;
 }
 .searchList > .dataList{
     height: 30px;

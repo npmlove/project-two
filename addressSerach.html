@@ -68,43 +68,43 @@
   <div class="Map" id="Map">
     <div class="searchBox">
       <div class="search">
-        <input placeholder="地址、城市、机场、港口、FBA仓库..."/>
+        <input placeholder="地址、城市、机场、港口、FBA仓库..." v-model="placeName" @input="changeValue"/>
         <div class="btn">
           <img src="img/search.png">
         </div>
       </div>
-      <!--      <div class="searchList">-->
-      <!--          <div class="dataList" v-for="item in 5">-->
-      <!--            China,Chongqing,重庆-->
-      <!--          </div>-->
-      <!--      </div>-->
-      <div class="listBox">
-        <div class="title">
-          <div>该地址附近的机场：</div>
-          <div>
-            推荐数量：<span>50条</span>
-          </div>
-        </div>
-        <div class="list" v-for="item in 5">
-          <div>
-            <p >代&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:<span>ckg</span></p>
-            <p>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>ckg</span></p>
-            <p>城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市:<span>ckg</span></p>
-            <p>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;编:<span>ckg</span></p>
-            <p>推荐指数:111</p>
-          </div>
-          <div>
-            <p >距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>ckg</span></p>
-            <p>预估时间:<span>ckg</span></p>
-          </div>
-          <img class="location" src="./img/locationNo.png">
-          <div class="active">
-              <span>￥</span><span>23</span> /KG起
-          </div>
+            <div class="searchList">
+                <div class="dataList" v-for="item in 5">
+                  China,Chongqing,重庆
+                </div>
+            </div>
+<!--      <div class="listBox">-->
+<!--        <div class="title">-->
+<!--          <div>该地址附近的机场：</div>-->
+<!--          <div>-->
+<!--            推荐数量：<span>50条</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="list" v-for="item in 5">-->
+<!--          <div>-->
+<!--            <p >代&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:<span>ckg</span></p>-->
+<!--            <p>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>ckg</span></p>-->
+<!--            <p>城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市:<span>ckg</span></p>-->
+<!--            <p>邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;编:<span>ckg</span></p>-->
+<!--            <p>推荐指数:111</p>-->
+<!--          </div>-->
+<!--          <div>-->
+<!--            <p >距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>ckg</span></p>-->
+<!--            <p>预估时间:<span>ckg</span></p>-->
+<!--          </div>-->
+<!--          <img class="location" src="./img/locationNo.png">-->
+<!--          <div class="active">-->
+<!--              <span>￥</span><span>23</span> /KG起-->
+<!--          </div>-->
 
-        </div>
+<!--        </div>-->
 
-      </div>
+<!--      </div>-->
     </div>
 
   </div>
@@ -118,7 +118,9 @@
         data: {
             menuIndex: 2,
             userInfo: '',
-            headerMenu: false
+            headerMenu: false,
+            placeName:'',
+
         },
         created() {
             if (!localStorage.getItem('wxOpenId')) {
@@ -135,6 +137,17 @@
 
         },
         methods: {
+            changeValue(){
+                axios({
+                    method: 'get',
+                    url: webIp + serviceApi.searchAirport+`?placeName=${this.placeName}`,
+                    data: {
+
+                    }
+                }).then((res) => {
+
+                })
+            },
             initMap() {
                 //叠加谷歌地图
                 var googleLayer = null;
@@ -148,7 +161,7 @@
                 var map = new AMap.Map('Map', {
                     zoom: 1,
                     viewMode: '2D',
-                    center: [116.408075, 39.950187],
+                    center: [116.412197,39.911092],
                     layers: [googleLayer, Sate]
                 });
 
