@@ -164,9 +164,9 @@
 							</div>
 							<div class="search-box" style="padding: 15px 10px 0 10px">
 								<div v-if="searchBottomIndex == 0" class="search-box-input" style="position: relative;">
-									<input v-model="trackSearchInput" @focus="isShowYundan = false" maxlength="11" onkeyup="value=value.replace(/[^\d|-]/g, '')" class="box-input" type="text" placeholder="全网货物跟踪，运单信息全掌握" style="width: 300px;" />
+									<input v-model="trackSearchInput" @focus="isShowYundan = false"  @input="valueChange" class="box-input" type="text" placeholder="全网货物跟踪，运单信息全掌握" style="width: 300px;" />
 									<button @click="trackSearch" class="box-btn btn-warning">全网追踪</button>
-									<div v-show="isShowYundan" style="position: absolute;bottom: -15px;font-size: 12px;color: #F00;display: none;">请输入11位的运单号</div>
+									<div v-show="isShowYundan" style="position: absolute;bottom: -15px;font-size: 12px;color: #F00;display: none;">请输入11位且格式正确的运单号</div>
 								</div>
 								<div v-if="searchBottomIndex == 1" class="search-box-input">
 									<input v-model="flightSearch" class="box-input" type="text" placeholder="全网航班,动态掌握" style="width: 300px;" />
@@ -786,6 +786,23 @@
 				// this.muSearchInput = this.muPageArr[0].threeLetterCode
 			},
 			methods: {
+				valueChange(){
+					this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
+					this.isShowYundan = false
+					if(this.trackSearchInput.match(/-/g) && this.trackSearchInput.match(/-/g).length > 1 ){
+						this.trackSearchInput = this.trackSearchInput.slice(0,this.trackSearchInput.length-1)
+					}
+					if(isNaN(this.trackSearchInput) && this.trackSearchInput.indexOf('-')!=3){
+						this.trackSearchInput = this.trackSearchInput.replace('-',"")
+					}
+					if(!isNaN(this.trackSearchInput) && this.trackSearchInput.length > 11){
+						this.trackSearchInput = this.trackSearchInput.slice(0,11)
+					}
+					if(isNaN(this.trackSearchInput) && this.trackSearchInput.length > 12){
+						this.trackSearchInput = this.trackSearchInput.slice(0,12)
+					}
+
+				},
 				jumpFlight(){
 					window.location.href = `./flightSearch.html?serach=${this.flightSearch}`;
 				},
@@ -809,11 +826,15 @@
 				},
 				trackSearch() {
 					if(!this.trackSearchInput){
-						this.isShowYundan = true
-						return
-					}else if(this.trackSearchInput.length != 11){
-						this.isShowYundan = true
-						return
+						this.isShowYundan = true;
+						return false
+					}
+					let reg1 = /^[0-9]{3}-{1}[0-9]{8}$/;
+					let reg2 = /^[0-9]{11}$/;
+					// console.log(reg2.test(this.trackSearchInput),reg1.test(this.trackSearchInput))
+					if(!reg2.test(this.trackSearchInput) && !reg1.test(this.trackSearchInput)){
+						this.isShowYundan = true;
+						return false
 					}
 					this.isShowYundan = false
 					window.location.href = './trackSearch.html?trackSearchInput='+this.trackSearchInput
