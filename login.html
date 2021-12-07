@@ -186,6 +186,7 @@
 				},60000)
 				this.initWebSocket()
 				this.daojishi()
+                this.heartCheckMethod()
 			},
 			methods: {
                 heartCheckFun(){
@@ -214,9 +215,9 @@
                         }
                     }
                 },
-                heartCheck(){
+                heartCheckMethod(){
                     setInterval(()=>{
-                        this.heartCheckFun()
+                        this.heartCheckFun.reset().start()
                     },20000)
                 },
 				shuaxinClick() {
