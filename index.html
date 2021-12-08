@@ -146,11 +146,11 @@
 								<div class="search-box-input-volume" v-if="searchTopIndex == 1">
 									<textarea type="textarea" v-model="volumeConetn" placeholder="请输入体积信息，多个体积请换行输入或以逗号分割"></textarea>
 									<div class="search-box-volume-base">
-										<div class="volume-file">
-											<input type="file">
-											<img src="./img/volume-file.png" alt="">
-											<span>点击上传</span>
-										</div>
+<!--										<div class="volume-file">-->
+<!--											<input type="file">-->
+<!--											<img src="./img/volume-file.png" alt="">-->
+<!--											<span>点击上传</span>-->
+<!--										</div>-->
 										<button style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary" @click="intelligentComputing">智能计算</button>
 									</div>
 								</div>
@@ -814,6 +814,7 @@
 				searchClose() {
 					this.qiSearchInput = '';
 					this.muSearchInput = '';
+					this.aiStr='';
 				},
 				showHeaderMenu(type) {
 					if(type == 1){
@@ -864,6 +865,7 @@
 								}
 							}).then(res => {
 								let data = res.data;
+								// debugger
 								if (data.code == 200) {
 									window.location.href = './freightQuery.html?qi='+data.data.pol+'&mu='+data.data.pod+'&volume='+data.data.volume;
 								}
