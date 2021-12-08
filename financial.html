@@ -337,7 +337,7 @@
 															    		v-for="(item,index) in invoiceTypeOpt"
 															    		:key="item.Name"
 																		:label="item.Name"
-															    		:value="item.Value">
+															    		:value="item.value">
 															    	</el-option>
 															    </el-select>
 															</el-form-item>
@@ -550,19 +550,19 @@
 				departureDate2: '',
 				departureDate3: '',
 				typeCode: '发票开具',
-				invoiceType: '增值税电子普通发票',
+				invoiceType: '0',
 				invoiceTypeOpt: [
 					{
 						Name: '增值税电子普通发票',
-						Value: '0'
+						value: '0'
 					},
 					{
 						Name: '增值税普通发票',
-						Value: '1'
+						value: '1'
 					},
 					{
 						Name: '增值税专用发票',
-						Value: '2'
+						value: '2'
 					}
 				],
 				tableData: [],
