@@ -4,7 +4,7 @@ var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境
 
 
 //开发环境
-var webIp = 'http://10.8.0.14:6679'
+// var webIp = 'http://10.8.0.14:6679'
 var webIp = 'http://10.8.0.1'
 var publicWeb = '/back/dcPortal/faw'
 
