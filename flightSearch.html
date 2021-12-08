@@ -263,15 +263,24 @@
                 })
 
                 // 绘制轨迹
-                var polyline = new AMap.Polyline({
+                let polyline= new AMap.Polyline({
                     map: map,
-                    path: [this.lineArr[0],this.lineArr[2],this.lineArr[1]],
-                    strokeColor: "#00A",  //线颜色
+                    path: [this.lineArr[0],this.lineArr[2]],
+                    strokeColor: "#FF1414",  //线颜色
                     strokeOpacity: 1,     //线透明度
                     strokeWeight: 3,      //线宽
-                    strokeStyle: "solid"  //线样式
+                    strokeStyle: "solid",  //线样式
                 });
-                map.setFitView();
+                let polyline1 =  new AMap.Polyline({
+                    map: map,
+                    path: [this.lineArr[1],this.lineArr[2]],
+                    strokeColor: "#FF1414",  //线颜色
+                    strokeOpacity: 1,     //线透明度
+                    strokeWeight: 3,      //线宽
+                    strokeStyle: "dashed",  //线样式
+                });
+                map.add(polyline);
+                map.add(polyline1);
                 map.setCenter(this.lineArr[2])
 
             },
