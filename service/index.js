@@ -93,6 +93,10 @@ const serviceApi = {
 	airLineSearch: '/track/airLine/trackFlight',
 	//通过地点关键词搜索附近机场
 	searchAirport:'/track/place/search-airport/',
+	//地点检索候选项
+	placeSuggest:'/track/place/suggest'
+
+
 
 
 
@@ -124,7 +128,9 @@ function getQueryVariable(variable){
     var vars = query.split("&");
     for (var i=0;i<vars.length;i++) {
         var pair = vars[i].split("=");
-        if(pair[0] == variable){return pair[1];}
+        if(pair[0] == variable){
+        	return  decodeURI(pair[1], "utf-8");
+        }
     }
     return(false);
 }

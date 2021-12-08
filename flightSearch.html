@@ -106,7 +106,7 @@
       </div>
       <div class="com-width">
         <div id="Map">
-          <div class="mask"></div>
+
         </div>
       </div>
       <div class="com-width">
@@ -222,7 +222,7 @@
                     method: 'post',
                     url: webIp + serviceApi.airLineSearch,
                     data: {
-                        airLineId: "NZ1005"
+                        airLineId: this.searchValue
                     }
                 }).then((res) => {
                     if (res.data.code == 200) {
@@ -265,13 +265,14 @@
                 // 绘制轨迹
                 var polyline = new AMap.Polyline({
                     map: map,
-                    path: this.lineArr,
+                    path: [this.lineArr[0],this.lineArr[2],this.lineArr[1]],
                     strokeColor: "#00A",  //线颜色
                     strokeOpacity: 1,     //线透明度
                     strokeWeight: 3,      //线宽
                     strokeStyle: "solid"  //线样式
                 });
                 map.setFitView();
+                map.setCenter(this.lineArr[2])
 
             },
             initMap() {
