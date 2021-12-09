@@ -240,7 +240,7 @@
       <el-row>
         <el-col :span="20">
           <el-form-item label="公司电话" prop="companyTel" :label-width="formLabelWidth" required>
-            <el-input v-model.number="form.companyTel" autocomplete="off"></el-input>
+            <el-input v-model.number="form.companyTel" maxlength="11" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -279,7 +279,7 @@
       <el-row>
         <el-col :span="20">
           <el-form-item label="联系电话" prop="recipientTel" :label-width="formLabelWidth" required>
-            <el-input v-model.number="expressForm.recipientTel" autocomplete="off"></el-input>
+            <el-input v-model.number="expressForm.recipientTel" maxLength="11" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -330,6 +330,7 @@
                 if (value === '') {
                     callback(new Error('请输入公司电话'));
                 }
+                console.log(value.toString().search(reg))
                 if (value.toString().search(reg)) {
                     callback(new Error('请输入正确的电话'));
                 }
