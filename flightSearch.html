@@ -106,7 +106,17 @@
       </div>
       <div class="com-width">
         <div id="Map">
-
+          <div class="mask">
+            <p>航线标注示意</p>
+            <div>
+              <span>已飞航线</span>
+              <div class="line1"></div>
+            </div>
+            <div>
+              <span>未飞航线</span>
+              <div class="line2"></div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="com-width">
@@ -280,7 +290,7 @@
                         marker.setLabel({
                             direction:'top',
                             offset: new AMap.Pixel(0, -6),  //设置文本标注偏移量
-                            content: `<div class='markerinfo'>${this.dataInfo.points[index]}</div>`, //设置文本标注内容
+                            content: `<div class='markerinfo'>${this.dataInfo.points[index].name}</div>`, //设置文本标注内容
                         });
                     }
 
