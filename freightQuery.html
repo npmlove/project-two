@@ -954,7 +954,7 @@
                         })
 
                         this.priceArr = data.data.freightQueryVOS
-                        if (data.data.freightQueryVOS == null) {
+                        if (data.data.freightQueryVOS == null || data.data.freightQueryVOS.length==0) {
                             this.priceArr = []
                             if (this.actDay && len < 6) {
                                 len += 1;
@@ -963,6 +963,7 @@
                             if (this.actDay && len == 6) {
                                 this.actDay = false;
                                 this.bookingDate = this.dateArr[len].date;
+                                this.currentDay = this.dateArr[len].date;
                                 this.dateTabActive = this.splitDate(this.dateArr[len].date);
                                 this.dow = this.dateArr[len].dow;
                                 this.initTwoCode()
@@ -973,12 +974,15 @@
                             if (this.actDay) {
                                 this.bookingDate = this.dateArr[len].date;
                                 this.dateTabActive = this.splitDate(this.dateArr[len].date);
+                                this.currentDay = this.dateArr[len].date;
                                 this.dow = this.dateArr[len].dow;
                                 this.initTwoCode()
                                 this.twoLetterCode1 = [];
                             }
                             this.actDay = false;
                         }
+                        this.dateValue = len;
+
                         for (var i = 0; i < this.priceArr.length; i++) {
                             this.priceArr[i].legDetail = this.priceArr[i].legDetail ? JSON.parse(this.priceArr[i].legDetail) : []
                             this.priceArr[i].isShow = false;
