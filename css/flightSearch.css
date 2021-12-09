@@ -239,6 +239,42 @@
     opacity: 0.5;
     z-index: 99999;
 }
+.markerContent{
+    width: 8px;
+    height: 8px;
+    background: #FF1414;
+    opacity: 1;
+    border: 1px solid #FFFFFF;
+    border-radius: 50%;
+}
+.markerinfo{
+    position: relative;
+    margin:0;
+    top: 0;
+    right: 0;
+    min-width: 0;
+
+}
+.amap-marker-label{
+    background: #FFFFFF;
+    border-radius: 5px 5px 5px 5px;
+    opacity: 1;
+    border: 1px solid #FF1414;
+    padding: 5px;
+}
+.amap-marker-label:after{
+    content: "";
+    position: absolute;
+    opacity: 1;
+    left: 50%;
+    bottom: -6px;
+    width: 8px;
+    height: 6px;
+    transform: translateX(-50%);
+    background-image: url("../img/arrow.png");
+    background-size: 100% 100%;
+}
+
 
 
 

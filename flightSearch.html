@@ -250,28 +250,61 @@
             },
             completeEventHandler(map) {
                 // 地图图块加载完毕后执行函数
-                let lineArr = []
-                this.lineArr && this.lineArr.forEach((item)=>{
+                // this.lineArr = [
+                //     [75.757904, 44.118117],
+                //     [97.375719, 30.598057],
+                //     [117.375719, 44.118117]
+                // ]
+                if(!this.lineArr || this.lineArr.length==0){
+                    return false
+                }
+                this.lineArr && this.lineArr.forEach((item,index)=>{
                     let icon = "img/aircraft.png"
-                    new AMap.Marker({
+                    // 点标记显示内容，HTML要素字符串
+                    let markerContent ="";
+                    if([0,1].includes(index)){
+                        markerContent = `<div class="markerContent"></div>`
+                    }else {
+                        markerContent = `<img src="img/currLine.png"/>`
+                    }
+                    let marker = new AMap.Marker({
                         map: map,
                         position: item,
                         icon: icon,
-                        offset: new AMap.Pixel(-26, -13),
+                        content: markerContent,
+                        offset: new AMap.Pixel(-5, -5),
                         autoRotation: true
                     });
+
+                    if([0,1].includes(index)){
+                        marker.setLabel({
+                            direction:'top',
+                            offset: new AMap.Pixel(0, -6),  //设置文本标注偏移量
+                            content: `<div class='markerinfo'>${this.dataInfo.points[index]}</div>`, //设置文本标注内容
+                        });
+                    }
+
                 })
 
                 // 绘制轨迹
-                var polyline = new AMap.Polyline({
+                let polyline= new AMap.Polyline({
                     map: map,
-                    path: [this.lineArr[0],this.lineArr[2],this.lineArr[1]],
-                    strokeColor: "#00A",  //线颜色
+                    path: [this.lineArr[0],this.lineArr[2]],
+                    strokeColor: "#FF1414",  //线颜色
                     strokeOpacity: 1,     //线透明度
                     strokeWeight: 3,      //线宽
-                    strokeStyle: "solid"  //线样式
+                    strokeStyle: "solid",  //线样式
                 });
-                map.setFitView();
+                let polyline1 =  new AMap.Polyline({
+                    map: map,
+                    path: [this.lineArr[1],this.lineArr[2]],
+                    strokeColor: "#FF1414",  //线颜色
+                    strokeOpacity: 1,     //线透明度
+                    strokeWeight: 3,      //线宽
+                    strokeStyle: "dashed",  //线样式
+                });
+                map.add(polyline);
+                map.add(polyline1);
                 map.setCenter(this.lineArr[2])
 
             },
