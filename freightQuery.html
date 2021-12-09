@@ -964,6 +964,7 @@
                                 this.actDay = false;
                                 this.bookingDate = this.dateArr[len].date;
                                 this.currentDay = this.dateArr[len].date;
+                                this.dateValue = len;
                                 this.dateTabActive = this.splitDate(this.dateArr[len].date);
                                 this.dow = this.dateArr[len].dow;
                                 this.initTwoCode()
@@ -974,6 +975,7 @@
                             if (this.actDay) {
                                 this.bookingDate = this.dateArr[len].date;
                                 this.dateTabActive = this.splitDate(this.dateArr[len].date);
+                                this.dateValue = len;
                                 this.currentDay = this.dateArr[len].date;
                                 this.dow = this.dateArr[len].dow;
                                 this.initTwoCode()
@@ -981,7 +983,7 @@
                             }
                             this.actDay = false;
                         }
-                        this.dateValue = len;
+
 
                         for (var i = 0; i < this.priceArr.length; i++) {
                             this.priceArr[i].legDetail = this.priceArr[i].legDetail ? JSON.parse(this.priceArr[i].legDetail) : []
