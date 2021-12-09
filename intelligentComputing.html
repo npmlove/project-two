@@ -16,8 +16,10 @@
     <title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
     <link rel="stylesheet" href="./css/reset.css" />
     <link rel="stylesheet" href="./css/common.css" />
+    <link rel="stylesheet" href="./css/element-ui-min.css">
     <link rel="stylesheet" href="/css/intelligentComputing.css">
     <script src="./js/vue.js"></script>
+    <script src="./js/element-ui.js"></script>
     <script src="./js/axios.min.js"></script>
     <script>
       var _hmt = _hmt || [];
@@ -70,11 +72,11 @@
             <div class="box-left-content">
               <textarea name="name" v-model="textStr" placeholder="请输入体积信息，多个体积请换行输入或以逗号分割"></textarea>
               <div class="box-left-content-base">
-                <div class="file">
-                  <input type="file">
-                  <img src="./img/volume-file.png" alt="">
-                  <span>点我上传</span>
-                </div>
+<!--                <div class="file">-->
+<!--                  <input type="file">-->
+<!--                  <img src="./img/volume-file.png" alt="">-->
+<!--                  <span>点我上传</span>-->
+<!--                </div>-->
                 <button class="box-btn btn-close" @click="keyRemove" style="flex: 0 0 80px;">一键清除</button>
                 <button style="flex: 0 0 80px;marginLeft: 20px;" @click="inquire" class="box-btn btn-prprimary">立即查询</button>
               </div>
@@ -219,11 +221,16 @@
             let data = res.data;
             if (data.code == 200) {
               this.multipliers = data.data;
+              this.volume = this.multipliers.totalVal?this.multipliers.totalVal.replace(/[^0-9|.]/ig,""):""
             }
 
           });
         },
         enquiry() {
+            if(!this.pod){
+                this.$message.error('请输入有效的运单号')
+                return false;
+            }
           window.location.href = `./freightQuery.html?qi=${this.pol}&mu=${this.pod}&piece=${this.piece}&volume=${this.volume}&weight=${this.weight}`;
         },
         //获取运价查询

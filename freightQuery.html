@@ -131,7 +131,7 @@
                 </div>
               </div>
             </div>
-            <div class="group-wrap group-wrap-item1 borderE7E8EC">
+            <div class="group-wrap group-wrap-item1 borderE7E8EC" >
               <div class="form-item">
                 <label>重量</label>
                 <div class="form-item-owrt">
@@ -252,49 +252,52 @@
           </table>
         </div>
       </div>
-      <div class="modify-flight-bar com-width">
-        <div class="flight-bar-box">
-          <div class="flight-bar-input">
-            <el-select v-model="twoLetterCode1" @change="selectChange(1)" multiple collapse-tags placeholder="请选择航司">
-              <el-option
-                v-for="item in twoCodeArr"
-                :key="item.value"
-                :label="item.airCompanyCode"
-                :value="item.airCompanyCode">
-                <span>{{item.airCompanyCode}}</span>
-                <span style="margin-left: 10px;padding-right: 20px;">{{item.name}}</span>
-              </el-option>
-            </el-select>
+      <div :style="{paddingTop: '20px',background: !dateShow?'#FFFFFF':'#F8FBFD'}">
+        <div class="modify-flight-bar com-width" style="margin-top: 0">
+          <div class="flight-bar-box">
+            <div class="flight-bar-input">
+              <el-select v-model="twoLetterCode1" @change="selectChange(1)" multiple collapse-tags placeholder="请选择航司">
+                <el-option
+                  v-for="item in twoCodeArr"
+                  :key="item.value"
+                  :label="item.airCompanyCode"
+                  :value="item.airCompanyCode">
+                  <span>{{item.airCompanyCode}}</span>
+                  <span style="margin-left: 10px;padding-right: 20px;">{{item.name}}</span>
+                </el-option>
+              </el-select>
+            </div>
+            <div class="flight-bar-input" v-if="!dateShow">
+              <el-select v-model="dateValue" @change="selectChange(2)" collapse-tags placeholder="请选择日期">
+                <el-option
+                  v-for="(item,index) in dateArr"
+                  :key="item.date"
+                  :label="item.date +'   '+ changeDate(item.dow)"
+                  :disabled="item.disabled"
+                  :value="index">
+                  <span>{{item.date}}</span>
+                  <span style="margin-left: 10px;padding-right: 20px;">{{changeDate(item.dow)}}</span>
+                </el-option>
+              </el-select>
+            </div>
+            <!-- <div class="flight-bar-btn"><button @click="submitQuery" class="box-btn btn-prprimary com-width60">确认</button></div> -->
           </div>
-          <div class="flight-bar-input" v-if="!dateShow">
-            <el-select v-model="dateValue" @change="selectChange(2)" collapse-tags placeholder="请选择日期">
-              <el-option
-                v-for="(item,index) in dateArr"
-                :key="item.date"
-                :label="item.date +'   '+ changeDate(item.dow)"
-                :disabled="item.disabled"
-                :value="index">
-                <span>{{item.date}}</span>
-                <span style="margin-left: 10px;padding-right: 20px;">{{changeDate(item.dow)}}</span>
-              </el-option>
-            </el-select>
-          </div>
-          <!-- <div class="flight-bar-btn"><button @click="submitQuery" class="box-btn btn-prprimary com-width60">确认</button></div> -->
+          <ul class="flight-bar-ul" :style="{marginLeft:!dateShow?'200px':'400px'}">
+            <li v-for="(item,index) in distanceArr" :key="index" class="flight-bar-li">
+              <div v-if="index != 0" class="flight-bar-arrow1">
+                <img alt="图片" @click="sortClick(item.value,'top')" class="flight-bar-arrow1-img"
+                     src="./img/modify-arrow1.png"/>
+              </div>
+              <div class="flight-bar-name">{{item.name}}</div>
+              <div v-if="index != 0" class="flight-bar-arrow2">
+                <img alt="图片" @click="sortClick(item.value,'bottom')" class="flight-bar-arrow2-img"
+                     src="./img/modify-arrow1.png"/>
+              </div>
+            </li>
+          </ul>
         </div>
-        <ul class="flight-bar-ul" :style="{marginLeft:!dateShow?'200px':'400px'}">
-          <li v-for="(item,index) in distanceArr" :key="index" class="flight-bar-li">
-            <div v-if="index != 0" class="flight-bar-arrow1">
-              <img alt="图片" @click="sortClick(item.value,'top')" class="flight-bar-arrow1-img"
-                   src="./img/modify-arrow1.png"/>
-            </div>
-            <div class="flight-bar-name">{{item.name}}</div>
-            <div v-if="index != 0" class="flight-bar-arrow2">
-              <img alt="图片" @click="sortClick(item.value,'bottom')" class="flight-bar-arrow2-img"
-                   src="./img/modify-arrow1.png"/>
-            </div>
-          </li>
-        </ul>
       </div>
+
     </div>
 
     <div class="modify-result-wrapper com-width">
@@ -825,6 +828,7 @@
             },
             selectChange(type) {
                 if(type == 2){
+                    this.currentDay = this.dateArr[this.dateValue].date
                     this.actDay = true;
                     this.initData(this.dateValue)
                 }else {
@@ -847,6 +851,11 @@
                         }
                     }
                 }
+                this.dateArr.forEach((item,index)=>{
+                    if(item.date == date){
+                        this.dateValue = index;
+                    }
+                })
                 this.currentDay = date
                 this.bookingDate = date
                 this.dateTabActive = this.splitDate(date)
@@ -854,6 +863,7 @@
                 this.initData()
                 this.initTwoCode()
                 this.twoLetterCode1 = []
+                this.isShowMore = false
             },
             moreClick(type) {
                 this.isShowMore = type
@@ -1078,6 +1088,7 @@
                     return false
                 }
                 this.bookingDate = date
+                this.currentDay = date
                 this.dateTabActive = this.splitDate(date)
                 this.dow = index
                 this.dateValue = ind;
