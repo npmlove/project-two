@@ -105,7 +105,6 @@
                     @selection-change="selectionChange"
                     stripe
                     style="width: 100%">
-                    <el-table-column type="selection" width="50"></el-table-column>
                     <el-table-column prop="waybillNo" label="运单号" min-width="120"></el-table-column>
                     <el-table-column prop="departureDate" label="航班日期" min-width="100"></el-table-column>
                     <el-table-column prop="reconciliationUnit" label="对账单位" min-width="180"></el-table-column>
@@ -662,98 +661,12 @@
                     }
                 })
             },
-            InvoicingClick(type) {
-                if (type == '票据') {
-                    this.$message.error('正在开发请稍后再试')
-                    return
-                }
-                if (this.billAmountCnyArr.length == 0) {
-                    this.$message.error('请选择开票数据')
-                    return
-                } else if (!this.invoiceType) {
-                    this.$message.error('请选择发票类型')
-                    return
-                } else if (!this.invoiceTitle) {
-                    this.$message.error('请选择发票抬头')
-                    return
-                } else if (!this.recipient) {
-                    this.$message.error('请选择收件人')
-                    return
-                }
-                if (type == '合并' || type == '单独') {
-                    var billIds = []
-                    for (var i = 0; i < this.billAmountCnyArr.length; i++) {
-                        billIds.push(this.billAmountCnyArr[i].id)
-                    }
-                    var data = {
-                        accountBank: this.invoiceTitleJson.accountBank,
-                        applyAmount: this.billAmountCnyTotal,
-                        bankAccount: this.invoiceTitleJson.bankAccount,
-                        billIds: billIds,
-                        companyAddress: this.invoiceTitleJson.companyAddress,
-                        companyTel: this.invoiceTitleJson.companyTel,
-                        dutyParagraph: this.invoiceTitleJson.dutyParagraph,
-                        invoiceTitle: this.invoiceTitleJson.invoiceTitle,
-                        invoiceType: this.invoiceType,
-                        merge: type == '合并' ? 0 : 1,
-                        recipient: this.recipientJson.recipient,
-                        recipientAddress: this.recipientJson.recipientAddress,
-                        recipientEmail: this.recipientJson.recipientEmail,
-                        recipientTel: this.recipientJson.recipientTel
-                    }
-                    axios({
-                        method: 'post',
-                        url: webIp + serviceApi.invoiceApply,
-                        data: data,
-                        headers: {
-                            'tokenId': localStorage.getItem('tokenId')
-                        }
-                    }).then((data) => {
-                        var data = data.data
-                        if (data.code == 200) {
-                            this.initList()
-                            this.$message.success('开票成功')
-                        } else if (data.code == -200) {
-                            window.location.href = './login.html'
-                        } else {
-                            this.$message.error(data.message)
-                        }
-                    })
-                }
-            },
-            invoiceInfosChange(val) {
-                this.invoiceInfosPrice = 0
-                this.invoiceInfosArr = []
-                if (val.length > 0) {
-                    for (var i = 0; i < val.length; i++) {
-                        this.invoiceInfosPrice += val[i].applyAmount
-                        for (var q = 0; q < val[i].billInfos.length; q++) {
-                            this.invoiceInfosArr.push(val[i].billInfos[q])
-                        }
-                    }
-                }
-            },
             selectionChange(val) {
                 this.billAmountCnyArr = val
                 this.billAmountCnyTotal = 0
                 if (val.length > 0) {
                     for (var i = 0; i < val.length; i++) {
                         this.billAmountCnyTotal += val[i].billAmountCny
-                    }
-                }
-            },
-            invoiceTitleChange(e) {
-                for (var q = 0; q < this.invoiceTitleOpt.length; q++) {
-                    if (e == this.invoiceTitleOpt[q].invoiceTitle) {
-                        this.invoiceTitleJson = this.invoiceTitleOpt[q]
-                    }
-                }
-            },
-            expressInfoChange(e) {
-                console.log(e)
-                for (var q = 0; q < this.recipientOpt.length; q++) {
-                    if (e == this.recipientOpt[q].recipient) {
-                        this.recipientJson = this.recipientOpt[q]
                     }
                 }
             },
@@ -876,25 +789,7 @@
                     }
                 })
             },
-            searchClick() {
-                if (this.typeCode == '发票开具') {
-                    this.initList()
-                } else if (this.typeCode == '发票信息') {
-                    this.initInvoiceInfos()
-                } else if (this.typeCode == '财务核销') {
-                    this.departureDate3 = ''
-                }
-            },
-            restClick() {
-                if (this.typeCode == '发票开具') {
-                    this.departureDate1 = ''
-                } else if (this.typeCode == '发票信息') {
-                    this.departureDate2 = ''
-                } else if (this.typeCode == '财务核销') {
-                    this.departureDate3 = ''
-                }
-                this.initList()
-            },
+
             showHeaderMenu(type) {
                 if (type == 1) {
                     this.headerMenu = true
