@@ -25,7 +25,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -51,7 +51,7 @@
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
-			
+
 			<!-- 运价查询 -->
 			<div class="modify-search-box">
 				<div class="modify-search-img"></div>
@@ -61,7 +61,7 @@
 							<div>
 								<div class="form-item">
 									<div class="form-item-owrt">
-										<input v-model="trackSearchInput" maxlength="11" onkeyup="value=value.replace(/[^\d]/g, '')" placeholder="全网货物跟踪，运单信息全掌握" type="text" style="width: 100%;" />
+										<input v-model="trackSearchInput"  @input="valueChange" placeholder="全网货物跟踪，运单信息全掌握" type="text" style="width: 100%;" />
 									</div>
 								</div>
 							</div>
@@ -76,7 +76,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="com-width track-details rest-table">
 				<div style="font-size: 16px;font-weight: 400;color: #999;">货物基本信息</div>
 				<el-table :data="tableData1" border stripe style="width: 100%">
@@ -91,7 +91,7 @@
 					<el-table-column prop="cargoWeight" label="重量" width="180"></el-table-column>
 					<el-table-column prop="cargoStatus" label="最新状态"></el-table-column>
 				</el-table>
-				
+
 				<div style="font-size: 16px;font-weight: 400;color: #999;margin-top: 20px;">航班信息</div>
 				<el-table :data="tableData2" border stripe style="width: 100%;">
 					<template slot="empty">
@@ -105,7 +105,7 @@
 					<el-table-column prop="filghtDestination" label="航班目的港" width="180"></el-table-column>
 					<el-table-column prop="remarks" label="其他信息"></el-table-column>
 				</el-table>
-				
+
 				<div style="font-size: 16px;font-weight: 400;color: #999;margin-top: 20px;">状态信息</div>
 				<el-table :data="tableData3" border stripe style="width: 100%;">
 					<template slot="empty">
@@ -124,8 +124,8 @@
 					<el-table-column prop="statusTime" label="状态时间" width="180"></el-table-column>
 					<el-table-column prop="statusDescription" label="状态描述"></el-table-column>
 				</el-table>
-				
-				
+
+
 				<!-- <el-tabs v-model="activeName" type="border-card">
 				    <el-tab-pane label="货物基本信息" name="first">
 						<el-table :data="tableData1" border stripe style="width: 100%">
@@ -164,7 +164,7 @@
 					</el-tab-pane>
 				</el-tabs> -->
 			</div>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -203,6 +203,25 @@
 				this.initData()
 			},
 			methods: {
+				valueChange(e){
+					this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
+					this.isShowYundan = false
+					if(this.trackSearchInput.match(/-/g) && this.trackSearchInput.match(/-/g).length > 1 ){
+						let sr = this.trackSearchInput.split("");
+						sr.splice(this.trackSearchInput.lastIndexOf('-'),1)
+						this.trackSearchInput=sr.join("");
+					}
+					if(isNaN(this.trackSearchInput) && this.trackSearchInput.indexOf('-')!=3){
+						this.trackSearchInput = this.trackSearchInput.replace('-',"")
+					}
+					if(!isNaN(this.trackSearchInput) && this.trackSearchInput.length > 11){
+						this.trackSearchInput = this.trackSearchInput.slice(0,11)
+					}
+					if(isNaN(this.trackSearchInput) && this.trackSearchInput.length > 12){
+						this.trackSearchInput = this.trackSearchInput.slice(0,12)
+					}
+
+				},
 				//物流追踪
 				initData() {
 					var jsonData = {
@@ -230,9 +249,16 @@
 				},
 				//立即查询
 				submitQuery() {
-					if(!this.trackSearchInput || (this.trackSearchInput.length != 11)){
+					if(!this.trackSearchInput){
 						this.$message.error('请输入有效的运单号')
 						return
+					}
+					let reg1 = /^[0-9]{3}-{1}[0-9]{8}$/;
+					let reg2 = /^[0-9]{11}$/;
+					// console.log(reg2.test(this.trackSearchInput),reg1.test(this.trackSearchInput))
+					if(!reg2.test(this.trackSearchInput) && !reg1.test(this.trackSearchInput)){
+						this.$message.error('请输入有效的运单号')
+						return false
 					}
 					this.initData()
 				},
