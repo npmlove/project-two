@@ -553,15 +553,15 @@
 				invoiceType: '0',
 				invoiceTypeOpt: [
 					{
-						Name: '增值税电子普通发票',
+						Name: '增值税普通发票',
 						value: '0'
 					},
 					{
-						Name: '增值税普通发票',
+						Name: '增值税专用发票',
 						value: '1'
 					},
 					{
-						Name: '增值税专用发票',
+						Name: '增值税电子普通发票',
 						value: '2'
 					}
 				],
@@ -584,6 +584,7 @@
 				invoiceInfosArr: []
 			},
 			created() {
+				console.log(123)
 				if(!localStorage.getItem('wxOpenId')){
 					window.location.href = './login.html'
 				}
@@ -598,6 +599,8 @@
 			},
 			methods: {
 				InvoicingClick(type) {
+					console.log(this.invoiceType)
+					return ;
 					if(type == '票据'){
 						if(this.billAmountCnyArr.length == 0){
 
