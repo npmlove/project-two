@@ -223,7 +223,8 @@
                     zIndex: 9
                 });
                 let toolBar = new AMap.ToolBar({
-                    position:"RB"
+                    position:"RB",
+                    offset: new AMap.Pixel(50, 0),
                 });
                 // let Sate = new AMap.TileLayer.RoadNet();
                 this.map = new AMap.Map('Map', {
@@ -250,6 +251,7 @@
                 this.map.setCenter(e.target.getPosition()); //设置地图中心点
                 setTimeout(()=>{
                     let dom =  document.getElementById('ratingBox')
+                    this.act = e.target.currIndex
                     for(let i=0;i<e.target.ratingNum;i++){
                         let  img = document.createElement("img");
                         img.src = "img/xingxing.png";
@@ -288,6 +290,7 @@
         </div>
       </div>`;
                     marker.ratingNum = item.rating;
+                    marker.currIndex = index;
                     marker.on('click', this.markerClick);
                     this.markesData.push(marker)
                     this.map.setFitView();
