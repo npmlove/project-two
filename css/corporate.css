@@ -42,5 +42,24 @@
     justify-content: center;
 }
 
+.infoList > div{
 
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+.infoList > div >span{
+    margin-left: 15px;
+}
+.infoList > div:last-child > img{
+    width: 100px;
+    height: 150px;
+    margin-left: 15px;
+}
+.submitInfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 

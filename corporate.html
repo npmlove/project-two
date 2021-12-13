@@ -96,22 +96,48 @@
         <div class="order-list-manage-title">企业认证</div>
         <div class="tabs__nav-wrap">
           <el-tabs v-model="typeCode" type="border-card" @tab-click="tabClickData">
-            <el-tab-pane label="发票开具" name="发票开具">
-              <div class="financial-invoice">
-                <div class="financial-invoice-table">
-                  <el-table
-                    class="financial-table"
-                    :data="tableData1"
-                    @selection-change="selectionChange"
-                    stripe
-                    style="width: 100%">
-                    <el-table-column prop="waybillNo" label="运单号" min-width="120"></el-table-column>
-                    <el-table-column prop="departureDate" label="航班日期" min-width="100"></el-table-column>
-                    <el-table-column prop="reconciliationUnit" label="对账单位" min-width="180"></el-table-column>
-                    <el-table-column prop="fullLeg" label="航线" min-width="120"></el-table-column>
-                    <el-table-column prop="billAmountCny" label="订单总金额" min-width="100"></el-table-column>
-                  </el-table>
-                </div>
+            <el-tab-pane label="企业信息" name="企业信息">
+              <!--              <template>-->
+              <!--                <span>去认证</span>-->
+              <!--              </template>-->
+              <!--              <div class="infoList">-->
+              <!--                <div>-->
+              <!--                  企业名称:<span>上海星星贸易有限公司</span>-->
+              <!--                </div>-->
+              <!--                <div>-->
+              <!--                  企业电话:<span>32132123123</span>-->
+              <!--                </div>-->
+              <!--                <div>-->
+              <!--                  企业地址:<span>上海星星贸易有限公司</span>-->
+              <!--                </div>-->
+              <!--                <div>-->
+              <!--                  营业执照:<img src="img/banner1.png">-->
+              <!--                </div>-->
+              <!--              </div>-->
+              <div class="submitInfo">
+
+                    <el-form :model="infoData" :rules="rules" ref="inforuleForm" label-width="140px" class="demo-ruleForm">
+                      <el-form-item label="企业名称" prop="name">
+                        <el-input v-model="infoData.name"></el-input>
+                      </el-form-item>
+                      <el-form-item label="企业唯一识别编码" prop="name">
+                        <el-input v-model="infoData.name"></el-input>
+                      </el-form-item>
+                      <el-form-item label="营业执照" prop="name">
+                        <el-upload
+                          class="upload-demo"
+                          drag
+                          action="https://jsonplaceholder.typicode.com/posts/"
+                          multiple>
+                          <i class="el-icon-upload"></i>
+                          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过5M</div>
+                        </el-upload>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-button type="primary" @click="submitForm('inforuleForm')">提交</el-button>
+                      </el-form-item>
+                    </el-form>
               </div>
             </el-tab-pane>
             <el-tab-pane label="开票信息" name="开票信息">
@@ -369,6 +395,9 @@
                     bankAccount: '',
                     id: ''
                 },
+                infoData: {
+                    name: '',
+                },
                 expressForm: {
                     id: 0,
                     recipient: "",
@@ -425,7 +454,7 @@
                 departureDate1: '',
                 departureDate2: '',
                 departureDate3: '',
-                typeCode: '发票开具',
+                typeCode: '企业信息',
                 invoiceType: '',
                 invoiceTypeOpt: [
                     {
@@ -442,7 +471,7 @@
                     }
                 ],
                 tableData: [],
-                //发票开具
+                //企业信息
                 tableData1: [],
                 billAmountCnyTotal: 0,
                 billAmountCnyArr: [],
@@ -473,6 +502,9 @@
 
         },
         methods: {
+            submitForm(){
+
+            },
             indexMethod(index) {
                 return index + 1;
             },
@@ -527,7 +559,7 @@
                     }
                 });
             },
-            deleInvoice(id,type=1) {
+            deleInvoice(id, type = 1) {
                 //type 1:发票抬头 2：发票邮寄
                 this.$confirm('此操作将永久删除该发票信息, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -535,10 +567,10 @@
                     type: 'warning'
                 }).then(() => {
                     let url = serviceApi.deleInvoice + `?invoiceInfoId=${id}`
-                    if(type == 1){
+                    if (type == 1) {
                         url = serviceApi.deleInvoice + `?invoiceInfoId=${id}`
                     }
-                    if(type == 2){
+                    if (type == 2) {
                         url = serviceApi.deleExpress + `?expressInfoId=${id}`
                     }
                     axios({
@@ -712,7 +744,7 @@
             },
             tabClickData(e) {
                 this.typeCode = e.paneName
-                if (this.typeCode == '发票开具') {
+                if (this.typeCode == '企业信息') {
                     this.initList()
                 } else if (this.typeCode == '开票信息') {
                     //获取发票抬头信息列表
@@ -749,27 +781,27 @@
 
 
             initList() {
-                var json = {
-                    startDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[0],
-                    endDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[1]
-                }
-                json = toData(json)
-                axios({
-                    method: 'get',
-                    url: webIp + serviceApi.billList + '?' + json,
-                    headers: {
-                        'tokenId': localStorage.getItem('tokenId')
-                    }
-                }).then((data) => {
-                    var data = data.data
-                    if (data.code == 200) {
-                        this.tableData1 = data.data
-                    } else if (data.code == -200) {
-                        window.location.href = './login.html'
-                    } else {
-                        this.$message.error(data.message)
-                    }
-                })
+                // var json = {
+                //     startDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[0],
+                //     endDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[1]
+                // }
+                // json = toData(json)
+                // axios({
+                //     method: 'get',
+                //     url: webIp + serviceApi.billList + '?' + json,
+                //     headers: {
+                //         'tokenId': localStorage.getItem('tokenId')
+                //     }
+                // }).then((data) => {
+                //     var data = data.data
+                //     if (data.code == 200) {
+                //         this.tableData1 = data.data
+                //     } else if (data.code == -200) {
+                //         window.location.href = './login.html'
+                //     } else {
+                //         this.$message.error(data.message)
+                //     }
+                // })
             },
             initUserInfo() {
                 axios({

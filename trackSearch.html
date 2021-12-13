@@ -258,6 +258,7 @@
 					var jsonData = {
 						awb: this.trackSearchInput
 					}
+					jsonData.awb = jsonData.awb.replace('-',"")
 					jsonData = toData(jsonData)
 					axios({
 						method: 'get',

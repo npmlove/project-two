@@ -24,7 +24,7 @@
   <script src="./js/axios.min.js"></script>
   <script src="./js/swiper-bundle.min.js"></script>
   <script type="text/javascript"
-          src="https://webapi.amap.com/maps?v=1.4.14&key=07536db46b52555c8782a4e5667fee2d"></script>
+          src="https://webapi.amap.com/maps?v=1.4.14&key=07536db46b52555c8782a4e5667fee2d&&plugin=AMap.Scale,AMap.OverView,AMap.ToolBar"></script>
   <script>
       var _hmt = _hmt || [];
       (function () {
@@ -86,22 +86,31 @@
           </div>
         </div>
         <div :class="['list',index == act?'actList':'']" v-for="(item,index) in airportsData" :key="index" @click="itemClick(item,index)">
-          <div>
-            <p >机场代码:<span>{{item.threeLetterCode}}</span></p>
-            <p>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>{{item.country}} {{item.countryEn}}</span></p>
-            <p>城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市:<span>{{item.city}} {{item.cityEn}}</span></p>
+          <div class="top">
+            <div>
+              <p >机场代码:<span>{{item.threeLetterCode}}</span></p>
+              <p>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>{{item.country}} {{item.countryEn}}</span></p>
+            </div>
+            <div>
+              <p >距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>{{item.distance}}</span></p>
+              <p>预估时间:<span>{{item.expendHour}}小时{{item.expendMinute}}分</span></p>
+            </div>
+
+          </div>
+          <div class="bot">
+
+            <div class="addre">
+              <div>城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市:</div>
+              <div>{{item.city}} {{item.cityEn}}</div>
+            </div>
             <p class="rating">推荐指数:
               <img src="img/xingxing.png" v-for="item in item.rating" :key="item">
             </p>
           </div>
-          <div>
-            <p >距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>{{item.distance}}</span></p>
-            <p>预估时间:<span>{{item.expendHour}}小时{{item.expendMinute}}分</span></p>
-          </div>
           <img v-if="index != act" class="location" src="./img/locationNo.png">
           <img v-else class="location" src="./img/locationYes.png">
-          <div class="active">
-              <span>￥</span><span>23</span>/KG起
+          <div class="active" v-if="item.priceDate">
+              <span>￥</span><span>{{item.minPrice}}</span>/KG起
           </div>
 
         </div>
@@ -141,14 +150,15 @@
             }
         },
         mounted() {
-            this.$nextTick(() => {
-                this.initMap()
-            })
+            this.initMap()
+            // this.$nextTick(() => {
+            //     this.initMap()
+            // })
 
         },
         methods: {
             itemClick(item,index){
-                debugger
+                // debugger
                 this.act =index;
                 this.infoWindow.close();
                 this.map.setCenter([item.longitude, item.latitude]); //设置地图中心点
@@ -187,6 +197,9 @@
                 })
             },
             changeValue(){
+                if(this.keywords==""){
+                    return false
+                }
                 axios({
                     method: 'get',
                     url: webIp + serviceApi.placeSuggest+`?keywords=${this.keywords}`,
@@ -209,14 +222,25 @@
                     getTileUrl: 'https://17dc.shenghuoq.com/map/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=[x]&y=[y]&z=[z]&s=Galil',
                     zIndex: 9
                 });
-                let Sate = new AMap.TileLayer.Satellite();
+                let toolBar = new AMap.ToolBar({
+                    position:"RB"
+                });
+                // let Sate = new AMap.TileLayer.RoadNet();
                 this.map = new AMap.Map('Map', {
                     zoom: 9,
                     viewMode: '2D',
                     center: [116.412197,39.911092],
-                    layers: [googleLayer, Sate]
+                    layers: [googleLayer]
                 });
+                let marker = new AMap.Marker({
+                    position: [116.412197,39.911092],
+                    map: this.map,
+                    icon: "img/curraddr.png",
+                    offset: new AMap.Pixel(-26, -13),
+                    autoRotation: true
 
+                });
+                this.map.addControl(toolBar);
 
             },
             markerClick(e) {
@@ -253,6 +277,7 @@
         <div>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>${item.country} ${item.countryEn}</span></div>
         <div>城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市:<span>${item.city} ${item.cityEn}</span></div>
         <div>距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>${item.distance}</span></div>
+         <div>经&nbsp;&nbsp;纬&nbsp;&nbsp;度:<span>${item.latitude} ，${item.longitude}</span></div>
         <div>预估时间:<span>${item.expendHour}小时${item.expendMinute}分</span></div>
         <div class="address">
           机场地址:
