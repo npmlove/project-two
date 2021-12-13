@@ -860,27 +860,27 @@
 					}
 				},
 				// 账务核销
-				verification(){
-					let params = {
-						startDepartureDate: this.departureDate3 == '' ? '' : this.departureDate3[0],
-						endDepartureDate: this.departureDate3 == '' ? '' : this.departureDate3[1]
-					}
-					axios({
-							method: 'post',
-							url: webIp+serviceApi.searchByPage,
-							data: params,
-							headers: {
-								'tokenId': localStorage.getItem('tokenId')
-							}
-						}).then(res=>{
-							let data = res.data ;
+				// verification(){
+				// 	let params = {
+				// 		startDepartureDate: this.departureDate3 == '' ? '' : this.departureDate3[0],
+				// 		endDepartureDate: this.departureDate3 == '' ? '' : this.departureDate3[1]
+				// 	}
+				// 	axios({
+				// 			method: 'post',
+				// 			url: webIp+serviceApi.searchByPage,
+				// 			data: params,
+				// 			headers: {
+				// 				'tokenId': localStorage.getItem('tokenId')
+				// 			}
+				// 		}).then(res=>{
+				// 			let data = res.data ;
 
-							if(data.code == 200){
-								this.tableData = data.data.page.records
-								this.tableDataTotalCny = data.data.totalCny
-							}
-						} )
-				},
+				// 			if(data.code == 200){
+				// 				this.tableData = data.data.page.records
+				// 				this.tableDataTotalCny = data.data.totalCny
+				// 			}
+				// 		} )
+				// },
 				restClick() {
 					if(this.typeCode == '发票开具'){
 						this.departureDate1 = ''
