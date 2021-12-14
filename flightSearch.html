@@ -308,12 +308,32 @@
                 let path2 = [];
                 let direction = ""
                 let length = this.pathInfo.length;
-                this.currPo = curr
+                let leftIndex=0;
+                let rightIndex=0;
+                this.currPo = curr;
                 if (curr[0] * 1 < start[0] * 1) {
                     direction = "left"
                 }
                 if (curr[0] * 1 > start[0] * 1) {
                     direction = "right"
+                }
+                for(let i=this.pathInfo.length-1;i>0;i--){
+                    let num = this.pathInfo[i].longitude*1 + this.pathInfo[i-1].longitude*1
+                    if(this.pathInfo[i-1].longitude*1 < this.pathInfo[i].longitude*1){
+                        leftIndex ++
+
+                    }else {
+                        rightIndex++
+                    }
+                    if(num>=-5 && num<=5){
+                        break;
+                    }
+                }
+                debugger
+                if(leftIndex>rightIndex){
+                    direction = "left";
+                }else {
+                    direction = "right";
                 }
                 let deg = 0;
                 if (direction == "left") {
