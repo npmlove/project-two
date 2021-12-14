@@ -318,7 +318,7 @@
       <el-row>
         <el-col :span="20">
           <el-form-item label="收件地址" prop="recipientAddress" :label-width="formLabelWidth" >
-            <el-input v-model="expressForm.recipientAddress" autocomplete="off"></el-input>
+            <el-input v-model="expressForm.recipientAddress" maxlength="50" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
