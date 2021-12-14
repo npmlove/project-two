@@ -230,6 +230,7 @@
         },
         methods: {
             getData() {
+                this.map && this.map.remove();
                 axios({
                     method: 'post',
                     url: webIp + serviceApi.airLineSearch,
@@ -363,35 +364,53 @@
                 }
 
 
-                if (curr[0] * 1 > 0 && start[0] * 1 < 0 && direction == "left") {
-                    path1 = []
-                    path1.push(new AMap.LngLat(curr[0], curr[1], true));
-                    path1.push(new AMap.LngLat(start[0] * 1 + 360, start[1], true));
-                }
-                if (curr[0] * 1 < 0 && start[0] * 1 > 0 && direction == "right") {
-                    path1 = []
-                    path1.push(new AMap.LngLat(curr[0] * 1 + 360, curr[1], true));
-                    path1.push(new AMap.LngLat(start[0], start[1], true));
-                }
+                // if (curr[0] * 1 > 0 && start[0] * 1 < 0 && direction == "left") {
+                //     path1 = []
+                //     path1.push(new AMap.LngLat(curr[0], curr[1], true));
+                //     path1.push(new AMap.LngLat(start[0] * 1 + 360, start[1], true));
+                // }
+                // if (curr[0] * 1 < 0 && start[0] * 1 > 0 && direction == "right") {
+                //     path1 = []
+                //     path1.push(new AMap.LngLat(curr[0] * 1 + 360, curr[1], true));
+                //     path1.push(new AMap.LngLat(start[0], start[1], true));
+                // }
 
+                for(let i=this.pathInfo.length-1;i>0;i--){
+                    path1=[];
+                    path1.push(new AMap.LngLat(this.pathInfo[i-1].longitude, this.pathInfo[i-1].latitude, true));
+                    path1.push(new AMap.LngLat(this.pathInfo[i].longitude, this.pathInfo[i].latitude, true));
+                    if (this.pathInfo[i-1].longitude * 1 > 0 && this.pathInfo[i].longitude * 1 < 0 && direction == "left") {
+                        path1 = []
+                        path1.push(new AMap.LngLat(this.pathInfo[i-1].longitude, this.pathInfo[i-1].latitude, true));
+                        path1.push(new AMap.LngLat(this.pathInfo[i].longitude * 1 + 360, this.pathInfo[i].latitude, true));
+                    }
+                    if (this.pathInfo[i-1].longitude * 1 < 0 && this.pathInfo[i].longitude * 1 > 0 && direction == "right") {
+                        path1 = []
+                        path1.push(new AMap.LngLat(this.pathInfo[i-1].longitude * 1 + 360, this.pathInfo[i-1].latitude, true));
+                        path1.push(new AMap.LngLat(this.pathInfo[i].longitude, this.pathInfo[i].latitude, true));
+                    }
+                    let polyline = new AMap.Polyline({
+                        map: map,
+                        path: path1,
+                        strokeColor: "#FF1414",  //线颜色
+                        strokeOpacity: 1,     //线透明度
+                        strokeWeight: 3,      //线宽
+                        strokeStyle: "solid",  //线样式
+                        // geodesic: true            // 绘制大地线
+                    });
+                    map.add(polyline);
+                }
                 // debugger
-                // let pathInfo1 = [];
-                // pathInfo1.push(new AMap.LngLat(-171.77638 , 51.06041, true));
-                // pathInfo1.push(new AMap.LngLat(-118.43966, 33.9464, true));
                 // 绘制轨迹
-                let polyline = new AMap.Polyline({
-                    map: map,
-                    path: path1,
-                    strokeColor: "#FF1414",  //线颜色
-                    strokeOpacity: 1,     //线透明度
-                    strokeWeight: 3,      //线宽
-                    strokeStyle: "solid",  //线样式
-                    geodesic: true            // 绘制大地线
-                });
-                // let pathInfo = [];
-                // pathInfo.push(new AMap.LngLat(-171.77638 + 360, 51.06041, true));
-                // pathInfo.push(new AMap.LngLat(121.233001709, 25.0776996613, true));
-
+                // let polyline = new AMap.Polyline({
+                //     map: map,
+                //     path: path1,
+                //     strokeColor: "#FF1414",  //线颜色
+                //     strokeOpacity: 1,     //线透明度
+                //     strokeWeight: 3,      //线宽
+                //     strokeStyle: "solid",  //线样式
+                //     geodesic: true            // 绘制大地线
+                // });
                 let polyline1 = new AMap.Polyline({
                     map: map,
                     path: path2,
@@ -401,7 +420,7 @@
                     strokeStyle: "dashed",  //线样式
                     geodesic: true            // 绘制大地线
                 });
-                map.add(polyline);
+                // map.add(polyline);
                 map.add(polyline1);
                 map.setCenter(this.currPo)
 
