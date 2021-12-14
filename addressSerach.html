@@ -109,7 +109,7 @@
           </div>
           <img v-if="index != act" class="location" src="./img/locationNo.png">
           <img v-else class="location" src="./img/locationYes.png">
-          <div class="active" v-if="item.priceDate">
+          <div class="active" @click.stop="goTo(item)" v-if="item.priceDate">
               <span>￥</span><span>{{item.minPrice}}</span>/KG起
           </div>
 
@@ -157,6 +157,10 @@
 
         },
         methods: {
+            goTo(item){
+                window.location.href=`./freightQuery.html?qi=&mu=${item.threeLetterCode}`
+                // debugger
+            },
             itemClick(item,index){
                 // debugger
                 this.act =index;
@@ -226,6 +230,7 @@
                     position:"RB",
                     offset: new AMap.Pixel(50, 0),
                 });
+                let scale = new AMap.Scale();
                 // let Sate = new AMap.TileLayer.RoadNet();
                 this.map = new AMap.Map('Map', {
                     zoom: 9,
@@ -242,6 +247,7 @@
 
                 });
                 this.map.addControl(toolBar);
+                this.map.addControl(scale);
 
             },
             markerClick(e) {

@@ -211,7 +211,9 @@
             headerMenu: false,
             searchValue: "",
             dataInfo: null,
-            lineArr:[]
+            lineArr: [],
+            pathInfo: [],
+            currPo: []
         },
         created() {
             if (!localStorage.getItem('wxOpenId')) {
@@ -237,18 +239,21 @@
                 }).then((res) => {
                     if (res.data.code == 200) {
                         this.dataInfo = res.data.data;
-                        if(res.data.data.points){
-                            res.data.data.points.forEach((item)=>{
+                        if (res.data.data.orgAndDesPoints) {
+                            res.data.data.orgAndDesPoints.forEach((item) => {
                                 this.lineArr.push([
-                                    item.longitude,item.latitude
+                                    item.longitude, item.latitude
                                 ])
                             })
                         }
-                        if(res.data.data.hisFlightDatas){
-                            res.data.data.hisFlightDatas.forEach((item)=>{
+                        if (res.data.data.points) {
+                            this.pathInfo = res.data.data.points;
+                        }
+                        if (res.data.data.hisFlightDatas) {
+                            res.data.data.hisFlightDatas.forEach((item) => {
                                 let time = new Date(item.ataDate) - new Date(item.atdDate)
-                                let  days    = time / 1000 / 60 / 60 / 24;
-                                let  daysRound = Math.floor(days);
+                                let days = time / 1000 / 60 / 60 / 24;
+                                let daysRound = Math.floor(days);
                                 item.daysRound = daysRound
                             })
                         }
@@ -265,16 +270,17 @@
                 //     [97.375719, 30.598057],
                 //     [117.375719, 44.118117]
                 // ]
-                if(!this.lineArr || this.lineArr.length==0){
+                if (!this.lineArr || this.lineArr.length == 0) {
                     return false
                 }
-                this.lineArr && this.lineArr.forEach((item,index)=>{
+
+                this.lineArr && this.lineArr.forEach((item, index) => {
                     let icon = "img/aircraft.png"
                     // 点标记显示内容，HTML要素字符串
-                    let markerContent ="";
-                    if([0,1].includes(index)){
+                    let markerContent = "";
+                    if ([0, 1].includes(index)) {
                         markerContent = `<div class="markerContent"></div>`
-                    }else {
+                    } else {
                         markerContent = `<img src="img/currLine.png"/>`
                     }
                     let marker = new AMap.Marker({
@@ -286,31 +292,88 @@
                         autoRotation: true
                     });
 
-                    if([0,1].includes(index)){
+                    if ([0, 1].includes(index)) {
                         marker.setLabel({
-                            direction:'top',
+                            direction: 'top',
                             offset: new AMap.Pixel(0, -6),  //设置文本标注偏移量
-                            content: `<div class='markerinfo'>${this.dataInfo.points[index].name}</div>`, //设置文本标注内容
+                            content: `<div class='markerinfo'>${this.dataInfo.orgAndDesPoints[index].name}</div>`, //设置文本标注内容
                         });
                     }
 
                 })
-                // let pathInfo = [];
-                // pathInfo.push(new AMap.LngLat(121.233001709, 25.0776996613, true));
-                // // pathInfo.push(new AMap.LngLat(165, 23, true));
-                // pathInfo.push(new AMap.LngLat(-5 + 360, 33.94250107, true));
-                // 绘制轨迹
-                let polyline= new AMap.Polyline({
+                let start = this.lineArr[0];
+                let end = this.lineArr[1];
+                let curr = [this.pathInfo[0].longitude, this.pathInfo[0].latitude];
+                let path1 = [];
+                let path2 = [];
+                let direction = ""
+                let length = this.pathInfo.length;
+                this.currPo = curr
+                if (curr[0] * 1 < start[0] * 1) {
+                    direction = "left"
+                }
+                if (curr[0] * 1 > start[0] * 1) {
+                    direction = "right"
+                }
+                let deg = 0;
+                if (direction == "left") {
+                    deg = -180
+                }
+                new AMap.Marker({
                     map: map,
-                    path: [this.lineArr[0],this.lineArr[2]],
+                    position: [this.pathInfo[0].longitude, this.pathInfo[0].latitude],
+                    icon: "img/aircraft.png",
+                    content: `<img style="transform: rotate(${deg}deg)" src="img/currLine.png"/>`,
+                    offset: new AMap.Pixel(-5, -5),
+                    autoRotation: true
+                });
+                path1.push(new AMap.LngLat(curr[0], curr[1], true));
+                path1.push(new AMap.LngLat(start[0], start[1], true));
+                path2.push(new AMap.LngLat(curr[0], curr[1], true));
+                path2.push(new AMap.LngLat(end[0], end[1], true));
+                if (curr[0] * 1 < 0 && end[0] * 1 > 0 && direction == "left") {
+                    path2 = []
+                    path2.push(new AMap.LngLat(curr[0] * 1 + 360, curr[1], true));
+                    path2.push(new AMap.LngLat(end[0], end[1], true));
+                }
+                if (curr[0] * 1 > 0 && end[0] * 1 < 0 && direction == "right") {
+                    path2 = []
+                    path2.push(new AMap.LngLat(curr[0], curr[1], true));
+                    path2.push(new AMap.LngLat(end[0] * 1 + 360, end[1], true));
+                }
+
+
+                if (curr[0] * 1 > 0 && start[0] * 1 < 0 && direction == "left") {
+                    path1 = []
+                    path1.push(new AMap.LngLat(curr[0], curr[1], true));
+                    path1.push(new AMap.LngLat(start[0] * 1 + 360, start[1], true));
+                }
+                if (curr[0] * 1 < 0 && start[0] * 1 > 0 && direction == "right") {
+                    path1 = []
+                    path1.push(new AMap.LngLat(curr[0] * 1 + 360, curr[1], true));
+                    path1.push(new AMap.LngLat(start[0], start[1], true));
+                }
+
+                // debugger
+                // let pathInfo1 = [];
+                // pathInfo1.push(new AMap.LngLat(-171.77638 , 51.06041, true));
+                // pathInfo1.push(new AMap.LngLat(-118.43966, 33.9464, true));
+                // 绘制轨迹
+                let polyline = new AMap.Polyline({
+                    map: map,
+                    path: path1,
                     strokeColor: "#FF1414",  //线颜色
                     strokeOpacity: 1,     //线透明度
                     strokeWeight: 3,      //线宽
                     strokeStyle: "solid",  //线样式
                 });
-                let polyline1 =  new AMap.Polyline({
+                // let pathInfo = [];
+                // pathInfo.push(new AMap.LngLat(-171.77638 + 360, 51.06041, true));
+                // pathInfo.push(new AMap.LngLat(121.233001709, 25.0776996613, true));
+
+                let polyline1 = new AMap.Polyline({
                     map: map,
-                    path: [this.lineArr[1],this.lineArr[2]],
+                    path: path2,
                     strokeColor: "#FF1414",  //线颜色
                     strokeOpacity: 1,     //线透明度
                     strokeWeight: 3,      //线宽
@@ -318,7 +381,7 @@
                 });
                 map.add(polyline);
                 map.add(polyline1);
-                map.setCenter(this.lineArr[2])
+                map.setCenter(this.currPo)
 
             },
             initMap() {
@@ -334,7 +397,7 @@
                 var map = new AMap.Map('Map', {
                     zoom: 1,
                     viewMode: '2D',
-                    center: this.lineArr[2]?this.lineArr[2]:[116.408075, 39.950187],
+                    center: this.lineArr[2] ? this.lineArr[2] : [116.408075, 39.950187],
                     layers: [googleLayer, Sate],
                     resizeEnable: true, //是否监控地图容器尺寸变化
                 });
