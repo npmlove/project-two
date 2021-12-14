@@ -17,7 +17,7 @@
 
     background-color: blue;
     height: 30px;
-
+    position: relative;
     display: flex;
 }
 .search > input{
@@ -37,6 +37,25 @@
     text-align: center;
     line-height: 30px;
     cursor: pointer;
+}
+.search > .dele{
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    position: absolute;
+    right: 60px;
+    top:50%;
+    transform: translateY( -50% );
+    background: #eeeeee;
+    line-height: 17px;
+    text-align: center;
+    cursor: pointer;
+
+}
+.search > .dele >img{
+    width: 15px;
+    height: 15px;
+
 }
 .btn > img{
     width: 15px;

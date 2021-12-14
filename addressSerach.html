@@ -23,8 +23,10 @@
   <script src="./js/vue.js"></script>
   <script src="./js/axios.min.js"></script>
   <script src="./js/swiper-bundle.min.js"></script>
+  <link rel="stylesheet" href="./css/element-ui-min.css">
+  <script src="./js/element-ui.js"></script>
   <script type="text/javascript"
-          src="https://webapi.amap.com/maps?v=1.4.14&key=07536db46b52555c8782a4e5667fee2d&&plugin=AMap.Scale,AMap.OverView,AMap.ToolBar"></script>
+          src="https://webapi.amap.com/maps?v=1.4.14&key=07536db46b52555c8782a4e5667fee2d&&plugin=AMap.Scale,AMap.OverView,AMap.ToolBar,AMap.Geocoder"></script>
   <script>
       var _hmt = _hmt || [];
       (function () {
@@ -68,7 +70,10 @@
   <div class="Map" id="Map">
     <div class="searchBox">
       <div class="search">
-        <input placeholder="地址、城市、机场、港口、FBA仓库..." maxlength="150" v-model="keywords" @input="changeValue" @keyup.enter="searchAddress(1)" />
+        <input placeholder="地址、城市、机场、港口、FBA仓库..." maxlength="150" v-model.trim="keywords" @input="changeValue" @keyup.enter="searchAddress(1)" />
+        <div class="dele" v-show="keywords" @click="keywords='',airportsData=[]">
+          <img src="img/close.png">
+        </div>
         <div class="btn" @click="searchAddress(1)">
           <img src="img/search.png">
         </div>
@@ -182,6 +187,10 @@
                 }else {
                     placeName = data.prefixAddress
                 }
+                if(!placeName){
+                    this.$message.error("请输入查询地点")
+                    return false
+                }
                 axios({
                     method: 'get',
                     url: webIp + serviceApi.searchAirport+`?placeName=${placeName}`,
@@ -285,7 +294,7 @@
         <div>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>${item.country} ${item.countryEn}</span></div>
         <div>城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市:<span>${item.city} ${item.cityEn}</span></div>
         <div>距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>${item.distance}</span></div>
-         <div>经&nbsp;&nbsp;纬&nbsp;&nbsp;度:<span>${item.latitude} ，${item.longitude}</span></div>
+         <div>经&nbsp;&nbsp;纬&nbsp;&nbsp;度:<span>${item.longitude}，${item.latitude}</span></div>
         <div>预估时间:<span>${item.expendHour}小时${item.expendMinute}分</span></div>
         <div class="address">
           机场地址:

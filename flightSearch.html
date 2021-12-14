@@ -329,7 +329,7 @@
                         break;
                     }
                 }
-                debugger
+                // debugger
                 if(leftIndex>rightIndex){
                     direction = "left";
                 }else {
@@ -386,6 +386,7 @@
                     strokeOpacity: 1,     //线透明度
                     strokeWeight: 3,      //线宽
                     strokeStyle: "solid",  //线样式
+                    geodesic: true            // 绘制大地线
                 });
                 // let pathInfo = [];
                 // pathInfo.push(new AMap.LngLat(-171.77638 + 360, 51.06041, true));
@@ -398,6 +399,7 @@
                     strokeOpacity: 1,     //线透明度
                     strokeWeight: 3,      //线宽
                     strokeStyle: "dashed",  //线样式
+                    geodesic: true            // 绘制大地线
                 });
                 map.add(polyline);
                 map.add(polyline1);
