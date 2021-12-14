@@ -363,7 +363,7 @@
                     path2.push(new AMap.LngLat(end[0] * 1 + 360, end[1], true));
                 }
 
-
+                //按照   起点到当前点 飞行路线
                 // if (curr[0] * 1 > 0 && start[0] * 1 < 0 && direction == "left") {
                 //     path1 = []
                 //     path1.push(new AMap.LngLat(curr[0], curr[1], true));
@@ -375,6 +375,7 @@
                 //     path1.push(new AMap.LngLat(start[0], start[1], true));
                 // }
 
+                //按照实际飞行路线
                 for(let i=this.pathInfo.length-1;i>0;i--){
                     path1=[];
                     path1.push(new AMap.LngLat(this.pathInfo[i-1].longitude, this.pathInfo[i-1].latitude, true));
@@ -402,6 +403,7 @@
                 }
                 // debugger
                 // 绘制轨迹
+                //按照   起点到当前点 飞行路线
                 // let polyline = new AMap.Polyline({
                 //     map: map,
                 //     path: path1,
@@ -411,6 +413,7 @@
                 //     strokeStyle: "solid",  //线样式
                 //     geodesic: true            // 绘制大地线
                 // });
+                //按照   当前点到终点 飞行路线
                 let polyline1 = new AMap.Polyline({
                     map: map,
                     path: path2,
@@ -420,6 +423,7 @@
                     strokeStyle: "dashed",  //线样式
                     geodesic: true            // 绘制大地线
                 });
+                //按照   起点到当前点 飞行路线
                 // map.add(polyline);
                 map.add(polyline1);
                 map.setCenter(this.currPo)
