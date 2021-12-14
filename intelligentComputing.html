@@ -228,7 +228,7 @@
         },
         enquiry() {
             if(!this.pod){
-                this.$message.error('请输入有效的运单号')
+                this.$message.error('请输入目的港')
                 return false;
             }
           window.location.href = `./freightQuery.html?qi=${this.pol}&mu=${this.pod}&piece=${this.piece}&volume=${this.volume}&weight=${this.weight}`;

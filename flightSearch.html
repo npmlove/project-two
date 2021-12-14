@@ -193,7 +193,7 @@
 </div>
 </body>
 <script type="text/javascript"
-        src="https://webapi.amap.com/maps?v=1.4.14&key=07536db46b52555c8782a4e5667fee2d"></script>
+        src="https://webapi.amap.com/maps?v=1.4.14&key=07536db46b52555c8782a4e5667fee2d&&plugin=AMap.Scale,AMap.OverView,AMap.ToolBar,AMap.Geocoder"></script>
 <script src="./service/index.js"></script>
 <script>
     new Vue({
@@ -439,6 +439,11 @@
                     getTileUrl: 'https://17dc.shenghuoq.com/map/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=[x]&y=[y]&z=[z]&s=Galil',
                     zIndex: 9
                 });
+                let toolBar = new AMap.ToolBar({
+                    position:"RB",
+                    offset: new AMap.Pixel(50, 0),
+                });
+                let scale = new AMap.Scale();
                 let Sate = new AMap.TileLayer();
                 var map = new AMap.Map('Map', {
                     zoom: 1,
@@ -447,6 +452,8 @@
                     layers: [googleLayer, Sate],
                     resizeEnable: true, //是否监控地图容器尺寸变化
                 });
+                map.addControl(toolBar);
+                map.addControl(scale);
                 map.on("complete", this.completeEventHandler(map));
 
 
