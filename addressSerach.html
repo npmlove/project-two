@@ -231,12 +231,12 @@
                     offset: new AMap.Pixel(50, 0),
                 });
                 let scale = new AMap.Scale();
-                // let Sate = new AMap.TileLayer.RoadNet();
+                let Sate = new AMap.TileLayer();
                 this.map = new AMap.Map('Map', {
                     zoom: 9,
                     viewMode: '2D',
                     center: [116.412197,39.911092],
-                    layers: [googleLayer]
+                    layers: [googleLayer,Sate]
                 });
                 let marker = new AMap.Marker({
                     position: [116.412197,39.911092],
