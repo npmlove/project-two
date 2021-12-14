@@ -240,6 +240,7 @@
                 }).then((res) => {
                     if (res.data.code == 200) {
                         this.dataInfo = res.data.data;
+                        this.lineArr = [];
                         if (res.data.data.orgAndDesPoints) {
                             res.data.data.orgAndDesPoints.forEach((item) => {
                                 this.lineArr.push([
