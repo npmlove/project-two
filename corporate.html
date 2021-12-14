@@ -244,42 +244,42 @@
       <el-row>
         <el-col :span="20">
           <el-form-item label="发票抬头" prop="invoiceTitle" :label-width="formLabelWidth">
-            <el-input v-model="form.invoiceTitle" autocomplete="off"></el-input>
+            <el-input v-model="form.invoiceTitle" maxLength="30" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="20">
-          <el-form-item label="纳税人识别号" prop="dutyParagraph" :label-width="formLabelWidth" required>
-            <el-input v-model="form.dutyParagraph" autocomplete="off"></el-input>
+          <el-form-item label="纳税人识别号" prop="dutyParagraph" :label-width="formLabelWidth" >
+            <el-input v-model="form.dutyParagraph" maxLength="20"  autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="20">
-          <el-form-item label="公司地址" prop="companyAddress" :label-width="formLabelWidth" required>
-            <el-input v-model="form.companyAddress" autocomplete="off"></el-input>
+          <el-form-item label="公司地址" prop="companyAddress" :label-width="formLabelWidth" >
+            <el-input v-model="form.companyAddress" maxLength="50" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="20">
-          <el-form-item label="公司电话" prop="companyTel" :label-width="formLabelWidth" required>
+          <el-form-item label="公司电话" prop="companyTel" :label-width="formLabelWidth" >
             <el-input v-model.number="form.companyTel" maxlength="11" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="20">
-          <el-form-item label="开户行" prop="accountBank" :label-width="formLabelWidth" required>
-            <el-input v-model="form.accountBank" autocomplete="off"></el-input>
+          <el-form-item label="开户行" prop="accountBank" :label-width="formLabelWidth" >
+            <el-input v-model="form.accountBank" maxLength="30" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="20">
-          <el-form-item label="银行卡号" prop="bankAccount" :label-width="formLabelWidth" required>
-            <el-input v-model.number="form.bankAccount" autocomplete="off"></el-input>
+          <el-form-item label="银行卡号" prop="bankAccount" :label-width="formLabelWidth" >
+            <el-input v-model.number="form.bankAccount" maxLength="19" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -296,28 +296,28 @@
       <el-row>
         <el-col :span="20">
           <el-form-item label="收件人" prop="recipient" :label-width="formLabelWidth">
-            <el-input v-model="expressForm.recipient" autocomplete="off"></el-input>
+            <el-input v-model="expressForm.recipient" maxLength="30" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="20">
-          <el-form-item label="联系电话" prop="recipientTel" :label-width="formLabelWidth" required>
+          <el-form-item label="联系电话" prop="recipientTel" :label-width="formLabelWidth" >
             <el-input v-model.number="expressForm.recipientTel" maxLength="11" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="20">
-          <el-form-item label="邮箱" prop="recipientEmail" :label-width="formLabelWidth" required>
+          <el-form-item label="邮箱" prop="recipientEmail" :label-width="formLabelWidth" >
             <el-input v-model="expressForm.recipientEmail" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="20">
-          <el-form-item label="收件地址" prop="recipientAddress" :label-width="formLabelWidth" required>
+          <el-form-item label="收件地址" prop="recipientAddress" :label-width="formLabelWidth" >
             <el-input v-model="expressForm.recipientAddress" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
@@ -410,40 +410,45 @@
                 expressListData: [],//发票邮寄信息
                 rules: {
                     invoiceTitle: [
-                        {required: true, message: '请输入发票抬头', trigger: 'blur'},
-                        {min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur'}
+                        {required: true, message: '请输入发票抬头', trigger: 'change'},
+                        {min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'change'}
                     ],
                     dutyParagraph: [
-                        {validator: validateDutyParagraph, trigger: 'blur'},
+                        {required: true, message: '请输入正确的纳税人识别号', trigger: 'change'},
+                        {validator: validateDutyParagraph, trigger: 'change'},
                     ],
                     companyAddress: [
-                        {required: true, message: '请输入公司地址', trigger: 'blur'},
-                        {min: 1, max: 50, message: '长度在 1 到 50个字符', trigger: 'blur'}
+                        {required: true, message: '请输入公司地址', trigger: 'change'},
+                        {min: 1, max: 50, message: '长度在 1 到 50个字符', trigger: 'change'}
                     ],
                     companyTel: [
-                        {validator: validateCompanyTel, trigger: 'blur'},
+                        {required: true, message: '请输入正确的电话', trigger: 'change'},
+                        {validator: validateCompanyTel, trigger: 'change'},
 
                     ],
                     accountBank: [
-                        {required: true, message: '请输入开户行', trigger: 'blur'},
-                        {min: 1, max: 30, message: '长度在 1 到 30个字符', trigger: 'blur'}
+                        {required: true, message: '请输入开户行', trigger: 'change'},
+                        {min: 1, max: 30, message: '长度在 1 到 30个字符', trigger: 'change'}
                     ],
                     bankAccount: [
-                        {validator: validateBankAccount, trigger: 'blur'},
+                        {required: true, message: '请输入正确的银行卡号', trigger: 'change'},
+                        {validator: validateBankAccount, trigger: 'change'},
                     ],
                     recipient: [
-                        {required: true, message: '请输入收件人', trigger: 'blur'},
-                        {min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur'}
+                        {required: true, message: '请输入收件人', trigger: 'change'},
+                        {min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'change'}
                     ],
                     recipientAddress: [
-                        {required: true, message: '请输入收件地址', trigger: 'blur'},
-                        {min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur'}
+                        {required: true, message: '请输入收件地址', trigger: 'change'},
+                        {min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'change'}
                     ],
                     recipientTel: [
-                        {validator: validateCompanyTel, trigger: 'blur'},
+                        {required: true, message: '请输入正确的电话', trigger: 'change'},
+                        {validator: validateCompanyTel, trigger: 'change'},
                     ],
                     recipientEmail: [
-                        {validator: validateEmail, trigger: 'blur'},
+                        {required: true, message: '请输入正确的邮箱', trigger: 'change'},
+                        {validator: validateEmail, trigger: 'change'},
                     ],
                 },
                 loading: false,
