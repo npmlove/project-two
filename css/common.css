@@ -3212,3 +3212,18 @@
 .financial-merge .financial-merge-list .financial-merge-btn:nth-of-type(3){
 	margin-right: 0;
 }
+
+
+   input:-webkit-autofill {
+   / / 背景颜色 background-color: transparent !important;
+   / / 背景图片 background-image: none !important;
+   / / 设置input输入框的背景颜色为透明色 -webkit-box-shadow: 0 0 0 px 1000 px transparent inset !important;
+	   transition: background-color 50000s ease-in-out 0s;
+   }
+   .input-item{
+	   position: relative;
+	   display: flex;
+	   align-items: center;
+	   border: 1px solid #E7E8EC;
+   }
+

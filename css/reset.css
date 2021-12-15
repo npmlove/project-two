@@ -346,12 +346,11 @@ textarea::-webkit-input-placeholder {
 
 .input-content .input-item .input-inner {
 	background-color: #FFFFFF;
-	border: 1px solid #E7E8EC;
+	border: none;
 	height: 48px;
 	line-height: 48px;
 	box-sizing: border-box;
-	width: 100%;
-	padding: 0 10px;
+	flex: 1;
 	font-size: 14px;
 }
 
@@ -370,19 +369,23 @@ textarea::-webkit-input-placeholder {
 }
 
 .input-icon1 {
+	width: 30px;
+	height: 30px;
 	background-image: url(../img/login_zh.png);
 	background-repeat: no-repeat;
-	background-position: left 10px center;
+	/*background-position: left 10px center;*/
 	background-size: 30px 30px;
-	padding-left: 50px !important;
+	margin: 0 10px;
 }
 
 .input-icon2 {
+	width: 25px;
+	height: 25px;
 	background-image: url(../img/login_pas.png);
 	background-repeat: no-repeat;
-	background-position: left 13px center;
+	/*background-position: left 13px center;*/
 	background-size: 25px 25px;
-	padding-left: 50px !important;
+	margin: 0 13px 0 14px;
 }
 
 .input-icon3 {
