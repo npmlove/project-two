@@ -225,6 +225,7 @@
 .infoBox > div > span{
     color: #333333 ;
     margin-left: 10px;
+    font-weight: bold;
 }
 .infoBox > .address{
     display: flex;
@@ -237,6 +238,7 @@
     word-wrap:break-word;
     margin-left: 10px;
     color: #333333 ;
+    font-weight: bold;
 }
 .keywords:focus{
     border: 1px solid #2273CB;

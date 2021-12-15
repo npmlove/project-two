@@ -279,6 +279,31 @@
                     this.isLoading = false
                 })
             },
+            line(map,type,start,end){
+                let path1 = [];
+                // start[0]="1.1770019531"
+                // end[0]="-122.375"
+                if(start[0]*1 <0 && (start[0]*1+end[0]*1 > 0) ){
+                    start[0] = start[0]*1 +360
+                }
+                if(end[0]*1 <0 && (start[0]*1+end[0]*1 > 0)){
+                    end[0] = end[0]*1 +360
+                }
+                path1.push(new AMap.LngLat(start[0], start[1], true));
+                path1.push(new AMap.LngLat(end[0], end[1], true));
+                let polyline = new AMap.Polyline({
+                    map: map,
+                    path: path1,
+                    strokeColor: "#FF1414",  //线颜色
+                    strokeOpacity: 1,     //线透明度
+                    strokeWeight: 3,      //线宽
+                    strokeStyle: type,  //线样式
+                    // geodesic: true            // 绘制大地线
+
+                });
+                map.add(polyline);
+                return  false
+            },
             completeEventHandler(map) {
                 // 地图图块加载完毕后执行函数
                 // this.lineArr = [
@@ -319,6 +344,21 @@
                 })
                 let start = this.lineArr[0];
                 let end = this.lineArr[1];
+                let now = new Date();
+                let date = this.dataInfo.lastFlightData.etdDate.slice(0,10).replace("年","/").replace("月","/");
+                let currDate = now.getFullYear()+"/"+(now.getMonth()*1+1)+"/"+now.getDate()
+                //未开始航线
+                if(this.pathInfo.length == 0  && (new Date(date) - new Date(currDate)) == 0){
+                    this.line(map,"dashed",start,end)
+                    return  false
+                }
+                //已完成航线
+                if(this.pathInfo.length == 0  && (new Date(date) - now) < 0){
+                    this.line(map,"solid",start,end)
+                    return  false
+                }
+
+                //正在进行时航线
                 let curr = [this.pathInfo[0].longitude, this.pathInfo[0].latitude];
                 let path1 = [];
                 let path2 = [];
