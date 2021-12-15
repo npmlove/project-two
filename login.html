@@ -99,20 +99,65 @@
 		</script>
 	</head>
 	<body>
-		<div id="app" style="font-size: 0;">
+		<div id="app">
 			<div class="login-bg">
 				<div class="com-width login-total">
 					<div style="margin-top: 100px;">
 						<img alt="图片" src="img/login.svg" style="width: 350px;height: 105px;"/>
 					</div>
 					<div class="login-from">
+<!--						<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="40" width="45">-->
+<!--							<path class="cls-2" d="M200,152.94V200H166.67l-13.73-13.73v-9.8h23.53V152.94Zm-47.06-23.53v47.06h-9.8l-13.73-13.73V129.41ZM200,105.88v23.53H176.47V105.88Zm-70.59,0v23.53H105.88V105.88Zm-35.29,0v21.57L72.55,105.88ZM200,0V94.12H105.88V0ZM94.12,0V94.12H60.78L37.25,70.59H70.59V23.53H23.53V56.86L0,33.33V0Zm82.35,23.53H129.41V70.59h47.06ZM58.82,35.29V58.82H35.29V35.29Zm105.89,0V58.82H141.18V35.29Z"/>-->
+<!--						</svg>-->
 						<img alt="图片" v-if="typeImg" @click="imgClick" src="./img/zhanghao.png" class="login-type"/>
 						<img alt="图片" v-if="!typeImg" @click="imgClick" src="./img/saoma.png" class="login-type"/>
 						<div v-if="typeImg" class="login-title">微信扫码登录/注册</div>
 						<div v-if="!typeImg" class="login-title">账号登录</div>
-						<div v-if="typeImg" class="login-content">
-							<div v-if="shixiao" class="qcode"><img alt="图片" :src="imgQrCode" /></div>
-							<div v-else class="qcode" style="width: 150px;height: 150px;text-align: center;font-size: 0;margin: 0 auto;line-height: 150px;background-color: rgba(153, 153, 153, 0.05);border-radius: 10px;"><img @click="shuaxinClick" alt="图片" src="./img/shuaxin.png" style="width: 42px;height: 42px;cursor: pointer;"/></div>
+						<div v-if="typeImg" class="login-content" style="position: relative">
+							<div  class="qcode" ><img alt="图片" :src="imgQrCode" :style="{opacity:  !shixiao?'0.3':'1'}" /></div>
+							<div  class="qcode"
+										v-if="!shixiao"
+										@click="shuaxinClick"
+									 style="
+									 position: absolute;
+									 left: 50%;
+									 top:0;
+									 transform: translateX(-50%);
+									 width: 150px;
+									 height: 150px;
+									 text-align: center;
+									 font-size: 0;
+									 margin: 0 auto;
+									 background-color: rgba(225, 225, 225, 0.5);
+									 display: flex;
+									 flex-direction: column;
+									 align-items: center;
+									 justify-content: center;
+									">
+								<p style="font-size: 18px;
+									font-weight: 500;
+
+									color: #333333;
+									">二维码已超时</p>
+								<div style="width: 84px;
+										height: 30px;
+										background: #FFFFFF;
+										display: flex;
+										align-items: center;
+										margin-top: 20px;
+									justify-content: center;
+									cursor: pointer;
+										"
+								>
+									<img  alt="图片" src="./img/shuaxin.png"
+											 style="width: 12px;height: 12px;cursor: pointer;"/>
+									<span style="font-size: 12px;
+											font-weight: 500;
+											margin-left: 5px;
+											color: #2273CB;">点击刷新</span>
+								</div>
+
+							</div>
 							<div class="sao">请使用微信扫描二维码</div>
 							<div class="gong">关注“17订舱”公众号</div>
 						</div>

@@ -501,8 +501,8 @@
             }
             this.openId = localStorage.getItem('wxOpenId')
             this.initUserInfo()
-            this.initInvoiceInfoList()
-            this.initExpressInfoList()
+            // this.initInvoiceInfoList()
+            // this.initExpressInfoList()
             this.initList()
 
         },
@@ -698,55 +698,8 @@
                     }
                 })
             },
-            selectionChange(val) {
-                this.billAmountCnyArr = val
-                this.billAmountCnyTotal = 0
-                if (val.length > 0) {
-                    for (var i = 0; i < val.length; i++) {
-                        this.billAmountCnyTotal += val[i].billAmountCny
-                    }
-                }
-            },
-            initInvoiceInfoList() {
-                axios({
-                    method: 'get',
-                    url: webIp + serviceApi.invoiceInfoList,
-                    headers: {
-                        'tokenId': localStorage.getItem('tokenId')
-                    }
-                }).then((data) => {
-                    var data = data.data
-                    if (data.code == 200) {
-                        this.invoiceTitleOpt = data.data
-                        this.invoiceTitle = data.data[0].invoiceTitle
-                        this.invoiceTitleJson = data.data[0]
-                    } else if (data.code == -200) {
-                        window.location.href = './login.html'
-                    } else {
-                        this.$message.error(data.message)
-                    }
-                })
-            },
-            initExpressInfoList() {
-                axios({
-                    method: 'get',
-                    url: webIp + serviceApi.expressInfoList,
-                    headers: {
-                        'tokenId': localStorage.getItem('tokenId')
-                    }
-                }).then((data) => {
-                    var data = data.data
-                    if (data.code == 200) {
-                        this.recipientOpt = data.data
-                        this.recipient = data.data[0].recipient
-                        this.recipientJson = data.data[0]
-                    } else if (data.code == -200) {
-                        window.location.href = './login.html'
-                    } else {
-                        this.$message.error(data.message)
-                    }
-                })
-            },
+
+
             tabClickData(e) {
                 this.typeCode = e.paneName
                 if (this.typeCode == '企业信息') {
@@ -756,33 +709,9 @@
                     this.invoiceInfolist();
                     //获取发票邮寄信息
                     this.expressInfoList();
-                } else if (this.typeCode == '财务核销') {
-                    this.departureDate3 = ''
                 }
             },
-            initInvoiceInfos() {
-                var json = {
-                    startDepartureDate: this.departureDate2 == '' ? '' : this.departureDate2[0],
-                    endDepartureDate: this.departureDate2 == '' ? '' : this.departureDate2[1]
-                }
-                json = toData(json)
-                axios({
-                    method: 'get',
-                    url: webIp + serviceApi.invoiceInfos + '?' + json,
-                    headers: {
-                        'tokenId': localStorage.getItem('tokenId')
-                    }
-                }).then((data) => {
-                    var data = data.data
-                    if (data.code == 200) {
-                        this.tableData2 = data.data
-                    } else if (data.code == -200) {
-                        window.location.href = './login.html'
-                    } else {
-                        this.$message.error(data.message)
-                    }
-                })
-            },
+
 
 
             initList() {
