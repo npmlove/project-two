@@ -223,7 +223,7 @@
                 this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
             }
             this.searchValue = getQueryVariable('serach')
-            this.getData()
+            this.searchValue && this.getData()
         },
         mounted() {
 
