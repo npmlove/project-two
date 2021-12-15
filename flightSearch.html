@@ -162,13 +162,17 @@
         </div>
       </div>
     </template>
-    <div class="modify-result-wrapper com-width" v-else>
+    <div class="modify-result-wrapper com-width" v-else-if="!isLoading" >
       <div style="width: 100%;text-align: center;padding: 20px;">
         <img alt="图片" style="width: 262px;height: 201px;" src="./img/null.png"/>
         <div style="color: #999;font-size: 14px;margin-top: 20px;">暂无数据</div>
       </div>
     </div>
-<!--    <img src="./img/loading1.gif">-->
+    <div class="loading" style="width: 100%;text-align: center" v-show="isLoading">
+      <img src="./img/loading1.gif" style="width: 90px;height: 90px">
+      <p style="color: #181818">正在加载中...</p>
+    </div>
+
   </div>
 
   <!-- 尾部 -->
@@ -195,6 +199,7 @@
 </body>
 <script type="text/javascript"
         src="https://webapi.amap.com/maps?v=1.4.14&key=07536db46b52555c8782a4e5667fee2d&&plugin=AMap.Scale,AMap.OverView,AMap.ToolBar,AMap.Geocoder"></script>
+
 <script src="./service/index.js"></script>
 <script>
     new Vue({
@@ -214,7 +219,8 @@
             dataInfo: null,
             lineArr: [],
             pathInfo: [],
-            currPo: []
+            currPo: [],
+            isLoading:false
         },
         created() {
             if (!localStorage.getItem('wxOpenId')) {
@@ -232,6 +238,7 @@
         methods: {
             getData() {
                 this.map && this.map.remove();
+                this.isLoading = true
                 axios({
                     method: 'post',
                     url: webIp + serviceApi.airLineSearch,
@@ -242,6 +249,10 @@
                     if (res.data.code == 200) {
                         this.dataInfo = res.data.data;
                         this.lineArr = [];
+                        if (!this.dataInfo){
+                            this.$message.error(res.data.message)
+                            return false
+                        }
                         if (res.data.data.orgAndDesPoints) {
                             res.data.data.orgAndDesPoints.forEach((item) => {
                                 this.lineArr.push([
@@ -264,6 +275,8 @@
                             this.initMap()
                         })
                     }
+                }).finally(()=>{
+                    this.isLoading = false
                 })
             },
             completeEventHandler(map) {
@@ -437,7 +450,7 @@
                 // 添加Google图层
                 googleLayer = new AMap.TileLayer({
                     // 图块取图地址
-                    getTileUrl: 'https://17dc.shenghuoq.com/map/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=[x]&y=[y]&z=[z]&s=Galil',
+                    getTileUrl: 'https://17dc.shenghuoq.com/map/{e173754b3b1bbd62a0be9c4afea73fdfa,ce60bcadc66cea58583ddd700f7d80bea,c7d52b85d86a06df50621e669557ea05a,57cf283b871304a296c3bd8acde4cc22a,msjcyawb3bapocysk0be9c4afea73fdsd,dsasd54b3b1scw62a0be9cmxjsa73fdfa,klosib85d8uisolxf50621e669557ea05,klosyc3b87130sdkc6c3bd8acdeklsogh}/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=[x]&y=[y]&z=[z]&s=Galil',
                     zIndex: 9
                 });
                 let toolBar = new AMap.ToolBar({

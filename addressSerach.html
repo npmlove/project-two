@@ -70,9 +70,12 @@
   <div class="Map" id="Map">
     <div class="searchBox">
       <div class="search">
-        <input placeholder="地址、城市、机场、港口、FBA仓库..." maxlength="150" v-model.trim="keywords" @input="changeValue" @keyup.enter="searchAddress(1)" />
+        <input class="keywords" placeholder="地址、城市、机场、港口、FBA仓库..." maxlength="150" v-model.trim="keywords" @input="changeValue" @keyup.enter="searchAddress(1)" />
         <div class="dele" v-show="keywords" @click="keywords='',airportsData=[]">
           <img src="img/close.png">
+        </div>
+        <div class="loading" style="width: 100%;text-align: center;position: absolute;left: 0;top:-10px;" v-if="isLoading">
+          <img src="img/loading1.gif" style="width: 50px;height: 50px;"/>
         </div>
         <div class="btn" @click="searchAddress(1)">
           <img src="img/search.png">
@@ -143,7 +146,8 @@
             infoWindow:null,
             markesData:[],
             act:-1,
-            isSearchList:false
+            isSearchList:false,
+            isLoading:false
 
         },
         created() {
@@ -191,6 +195,7 @@
                     this.$message.error("请输入查询地点")
                     return false
                 }
+                this.isLoading=true;
                 axios({
                     method: 'get',
                     url: webIp + serviceApi.searchAirport+`?placeName=${placeName}`,
@@ -207,6 +212,8 @@
                     if(res.data.code==-1){
                         this.$message.error(res.data.message)
                     }
+                }).finally(()=>{
+                    this.isLoading=false;
                 })
             },
             changeValue(){
@@ -232,7 +239,7 @@
                 // 添加Google图层
                 googleLayer = new AMap.TileLayer({
                     // 图块取图地址
-                    getTileUrl: 'https://17dc.shenghuoq.com/map/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=[x]&y=[y]&z=[z]&s=Galil',
+                    getTileUrl: 'https://17dc.shenghuoq.com/map/{e173754b3b1bbd62a0be9c4afea73fdfa,ce60bcadc66cea58583ddd700f7d80bea,c7d52b85d86a06df50621e669557ea05a,57cf283b871304a296c3bd8acde4cc22a,msjcyawb3bapocysk0be9c4afea73fdsd,dsasd54b3b1scw62a0be9cmxjsa73fdfa,klosib85d8uisolxf50621e669557ea05,klosyc3b87130sdkc6c3bd8acdeklsogh}/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=[x]&y=[y]&z=[z]&s=Galil',
                     zIndex: 9
                 });
                 let toolBar = new AMap.ToolBar({

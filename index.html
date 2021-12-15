@@ -867,7 +867,9 @@
 								let data = res.data;
 								// debugger
 								if (data.code == 200) {
-									window.location.href = './freightQuery.html?qi='+data.data.pol+'&mu='+data.data.pod+'&volume='+data.data.volume;
+									debugger
+									let pol = data.data.pol?data.data.pol:''
+									window.location.href = './freightQuery.html?qi='+pol+'&mu='+data.data.pod+'&volume='+data.data.volume;
 								}
 							});
 						} else {

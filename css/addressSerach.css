@@ -68,7 +68,7 @@
     max-height: 150px;
     overflow-y: auto;
     position: absolute;
-    top: 30px;
+    top: 32px;
     z-index: 99;
     width: 100%;
 }
@@ -237,4 +237,7 @@
     word-wrap:break-word;
     margin-left: 10px;
     color: #333333 ;
+}
+.keywords:focus{
+    border: 1px solid #2273CB;
 }
