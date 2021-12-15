@@ -86,8 +86,11 @@
 					</div>
 				</div>
 			</div>
-
-			<div class="com-width track-details rest-table">
+			<div class="loading" style="width: 100%;text-align: center" v-show="isLoading">
+				<img src="./img/loading1.gif" style="width: 90px;height: 90px">
+				<p style="color: #181818">正在加载中...</p>
+			</div>
+			<div  v-show="!isLoading" class="com-width track-details rest-table">
 				<div style="font-size: 16px;font-weight: 400;color: #999;">货物基本信息</div>
 				<el-table :data="tableData1" border stripe style="width: 100%">
 					<template slot="empty">
@@ -175,6 +178,7 @@
 				</el-tabs> -->
 			</div>
 
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -208,7 +212,8 @@
 				tableData2: [],
 				tableData3: [],
 				userInfo: '',
-				headerMenu: false
+				headerMenu: false,
+				isLoading:true,
 			},
 			created() {
 				// if(!localStorage.getItem('wxOpenId')){
@@ -260,6 +265,7 @@
 					}
 					jsonData.awb = jsonData.awb.replace('-',"")
 					jsonData = toData(jsonData)
+					this.isLoading = true;
 					axios({
 						method: 'get',
 						url: webIp+serviceApi.trackSearchWeekRates+'?'+jsonData,
@@ -277,6 +283,11 @@
 						}else{
 							this.$message.error('查询失败')
 						}
+					}).finally(()=>{
+						setTimeout(()=>{
+							this.isLoading = false;
+						},100)
+
 					})
 				},
 				//立即查询
