@@ -65,14 +65,10 @@
   </div>
   <!-- 查询内容 -->
   <div class="modify-flight" style="margin-top: 0;padding-top: 0;">
-    <div class="diy-top" ref="diyTop" :style="{
-      background:!dateShow?'#ffffff':'',
-      paddingBottom: '20px',
-      borderBottom:!dateShow?'1px solid #eeeeee':'none',
-    }">
-      <div class="modify-search-box" style="background-color: #FFF;padding-bottom: 20px;margin-bottom: 20px;">
+
+      <div class="modify-search-box" ref="topSE" style="background-color: #FFF;padding-bottom: 20px;margin-bottom: 20px;">
         <div class="modify-search-img"></div>
-        <div class="modify-search-form">
+        <div class="modify-search-form" >
           <div class="form-line">
             <div class="group-wrap group-wrap-item borderE7E8EC">
               <div style="display: flex;align-items: center;justify-content: space-between;">
@@ -184,7 +180,7 @@
           </div>
         </div>
       </div>
-      <div v-show="!isShowMore && dateShow" class="modify-flight-date com-width">
+      <div v-show="!isShowMore" style="margin-bottom: 20px" class="modify-flight-date com-width">
         <ul class="modify-date-tabs">
           <li v-for="(item,index) in dateArr" :key="index"
               :class="['modify-date-tab',
@@ -207,7 +203,7 @@
           <li @click="moreClick(true)" class="modify-date-tab modify-more-date">更多日期</li>
         </ul>
       </div>
-      <div v-show="isShowMore && dateShow" ref="dateTwo" class="calendar-lowprice-cla">
+      <div v-show="isShowMore"  style="margin-bottom: 20px"  ref="dateTwo" class="calendar-lowprice-cla">
         <div class="cld-tab-title">
           <div class="cld-tabs-name">日历查看</div>
           <img alt="图片" @click="moreClick(false)" src="./img/close.png"/>
@@ -252,7 +248,7 @@
           </table>
         </div>
       </div>
-      <div :style="{paddingTop: '20px',background: !dateShow?'#FFFFFF':'#F8FBFD'}">
+      <div style="position: sticky;top: 0;z-index: 999" ref="sticky">
         <div class="modify-flight-bar com-width" style="margin-top: 0">
           <div class="flight-bar-box">
             <div class="flight-bar-input">
@@ -267,6 +263,14 @@
                 </el-option>
               </el-select>
             </div>
+            <ul class="group-radio-ul" v-if="!dateShow" style="margin: 0 20px">
+              <li @click="aircraftRadioClick('散货')" :class="{radio_li_active: aircraftRadioName == '散货'}"
+                  class="radio-li com-font-size14">散货
+              </li>
+              <li @click="aircraftRadioClick('托盘')" :class="{radio_li_active: aircraftRadioName == '托盘'}"
+                  class="radio-li com-font-size14">托盘
+              </li>
+            </ul>
             <div class="flight-bar-input" v-if="!dateShow">
               <el-select v-model="dateValue" @change="selectChange(2)" collapse-tags placeholder="请选择日期">
                 <el-option
@@ -298,7 +302,6 @@
         </div>
       </div>
 
-    </div>
 
     <div class="modify-result-wrapper com-width">
       <div v-if="priceArr.length == 0" style="width: 100%;text-align: center;padding: 20px;">
@@ -401,7 +404,7 @@
             <div class="result-wrapper-content flightInof" v-if="item.isShowType==2">
               <div class="listContent" v-for="(ite,index) in item.legDetail" :key="index">
                 <div class="title">
-                  <span>首程航班</span>
+                  <span>{{getIndex(index)}}程航班</span>
                   <span>{{ite.startRouteName}} —— {{ite.endRouteName}}</span>
                 </div>
                 <div class="diyTable">
@@ -569,6 +572,21 @@
 
         },
         methods: {
+            getIndex(index){
+                switch (index){
+                    case 0:return "首";
+                    case 1:return "二";
+                    case 2:return "三";
+                    case 3:return "四";
+                    case 4:return "五";
+                    case 5:return "六";
+                    case 6:return "七";
+                    case 7:return "八";
+                    case 8:return "九";
+                    case 9:return "十";
+                    default: return index*1+1;
+                }
+            },
             changeDate(date){
               switch (date){
                   case 1:return "周一";
@@ -585,18 +603,14 @@
 
                 this.$nextTick(() => {
                     window.addEventListener("scroll", () => {
+                        let num = this.$refs.sticky.offsetTop  -  document.documentElement.scrollTop
+                        console.dir(num)
+                        if(num==0){
+                            this.dateShow = false
+                        }else {
+                            this.dateShow = true
+                        }
 
-                        let num = 72
-                        if (this.isShowMore) {
-                            num = this.$refs.dateTwo.clientHeight + 20
-                        }
-                        // console.log(this.$refs.diyTop.offsetTop,num)
-                        if (this.$refs.diyTop.offsetTop > 150 + num ) {
-                            this.dateShow = false;
-                        }
-                        if (this.$refs.diyTop.offsetTop < 125  && !this.dateShow) {
-                            this.dateShow = true;
-                        }
                     });
                 });
             },
