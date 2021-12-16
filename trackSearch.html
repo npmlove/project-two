@@ -32,6 +32,7 @@
 	</head>
 	<body>
 		<div id="app">
+			<div style="min-height: calc(100vh - 140px)">
 			<!-- 头部 -->
 			<div class="header">
 				<div class="header-img">
@@ -61,7 +62,6 @@
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
-
 			<!-- 运价查询 -->
 			<div class="modify-search-box">
 				<div class="modify-search-img"></div>
@@ -86,7 +86,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="loading" style="width: 100%;text-align: center" v-show="isLoading">
+			<div class="loading" style="width: 100%;text-align: center;margin-top: 20px" v-show="isLoading">
 				<img src="./img/loading1.gif" style="width: 90px;height: 90px">
 				<p style="color: #181818">正在加载中...</p>
 			</div>
@@ -177,8 +177,7 @@
 					</el-tab-pane>
 				</el-tabs> -->
 			</div>
-
-
+			</div>
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
