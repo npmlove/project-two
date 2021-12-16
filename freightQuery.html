@@ -184,8 +184,8 @@
         <ul class="modify-date-tabs">
           <li v-for="(item,index) in dateArr" :key="index"
               :class="['modify-date-tab',
-              dateTabActive == splitDate(item.date)?'modify-date-tab-active':'',
-              weekDatePrice[item.isDow-1] == null?'modify-date-tab-noactive':''
+              (dateTabActive == splitDate(item.date) &&  !item.disabled)?'modify-date-tab-active':'',
+              item.disabled?'modify-date-tab-noactive':''
               ]"
           >
             <div @click="dateItemClick(item.dow,item.date,index,item)">
@@ -196,7 +196,8 @@
               <div v-if="item.dow == 5" class="date">{{splitDate(item.date)}} 周五</div>
               <div v-if="item.dow == 6" class="date">{{splitDate(item.date)}} 周六</div>
               <div v-if="item.dow == 0" class="date">{{splitDate(item.date)}} 周日</div>
-              <div v-if="weekDatePrice[item.isDow-1] == null" class="price">无航班</div>
+              <div v-if="new Date(item.date) - new Date(currentDayWeekDate[14].date) >= 0" class="price">可占仓</div>
+              <div v-else-if="weekDatePrice[item.isDow-1] == null" class="price">无航班</div>
               <div v-else class="price">￥{{weekDatePrice[item.isDow - 1]}}/kg</div>
             </div>
           </li>
@@ -220,10 +221,10 @@
               <th>周日</th>
             </tr>
             <tr v-for="(item,index) in dateMoreArr" :key="index">
-              <td :class="{default_color: childerItem.currentDay,default_active: currentDay == childerItem.date}"
+              <td :class="{default_color: !childerItem.disabled,default_active: dateTabActive == splitDate(childerItem.date)}"
                   v-for="(childerItem,childerIndex) in item" :key="childerIndex">
-                <div v-if="childerItem.currentDay" @click="dateClick(childerItem.date,childerIndex)" >
-                  <div :style="{fontSize: '12px',color:!weekDatePrice[childerIndex]?'#999':'#2273CB'}">{{splitDate(childerItem.date)}}</div>
+                <div v-if="!childerItem.disabled" @click="dateClick(childerItem.date,childerIndex,index,item)" >
+                  <div :style="{fontSize: '12px',color:childerItem.disabled?'#999':'#2273CB'}">{{splitDate(childerItem.date)}}</div>
                   <div v-if="0 == index" :style="{fontSize: '12px',color:!weekDatePrice[childerIndex]?'#999':'#2273CB'}">
                     <span v-if="weekDatePrice[childerIndex]">￥{{weekDatePrice[childerIndex]}}</span>
                     <span v-else>无航班</span>
@@ -234,7 +235,7 @@
                     </div>
                     <div v-else :style="{fontSize: '12px',color:!weekDatePrice[childerIndex]?'#999':'#FF9914'}">无航班</div>
                   </div>
-                  <div v-else-if="childerItem.currentDay" style="font-size: 12px;">可占仓</div>
+                  <div v-else-if="!childerItem.disabled" style="font-size: 12px;">可占仓</div>
                 </div>
                 <div v-else>
                   <div>{{splitDate(childerItem.date)}}</div>
@@ -521,7 +522,7 @@
         mounted() {
             var myDate = new Date()
             this.currWeekDate = myDate.getDay()
-            this.dow = myDate.getDay()
+            // this.dow = myDate.getDay()
             this.pol = getQueryVariable('qi') || '';
             this.pod = getQueryVariable('mu') || '';
             this.piece = getQueryVariable('piece') || '';
@@ -534,10 +535,11 @@
                 this.currentDayWeekDate = this.currentDayWeekDate.sort()
             }
             this.currentDayWeekDate = isDateCurrent1(this.currentDayWeekDate)
-            this.dateArr = this.currentDayWeekDate.slice(0, 7)
+
+            this.dateArr = JSON.parse(JSON.stringify(this.currentDayWeekDate)).slice(0, 7)
             this.currentDay = formatDate(myDate.toLocaleDateString())
             this.bookingDate = this.currentDay
-            this.dateTabActive = this.splitDate(this.currentDay)
+            // this.dateTabActive = this.splitDate(this.currentDay)
 
             var mmWeek = []
             for (var i = 0; i < getMm.length; i++) {
@@ -545,28 +547,15 @@
             }
             var newMmWeek = this.duplicate2(mmWeek)
             newMmWeek = newMmWeek.sort()
-            this.dateMoreArr = []
-            for (var a = 0; a < newMmWeek.length; a++) {
-                var arr = []
-                for (var z = 0; z < newMmWeek[a].length; z++) {
-                    if (this.currentDay == newMmWeek[a][z]) {
-                        this.isIndexDay = a
-                    }
-                    var json = {
-                        date: newMmWeek[a][z],
-                        currentMm: getCurrentMm() == newMmWeek[a][z].split('-')[1] ? true : false,
-                        currentDay: isDateCurrent(newMmWeek[a][z])
-                    }
-                    arr.push(json)
-                }
-                this.dateMoreArr.push(arr)
-            }
-            this.dateMoreArr = this.dateMoreArr.splice(this.isIndexDay, this.isIndexDay + 2)
+
+
+            this.dateMoreArr = [];
             this.weekRatesVOS = newMmWeek[this.isIndexDay];
+
             this.initData()
             this.qiSearchByPage()
             this.muSearchByPage()
-            this.initTwoCode()
+            // this.initTwoCode()
             this.scrollDiy();
 
 
@@ -795,7 +784,7 @@
                     this.pod = item.threeLetterCode
                 }
                 this.initData()
-                this.initTwoCode()
+                // this.initTwoCode()
                 this.twoLetterCode1 = []
             },
             qiSearchByPage() {
@@ -842,40 +831,34 @@
             },
             selectChange(type) {
                 if(type == 2){
-                    this.currentDay = this.dateArr[this.dateValue].date
-                    this.actDay = true;
-                    this.initData(this.dateValue)
+                    this.dow = this.dateValue + 1;
+                    this.dateTabActive = this.splitDate(this.dateArr[this.dateValue].date)
+
+                    this.initData()
                 }else {
                     this.initData()
                 }
 
             },
-            dateClick(date, childerIndex) {
-                if(!this.weekDatePrice[childerIndex]){
+            dateClick(date, childerIndex,index,item) {
+
+                if(item.disabled){
                     return false
                 }
-                for (var z = 0; z < this.currentDayWeekDate.length; z++) {
-                    if (this.currentDayWeekDate[z].date == date) {
-                        if (z < 7) {
-                            this.dateArr = this.currentDayWeekDate.slice(0, 7)
-                        } else if (z > 13) {
-                            this.dateArr = this.currentDayWeekDate.slice(-7)
-                        } else {
-                            this.dateArr = this.currentDayWeekDate.slice(z - 3, z + 4)
-                        }
-                    }
-                }
+                let start = index * 7;
+                this.dateArr = this.currentDayWeekDate.slice(start,index * 7 + 7)
                 this.dateArr.forEach((item,index)=>{
                     if(item.date == date){
                         this.dateValue = index;
                     }
                 })
+
                 this.currentDay = date
                 this.bookingDate = date
                 this.dateTabActive = this.splitDate(date)
                 this.dow = childerIndex + 1
                 this.initData()
-                this.initTwoCode()
+                // this.initTwoCode()
                 this.twoLetterCode1 = []
                 this.isShowMore = false
             },
@@ -925,22 +908,16 @@
                 })
             },
             //获取运价查询
-            initData(len = 0) {
+            initData() {
                 var codeArr = JSON.parse(JSON.stringify(this.twoLetterCode1))
                 if (this.volume && this.weight) {
                     var chargedWeight = Math.ceil(Number(this.volume) * this.weightPrice) > this.weight ? Math.ceil(Number(this.volume) * this.weightPrice) : this.weight
                 } else {
                     var chargedWeight = ''
                 }
-                let dow = '';
-                if (this.actDay) {
-                    dow = this.dateArr[len].dow == 0 ? 7 : this.dateArr[len].dow;
-                } else {
-                    dow = this.dow == 0 ? 7 : this.dow;
-                }
                 var data = {
                     cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
-                    dow: dow,
+                    dow: this.dow,
                     pageNum: this.pageNum,
                     pageSize: this.pageSize,
                     pod: this.pod,
@@ -949,6 +926,7 @@
                     vwr: isNaN(Math.ceil((this.weight) / (this.volume))) ? '' : Math.ceil((this.weight) / (this.volume)),
                     chargedWeight: chargedWeight
                 }
+
                 data = toData(data)
                 axios({
                     method: 'get',
@@ -961,42 +939,71 @@
                             this.weekDatePrice.push(data.data.weekRatesVOS[q].value)
                         }
 
+
                         this.dateArr.forEach((item,index)=>{
+                            item.disabled=false
                             if(this.weekDatePrice[item.isDow - 1] == null){
                                 item.disabled=true
                             }
-                        })
+                            if((new Date(item.date) - new Date())<0){
+                                item.disabled=true
+                            }
+                            if(!item.disabled && this.dateTabActive==''){
+                                this.dateTabActive = this.splitDate(item.date);
+                                this.dow=item.dow;
+                                this.dateValue = index;
+                            }
 
-                        this.priceArr = data.data.freightQueryVOS
-                        if (data.data.freightQueryVOS == null || data.data.freightQueryVOS.length==0) {
-                            this.priceArr = []
-                            if (this.actDay && len < 6) {
-                                len += 1;
-                                this.initData(len);
+                        })
+                        this.currentDayWeekDate.forEach((item,index)=>{
+                           item.disabled=false;
+                            if(this.weekDatePrice[index] == null){
+                                item.disabled=true
                             }
-                            if (this.actDay && len == 6) {
-                                this.actDay = false;
-                                this.bookingDate = this.dateArr[len].date;
-                                this.currentDay = this.dateArr[len].date;
-                                this.dateValue = len;
-                                this.dateTabActive = this.splitDate(this.dateArr[len].date);
-                                this.dow = this.dateArr[len].dow;
-                                this.initTwoCode()
-                                this.twoLetterCode1 = [];
+                            if((new Date(item.date) - new Date())<0){
+                                item.disabled=true
                             }
-                            return
-                        } else {
-                            if (this.actDay) {
-                                this.bookingDate = this.dateArr[len].date;
-                                this.dateTabActive = this.splitDate(this.dateArr[len].date);
-                                this.dateValue = len;
-                                this.currentDay = this.dateArr[len].date;
-                                this.dow = this.dateArr[len].dow;
-                                this.initTwoCode()
-                                this.twoLetterCode1 = [];
+                            if(index >= 14){
+                                item.disabled=false
                             }
-                            this.actDay = false;
-                        }
+                            if(index % 7 == 0){
+                                this.dateMoreArr[parseInt(index/7)]=[];
+                            }
+                            this.dateMoreArr[parseInt(index/7)].push(item);
+                        })
+                        console.log(this.dateTabActive)
+
+                        this.priceArr = data.data.freightQueryVOS?data.data.freightQueryVOS:[];
+                        this.initTwoCode()
+                        // if (data.data.freightQueryVOS == null || data.data.freightQueryVOS.length==0) {
+                        //     this.priceArr = []
+                        //     if (this.actDay && len < 6) {
+                        //         len += 1;
+                        //         this.initData(len);
+                        //     }
+                        //     if (this.actDay && len == 6) {
+                        //         this.actDay = false;
+                        //         this.bookingDate = this.dateArr[len].date;
+                        //         this.currentDay = this.dateArr[len].date;
+                        //         this.dateValue = len;
+                        //         this.dateTabActive = this.splitDate(this.dateArr[len].date);
+                        //         this.dow = this.dateArr[len].dow;
+                        //         this.initTwoCode()
+                        //         this.twoLetterCode1 = [];
+                        //     }
+                        //     return
+                        // } else {
+                        //     if (this.actDay) {
+                        //         this.bookingDate = this.dateArr[len].date;
+                        //         this.dateTabActive = this.splitDate(this.dateArr[len].date);
+                        //         this.dateValue = len;
+                        //         this.currentDay = this.dateArr[len].date;
+                        //         this.dow = this.dateArr[len].dow;
+                        //         this.initTwoCode()
+                        //         this.twoLetterCode1 = [];
+                        //     }
+                        //     this.actDay = false;
+                        // }
 
 
                         for (var i = 0; i < this.priceArr.length; i++) {
@@ -1016,7 +1023,7 @@
                             this.priceArr[i].sort1000Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)), '1000', 'top')
                             this.priceArr[i].sort1000Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)), '1000', 'bottom')
                         }
-                        // debugger
+
                     } else {
                         this.priceArr = []
                     }
@@ -1104,16 +1111,16 @@
 
             },
             dateItemClick(index, date, ind,item) {
-                if(this.weekDatePrice[item.isDow-1] == null){
+                if(item.disabled){
                     return false
                 }
                 this.bookingDate = date
                 this.currentDay = date
                 this.dateTabActive = this.splitDate(date)
-                this.dow = index
+                this.dow = item.isDow
                 this.dateValue = ind;
                 this.initData()
-                this.initTwoCode()
+                // this.initTwoCode()
                 this.twoLetterCode1 = []
             },
             //货物类型单选

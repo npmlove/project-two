@@ -179,14 +179,14 @@ function isDateCurrent1(arr) {
 	var newArr = []
 	for(var a = 0; a < arr.length; a++){
 		var date1 = new Date(arr[a])
-		if(date1.getTime() > date2.getTime()){
+
 			var json = {
 				date: arr[a],
 				dow: date1.getDay(),
 				isDow: date1.getDay() == 0 ? 7 : date1.getDay()
 			}
 			newArr.push(json)
-		}
+
 	}
 	return newArr
 }
@@ -208,18 +208,18 @@ function getWeekDay(data) {
 		return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
 	});
 }
-//获取进三周的数据
+//获取进四周的数据
 function getWeekDay1(data) {
 	var dateString = formatDate(data);//当天的日期，例如2020-2-28
 	var presentDate = new Date(dateString);
 	if(presentDate.getDay() == 0){
-		var today = 21;
-		return Array.from(new Array(21), function (val, index) {
+		var today = 28;
+		return Array.from(new Array(28), function (val, index) {
 			return formatDate(new Date(presentDate.getTime() + (today - index - 1) * 24 * 60 * 60 * 1000));
 		});
 	}else{
-		var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 21;
-		return Array.from(new Array(21), function (val, index) {
+		var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 28;
+		return Array.from(new Array(28), function (val, index) {
 			return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
 		});
 	}
