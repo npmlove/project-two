@@ -938,14 +938,14 @@
                         for (var q = 0; q < data.data.weekRatesVOS.length; q++) {
                             this.weekDatePrice.push(data.data.weekRatesVOS[q].value)
                         }
-
-
+                        let now = new Date();
+                        let currDate = now.getFullYear()+"/"+(now.getMonth()*1+1)+"/"+now.getDate()
                         this.dateArr.forEach((item,index)=>{
                             item.disabled=false
                             if(this.weekDatePrice[item.isDow - 1] == null){
                                 item.disabled=true
                             }
-                            if((new Date(item.date) - new Date())<0){
+                            if((new Date(item.date) - new Date(currDate))<0){
                                 item.disabled=true
                             }
                             if(!item.disabled && this.dateTabActive==''){
@@ -960,7 +960,7 @@
                             if(this.weekDatePrice[index] == null){
                                 item.disabled=true
                             }
-                            if((new Date(item.date) - new Date())<0){
+                            if((new Date(item.date) - new Date(currDate))<0){
                                 item.disabled=true
                             }
                             if(index >= 14){
