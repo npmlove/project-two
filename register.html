@@ -94,7 +94,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -110,7 +110,8 @@
 						<div class="login-title" style="padding-top: 40px;">绑定手机号</div>
 						<div class="login-content input-content" style="margin: 30px 37px 0;">
 							<div class="input-item com-bottom10">
-								<input v-model="tel" maxlength="11" @focus="isError = false" placeholder="请输入手机号码" class="input-inner input-icon1" type="text" />
+								<div class="input-icon1"></div>
+								<input v-model="tel" maxlength="11" @focus="isError = false" placeholder="请输入手机号码" class="input-inner" type="text" />
 							</div>
 							<div class="input-item com-bottom10">
 								<input v-model="registerCode" @focus="isError = false" placeholder="请输入验证码" class="input-inner input-icon3 com-padding-right100" type="text" />
@@ -121,10 +122,12 @@
 								<input v-model="invitationCode" @focus="isError = false" placeholder="请输入邀请码" class="input-inner input-icon3 com-padding-right100" type="text" />
 							</div>
 							<div class="input-item com-bottom10">
-								<input v-model="password" @focus="isError = false" placeholder="请设置密码(6-20位字符)" class="input-inner input-icon2" type="password" />
+								<div class="input-icon2"></div>
+								<input v-model="password" @focus="isError = false" placeholder="请设置密码(6-20位字符)" class="input-inner" type="password" />
 							</div>
 							<div class="input-item">
-								<input v-model="newPassword" @focus="isError = false" placeholder="确认密码" class="input-inner input-icon2" type="password" />
+								<div class="input-icon2"></div>
+								<input v-model="newPassword" @focus="isError = false" placeholder="确认密码" class="input-inner" type="password" />
 							</div>
 							<div class="input-tips" :style="{visibility: !isError ? 'hidden' : 'visible'}">{{errorText}}</div>
 							<div style="text-align: left;">
@@ -176,7 +179,7 @@
 				newPassword: '',
 				registerCode: '',
 				invitationCode: ''
-				
+
 			},
 			mounted() {
 				this.openId = getQueryVariable('openId')
@@ -188,7 +191,7 @@
 				},
 				submitClick() {
 					var reg = /^(1[3456789])\d{9}$/
-					var regpass = /^[0-9A-Za-z]{6,20}$/ 
+					var regpass = /^[0-9A-Za-z]{6,20}$/
 					if(!reg.test(this.tel)){
 						this.isError = true
 						this.errorText = '请输入有效的手机号码'

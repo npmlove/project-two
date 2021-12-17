@@ -352,6 +352,7 @@ textarea::-webkit-input-placeholder {
 	box-sizing: border-box;
 	flex: 1;
 	font-size: 14px;
+	/*padding-left: 39px;*/
 }
 
 .input-yzm {
@@ -373,7 +374,7 @@ textarea::-webkit-input-placeholder {
 	height: 30px;
 	background-image: url(../img/login_zh.png);
 	background-repeat: no-repeat;
-	/*background-position: left 10px center;*/
+	background-position: left 0px center;
 	background-size: 30px 30px;
 	margin: 0 10px;
 }
@@ -383,7 +384,7 @@ textarea::-webkit-input-placeholder {
 	height: 25px;
 	background-image: url(../img/login_pas.png);
 	background-repeat: no-repeat;
-	/*background-position: left 13px center;*/
+	background-position: left 0px center;
 	background-size: 25px 25px;
 	margin: 0 13px 0 14px;
 }
