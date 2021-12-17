@@ -130,6 +130,7 @@
 						<div v-if="typeImg" class="login-title">微信扫码登录/注册</div>
 						<div v-if="!typeImg" class="login-title">账号登录</div>
 						<div v-if="typeImg" class="login-content" style="position: relative">
+<!--							<div  class="qcode" ><img alt="图片" :src="imgQrCode"/></div>-->
 							<div  class="qcode" ><img alt="图片" :src="imgQrCode" :style="{opacity:  !shixiao?'0.3':'1'}" /></div>
 							<div  class="qcode"
 										v-if="!shixiao"
