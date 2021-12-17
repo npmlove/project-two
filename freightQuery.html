@@ -77,7 +77,7 @@
                   <div class="form-item-owrt">
                     <input @input="qiSearchByPage" @focus="showCityList(1,true)" @blur="showCityList(1,false)"
                            v-model="pol" placeholder="输入城市或机场三字码" type="text"/>
-                    <div v-show="qiShowState" style="display: none;" class="open-warp-router">
+                    <div v-show="qiShowState" style="display: none;z-index: 9999" class="open-warp-router">
                       <div v-if="!pol" class="open-warp-router-hot">热门机场</div>
                       <div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index"
                            class="opne-warp-city">
@@ -95,7 +95,7 @@
                   <div class="form-item-owrt">
                     <input @input="muSearchByPage" @focus="showCityList(2,true)" @blur="showCityList(2,false)"
                            v-model="pod" placeholder="输入城市或机场三字码" type="text"/>
-                    <div v-show="muShowState" style="display: none;" class="open-warp-router">
+                    <div v-show="muShowState" style="display: none;z-index: 9999" class="open-warp-router">
                       <div v-if="!pod" class="open-warp-router-hot">热门机场</div>
                       <div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index"
                            class="opne-warp-city">
@@ -310,7 +310,7 @@
         <div style="color: #999;font-size: 14px;margin-top: 20px;">暂无数据</div>
       </div>
       <ul v-if="priceArr.length > 0" class="result-wrapper-ul">
-        <li v-for="(item,index) in priceArr" :key="index" class="result-wrapper-li">
+        <li v-for="(item,index) in priceArr" :key="index" class="result-wrapper-li"  @click="shrink(item,index)">
           <div class="wrapper-li-content">
             <div class="wrapper-li-content-left">
               <div class="wrapper-li-tags" style="justify-content: space-between;">
@@ -376,12 +376,12 @@
           </div>
           <div class="result-wrapper-tabs">
             <ul class="result-wrapper-tabs-ul">
-              <li :class="[item.isShowType==1?'result-wrapper-tabs-active':'']" @click="typeChange(item,index,1)">普货政策
+              <li :class="[item.isShowType==1?'result-wrapper-tabs-active':'']" @click.stop="typeChange(item,index,1)">普货政策
               </li>
-              <li :class="[item.isShowType==2?'result-wrapper-tabs-active':'']" @click="typeChange(item,index,2)">航班信息
+              <li :class="[item.isShowType==2?'result-wrapper-tabs-active':'']" @click.stop="typeChange(item,index,2)">航班信息
               </li>
             </ul>
-            <div class="result-wrapper-shouqi" @click="shrink(item,index)">{{item.isShow ? '收起' : '展开'}}</div>
+            <div class="result-wrapper-shouqi" @click.stop="shrink(item,index)">{{item.isShow ? '收起' : '展开'}}</div>
           </div>
           <template v-if="item.isShow">
             <div class="result-wrapper-content" v-if="item.isShowType==1">
@@ -589,15 +589,24 @@
               }
             },
             scrollDiy() {
-
+               let qi =  this.qiShowState
+               let mu =  this.muShowState
                 this.$nextTick(() => {
                     window.addEventListener("scroll", () => {
                         let num = this.$refs.sticky.offsetTop  -  document.documentElement.scrollTop
                         console.dir(num)
                         if(num==0){
                             this.dateShow = false
+                            this.qiShowState = false
+                            this.muShowState = false
                         }else {
-                            this.dateShow = true
+                            this.dateShow = true;
+                            if(qi){
+                                this.qiShowState = true
+                            }
+                            if(mu){
+                                this.muShowState = true
+                            }
                         }
 
                     });

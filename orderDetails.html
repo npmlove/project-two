@@ -27,6 +27,9 @@
 			.orderOptionsList:last-child{
 				border-bottom: 0;
 			}
+      .diyClass{
+          background: red;
+      }
 		</style>
 		<script>
 			var _hmt = _hmt || [];
@@ -150,7 +153,30 @@
 												</div>
 												<a class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</a>
 											</el-tooltip> -->
-											<a class="yunfei">空运费：￥{{toPriceTotal(item)}}</a>
+											<el-tooltip placement="top"  effect="light"  popper-class="diyClass">
+												<div slot="content">
+                          <div>运费计算</div>
+                          <div class="list">
+                            <span>空运费</span>
+                            <span>21*1200</span>
+                            <span>￥121</span>
+                          </div>
+                          <div>
+                            <span>报关费</span>
+                            <span>￥121</span>
+                          </div>
+                          <div>
+                            <span>制单费</span>
+                            <span>￥121</span>
+                          </div>
+                          <div class="line"></div>
+                          <div>
+                            <span>合计</span>
+                            <span>￥23</span>
+                          </div>
+                        </div>
+											  <a class="yunfei">空运费：￥{{toPriceTotal(item)}}</a>
+											</el-tooltip>
 											<div class="danjia" style="margin-bottom: 15px;">单价：{{item.bookingPrice}}元/kg</div>
 											<button @click="submitBtn('方案',item)" class="box-btn btn-prprimary com-height50" style="font-size: 18px;padding: 0 20px;">选用该方案</button>
 										</div>
