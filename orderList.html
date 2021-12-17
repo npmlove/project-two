@@ -25,7 +25,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -36,12 +36,21 @@
 			<div class="header">
 				<div class="header-img">
 					<a href="./index.html">
-						<!-- <img class="logo" src="./img/logo.png" /> -->
 						<div class="logo"></div>
 					</a>
 					<div class="logo-title"></div>
 				</div>
-				<div @click="loginClick" class="header-user">登录</div>
+				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
+						<div @click="tuiChu" class="header-bak">退出</div>
+					</div>
+				</div>
+				<div v-else @click="loginClick" class="header-user">登录</div>
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
@@ -91,8 +100,8 @@
 										</el-form-item>
 										<el-form-item label="航线">
 											<el-select v-model="pol" placeholder="起运港" :remote-method="polMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 90px;">
-												<el-option 
-													v-for="(item,index) in polOpt" 
+												<el-option
+													v-for="(item,index) in polOpt"
 													:disabled="pod == item.threeLetterCode"
 													:key="item.threeLetterCode" :value="item.threeLetterCode">
 													<span>{{item.threeLetterCode}}</span>
@@ -101,8 +110,8 @@
 											</el-select>
 											<div style="display: inline-block;background-image: url(./img/jiantou.png);margin: 0 5px;width: 16px;height: 30px;vertical-align: top;background-size: 16px 16px;background-repeat: no-repeat;background-position: center;"></div>
 											<el-select v-model="pod" placeholder="目的港" :remote-method="podMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 90px;">
-												<el-option 
-													v-for="(item,index) in podOpt" 
+												<el-option
+													v-for="(item,index) in podOpt"
 													:disabled="pol == item.threeLetterCode"
 													:key="item.threeLetterCode" :value="item.threeLetterCode">
 													<span>{{item.threeLetterCode}}</span>
@@ -114,9 +123,9 @@
 									<div>
 										<el-form-item label="航司">
 											<el-select v-model="airCompanyCode" placeholder="航司代码" :remote-method="companyMethod" :loading="loading" clearable filterable remote reserve-keyword style="width: 140px;">
-												<el-option 
-													v-for="item in airCompanyCodeOpt" 
-													:key="item.airCompanyCode" 
+												<el-option
+													v-for="item in airCompanyCodeOpt"
+													:key="item.airCompanyCode"
 													:value="item.airCompanyCode">
 												  <span>{{item.airCompanyCode}}</span>
 												  <span style="margin-left: 5px;">{{item.name}}</span>
@@ -757,7 +766,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -807,11 +816,16 @@
 				h: '',
 				m: '',
 				s: '',
-				updateTime: ''
+				updateTime: '',
+				userInfo: '',
+				headerMenu: false,
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
 					window.location.href = './login.html'
+				}
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 				}
 				this.openId = localStorage.getItem('wxOpenId')
 				this.initUserInfo()
@@ -822,22 +836,33 @@
 				this.initTwoCode()
 			},
 			mounted() {
-				
+
 			},
 			methods: {
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
+				},
+				showHeaderMenu(type) {
+					if(type == 1){
+						this.headerMenu = true
+					}else {
+						this.headerMenu = false
+					}
+				},
 				//倒计时
 				countTime(index,totalTime) {
 					//获取当前时间
 					var date = new Date();
 					var now = date.getTime();
-				
+
 					//设置截止时间
 					var endDate = new Date(totalTime);
 					var end = endDate.getTime()+24*60*60*1000;
-				
+
 					//时间差
 					var leftTime = end-now;
-				
+
 					//定义变量 d,h,m,s保存倒计时的时间
 					var h , m , s;
 					if (leftTime > 0) {
@@ -856,21 +881,21 @@
 						this.dataArr[index].timeOutA = nn
 					},1000);
 					// return h +'时'+ m +'分'+ s +'秒'
-					
+
 				},
 				//倒计时
 				countTime1(index,totalTime) {
 					//获取当前时间
 					var date = new Date();
 					var now = date.getTime();
-				
+
 					//设置截止时间
 					var endDate = new Date(totalTime);
 					var end = endDate.getTime()+24*60*60*1000;
-				
+
 					//时间差
 					var leftTime = end-now;
-				
+
 					//定义变量 d,h,m,s保存倒计时的时间
 					var h , m , s;
 					if (leftTime > 0) {
@@ -884,7 +909,7 @@
 					m = m > 9 ? m : '0'+m
 					s = s > 9 ? s : '0'+s
 					return h +'时'+ m +'分'+ s +'秒'
-					
+
 				},
 				priceType(json) {
 					if(json){
@@ -937,7 +962,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -984,7 +1009,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},
@@ -1003,7 +1028,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},

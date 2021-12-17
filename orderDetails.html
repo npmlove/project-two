@@ -33,7 +33,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -44,12 +44,21 @@
 			<div class="header">
 				<div class="header-img">
 					<a href="./index.html">
-						<!-- <img class="logo" src="./img/logo.png" /> -->
 						<div class="logo"></div>
 					</a>
 					<div class="logo-title"></div>
 				</div>
-				<div @click="loginClick" class="header-user">登录</div>
+				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
+						<div @click="tuiChu" class="header-bak">退出</div>
+					</div>
+				</div>
+				<div v-else @click="loginClick" class="header-user">登录</div>
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
@@ -328,7 +337,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -369,16 +378,32 @@
 				status: '',
 				orderCargoDetailList: [],
 				orderAttachmentList: [],
-				activityFlowVOList: []
+				activityFlowVOList: [],
+				userInfo: '',
+				headerMenu: false,
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
 					window.location.href = './login.html'
 				}
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				}
 				this.orderId = getQueryVariable('orderId')
 				this.orderSearchDetail()
 			},
 			methods: {
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
+				},
+				showHeaderMenu(type) {
+					if(type == 1){
+						this.headerMenu = true
+					}else {
+						this.headerMenu = false
+					}
+				},
 				submitBtn(type,item) {
 					if(type == '方案'){
 						console.log(item)
@@ -422,7 +447,7 @@
 								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
-								
+
 							}
 						})
 					}else if(type == '取消'){
@@ -452,7 +477,7 @@
 								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
-								
+
 							}
 						})
 					}else if(type == '进仓'){
@@ -485,7 +510,7 @@
 								window.location.href = './login.html'
 							}else{
 								this.$message.error(data.message)
-								
+
 							}
 						})
 					}
@@ -561,7 +586,7 @@
 							window.location.href = './login.html'
 						}else{
 							this.$message.error(data.message)
-							
+
 						}
 					})
 				},

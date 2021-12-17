@@ -25,7 +25,7 @@
 			(function() {
 				var hm = document.createElement("script");
 				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0]; 
+				var s = document.getElementsByTagName("script")[0];
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -36,12 +36,21 @@
 			<div class="header">
 				<div class="header-img">
 					<a href="./index.html">
-						<!-- <img class="logo" src="./img/logo.png" /> -->
 						<div class="logo"></div>
 					</a>
 					<div class="logo-title"></div>
 				</div>
-				<div @click="loginClick" class="header-user">登录</div>
+				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
+						<div @click="tuiChu" class="header-bak">退出</div>
+					</div>
+				</div>
+				<div v-else @click="loginClick" class="header-user">登录</div>
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
@@ -244,7 +253,7 @@
 						</ul>
 					</div>
 				</div>
-				
+
 				<div class="modify-result-wrapper com-width">
 					<div v-if="priceArr.length == 0" style="width: 100%;text-align: center;padding: 20px;">
 						<img alt="图片" style="width: 262px;height: 201px;" src="./img/null.png" />
@@ -331,7 +340,7 @@
 					</ul>
 				</div>
 			</div>
-			
+
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -402,11 +411,16 @@
 				dateArr: [],
 				dateMoreArr: [],
 				isIndexDay: 0,
-				bookingDate: ''
+				bookingDate: '',
+				userInfo: '',
+				headerMenu: false,
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
 					window.location.href = './login.html'
+				}
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 				}
 			},
 			mounted() {
@@ -423,11 +437,11 @@
 				}
 				this.currentDayWeekDate = isDateCurrent1(this.currentDayWeekDate)
 				this.dateArr = this.currentDayWeekDate.slice(0,7)
-				
+
 				this.currentDay = formatDate(myDate.toLocaleDateString())
 				this.bookingDate = this.currentDay
 				this.dateTabActive = this.splitDate(this.currentDay)
-				
+
 				var mmWeek = []
 				for(var i = 0; i < getMm.length; i++){
 					mmWeek.push(getWeekDay(getMm[i]).slice(-7))
@@ -456,6 +470,17 @@
 				this.initTwoCode()
 			},
 			methods: {
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
+				},
+				showHeaderMenu(type) {
+					if(type == 1){
+						this.headerMenu = true
+					}else {
+						this.headerMenu = false
+					}
+				},
 				sortClick(value,type) {
 					for(var i = 0; i < this.priceArr.length; i++){
 						if(value == 'M' && type == 'top'){
@@ -592,7 +617,7 @@
 						return
 					}
 					this.initData()
-					
+
 				},
 				selectChange() {
 					this.initData()
@@ -769,7 +794,7 @@
 						var aircraftRadioName = this.aircraftRadioName == '散货' ? 1 : 2
 						window.location.href = './bookingSpace.html?airlineId='+id+'&cargoType='+aircraftRadioName+'&dow='+dow+'&date='+this.bookingDate
 					}
-					
+
 				},
 				dateItemClick(index,date) {
 					this.bookingDate = date

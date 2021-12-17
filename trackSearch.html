@@ -36,12 +36,21 @@
 			<div class="header">
 				<div class="header-img">
 					<a href="./index.html">
-						<!-- <img class="logo" src="./img/logo.png" /> -->
 						<div class="logo"></div>
 					</a>
 					<div class="logo-title"></div>
 				</div>
-				<div @click="loginClick" class="header-user">登录</div>
+				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
+						<div @click="tuiChu" class="header-bak">退出</div>
+					</div>
+				</div>
+				<div v-else @click="loginClick" class="header-user">登录</div>
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
@@ -196,13 +205,29 @@
 				activeName: 'first',
 				tableData1: [],
 				tableData2: [],
-				tableData3: []
+				tableData3: [],
+				userInfo: '',
+				headerMenu: false,
 			},
 			mounted() {
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				}
 				this.trackSearchInput = getQueryVariable('trackSearchInput')
 				this.initData()
 			},
 			methods: {
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
+				},
+				showHeaderMenu(type) {
+					if(type == 1){
+						this.headerMenu = true
+					}else {
+						this.headerMenu = false
+					}
+				},
 				valueChange(e){
 					this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
 					this.isShowYundan = false
