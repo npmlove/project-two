@@ -354,7 +354,7 @@
                 // var reg = /^((0\d{2,3}-\d{7,8})|(1[3584]\d{9}))$/;
                 var reg = /^[0-9-]{1,20}$/;
                 if (value === '') {
-                    callback(new Error('请输入公司电话'));
+                    callback(new Error('请输入电话'));
                 }
                 console.log(value.toString().search(reg))
                 if (value.toString().search(reg)) {
