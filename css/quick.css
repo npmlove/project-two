@@ -1,3 +1,7 @@
+div{
+    word-wrap: break-word;
+    word-break: normal;
+}
 .quick{
     background: #FFFFFF;
     border: 1px solid #E7E8EC;
@@ -51,13 +55,22 @@
 .rowOne > div  .el-input{
   margin-top: 5px;
 }
+.rowOne > div  .input{
+
+    background: #FFFFFF;
+    opacity: 1;
+    border: 1px solid #000000;
+    margin-top: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+}
 .rowOne > div:last-child{
     margin-right: 0;
 }
 .rowTwo{
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
 
     font-size: 14px;
@@ -71,6 +84,15 @@
 }
 .rowTwo .el-textarea{
     margin-top: 5px;
+}
+
+.rowTwo > div  .input{
+    background: #FFFFFF;
+    opacity: 1;
+    border: 1px solid #000000;
+    margin-top: 5px;
+    padding: 10px;
+    box-sizing: border-box;
 }
 .rowTwo > div:nth-child(2n){
     margin-right: 0;
@@ -128,7 +150,93 @@
 .rowFive > div  .el-input{
     margin-top: 5px;
 }
+.rowFive > div  .input{
+    background: #FFFFFF;
+    opacity: 1;
+    border: 1px solid #000000;
+    margin-top: 5px;
+    padding: 10px;
+    box-sizing: border-box;
 
+}
+.tips{
+    font-size: 14px;
+    font-weight: 500;
+    color: #2273CB;
+    margin: 5px 0 30px 0;
+}
+
+.infoCen{
+    margin-bottom: 15px;
+}
+
+.success{
+    width: 100%;
+    height: 64px;
+    background: #F1F9EC;
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #62C726;
+    margin-bottom: 15px;
+    border: 1px solid rgba(118, 198, 73, 0.5);
+}
+.success > img{
+    margin-right: 10px;
+}
+#pdf{
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    padding: 40px;
+    box-sizing: border-box;
+
+}
+#pdf  div{
+    font-weight: 500 !important;
+}
+#pdf .title{
+    font-weight: bold !important;
+}
+#pdf table{
+    border: 1px #000000 solid;
+}
+.download{
+    width: 184px;
+    height: 52px;
+    background: #2273CB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #FFFFFF;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.download img{
+    margin-right: 10px;
+}
+.colose{
+    position: absolute;
+    right: 15px;
+    top: 100px;
+    cursor: pointer;
+}
+.colose > img{
+    width: 20px;
+    height: 20px;
+}
 .booking-form-item-label{
     padding-left: 0 !important;
 }
+.group-radio-ul .radio-li{
+    color: #000000 !important;
+}
+
+
