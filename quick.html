@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <meta name="applicable-device" content="pc,mobile">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="renderer" content="webkit">
+  <meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+  <meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+  <link rel='icon' href='./img/favicon.ico' type='image/x-icon'/>
+  <title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+  <link rel="stylesheet" href="./css/element-ui-min.css">
+  <link rel="stylesheet" href="./css/reset.css"/>
+  <link rel="stylesheet" href="./css/common.css"/>
+  <link rel="stylesheet" href="./css/corporate.css"/>
+  <link rel="stylesheet" href="./css/quick.css"/>
+  <script src="./js/vue.js"></script>
+  <script src="./js/axios.min.js"></script>
+  <script src="./js/element-ui.js"></script>
+  <script>
+      var _hmt = _hmt || [];
+      (function () {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+      })();
+  </script>
+</head>
+<body>
+<div id="app">
+  <!-- 头部 -->
+  <div class="header">
+    <div class="header-img">
+      <a href="./index.html">
+        <!-- <img class="logo" src="./img/logo.png" /> -->
+        <div class="logo"></div>
+      </a>
+      <div class="logo-title"></div>
+    </div>
+    <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+      <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+      <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+        <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+        <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+        <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+        <div class="header-bak"><a href="./financial.html">财务管理</a></div>
+        <div @click="tuiChu" class="header-bak">退出</div>
+      </div>
+    </div>
+    <div v-else @click="loginClick" class="header-user">登录</div>
+  </div>
+  <div class="header-menu">
+    <ul class="header-menu-list com-width">
+      <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+      <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
+      <!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+      <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+    </ul>
+  </div>
+  <!-- 订单管理 -->
+  <div class="order-list">
+    <div class="com-width order-list-content">
+      <div class="order-list-userInfo">
+        <div class="list-userInfo-menu">
+          <div class="userInfo-touxiang-list">
+            <div class="userInfo-touxiang-img">
+              <img alt="图片" :src="userInfo.headImgUrl"/>
+            </div>
+            <div class="userInfo-huanyin">欢迎您{{userInfo.nickname}}</div>
+            <div class="userInfo-youxiang">设置邮箱</div>
+          </div>
+          <ul class="userInfo-menu-list">
+            <li class="menu-list-active"><a href="./quick.html">一键订舱</a></li>
+            <li><a href="./corporate.html">企业信息</a></li>
+            <li><a href="./orderList.html">订单管理</a></li>
+            <li><a href="./financial.html">财务管理</a></li>
+          </ul>
+        </div>
+        <div class="list-userInfo-customer">
+          <div class="userInfo-customer">
+            <div>您的专属客服:</div>
+            <div>nana</div>
+          </div>
+          <div class="userInfo-customer">
+            <div>欢迎致电:</div>
+            <div>13567862626</div>
+          </div>
+        </div>
+      </div>
+      <div class="order-list-manage">
+        <div class="order-list-manage-title">填写订舱信息</div>
+        <div class="tabs__nav-wrap quick">
+         <div class="goodsInfo">
+           <div class="infoTop">
+             <div class="rowOne">
+               <div>
+                 <span>*</span>始发站/Airport of Departure
+                 <el-input
+                   placeholder="请输入始发站"
+                   v-model="input"
+                   clearable>
+                 </el-input>
+               </div>
+               <div>
+                 <span>*</span>到达站/Airport of Destination
+                 <el-input
+                   placeholder="请输入到达站"
+                   v-model="input"
+                   clearable>
+                 </el-input>
+               </div>
+               <div>
+                 <span>*</span>航司/Flight
+                 <el-input
+                   placeholder="请输入航司"
+                   v-model="input"
+                   clearable>
+                 </el-input>
+               </div>
+               <div>
+                 <span>*</span>航班日期/Flight NO_Date
+                 <el-date-picker
+                   v-model="value1"
+                   type="date"
+                   placeholder="请选择日期">
+                 </el-date-picker>
+               </div>
+             </div>
+             <div class="rowTwo">
+               <div>
+                 发货人名称、地址和电话/Shipper's Name,Address and Telephone
+                 <el-input
+                   type="textarea"
+                   :autosize="{ minRows: 3, maxRows: 4}"
+                   placeholder="请输入发货人名称、地址和电话"
+                   resize="none"
+                   v-model="textarea2">
+                 </el-input>
+               </div>
+               <div>
+                 通知人/Notify Party
+                 <el-input
+                   type="textarea"
+                   :autosize="{ minRows: 3, maxRows: 4}"
+                   placeholder="请输入通知人"
+                   resize="none"
+                   v-model="textarea2">
+                 </el-input>
+               </div>
+               <div>
+                 收货人名称、地址和电话/Consignee's Name,Address and Telephone
+                 <el-input
+                   type="textarea"
+                   :autosize="{ minRows: 3, maxRows: 4}"
+                   placeholder="请输入收货人名称名称、地址和电话"
+                   resize="none"
+                   v-model="textarea2">
+                 </el-input>
+               </div>
+
+             </div>
+             <div class="rowThree">
+               <table border="">
+                 <tr>
+                   <td>
+                     <p>
+                       <span>*</span>件数
+                     </p>
+                     No.of package
+                   </td>
+                   <td>
+                     <p>
+                       <span>*</span>毛重
+                     </p>
+                     G/W
+                   </td>
+                   <td>
+                     <p>
+                       <span>*</span>体积
+                     </p>
+                     Measurement
+                   </td>
+                   <td>
+                     <p>
+                       <span>*</span>货物品名
+                     </p>
+                     Nature of goods
+                   </td>
+                   <td>
+                     <p>
+                       唛头
+                     </p>
+                     Marks
+                   </td>
+                 </tr>
+                 <tr>
+                   <td>
+                     <el-input
+                       placeholder="请输入内容"
+                       v-model="input"
+                       clearable>
+                     </el-input>
+                   </td>
+                   <td>
+                     <el-input
+                       placeholder="请输入内容"
+                       v-model="input"
+                       clearable>
+                     </el-input>
+                   </td>
+                   <td>
+                     <el-input
+                       placeholder="请输入内容"
+                       v-model="input"
+                       clearable>
+                     </el-input>
+                   </td>
+                   <td>
+                     <el-input
+                       placeholder="请输入内容"
+                       v-model="input"
+                       clearable>
+                     </el-input>
+                   </td>
+                   <td>
+                     <el-input
+                       placeholder="请输入内容"
+                       v-model="input"
+                       clearable>
+                     </el-input>
+                   </td>
+                 </tr>
+               </table>
+             </div>
+             <div class="rowFour">
+               <div><span style="color: #FF1414;margin-right: 5px">*</span>包装类型</div>
+               <ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 20px;">
+                 <li @click="packageTypeClick(1)" :class="{radio_li_active: packageType == '1'}" class="radio-li">散货</li>
+                 <li @click="packageTypeClick(2)" :class="{radio_li_active: packageType == '2'}" class="radio-li">托盘</li>
+               </ul>
+             </div>
+             <div class="list booking">
+               <div v-if="packageType == '2'" v-for="(item,index) in trayDetail" :key="index" class="booking-form-line" style="padding-left: 0px">
+                 <div class="booking-form-item">
+                   <label class="booking-form-item-label"><span style="color: #FF1414;margin-right: 5px">*</span>托盘数量</label>
+                   <div class="booking-form-item-content">
+                     <input v-model="item.trayNumber" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3" class="booking-form-input" type="text" />
+                   </div>
+                 </div>
+                 <div class="booking-form-item" style="padding-left: 30px">
+                   <label class="booking-form-item-label"><span style="color: #FF1414;margin-right: 5px">*</span>托盘尺寸</label>
+                   <div class="booking-form-item-content">
+                     <div class="booking-form-tips-left">长</div>
+                     <input v-model="item.traySize" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3" class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;"/>
+                     <div class="booking-form-tips-right">CM</div>
+                   </div>
+                 </div>
+                 <div class="booking-form-item" style="margin-left: 20px;">
+                   <div class="booking-form-item-content">
+                     <div class="booking-form-tips-left">宽</div>
+                     <input v-model="item.trayWidth" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3" class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;" />
+                     <div class="booking-form-tips-right">CM</div>
+                   </div>
+                 </div>
+                 <div class="booking-form-item" style="margin-left: 20px;">
+                   <div class="booking-form-item-content">
+                     <div class="booking-form-tips-left">高</div>
+                     <input v-model="item.trayHeight" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3" class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;" />
+                     <div class="booking-form-tips-right">CM</div>
+                   </div>
+                 </div>
+                 <img v-if="trayDetail.length > 1" @click="trayDeleteClick(index)" style="height: 22px;margin-left: 20px;margin-top: 4px;cursor: pointer;" alt="图片" src="./img/lajixiang.png" />
+               </div>
+               <button v-if="(trayDetail.length != 10) && packageType == '2'" @click="trayAddClick" class="box-btn btn-prprimary com-width100" >添加</button>
+             </div>
+             <div class="rowFive">
+               <div>
+                 <span>*</span>单价/Price
+                 <el-input
+                   placeholder="请输入单价"
+                   v-model="input"
+                   clearable>
+                 </el-input>
+               </div>
+               <div style="width: 200px">
+                 <span>*</span>分泡/Proportion
+                 <el-select v-model="value" clearable placeholder="请选择" >
+                   <el-option
+                     v-for="item in options"
+                     :key="item.value"
+                     :label="item.label"
+                     :value="item.value">
+                   </el-option>
+                 </el-select>
+               </div>
+               <div>
+                 <span>*</span>比重/Proportion
+                 <el-input
+                   placeholder="请输入比重"
+                   v-model="input"
+                   clearable>
+                 </el-input>
+               </div>
+             </div>
+           </div>
+           <div class="infoCen" style="margin-top: 20px">
+             <div class="title">货物类型</div>
+             <ul class="group-radio-ul" style="font-size: 14px;">
+               <li @click="cargoTypeClick(1)" :class="{radio_li_active: cargoType == '1'}" class="radio-li">普货</li>
+               <li @click="cargoTypeClick(2)" :class="{radio_li_active: cargoType == '2'}" class="radio-li">化工品</li>
+               <li @click="cargoTypeClick(3)" :class="{radio_li_active: cargoType == '3'}" class="radio-li">危险品</li>
+               <li @click="cargoTypeClick(4)" :class="{radio_li_active: cargoType == '4'}" class="radio-li">防疫物资</li>
+             </ul>
+           </div>
+           <div class="infobot booking" >
+             <div class="booking-item  bakFFFFFF booking-serve-width" style="padding-left: 0">
+               <div class="title">服务产品</div>
+               <div class="booking-form-line">
+                 <div class="booking-form-item">
+                   <label class="booking-form-item-label" style="width: 84px;">报关服务</label>
+                   <div class="booking-form-item-content">
+                     <ul class="group-radio-ul" style="font-size: 14px;">
+                       <li @click="customsTypeClick(1)" :class="{radio_li_active: customsType == '1'}" class="radio-li">自行报关</li>
+                       <li @click="customsTypeClick(2)" :class="{radio_li_active: customsType == '2'}" class="radio-li">委托“17订舱”报关</li>
+                     </ul>
+                   </div>
+                 </div>
+               </div>
+               <div class="booking-form-line">
+                 <div class="booking-form-item">
+                   <label class="booking-form-item-label" style="width: 84px;">国内提货</label>
+                   <div class="booking-form-item-content">
+                     <ul class="group-radio-ul" style="font-size: 14px;">
+                       <li @click="isPickUpClick(1)" :class="{radio_li_active: isPickUp == '1'}" class="radio-li">不需要</li>
+                       <li @click="isPickUpClick(2)" :class="{radio_li_active: isPickUp == '2'}" class="radio-li">需要</li>
+                     </ul>
+                   </div>
+                 </div>
+               </div>
+               <div v-if="isPickUp == '2'" style="padding-left: 60px">
+                 <div class="booking-form-line">
+                   <div class="booking-form-item">
+                     <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货地址</label>
+                     <div class="booking-form-item-content">
+                       <input v-model="pickUpAddress" maxlength="50" placeholder="请填写提货地址" class="booking-form-input" type="text" style="width: 450px;"/>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="booking-form-line">
+                   <div class="booking-form-item">
+                     <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货联系人</label>
+                     <div class="booking-form-item-content">
+                       <input v-model="pickUpContacts" maxlength="15" placeholder="请填写提货联系人" class="booking-form-input" type="text" style="width: 450px;"/>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="booking-form-line">
+                   <div class="booking-form-item">
+                     <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
+                     <div class="booking-form-item-content">
+                       <input v-model="pickUpTel" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="11" placeholder="请填写联系电话" class="booking-form-input" type="text" style="width: 450px;"/>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+               <div class="booking-form-line">
+                 <div class="booking-form-item">
+                   <label class="booking-form-item-label" style="width: 84px;">清关服务</label>
+                   <div class="booking-form-item-content">
+                     <ul class="group-radio-ul" style="font-size: 14px;">
+                       <li @click="cclTypeClick(1)" :class="{radio_li_active: cclType == '1'}" class="radio-li">自行清关</li>
+                       <li @click="cclTypeClick(2)" :class="{radio_li_active: cclType == '2'}" class="radio-li">DDU</li>
+                       <li @click="cclTypeClick(3)" :class="{radio_li_active: cclType == '3'}" class="radio-li">DDP</li>
+                       <li @click="cclTypeClick(4)" :class="{radio_li_active: cclType == '4'}" class="radio-li">DAP</li>
+                     </ul>
+                   </div>
+                 </div>
+               </div>
+               <div v-if="cclType != '1'" style="padding-left: 60px">
+                 <div class="booking-form-line">
+                   <div class="booking-form-item">
+                     <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>送货地址</label>
+                     <div class="booking-form-item-content">
+                       <input v-model="deliveryAddress" maxlength="200" placeholder="请填写送货地址" class="booking-form-input" type="text" style="width: 450px;"/>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="booking-form-line">
+                   <div class="booking-form-item">
+                     <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>送货联系人</label>
+                     <div class="booking-form-item-content">
+                       <input v-model="deliveryContacts" maxlength="50" placeholder="请填写送货联系人" class="booking-form-input" type="text" style="width: 450px;"/>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="booking-form-line">
+                   <div class="booking-form-item">
+                     <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
+                     <div class="booking-form-item-content">
+                       <input v-model="deliveryTel" maxlength="20" placeholder="请填写联系电话" class="booking-form-input" type="text" style="width: 450px;"/>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 尾部 -->
+  <div class="footer">
+    <div class="com-width">
+      <div class="footer-content">
+        <div class="footer-label">
+          <div class="footer-cool" style="margin-bottom: 10px;">
+            <span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank"
+                                                                               href="./yingyezhizhaoImg.html"
+                                                                               class="yingyezhizhao">营业执照</a></span>
+          </div>
+          <!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
+            <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
+            <span>沪公网备XXXXXXXXXXXXX号</span>
+          </div> -->
+          <div class="footer-ipc">上海傲晔物流科技有限公司 丨 上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
+        </div>
+        <div class="footer-img"><img alt="图片" src="./img/qcode.png"/></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+<script src="./service/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                headerMenu:false,
+                menuIndex:1,
+                cargoType:1,
+                packageType:1,
+                input:'',
+                value1:'',
+                textarea2:'',
+                trayDetail: [
+                    {
+                        trayNumber: '',
+                        traySize: '',
+                        trayWidth: '',
+                        trayHeight: ''
+                    }
+                ],
+                customsType: '1',
+                isPickUp: '1',
+                cclType: '1',
+                pickUpAddress: '',
+                pickUpContacts: '',
+                pickUpTel: '',
+                deliveryAddress: '',
+                deliveryContacts: '',
+                deliveryTel: '',
+                airlineIdA: '',
+                cargoTypeA: '',
+                dowA: '',
+                options: [{
+                    value: '选项1',
+                    label: '不分泡'
+                }, {
+                    value: '选项2',
+                    label: '1/9分泡'
+                }, {
+                    value: '选项3',
+                    label: '2/8分泡'
+                }, {
+                    value: '选项4',
+                    label: '3/7分泡'
+                }, {
+                    value: '选项5',
+                    label: '4/6分泡'
+                }, {
+                    value: '选项6',
+                    label: '5/5分泡'
+                }],
+                value: ''
+            }
+        },
+        created() {
+            if (!localStorage.getItem('wxOpenId')) {
+                window.location.href = './login.html'
+            }
+            if (localStorage.getItem('userInfo')) {
+                this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+            }
+            this.openId = localStorage.getItem('wxOpenId')
+            this.initUserInfo()
+            this.initList()
+
+        },
+        methods: {
+            //报关类型
+            customsTypeClick(val) {
+                this.customsType = val
+            },
+            //是否上门取件
+            isPickUpClick(val) {
+                this.isPickUp = val
+            },
+            //清关类型
+            cclTypeClick(val) {
+                this.cclType = val
+            },
+            //删除散货托盘数量
+            trayDeleteClick(index) {
+                this.trayDetail.splice(index,1)
+            },
+            //添加散货托盘数量
+            trayAddClick() {
+                var json = {
+                    trayNumber: '',
+                    traySize: '',
+                    trayWidth: '',
+                    trayHeight: ''
+                }
+                this.trayDetail.push(json)
+            },
+            cargoTypeClick(act){
+                this.cargoType = act
+            },
+            packageTypeClick(act){
+                this.packageType = act
+            },
+            initList() {
+            },
+            initUserInfo() {
+                axios({
+                    method: 'get',
+                    url: webIp + serviceApi.userUserInfo + '?openId=' + this.openId,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                        this.userInfo = data.data.tportalUser
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
+                    }
+                })
+            },
+
+            showHeaderMenu(type) {
+                if (type == 1) {
+                    this.headerMenu = true
+                } else {
+                    this.headerMenu = false
+                }
+            },
+            tuiChu() {
+                localStorage.clear()
+                window.location.href = './login.html'
+            },
+            //登录
+            loginClick() {
+                window.location.href = './login.html'
+            },
+            // muen
+            menuClick(index) {
+                this.menuIndex = index
+                if (index == 0) {
+                    window.location.href = './index.html'
+                } else if (index == 1) {
+                    window.location.href = './orderList.html'
+                } else if (index == 3) {
+                    window.location.href = './about_us.html'
+                }
+            }
+        }
+    })
+</script>
+</html>

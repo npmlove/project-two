@@ -45,6 +45,23 @@
 				margin-left: 40px;
 				margin-bottom: 10px;
 			}
+			.quick{
+				width: 106px;
+				height: 32px;
+				background: #2273CB;
+				border-radius: 60px 60px 60px 60px;
+				opacity: 1;
+				font-size: 14px;
+				font-weight: bold;
+				text-align: center;
+				line-height: 32px;
+				color: #FFFFFF;
+				cursor: pointer;
+				margin-left: 10px;
+			}
+			.quick > img{
+				margin-left: 5px;
+			}
 		</style>
 	</head>
 	<body>
@@ -68,6 +85,11 @@
 					</div>
 				</div>
 				<div v-else @click="loginClick" class="header-user">登录</div>
+				<div class="quick ">
+					<img src="img/quick.png">
+					<span @click="goQuick">企业认证</span>
+				</div>
+
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
@@ -786,6 +808,9 @@
 				// this.muSearchInput = this.muPageArr[0].threeLetterCode
 			},
 			methods: {
+				goQuick(){
+					window.location.href='./quick.html'
+				},
 				valueChange(){
 					this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
 					this.isShowYundan = false

@@ -7,8 +7,9 @@
 	margin: 0 auto;
 	height: 80px;
 	display: flex;
-	justify-content: space-between;
+	/*justify-content: space-between;*/
 	align-content: center;
+	align-items: center;
 	position: relative;
 }
 
@@ -56,6 +57,7 @@
 	position: relative;
 	align-items: center;
 	display: flex;
+	margin-left: auto;
 }
 .header-userInfo .header-imgUrl{
 	width: 30px;
@@ -65,7 +67,7 @@
 }
 .header-userInfo .header-userInfo-menu{
 	z-index: 9999999;
-	top: 60px;
+	top: 30px;
 	right: 0;
 	position: absolute;
 	width: 180px;

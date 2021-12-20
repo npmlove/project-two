@@ -1,0 +1,134 @@
+.quick{
+    background: #FFFFFF;
+    border: 1px solid #E7E8EC;
+    padding: 40px;
+    box-sizing: border-box;
+}
+.title{
+    position: relative;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 20px;
+    padding-left: 10px;
+}
+.title:before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 18px;
+    background: #1C99F7;
+    border-radius: 0px 0px 0px 0px;
+    opacity: 1;
+
+
+}
+.goodsInfo{
+    width: 100%;
+}
+.rowOne{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+.rowOne > div{
+    flex: 1;
+    width: 25%;
+    margin-right: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000000;
+
+}
+.rowOne > div > span {
+    color: #FF1414;
+    margin-right: 5px;
+}
+.rowOne > div  .el-input{
+  margin-top: 5px;
+}
+.rowOne > div:last-child{
+    margin-right: 0;
+}
+.rowTwo{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 14px;
+    font-weight: bold;
+    color: #000000;
+}
+.rowTwo > div{
+    width: 48%;
+    margin-top: 15px;
+    /*margin-right: 20px;*/
+}
+.rowTwo .el-textarea{
+    margin-top: 5px;
+}
+.rowTwo > div:nth-child(2n){
+    margin-right: 0;
+    width: 50%;
+}
+.rowThree > table{
+    width: 100%;
+    border: 1px #E7E8EC solid;
+    margin: 30px 0;
+}
+.rowThree > table  tr  td{
+    width: 20%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000000;
+    height: 55px;
+}
+.rowThree > table  tr  td .el-input__inner{
+    border: none;
+    height: 55px;
+    line-height: 55px;
+    text-align: center;
+}
+.rowThree > table  tr:nth-child(1)  td p {
+    font-weight: bold;
+
+}
+.rowThree > table  tr:nth-child(1)  td p span{
+    color: #FF1414;
+    margin-right: 5px;
+}
+.rowFour {
+    display: flex;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000000;
+}
+.rowFive{
+    display: flex;
+    align-items: center;
+    /*justify-content: space-between;*/
+
+}
+.rowFive > div{
+    margin-right: 20px;
+    font-size: 14px;
+    color: #000000;
+
+}
+.rowFive > div > span {
+    color: #FF1414;
+    margin-right: 5px;
+}
+.rowFive > div  .el-input{
+    margin-top: 5px;
+}
+
+.booking-form-item-label{
+    padding-left: 0 !important;
+}
