@@ -584,13 +584,14 @@
 				invoiceInfosArr: []
 			},
 			created() {
-				console.log(123)
 				if(!localStorage.getItem('wxOpenId')){
 					window.location.href = './login.html'
 				}
 				if(localStorage.getItem('userInfo')){
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 				}
+
+				console.log(serviceApi)
 				this.openId = localStorage.getItem('wxOpenId')
 				this.initUserInfo()
 				this.initInvoiceInfoList()
@@ -785,14 +786,9 @@
 									tempData[i].invoiceNumbers = tempData[i].invoiceNumbers.split(",").slice(0,-1)
 									tempData[i].tempInvoicePop = tempData[i].invoiceNumbers.pop()
 								}
-								// if( tempData[i].departureDate.indexOf(',') != -1){
-								// 	tempData[i].departureDate = tempData[i].departureDate.split(",").slice(0,-1)
-								// 	tempData[i].tempDeparturePop = tempData[i].tempDeparturePop.pop()
-								// }
 
 							}
 							this.tableData2 = tempData
-							console.log(tempData)
 						}else if(data.code == -200){
 							window.location.href = './login.html'
 						}else{
@@ -800,9 +796,6 @@
 						}
 					})
 				},
-
-
-
 				initList() {
 					var json = {
 						startDepartureDate: this.departureDate1 == '' ? '' : this.departureDate1[0],
@@ -866,7 +859,7 @@
 					}
 					axios({
 							method: 'post',
-							url: webIp+'/back/dcPortal/faw/t-rcv-records/searchByPage',
+							url: webIp+serviceApi.orderBIllList,
 							data: params,
 							headers: {
 								'tokenId': localStorage.getItem('tokenId')
