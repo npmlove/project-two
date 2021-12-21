@@ -81,6 +81,25 @@
 				width: 13px;
 				height: 9px;
 			}
+			.pdfBox{
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				display: flex;
+				justify-content: space-between;
+				flex-wrap: wrap;
+				overflow: auto;
+				width: 200px;
+				height: 100px;
+				border: 1px solid red;
+			}
+			.pdf{
+					width: 48%;
+				height: 100%;
+				border: black 1px solid;
+				margin-bottom: 10px;
+
+			}
 		</style>
 		<script>
 			var _hmt = _hmt || [];
@@ -93,7 +112,7 @@
 		</script>
 	</head>
 	<body>
-		<div id="app" style="font-size: 0;">
+		<div id="app">
 			<div style="min-height: calc(100vh - 140px)">
 				<!-- 头部 -->
 				<div class="header">
@@ -275,6 +294,13 @@
 								</div>
 								<div class="details-table-list">
 									<div class="details-table-title">货物信息</div>
+									<div class="pdfBox">
+										<div class="pdf" v-for="(item,index) in orderAttachmentList">
+											<img src="img/xiasj.png" @click="downLoad(item)">
+											<div  @click="preview(item)">文件名</div>
+										</div>
+									</div>
+
 									<div class="details-table-tab">
 										<div class="details-table-tab-title">订舱信息</div>
 										<div class="details-table-details" style="display: flex;">
@@ -423,6 +449,14 @@
 					<el-button @click="nextStep">下一张账单（{{(billInfosIndex+1)}}/{{billInfos.length}}）</el-button>
 				</div>
 			</el-dialog>
+			<el-dialog
+				title=""
+				:visible.sync="centerDialogVisible"
+				width="80%"
+				top="0vh"
+				center>
+				<embed style="width: 100%;height: 90vh" :src="webIp+filePath"/>
+			</el-dialog>
 
 			<!-- 尾部 -->
 			<div class="footer">
@@ -473,7 +507,10 @@
 				billInfos: [],
 				tbcBillVO: {},
 				dialogFormVisible: false,
-          act:-1
+				act:-1,
+				centerDialogVisible:false,
+				filePath:'',
+				fileName:''
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -486,6 +523,28 @@
 				this.orderSearchDetail()
 			},
 			methods: {
+				downLoad(item){
+
+					axios({
+						method: "get",
+						url: item.xpath,
+						responseType: 'blob',//接受使用分片方式
+					}).then((res) => {
+						let url = window.URL.createObjectURL(res.data)
+						let a = document.createElement('a');//创建a标签
+						a.id="download"
+						a.href = url;//标签路径
+						a.download = item.attachmentName;//下载文件名称
+						a.click();//模拟点击
+					}).catch((err) => {
+						console.log("err",err)
+					});
+				},
+				preview(item){
+					this.centerDialogVisible=true;
+					this.filePath=item.xpath
+					this.fileName=item.attachmentName
+				},
 				importPdf() {
 					var data = {
 						pdfPath: this.billInfos[this.billInfosIndex].pdfPath
