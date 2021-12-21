@@ -473,7 +473,7 @@
             <img src="img/success.png"/>
             恭喜您，订舱成功！
           </div>
-          <div class="colose">
+          <div class="colose" @click="goOrder">
             <img src="./img/close.png">
           </div>
           <div id="pdf">
@@ -992,24 +992,35 @@
                     bookingCbm,
                     cargoName,
                     marks,
+                    shipper,
+                    notifier,
+                    consignee,
+                    packageType,
+                    cargoType
                 } = this
                 axios({
                     method: 'post',
                     url: webIp + serviceApi.fastOrder,
                     data:{
-                        trayDetail:JSON.stringify(this.trayDetail),
-                        ...this.changeData,
-                        ...this.pickUp,
-                        ...this.delivery,
-                        customsType,
-                        isPickUp,
-                        cclType,
-                        bookingPiece,
-                        bookingWeight,
-                        bookingCbm,
-                        cargoName,
-                        marks,
-
+                        order:{
+                            trayDetail:JSON.stringify(this.trayDetail),
+                            ...this.changeData,
+                            ...this.pickUp,
+                            ...this.delivery,
+                            customsType,
+                            isPickUp,
+                            cclType,
+                            bookingPiece,
+                            bookingWeight,
+                            bookingCbm,
+                            cargoName,
+                            marks,
+                            shipper,
+                            notifier,
+                            consignee,
+                            packageType,
+                            cargoType
+                        }
                     },
                     headers: {
                         'tokenId': localStorage.getItem('tokenId')
@@ -1162,6 +1173,9 @@
                 } else if (index == 3) {
                     window.location.href = './about_us.html'
                 }
+            },
+            goOrder(){
+                window.location.href = './orderList.html?type=1'
             }
         }
     })

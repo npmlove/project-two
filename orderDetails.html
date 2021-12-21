@@ -94,318 +94,320 @@
 	</head>
 	<body>
 		<div id="app" style="font-size: 0;">
-			<!-- 头部 -->
-			<div class="header">
-				<div class="header-img">
-					<a href="./index.html">
-						<!-- <img class="logo" src="./img/logo.png" /> -->
-						<div class="logo"></div>
-					</a>
-					<div class="logo-title"></div>
-				</div>
-				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
-					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
-					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
-						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
-						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
-						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
-						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
-						<div @click="tuiChu" class="header-bak">退出</div>
+			<div style="min-height: calc(100vh - 140px)">
+				<!-- 头部 -->
+				<div class="header">
+					<div class="header-img">
+						<a href="./index.html">
+							<!-- <img class="logo" src="./img/logo.png" /> -->
+							<div class="logo"></div>
+						</a>
+						<div class="logo-title"></div>
 					</div>
-				</div>
-				<div v-else @click="loginClick" class="header-user">登录</div>
-			</div>
-			<div class="header-menu">
-				<ul class="header-menu-list com-width">
-					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
-					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
-					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
-					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
-				</ul>
-			</div>
-			<!-- 订单详情 -->
-			<div class="order-details">
-				<div class="com-width order-details-content">
-					<div class="order-details-title">
-						<a href="./orderList.html">订单管理</a>
-						<img alt="图片" src="./img/arrow_details.png" />
-						<div>订单详情</div>
-						<div>订单号：{{detailsArr.orderNo}}</div>
-					</div>
-					<div class="order-details-step">
-						<div v-for="(item,index) in activityFlowVOList" :class="{'order-details-step-active': item.position == 1 ? true : false, 'order-details-step-check': item.position == 2 ? true : false, 'order-details-spte-bak': item.position == 2 && item.state == 1 ? true : false}" :key="index" class="order-details-step-btn">
-							<img v-if="item.position == 1" alt="图片" src="./img/orderDetails_check.png">{{item.desc}}
+					<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+						<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+						<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+							<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+							<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+							<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+							<div class="header-bak"><a href="./financial.html">财务管理</a></div>
+							<div @click="tuiChu" class="header-bak">退出</div>
 						</div>
 					</div>
-					<div class="order-details-table">
-						<div class="order-details-list">
-							<div v-if="detailsArr.status == '5'" class="details-table-list" style="margin-top: 0;">
-								<div class="table-list-title-arr-title">非常抱歉，您预定的仓位暂无，已为您推荐了其他方案，请尽快确认</div>
-								<div class="color9995" style="color: #999999;font-size: 14px;padding: 20px 20px 0 20px;">订舱信息</div>
-								<div class="list-route-icon">
-									<img v-if="detailsArr.logoPath" style="opacity: 0.5;" alt="tupian" :src="detailsArr.logoPath" />
-									<div class="list-route-icon-title color9995">{{detailsArr.airCompanyName}}<span style="marginLeft:5px;">{{detailsArr.airCompanyCode}}</div>
-									<div v-if="detailsArr.dow == '1'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周一</div>
-									<div v-if="detailsArr.dow == '2'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周二</div>
-									<div v-if="detailsArr.dow == '3'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周三</div>
-									<div v-if="detailsArr.dow == '4'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周四</div>
-									<div v-if="detailsArr.dow == '5'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周五</div>
-									<div v-if="detailsArr.dow == '6'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周六</div>
-									<div v-if="detailsArr.dow == '7'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周日</div>
-								</div>
-								<div class="list-arr-route border-btm-da">
-									<div class="list-arr-route-yitong">
-										<div class="list-arr-route-neirong">
-											<div class="color9995">{{detailsArr.pol}}</div>
-											<div class="color9995">{{detailsArr.polName}}</div>
+					<div v-else @click="loginClick" class="header-user">登录</div>
+				</div>
+				<div class="header-menu">
+					<ul class="header-menu-list com-width">
+						<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+						<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
+						<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+						<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+					</ul>
+				</div>
+				<!-- 订单详情 -->
+				<div class="order-details">
+					<div class="com-width order-details-content">
+						<div class="order-details-title">
+							<a href="./orderList.html">订单管理</a>
+							<img alt="图片" src="./img/arrow_details.png" />
+							<div>订单详情</div>
+							<div>订单号：{{detailsArr.orderNo}}</div>
+						</div>
+						<div class="order-details-step">
+							<div v-for="(item,index) in activityFlowVOList" :class="{'order-details-step-active': item.position == 1 ? true : false, 'order-details-step-check': item.position == 2 ? true : false, 'order-details-spte-bak': item.position == 2 && item.state == 1 ? true : false}" :key="index" class="order-details-step-btn">
+								<img v-if="item.position == 1" alt="图片" src="./img/orderDetails_check.png">{{item.desc}}
+							</div>
+						</div>
+						<div class="order-details-table">
+							<div class="order-details-list">
+								<div v-if="detailsArr.status == '5'" class="details-table-list" style="margin-top: 0;">
+									<div class="table-list-title-arr-title">非常抱歉，您预定的仓位暂无，已为您推荐了其他方案，请尽快确认</div>
+									<div class="color9995" style="color: #999999;font-size: 14px;padding: 20px 20px 0 20px;">订舱信息</div>
+									<div class="list-route-icon">
+										<img v-if="detailsArr.logoPath" style="opacity: 0.5;" alt="tupian" :src="detailsArr.logoPath" />
+										<div class="list-route-icon-title color9995">{{detailsArr.airCompanyName}}<span style="marginLeft:5px;">{{detailsArr.airCompanyCode}}</div>
+										<div v-if="detailsArr.dow == '1'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周一</div>
+										<div v-if="detailsArr.dow == '2'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周二</div>
+										<div v-if="detailsArr.dow == '3'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周三</div>
+										<div v-if="detailsArr.dow == '4'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周四</div>
+										<div v-if="detailsArr.dow == '5'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周五</div>
+										<div v-if="detailsArr.dow == '6'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周六</div>
+										<div v-if="detailsArr.dow == '7'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周日</div>
+									</div>
+									<div class="list-arr-route border-btm-da">
+										<div class="list-arr-route-yitong">
+											<div class="list-arr-route-neirong">
+												<div class="color9995">{{detailsArr.pol}}</div>
+												<div class="color9995">{{detailsArr.polName}}</div>
+											</div>
+											<div class="list-arr-route-neirong">
+												<div class="color9995">{{detailsArr.pod}}</div>
+												<div class="color9995">{{detailsArr.podName}}</div>
+											</div>
 										</div>
-										<div class="list-arr-route-neirong">
-											<div class="color9995">{{detailsArr.pod}}</div>
-											<div class="color9995">{{detailsArr.podName}}</div>
+										<div class="list-arr-route-jiaqian color9995">单价：{{detailsArr.bookingPrice}}元/kg</div>
+									</div>
+									<div class="tuijianhangxian">推荐航线</div>
+									<div class="orderOptionsList" v-for="(item,index) in orderOptionsList" :key="index">
+										<div class="list-route-icon">
+											<img v-if="item.logoPath" alt="tupian" :src="item.logoPath" />
+											<div class="list-route-icon-title">{{item.airCompanyName}}<span style="marginLeft:5px;">{{item.airCompanyCode}}</span></div>
+											<div v-if="item.dow == '1'" class="list-route-icon-date color227">{{item.departureDate}}  周一</div>
+											<div v-if="item.dow == '2'" class="list-route-icon-date color227">{{item.departureDate}}  周二</div>
+											<div v-if="item.dow == '3'" class="list-route-icon-date color227">{{item.departureDate}}  周三</div>
+											<div v-if="item.dow == '4'" class="list-route-icon-date color227">{{item.departureDate}}  周四</div>
+											<div v-if="item.dow == '5'" class="list-route-icon-date color227">{{item.departureDate}}  周五</div>
+											<div v-if="item.dow == '6'" class="list-route-icon-date color227">{{item.departureDate}}  周六</div>
+											<div v-if="item.dow == '7'" class="list-route-icon-date color227">{{item.departureDate}}  周日</div>
+										</div>
+										<div class="list-arr-route" style="position: relative;">
+											<div class="list-arr-route-yitong">
+												<div class="list-arr-route-neirong">
+													<div>{{item.pol}}</div>
+													<div>{{item.polName}}</div>
+												</div>
+												<div class="list-arr-route-neirong">
+													<div>{{item.pod}}</div>
+													<div>{{item.podName}}</div>
+												</div>
+											</div>
+											<div v-if="item.fullLeg.split(',').length > 2" style="position: absolute;top: 0;left: 142px;">
+												<el-tooltip class="item" effect="dark" :content="item.fullLeg" placement="top-start">
+													<a>{{item.firstHub}}</a>
+												</el-tooltip>
+											</div>
+											<div class="list-tuijian-feiyong" style="margin-top: -55px;text-align: right;">
+												<!-- <el-tooltip placement="bottom">
+													<div slot="content">
+														<div>333</div>
+														<div>333</div>
+														<div>333</div>
+													</div>
+													<a class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</a>
+												</el-tooltip> -->
+												<a class="yunfei" @mouseenter="act=index" @mouseleave="act=-1">空运费：￥{{toPriceTotal(item)}}
+													<div class="mark" v-show="act==index" @mouseenter="act=index" @mouseleave="act=-1">
+														<div class="title">运费计算</div>
+														<div class="list">
+															<span>空运费:</span>
+															<span style="margin-left: auto;">21*1200</span>
+															<span>￥121</span>
+														</div>
+														<div class="list">
+															<span>报关费:</span>
+															<span>￥121</span>
+														</div>
+														<div class="list">
+															<span>制单费:</span>
+															<span>￥121</span>
+														</div>
+														<div class="line"></div>
+														<div class="list">
+															<span>合计:</span>
+															<span style="font-weight: bold;color: #FF9914;">￥23</span>
+														</div>
+													</div>
+												</a>
+												<div class="danjia" style="margin-bottom: 15px;">单价：{{item.bookingPrice}}元/kg</div>
+												<button @click="submitBtn('方案',item)" class="box-btn btn-prprimary com-height50" style="font-size: 18px;padding: 0 20px;">选用该方案</button>
+											</div>
 										</div>
 									</div>
-									<div class="list-arr-route-jiaqian color9995">单价：{{detailsArr.bookingPrice}}元/kg</div>
 								</div>
-								<div class="tuijianhangxian">推荐航线</div>
-								<div class="orderOptionsList" v-for="(item,index) in orderOptionsList" :key="index">
+								<div  v-if="detailsArr.status != '5'" class="details-table-list" style="margin-top: 0;">
+									<div class="table-list-title-arr">
+										<div class="list-title-arr-left">
+											<div>{{detailsArr.polName}}({{detailsArr.pol}})</div>
+											<div style="margin: 0 20px;"><img alt="图片" style="width: 16px;height: 16px;" src="./img/icon2.png" /></div>
+											<div>{{detailsArr.podName}}({{detailsArr.pod}})</div>
+										</div>
+										<div v-if="detailsArr.waybillNo" class="list-title-arr-right">运单号：{{detailsArr.waybillNo}}</div>
+									</div>
 									<div class="list-route-icon">
-										<img v-if="item.logoPath" alt="tupian" :src="item.logoPath" />
-										<div class="list-route-icon-title">{{item.airCompanyName}}<span style="marginLeft:5px;">{{item.airCompanyCode}}</span></div>
-										<div v-if="item.dow == '1'" class="list-route-icon-date color227">{{item.departureDate}}  周一</div>
-										<div v-if="item.dow == '2'" class="list-route-icon-date color227">{{item.departureDate}}  周二</div>
-										<div v-if="item.dow == '3'" class="list-route-icon-date color227">{{item.departureDate}}  周三</div>
-										<div v-if="item.dow == '4'" class="list-route-icon-date color227">{{item.departureDate}}  周四</div>
-										<div v-if="item.dow == '5'" class="list-route-icon-date color227">{{item.departureDate}}  周五</div>
-										<div v-if="item.dow == '6'" class="list-route-icon-date color227">{{item.departureDate}}  周六</div>
-										<div v-if="item.dow == '7'" class="list-route-icon-date color227">{{item.departureDate}}  周日</div>
+										<img v-if="detailsArr.logoPath" alt="tupian" :src="detailsArr.logoPath" />
+										<div class="list-route-icon-title">{{detailsArr.airCompanyName}}<span style="marginLeft:5px;">{{detailsArr.airCompanyCode}}</div>
+										<div v-if="detailsArr.dow == '1'" class="list-route-icon-date">{{detailsArr.departureDate}}  周一</div>
+										<div v-if="detailsArr.dow == '2'" class="list-route-icon-date">{{detailsArr.departureDate}}  周二</div>
+										<div v-if="detailsArr.dow == '3'" class="list-route-icon-date">{{detailsArr.departureDate}}  周三</div>
+										<div v-if="detailsArr.dow == '4'" class="list-route-icon-date">{{detailsArr.departureDate}}  周四</div>
+										<div v-if="detailsArr.dow == '5'" class="list-route-icon-date">{{detailsArr.departureDate}}  周五</div>
+										<div v-if="detailsArr.dow == '6'" class="list-route-icon-date">{{detailsArr.departureDate}}  周六</div>
+										<div v-if="detailsArr.dow == '7'" class="list-route-icon-date">{{detailsArr.departureDate}}  周日</div>
 									</div>
 									<div class="list-arr-route" style="position: relative;">
 										<div class="list-arr-route-yitong">
 											<div class="list-arr-route-neirong">
-												<div>{{item.pol}}</div>
-												<div>{{item.polName}}</div>
+												<div>{{detailsArr.pol}}</div>
+												<div>{{detailsArr.polName}}</div>
 											</div>
 											<div class="list-arr-route-neirong">
-												<div>{{item.pod}}</div>
-												<div>{{item.podName}}</div>
+												<div>{{detailsArr.pod}}</div>
+												<div>{{detailsArr.podName}}</div>
 											</div>
 										</div>
-										<div v-if="item.fullLeg.split(',').length > 2" style="position: absolute;top: 0;left: 142px;">
-											<el-tooltip class="item" effect="dark" :content="item.fullLeg" placement="top-start">
-												<a>{{item.firstHub}}</a>
+										<div v-if="detailsArr.legCount > 1" style="position: absolute;top: 0;left: 142px;">
+											<el-tooltip class="item" effect="dark" :content="detailsArr.fullLeg" placement="top-start">
+												<a>{{detailsArr.firstHub}}</a>
 											</el-tooltip>
 										</div>
-										<div class="list-tuijian-feiyong" style="margin-top: -55px;text-align: right;">
-											<!-- <el-tooltip placement="bottom">
-												<div slot="content">
-													<div>333</div>
-													<div>333</div>
-													<div>333</div>
+										<div class="list-arr-route-jiaqian">单价：{{detailsArr.bookingPrice}}元/kg</div>
+									</div>
+								</div>
+								<div class="details-table-list">
+									<div class="details-table-title">货物信息</div>
+									<div class="details-table-tab">
+										<div class="details-table-tab-title">订舱信息</div>
+										<div class="details-table-details" style="display: flex;">
+											<div class="details-table-tabs"><span>品名：</span>{{detailsArr.cargoName}}</div>
+											<div v-if="detailsArr.cargoType == '1'" class="details-table-tabs"><span>类型：</span>普货</div>
+											<div v-if="detailsArr.cargoType == '2'" class="details-table-tabs"><span>类型：</span>化工品</div>
+											<div v-if="detailsArr.cargoType == '3'" class="details-table-tabs"><span>类型：</span>危险品</div>
+											<div v-if="detailsArr.cargoType == '4'" class="details-table-tabs"><span>类型：</span>防疫物资</div>
+											<div class="details-table-tabs"><span>件数：</span>{{detailsArr.bookingPiece}}PCS</div>
+											<div class="details-table-tabs"><span>体积：</span>{{detailsArr.bookingCbm}}CBM</div>
+										</div>
+										<div class="details-table-details" style="display: flex;">
+											<div class="details-table-tabs"><span>重量：</span>{{detailsArr.bookingWeight}}KG</div>
+											<div class="details-table-tabs"><span>比重：</span>1:{{detailsArr.bookingVwr}}</div>
+											<div class="details-table-tabs"><span>计费重：</span>{{detailsArr.bookingCw}}KG</div>
+										</div>
+									</div>
+									<div v-if="detailsArr.inboundPiece" class="details-table-tab">
+										<div class="details-table-tab-title">进仓数据</div>
+										<div class="details-table-details" style="display: flex;">
+											<div class="details-table-tabs"><span style="flex: 0 0 42px;">件数：</span>{{detailsArr.inboundPiece}}PCS</div>
+											<div class="details-table-tabs"><span style="flex: 0 0 42px;">体积：</span>{{detailsArr.inboundCbm}}CBM</div>
+											<div class="details-table-tabs"><span style="flex: 0 0 42px;">重量：</span>{{detailsArr.inboundWeight}}KGS</div>
+										</div>
+										<div class="details-table-details" style="display: flex;">
+											<div class="details-table-tabs"><span style="flex: 0 0 42px;">比重：</span>1:{{detailsArr.inboundVwr}}</div>
+											<div class="details-table-tabs"><span style="flex: 0 0 70px;">计费重：</span>{{detailsArr.inboundCw}}KGS</div>
+											<div v-if="detailsArr.bubblePoint == '10'" class="details-table-tabs"><span>分泡比例：</span>不分泡</div>
+											<div v-if="detailsArr.bubblePoint == '1'" class="details-table-tabs"><span>分泡比例：</span>1/9</div>
+											<div v-if="detailsArr.bubblePoint == '2'" class="details-table-tabs"><span>分泡比例：</span>2/8</div>
+											<div v-if="detailsArr.bubblePoint == '3'" class="details-table-tabs"><span>分泡比例：</span>3/7</div>
+											<div v-if="detailsArr.bubblePoint == '4'" class="details-table-tabs"><span>分泡比例：</span>4/6</div>
+											<div v-if="detailsArr.bubblePoint == '5'" class="details-table-tabs"><span>分泡比例：</span>5/5</div>
+											<div v-if="detailsArr.bubblePoint == '6'" class="details-table-tabs"><span>分泡比例：</span>6/4</div>
+											<div v-if="detailsArr.bubblePoint == '7'" class="details-table-tabs"><span>分泡比例：</span>7/3</div>
+											<div v-if="detailsArr.bubblePoint == '8'" class="details-table-tabs"><span>分泡比例：</span>8/2</div>
+											<div v-if="detailsArr.bubblePoint == '9'" class="details-table-tabs"><span>分泡比例：</span>9/1</div>
+										</div>
+										<div v-if="orderCargoDetailList.length > 0" class="booking" style="margin-top: 20px;">
+											<ul class="booking-proportion-ul" style="font-size: 14px;">
+												<li class="booking-proportion-item">
+													<div>件数PCS</div>
+													<div>体积CBM</div>
+													<div>重量KGS</div>
+													<div>货物尺寸CM</div>
+													<div>包装方式</div>
+													<div>外箱情况</div>
+												</li>
+												<li v-for="(item,index) in orderCargoDetailList" class="booking-proportion-item">
+													<div>{{item.piece}}</div>
+													<div>{{item.cbm}}</div>
+													<div>{{item.weight}}</div>
+													<div>{{item.cargoSize}}</div>
+													<div v-if="item.packing == '1'">纸箱</div>
+													<div v-if="item.packing == '2'">夹板箱</div>
+													<div v-if="item.packing == '3'">托盘</div>
+													<div v-if="item.outerBox == '1'">正常</div>
+													<div v-if="item.outerBox == '2'">异常</div>
+												</li>
+											</ul>
+										</div>
+										<div v-if="orderAttachmentList.length > 0" class="details-table-details" style="display: flex;">
+											<div class="details-table-tabs">
+												<span style="flex: 0 0 80px;">进仓图片：</span>
+												<div style="width: 660px;display: flex;flex-wrap: wrap;">
+													<div v-for="(item,index) in orderAttachmentList" :key="index" style="margin-right: 10px;margin-bottom: 10px;font-size: 0;position: relative;">
+														<img :src="item.xpath" style="width: 150px;height: 150px;" />
+													</div>
 												</div>
-												<a class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</a>
-											</el-tooltip> -->
-                      <a class="yunfei" @mouseenter="act=index" @mouseleave="act=-1">空运费：￥{{toPriceTotal(item)}}
-                        <div class="mark" v-show="act==index" @mouseenter="act=index" @mouseleave="act=-1">
-                          <div class="title">运费计算</div>
-                          <div class="list">
-                            <span>空运费:</span>
-                            <span style="margin-left: auto;">21*1200</span>
-                            <span>￥121</span>
-                          </div>
-                          <div class="list">
-                            <span>报关费:</span>
-                            <span>￥121</span>
-                          </div>
-                          <div class="list">
-                            <span>制单费:</span>
-                            <span>￥121</span>
-                          </div>
-                          <div class="line"></div>
-                          <div class="list">
-                            <span>合计:</span>
-                            <span style="font-weight: bold;color: #FF9914;">￥23</span>
-                          </div>
-                        </div>
-                      </a>
-											<div class="danjia" style="margin-bottom: 15px;">单价：{{item.bookingPrice}}元/kg</div>
-											<button @click="submitBtn('方案',item)" class="box-btn btn-prprimary com-height50" style="font-size: 18px;padding: 0 20px;">选用该方案</button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div  v-if="detailsArr.status != '5'" class="details-table-list" style="margin-top: 0;">
-								<div class="table-list-title-arr">
-									<div class="list-title-arr-left">
-										<div>{{detailsArr.polName}}({{detailsArr.pol}})</div>
-										<div style="margin: 0 20px;"><img alt="图片" style="width: 16px;height: 16px;" src="./img/icon2.png" /></div>
-										<div>{{detailsArr.podName}}({{detailsArr.pod}})</div>
-									</div>
-									<div v-if="detailsArr.waybillNo" class="list-title-arr-right">运单号：{{detailsArr.waybillNo}}</div>
-								</div>
-								<div class="list-route-icon">
-									<img v-if="detailsArr.logoPath" alt="tupian" :src="detailsArr.logoPath" />
-									<div class="list-route-icon-title">{{detailsArr.airCompanyName}}<span style="marginLeft:5px;">{{detailsArr.airCompanyCode}}</div>
-									<div v-if="detailsArr.dow == '1'" class="list-route-icon-date">{{detailsArr.departureDate}}  周一</div>
-									<div v-if="detailsArr.dow == '2'" class="list-route-icon-date">{{detailsArr.departureDate}}  周二</div>
-									<div v-if="detailsArr.dow == '3'" class="list-route-icon-date">{{detailsArr.departureDate}}  周三</div>
-									<div v-if="detailsArr.dow == '4'" class="list-route-icon-date">{{detailsArr.departureDate}}  周四</div>
-									<div v-if="detailsArr.dow == '5'" class="list-route-icon-date">{{detailsArr.departureDate}}  周五</div>
-									<div v-if="detailsArr.dow == '6'" class="list-route-icon-date">{{detailsArr.departureDate}}  周六</div>
-									<div v-if="detailsArr.dow == '7'" class="list-route-icon-date">{{detailsArr.departureDate}}  周日</div>
-								</div>
-								<div class="list-arr-route" style="position: relative;">
-									<div class="list-arr-route-yitong">
-										<div class="list-arr-route-neirong">
-											<div>{{detailsArr.pol}}</div>
-											<div>{{detailsArr.polName}}</div>
-										</div>
-										<div class="list-arr-route-neirong">
-											<div>{{detailsArr.pod}}</div>
-											<div>{{detailsArr.podName}}</div>
-										</div>
-									</div>
-									<div v-if="detailsArr.legCount > 1" style="position: absolute;top: 0;left: 142px;">
-										<el-tooltip class="item" effect="dark" :content="detailsArr.fullLeg" placement="top-start">
-											<a>{{detailsArr.firstHub}}</a>
-										</el-tooltip>
-									</div>
-									<div class="list-arr-route-jiaqian">单价：{{detailsArr.bookingPrice}}元/kg</div>
-								</div>
-							</div>
-							<div class="details-table-list">
-								<div class="details-table-title">货物信息</div>
-								<div class="details-table-tab">
-									<div class="details-table-tab-title">订舱信息</div>
-									<div class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs"><span>品名：</span>{{detailsArr.cargoName}}</div>
-										<div v-if="detailsArr.cargoType == '1'" class="details-table-tabs"><span>类型：</span>普货</div>
-										<div v-if="detailsArr.cargoType == '2'" class="details-table-tabs"><span>类型：</span>化工品</div>
-										<div v-if="detailsArr.cargoType == '3'" class="details-table-tabs"><span>类型：</span>危险品</div>
-										<div v-if="detailsArr.cargoType == '4'" class="details-table-tabs"><span>类型：</span>防疫物资</div>
-										<div class="details-table-tabs"><span>件数：</span>{{detailsArr.bookingPiece}}PCS</div>
-										<div class="details-table-tabs"><span>体积：</span>{{detailsArr.bookingCbm}}CBM</div>
-									</div>
-									<div class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs"><span>重量：</span>{{detailsArr.bookingWeight}}KG</div>
-										<div class="details-table-tabs"><span>比重：</span>1:{{detailsArr.bookingVwr}}</div>
-										<div class="details-table-tabs"><span>计费重：</span>{{detailsArr.bookingCw}}KG</div>
-									</div>
-								</div>
-								<div v-if="detailsArr.inboundPiece" class="details-table-tab">
-									<div class="details-table-tab-title">进仓数据</div>
-									<div class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs"><span style="flex: 0 0 42px;">件数：</span>{{detailsArr.inboundPiece}}PCS</div>
-										<div class="details-table-tabs"><span style="flex: 0 0 42px;">体积：</span>{{detailsArr.inboundCbm}}CBM</div>
-										<div class="details-table-tabs"><span style="flex: 0 0 42px;">重量：</span>{{detailsArr.inboundWeight}}KGS</div>
-									</div>
-									<div class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs"><span style="flex: 0 0 42px;">比重：</span>1:{{detailsArr.inboundVwr}}</div>
-										<div class="details-table-tabs"><span style="flex: 0 0 70px;">计费重：</span>{{detailsArr.inboundCw}}KGS</div>
-										<div v-if="detailsArr.bubblePoint == '10'" class="details-table-tabs"><span>分泡比例：</span>不分泡</div>
-										<div v-if="detailsArr.bubblePoint == '1'" class="details-table-tabs"><span>分泡比例：</span>1/9</div>
-										<div v-if="detailsArr.bubblePoint == '2'" class="details-table-tabs"><span>分泡比例：</span>2/8</div>
-										<div v-if="detailsArr.bubblePoint == '3'" class="details-table-tabs"><span>分泡比例：</span>3/7</div>
-										<div v-if="detailsArr.bubblePoint == '4'" class="details-table-tabs"><span>分泡比例：</span>4/6</div>
-										<div v-if="detailsArr.bubblePoint == '5'" class="details-table-tabs"><span>分泡比例：</span>5/5</div>
-										<div v-if="detailsArr.bubblePoint == '6'" class="details-table-tabs"><span>分泡比例：</span>6/4</div>
-										<div v-if="detailsArr.bubblePoint == '7'" class="details-table-tabs"><span>分泡比例：</span>7/3</div>
-										<div v-if="detailsArr.bubblePoint == '8'" class="details-table-tabs"><span>分泡比例：</span>8/2</div>
-										<div v-if="detailsArr.bubblePoint == '9'" class="details-table-tabs"><span>分泡比例：</span>9/1</div>
-									</div>
-									<div v-if="orderCargoDetailList.length > 0" class="booking" style="margin-top: 20px;">
-										<ul class="booking-proportion-ul" style="font-size: 14px;">
-											<li class="booking-proportion-item">
-												<div>件数PCS</div>
-												<div>体积CBM</div>
-												<div>重量KGS</div>
-												<div>货物尺寸CM</div>
-												<div>包装方式</div>
-												<div>外箱情况</div>
-											</li>
-											<li v-for="(item,index) in orderCargoDetailList" class="booking-proportion-item">
-												<div>{{item.piece}}</div>
-												<div>{{item.cbm}}</div>
-												<div>{{item.weight}}</div>
-												<div>{{item.cargoSize}}</div>
-												<div v-if="item.packing == '1'">纸箱</div>
-												<div v-if="item.packing == '2'">夹板箱</div>
-												<div v-if="item.packing == '3'">托盘</div>
-												<div v-if="item.outerBox == '1'">正常</div>
-												<div v-if="item.outerBox == '2'">异常</div>
-											</li>
-										</ul>
-									</div>
-									<div v-if="orderAttachmentList.length > 0" class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs">
-											<span style="flex: 0 0 80px;">进仓图片：</span>
-											<div style="width: 660px;display: flex;flex-wrap: wrap;">
-											  <div v-for="(item,index) in orderAttachmentList" :key="index" style="margin-right: 10px;margin-bottom: 10px;font-size: 0;position: relative;">
-											    <img :src="item.xpath" style="width: 150px;height: 150px;" />
-											  </div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div v-if="(detailsArr.cclType != '1') || detailsArr.isPickUp == '2'" class="details-table-list">
-								<div class="details-table-title">服务产品</div>
-								<div v-if="detailsArr.isPickUp == '2'" class="details-table-tab">
-									<div class="details-table-tab-title">国内提货</div>
-									<div class="details-table-details">
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">提货地址：</span>{{detailsArr.pickUpAddress}}</div>
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 85px;">提货联系人：</span>{{detailsArr.pickUpContacts}}</div>
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">联系电话：</span>{{detailsArr.pickUpTel}}</div>
-									</div>
-								</div>
-								<div v-if="(detailsArr.cclType != '1')" class="details-table-tab">
-									<div class="details-table-tab-title">清关服务</div>
-									<div class="details-table-details">
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">送货地址：</span>{{detailsArr.deliveryAddress}}</div>
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 85px;">送货联系人：</span>{{detailsArr.deliveryContacts}}</div>
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">联系电话：</span>{{detailsArr.deliveryTel}}</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="order-details-table-zhangdan">
-							<div>
-								<div class="details-table-zhangdan-title">预计账单</div>
-								<div class="booking-price borderEFEFEF bakFFFFFF">
-									<div v-if="guonerArr.length > 0" class="booking-price-item">
-										<div class="booking-price-item-name">国内段</div>
-										<div v-for="(item,index) in guonerArr" class="booking-price-item-list">
-											<div>{{item.expenseName}}</div>
-											<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
-											<div v-else><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+								<div v-if="(detailsArr.cclType != '1') || detailsArr.isPickUp == '2'" class="details-table-list">
+									<div class="details-table-title">服务产品</div>
+									<div v-if="detailsArr.isPickUp == '2'" class="details-table-tab">
+										<div class="details-table-tab-title">国内提货</div>
+										<div class="details-table-details">
+											<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">提货地址：</span>{{detailsArr.pickUpAddress}}</div>
+											<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 85px;">提货联系人：</span>{{detailsArr.pickUpContacts}}</div>
+											<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">联系电话：</span>{{detailsArr.pickUpTel}}</div>
 										</div>
 									</div>
-									<div class="booking-price-total">
-										<div></div>
-										<div>{{guonerJiaqian}}</div>
-									</div>
-								</div>
-							</div>
-							<div v-if="guowaiArr.length > 0" style="margin-top: 20px;">
-								<div class="details-table-zhangdan-title">账单明细</div>
-								<div class="booking-price borderEFEFEF bakFFFFFF">
-									<div class="booking-price-item">
-										<div class="booking-price-item-name">国外段</div>
-										<div v-for="(item,index) in guowaiArr" class="booking-price-item-list">
-											<div>{{item.expenseName}}</div>
-											<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
-											<div v-else><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+									<div v-if="(detailsArr.cclType != '1')" class="details-table-tab">
+										<div class="details-table-tab-title">清关服务</div>
+										<div class="details-table-details">
+											<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">送货地址：</span>{{detailsArr.deliveryAddress}}</div>
+											<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 85px;">送货联系人：</span>{{detailsArr.deliveryContacts}}</div>
+											<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">联系电话：</span>{{detailsArr.deliveryTel}}</div>
 										</div>
 									</div>
-									<div class="booking-price-total">
-										<div></div>
-										<div>{{guowaiJiaqian}}</div>
-									</div>
 								</div>
 							</div>
-							<div style="margin-top: 20px;">
-								<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
-								<button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据确认</button>
-								<button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">账单已生成，请确认</button>
+							<div class="order-details-table-zhangdan">
+								<div>
+									<div class="details-table-zhangdan-title">账单详情</div>
+									<div class="booking-price borderEFEFEF bakFFFFFF">
+										<div v-if="guonerArr.length > 0" class="booking-price-item">
+											<div class="booking-price-item-name">国内段</div>
+											<div v-for="(item,index) in guonerArr" class="booking-price-item-list">
+												<div>{{item.expenseName}}</div>
+												<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+												<div v-else><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+											</div>
+										</div>
+										<div class="booking-price-total">
+											<div></div>
+											<div>{{guonerJiaqian}}</div>
+										</div>
+									</div>
+								</div>
+								<div v-if="guowaiArr.length > 0" style="margin-top: 20px;">
+									<div class="details-table-zhangdan-title">账单明细</div>
+									<div class="booking-price borderEFEFEF bakFFFFFF">
+										<div class="booking-price-item">
+											<div class="booking-price-item-name">国外段</div>
+											<div v-for="(item,index) in guowaiArr" class="booking-price-item-list">
+												<div>{{item.expenseName}}</div>
+												<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+												<div v-else><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
+											</div>
+										</div>
+										<div class="booking-price-total">
+											<div></div>
+											<div>{{guowaiJiaqian}}</div>
+										</div>
+									</div>
+								</div>
+								<div style="margin-top: 20px;">
+									<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
+									<button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据确认</button>
+									<button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">账单已生成，请确认</button>
+								</div>
 							</div>
 						</div>
 					</div>

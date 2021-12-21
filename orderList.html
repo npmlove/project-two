@@ -848,6 +848,9 @@
 				if(localStorage.getItem('userInfo')){
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 				}
+				if(getQueryVariable("type")){
+					this.typeCode = getQueryVariable("type")
+				}
 				this.openId = localStorage.getItem('wxOpenId')
 				this.initUserInfo()
 				this.initData()
