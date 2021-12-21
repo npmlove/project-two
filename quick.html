@@ -245,7 +245,7 @@
                       <td>
                         <el-input
                           placeholder="请输入内容"
-                          v-model="input"
+                          v-model="marks"
                           maxLength="100"
                           clearable>
                         </el-input>
@@ -463,6 +463,7 @@
               </div>
             </div>
           </div>
+          <div :class="['btn']">订舱</div>
         </template>
         <div v-else style="position: relative">
           <div class="success">
@@ -639,7 +640,7 @@
                 textarea2: '',
                 price: "",
                 notify: "SAME AS CONSIGNEE",
-                isPdf: true,
+                isPdf: false,
                 trayDetail: [
                     {
                         trayNumber: '',
@@ -655,6 +656,7 @@
                 bookingWeight: '',
                 bookingCbm: '',
                 cargoName: '',
+                marks:'',
                 pickUpAddress: '',
                 pickUpContacts: '',
                 pickUpTel: '',
@@ -697,6 +699,21 @@
             this.initUserInfo()
             this.initList()
 
+        },
+        computed: {
+            changeData() {
+                const { sourceType, sourceOrder, sourceStatus } = this;
+                return {
+                    sourceType,
+                    sourceOrder,
+                    sourceStatus,
+                };
+            }
+        },
+        watch: {
+            changeData: function(newV) {
+               console.log(newV)
+            }
         },
         methods: {
             download() {

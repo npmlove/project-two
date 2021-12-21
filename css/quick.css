@@ -232,6 +232,21 @@ div{
     width: 20px;
     height: 20px;
 }
+.btn{
+    width: 184px;
+    height: 52px;
+    text-align: center;
+    line-height: 52px;
+    margin: 40px auto;
+    background: rgba(0, 0, 0, 0.20000000298023224);
+    font-size: 16px;
+    font-weight: bold;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+.active{
+    background: #2273CB;
+}
 .booking-form-item-label{
     padding-left: 0 !important;
 }
