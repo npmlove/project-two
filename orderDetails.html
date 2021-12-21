@@ -527,7 +527,7 @@
 
 					axios({
 						method: "get",
-						url: item.xpath,
+						url: webIp+item.xpath,
 						responseType: 'blob',//接受使用分片方式
 					}).then((res) => {
 						let url = window.URL.createObjectURL(res.data)

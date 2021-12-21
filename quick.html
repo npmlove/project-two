@@ -951,7 +951,7 @@
 
                 axios({
                     method: "get",
-                    url: this.filePath,
+                    url: webIp+this.filePath,
                     responseType: 'blob',//接受使用分片方式
                 }).then((res) => {
                     let url = window.URL.createObjectURL(res.data)
