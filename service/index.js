@@ -19,6 +19,7 @@ var publicWeb = '/back/dcPortal/faw'
 
 //接口
 const serviceApi = {
+	abc:"5555555555",
 	// 首页Banner广告展示
 	showBanners: publicWeb+'/t-banner/noAuth/showBanners',
 	// 首页AI文字解析,获取查价所需数据
@@ -95,11 +96,6 @@ const serviceApi = {
 	searchAirport:'/track/place/search-airport/',
 	//地点检索候选项
 	placeSuggest:'/track/place/suggest',
-	// 订单核销列表
-	orderSecondList: publicWeb + '/t-rcv-records/searchByPage',
-
-
-
 
 
 }
