@@ -96,7 +96,7 @@ const serviceApi = {
 	//地点检索候选项
 	placeSuggest:'/track/place/suggest',
 	//快捷下单
-	fastOrder:publicWeb+'/t-order/fastOrder'
+	fastOrder:publicWeb+'/t-order/fastOrder',
 
 	orderBIllList: publicWeb + '/t-rcv-records/searchByPage'
 
