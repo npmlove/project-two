@@ -138,6 +138,7 @@ div{
 
 }
 .rowFive > div{
+    position: relative;
     margin-right: 20px;
     font-size: 14px;
     color: #000000;
@@ -246,6 +247,12 @@ div{
 }
 .active{
     background: #2273CB;
+}
+.kg{
+    position: absolute;
+    right: 40px;
+    top: 35px;
+    color: #999;
 }
 .booking-form-item-label{
     padding-left: 0 !important;

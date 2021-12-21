@@ -106,7 +106,7 @@
                     <span>*</span>始发站/Airport of Departure
                     <el-input
                       placeholder="请输入始发站"
-                      v-model="input"
+                      v-model="pol"
                       clearable>
                     </el-input>
                   </div>
@@ -114,7 +114,7 @@
                     <span>*</span>到达站/Airport of Destination
                     <el-input
                       placeholder="请输入到达站"
-                      v-model="input"
+                      v-model="pod"
                       clearable>
                     </el-input>
                   </div>
@@ -122,15 +122,16 @@
                     <span>*</span>航司/Flight
                     <el-input
                       placeholder="请输入航司"
-                      v-model="input"
+                      v-model="airCompanyCode"
                       clearable>
                     </el-input>
                   </div>
                   <div>
                     <span>*</span>航班日期/Flight NO_Date
                     <el-date-picker
-                      v-model="value1"
+                      v-model="departureDate"
                       type="date"
+                      value-format="yyyy-MM-dd"
                       placeholder="请选择日期">
                     </el-date-picker>
                   </div>
@@ -144,7 +145,7 @@
                       placeholder="请输入发货人名称、地址和电话"
                       resize="none"
                       maxLength="500"
-                      v-model="textarea2">
+                      v-model="shipper">
                     </el-input>
                   </div>
                   <div>
@@ -155,7 +156,7 @@
                       placeholder="请输入通知人"
                       resize="none"
                       maxLength="500"
-                      v-model="notify">
+                      v-model="notifier">
                     </el-input>
                   </div>
                   <div>
@@ -166,7 +167,7 @@
                       placeholder="请输入收货人名称名称、地址和电话"
                       resize="none"
                       maxLength="500"
-                      v-model="textarea2">
+                      v-model="consignee">
                     </el-input>
                   </div>
 
@@ -228,7 +229,7 @@
                         <el-input
                           placeholder="请输入内容"
                           v-model="bookingCbm"
-                          onkeyup="value=value.replace(/[^\d.]/g, '')"
+
                           @input="inputChange"
                           @blur="inputChange('blur')"
                           clearable>
@@ -313,16 +314,16 @@
                     <span>*</span>单价/Price
                     <el-input
                       placeholder="请输入单价"
-                      v-model="price"
-                      onkeyup="value=value.replace(/[^\d.]/g, '')"
+                      v-model="bookingPrice"
                       @input="priceChange"
                       @blur="priceChange('blur')"
                       clearable>
                     </el-input>
+                    <div class="kg">/kg</div>
                   </div>
                   <div style="width: 200px">
                     <span>*</span>分泡/Proportion
-                    <el-select v-model="value" placeholder="请选择">
+                    <el-select v-model="bubblePoint" placeholder="请选择">
                       <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -335,7 +336,7 @@
                     <span>*</span>比重/Proportion
                     <el-input
                       placeholder="比重自动填充"
-                      v-model="input"
+                      v-model="bookingVwr"
                       disabled
                       clearable>
                     </el-input>
@@ -388,7 +389,8 @@
                       <div class="booking-form-item">
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货地址</label>
                         <div class="booking-form-item-content">
-                          <input v-model="pickUpAddress" maxlength="50" placeholder="请填写提货地址" class="booking-form-input"
+                          <input v-model=" pickUp.pickUpAddress" maxlength="50" placeholder="请填写提货地址"
+                                 class="booking-form-input"
                                  type="text" style="width: 450px;"/>
                         </div>
                       </div>
@@ -397,7 +399,7 @@
                       <div class="booking-form-item">
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货联系人</label>
                         <div class="booking-form-item-content">
-                          <input v-model="pickUpContacts" maxlength="15" placeholder="请填写提货联系人"
+                          <input v-model=" pickUp.pickUpContacts" maxlength="15" placeholder="请填写提货联系人"
                                  class="booking-form-input"
                                  type="text" style="width: 450px;"/>
                         </div>
@@ -407,7 +409,7 @@
                       <div class="booking-form-item">
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
                         <div class="booking-form-item-content">
-                          <input v-model="pickUpTel" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="11"
+                          <input v-model=" pickUp.pickUpTel" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="11"
                                  placeholder="请填写联系电话" class="booking-form-input" type="text" style="width: 450px;"/>
                         </div>
                       </div>
@@ -435,7 +437,7 @@
                       <div class="booking-form-item">
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>送货地址</label>
                         <div class="booking-form-item-content">
-                          <input v-model="deliveryAddress" maxlength="200" placeholder="请填写送货地址"
+                          <input v-model="delivery.deliveryAddress" maxlength="200" placeholder="请填写送货地址"
                                  class="booking-form-input" type="text" style="width: 450px;"/>
                         </div>
                       </div>
@@ -444,7 +446,7 @@
                       <div class="booking-form-item">
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>送货联系人</label>
                         <div class="booking-form-item-content">
-                          <input v-model="deliveryContacts" maxlength="50" placeholder="请填写送货联系人"
+                          <input v-model="delivery.deliveryContacts" maxlength="50" placeholder="请填写送货联系人"
                                  class="booking-form-input" type="text" style="width: 450px;"/>
                         </div>
                       </div>
@@ -453,7 +455,8 @@
                       <div class="booking-form-item">
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
                         <div class="booking-form-item-content">
-                          <input v-model="deliveryTel" maxlength="20" placeholder="请填写联系电话" class="booking-form-input"
+                          <input v-model="delivery.deliveryTel" maxlength="20" placeholder="请填写联系电话"
+                                 class="booking-form-input"
                                  type="text" style="width: 450px;"/>
                         </div>
                       </div>
@@ -463,7 +466,7 @@
               </div>
             </div>
           </div>
-          <div :class="['btn']">订舱</div>
+          <div :class="['btn',showBtn?'active':'btn']"  @click="submit">订舱</div>
         </template>
         <div v-else style="position: relative">
           <div class="success">
@@ -480,37 +483,37 @@
                 <div class="rowOne">
                   <div>
                     <span>*</span>始发站/Airport of Departure
-                    <div class="input">112121</div>
+                    <div class="input">{{pol}}</div>
                   </div>
                   <div>
                     <span>*</span>到达站/Airport of Destination
-                    <div class="input">112121</div>
+                    <div class="input">{{pod}}</div>
                   </div>
                   <div>
                     <span>*</span>航司/Flight
-                    <div class="input">112121</div>
+                    <div class="input">{{airCompanyCode}}</div>
                   </div>
                   <div>
                     <span>*</span>航班日期/Flight NO_Date
-                    <div class="input">112121</div>
+                    <div class="input">{{departureDate}}</div>
                   </div>
                 </div>
                 <div class="rowTwo">
                   <div>
                     发货人名称、地址和电话/Shipper's Name,Address and Telephone
-                    <div class="input">112121</div>
+                    <div class="input">{{shipper}}</div>
                   </div>
                   <div>
                     通知人/Notify Party
-                    <div class="input">112121</div>
+                    <div class="input">{{notifier}}</div>
                   </div>
                   <div>
                     收货人名称、地址和电话/Consignee's Name,Address and Telephone
-                    <div class="input">112121</div>
+                    <div class="input">{{consignee}}</div>
                   </div>
                   <div>
                     <span style="color: #FF1414;margin-right: 5px;">*</span>包装类型
-                    <div class="input">112121</div>
+                    <div class="input">{{packageType == '1'?'散货':'托盘'}}</div>
                   </div>
 
                 </div>
@@ -550,39 +553,39 @@
                     </tr>
                     <tr>
                       <td>
-                        111
+                       {{bookingPiece}}
                       </td>
                       <td>
-                        222
+                        {{bookingWeight}}
                       </td>
                       <td>
-                        333
+                        {{bookingCbm}}
                       </td>
                       <td>
-                        444
+                        {{cargoName}}
                       </td>
                       <td>
-                        555
+                        {{marks}}
                       </td>
                     </tr>
                   </table>
                 </div>
                 <div class="rowFive" style="display: block">
-                  <div style="margin-bottom: 20px">
+                  <div style="margin-bottom: 20px" v-if="packageType == '2'">
                     <span>*</span>托盘尺寸/Dimensions
-                    <div class="input">1111</div>
+                    <div class="input">{{chicun}}</div>
                   </div>
                   <div style="width: 200px;margin-bottom: 20px">
                     <span>*</span>单价/Price
-                    <div class="input">1111</div>
+                    <div class="input">{{bookingPrice}} /kg</div>
                   </div>
                   <div style="width: 200px;margin-bottom: 20px">
                     <span>*</span>分泡/Proportion
-                    <div class="input">1111</div>
+                    <div class="input">{{options[bubblePoint*1-1].label}}</div>
                   </div>
                   <div style="width: 200px;margin-bottom: 20px">
                     <span>*</span>比重/Proportion
-                    <div class="input">1111</div>
+                    <div class="input">{{bookingVwr}}</div>
                   </div>
                 </div>
                 <div class="tips" style="margin-top: -10px">托运人声明：请尽量保证舱位，如有特殊情况请务必及时告知TKS</div>
@@ -656,36 +659,70 @@
                 bookingWeight: '',
                 bookingCbm: '',
                 cargoName: '',
-                marks:'',
-                pickUpAddress: '',
-                pickUpContacts: '',
-                pickUpTel: '',
-                deliveryAddress: '',
-                deliveryContacts: '',
-                deliveryTel: '',
+                marks: '',
+                pickUp: {
+                    pickUpAddress: '',
+                    pickUpContacts: '',
+                    pickUpTel: '',
+                },
+                delivery: {
+                    deliveryAddress: '',
+                    deliveryContacts: '',
+                    deliveryTel: '',
+                },
+
+
+                pol: '',//始发站
+                pod: '',//终点站
+                airCompanyCode: '',//航司
+                departureDate: '',//航班日期
+                shipper: '',//发货人
+                notifier: 'SAME AS CONSIGNEE',//通知人
+                consignee: '',//收货人
+                bookingPrice: '',//单价
+                bubblePoint: '10',//分泡
+                bookingVwr: '',//比重
                 airlineIdA: '',
                 cargoTypeA: '',
                 dowA: '',
                 options: [{
                     value: '1',
-                    label: '不分泡'
-                }, {
-                    value: '2',
                     label: '1/9分泡'
                 }, {
-                    value: '3',
+                    value: '2',
                     label: '2/8分泡'
                 }, {
-                    value: '4',
+                    value: '3',
                     label: '3/7分泡'
                 }, {
-                    value: '5',
+                    value: '4',
                     label: '4/6分泡'
                 }, {
-                    value: '6',
+                    value: '5',
                     label: '5/5分泡'
+                }, {
+                    value: '6',
+                    label: '6/4分泡'
+                }, {
+                    value: '7',
+                    label: '7/3分泡'
+                }, {
+                    value: '8',
+                    label: '8/2分泡'
+                }, {
+                    value: '9',
+                    label: '9/1分泡'
+                }, {
+                    value: '10',
+                    label: '不分泡'
                 }],
-                value: '1'
+                chicun:"",
+                btnShow: false,
+                btnShow1: false,
+                btnShow2: false,
+                btnShow3: false,
+                showBtn: false
+
             }
         },
         created() {
@@ -702,22 +739,214 @@
         },
         computed: {
             changeData() {
-                const { sourceType, sourceOrder, sourceStatus } = this;
+                const {
+                    pol,//始发站
+                    pod,//终点站
+                    airCompanyCode,//航司
+                    departureDate,//航班日期
+                    bookingPrice,//单价
+                    bubblePoint,//分泡
+                    bookingVwr,//比重
+                    bookingPiece,//件数
+                    bookingWeight,//毛重
+                    bookingCbm,//体积
+                    cargoName,//品名
+                } = this;
                 return {
-                    sourceType,
-                    sourceOrder,
-                    sourceStatus,
+                    pol,//始发站
+                    pod,//终点站
+                    airCompanyCode,//航司
+                    departureDate,//航班日期
+                    bookingPrice,//单价
+                    bubblePoint,//分泡
+                    bookingVwr,//比重
+                    bookingPiece,//件数
+                    bookingWeight,//毛重
+                    bookingCbm,//体积
+                    cargoName,//品名
                 };
+            },
+            changePickUp() {
+                return {...this.pickUp}
+            },
+            changeDelivery() {
+                return {...this.delivery}
+            },
+            isShow() {
+                const {
+                    btnShow,
+                    btnShow1,
+                    btnShow2,
+                    btnShow3,
+                    isPickUp,
+                    cclType,
+                    packageType
+                } = this
+                return {
+                    btnShow,
+                    btnShow1,
+                    btnShow2,
+                    btnShow3,
+                    isPickUp,
+                    cclType,
+                    packageType
+                }
             }
+
+
         },
         watch: {
-            changeData: function(newV) {
-               console.log(newV)
-            }
+            isShow: {
+                handler(newV, oldVal) {
+                    this.showBtn = false;
+                    let arr = [];
+                    let sum = 0;
+                    if (this.isPickUp == 2) {
+                        arr.push(true)
+                    }
+                    if ([2, 3, 4].includes(this.cclType * 1)) {
+                        arr.push(true)
+                    }
+                    if (this.packageType == 2) {
+                        arr.push(true)
+                    }
+                    if (this.isPickUp == 2 || [2, 3, 4].includes(this.cclType * 1) || this.packageType == 2) {
+                        for (let key in newV) {
+                            if (newV[key]) {
+                                sum++
+                            }
+                        }
+                        console.log(sum - 3, arr.length)
+                        if (sum - 3 == arr.length + 1) {
+                            this.showBtn = true
+                        } else {
+                            this.showBtn = false
+                        }
+                    } else if (this.btnShow) {
+                        this.showBtn = true
+                    }
+
+
+                },
+                deep: true
+            },
+            changeData: {
+                handler(newV, oldVal) {
+                    let  bookingVwr = Math.ceil(newV.bookingWeight/newV.bookingCbm)
+                    this.bookingVwr = isNaN(bookingVwr)||bookingVwr==Infinity?"":bookingVwr
+                    for (let key in newV) {
+                        if (newV[key] == "") {
+                            this.btnShow = false
+                            break
+                        } else {
+                            this.btnShow = true
+                        }
+                    }
+                },
+                deep: true
+            },
+            trayDetail: {
+                handler(newV, oldVal) {
+                    for (let i = 0; i < newV.length; i++) {
+                        for (let item in newV[i]) {
+                            if (newV[i][item] == "") {
+                                this.btnShow3 = false
+                                this.copybtnShow3 = false
+                                break
+                            } else {
+                                this.btnShow3 = true
+                                this.copybtnShow3 = true
+                            }
+                        }
+                    }
+                },
+                deep: true
+            },
+            packageType: {
+                handler(newV, oldVal) {
+                    if (newV == 1) {
+                        this.btnShow3 = false
+                        // this.trayDetail = [
+                        //     {
+                        //         trayNumber: '',
+                        //         traySize: '',
+                        //         trayWidth: '',
+                        //         trayHeight: ''
+                        //     }
+                        // ]
+                    }else if (this.copybtnShow3) {
+                        this.btnShow3 = true
+                    }
+                },
+                deep: true
+            },
+            isPickUp: {
+                handler(newV, oldVal) {
+                    if (newV == 1) {
+                        this.btnShow1 = false;
+                        // this.pickUp = {
+                        //     pickUpAddress: '',
+                        //     pickUpContacts: '',
+                        //     pickUpTel: '',
+                        // }
+                    }else if (this.copybtnShow1) {
+                        this.btnShow1 = true
+                    }
+                },
+                deep: true
+            },
+            cclType: {
+                handler(newV, oldVal) {
+
+                    if (newV == 1) {
+                        this.btnShow2 = false
+                        // this.delivery = {
+                        //     deliveryAddress: '',
+                        //     deliveryContacts: '',
+                        //     deliveryTel: '',
+                        // }
+                    }else if (this.copybtnShow2) {
+                        this.btnShow2 = true
+                    }
+
+
+                },
+                deep: true
+            },
+            changePickUp: {
+                handler(newV, oldVal) {
+                    for (let key in newV) {
+                        if (newV[key] == "") {
+                            this.btnShow1 = false
+                            this.copybtnShow1 = false
+                            break
+                        } else {
+                            this.btnShow1 = true
+                            this.copybtnShow1 = true
+                        }
+                    }
+                },
+                deep: true
+            },
+            changeDelivery: {
+                handler(newV, oldVal) {
+                    for (let key in newV) {
+                        if (newV[key] == "") {
+                            this.btnShow2 = false
+                            this.copybtnShow2 = false
+                            break
+                        } else {
+                            this.btnShow2 = true
+                            this.copybtnShow2 = true
+                        }
+                    }
+                },
+                deep: true
+            },
         },
         methods: {
             download() {
-                document.body.scrollTop=document.documentElement.scrollTop=0;
+                document.body.scrollTop = document.documentElement.scrollTop = 0;
 
                 var target = document.getElementById("pdf");
                 target.style.background = "#FFFFFF";
@@ -746,128 +975,110 @@
                             }
                         }
                     }            //保存文件
-                    PDF.save('content.pdf')
+                    PDF.save( `${this.pol}-${this.pod}-${this.airCompanyCode}-${this.departureDate}-托书.pdf`)
                 })
 
             },
             submit() {
-                var reg = /^(1[3456789])\d{9}$/
-                if (this.totolPrice == '0' || this.chargedJiaqian == '0') {
-                    this.$message.error('货物计费量未达标，请重新填写')
-                    return
-                }
-                if (!this.bookingPiece) {
-                    this.$message.error('请输入件数')
-                    return
-                } else if (!this.bookingWeight) {
-                    this.$message.error('请输入重量')
-                    return
-                } else if (!this.bookingCbm) {
-                    this.$message.error('请输入体积')
-                    return
-                } else if (!this.cargoName) {
-                    this.$message.error('请输入品名')
-                    return
-                }
-                if (this.packageType == '2') {
-                    for (var i = 0; i < this.trayDetail.length; i++) {
-                        if (this.trayDetail[i].trayNumber == '') {
-                            this.$message.error('请输入托盘数量')
-                            return
-                        } else if (this.trayDetail[i].traySize == '') {
-                            this.$message.error('请输入托盘尺寸长度')
-                            return
-                        } else if (this.trayDetail[i].trayWidth == '') {
-                            this.$message.error('请输入托盘尺寸宽度')
-                            return
-                        } else if (this.trayDetail[i].trayHeight == '') {
-                            this.$message.error('请输入托盘尺寸高度')
-                            return
-                        }
-                    }
-                }
-                if (this.isPickUp == '2') {
-                    if (this.pickUpAddress == '') {
-                        this.$message.error('请输入国内上门提货提货地址')
-                        return
-                    } else if (this.pickUpContacts == '') {
-                        this.$message.error('请输入国内上门提货提货联系人')
-                        return
-                    } else if (this.pickUpTel == '') {
-                        this.$message.error('请输入国内上门提货联系电话')
-                        return
-                    } else if (!reg.test(this.pickUpTel)) {
-                        this.$message.error('请输入有效的国内上门提货联系电话')
-                        return
-                    }
-                } else {
-                    this.pickUpAddress = ''
-                    this.pickUpContacts = ''
-                    this.pickUpTel = ''
-                }
-                if (this.cclType != '1') {
-                    if (this.deliveryAddress == '') {
-                        this.$message.error('请输入清关服务送货地址')
-                        return
-                    } else if (this.deliveryContacts == '') {
-                        this.$message.error('请输入清关服务送货联系人')
-                        return
-                    } else if (this.deliveryTel == '') {
-                        this.$message.error('请输入清关服务联系电话')
-                        return
-                    }
-                } else {
-                    this.deliveryAddress = ''
-                    this.deliveryContacts = ''
-                    this.deliveryTel = ''
-                }
-            },
-            priceChange(type = "input") {
-                let index = this.price.indexOf(".");
-                let lastIndex = this.price.lastIndexOf(".")
-                if (type == "blur" && index !== -1 && this.price.length - 1 - index == 0) {
-                    this.price = this.price.slice(0, this.price.length - 1);
+                if(!this.showBtn){
                     return false
                 }
-                if (type == "blur" && index !== -1 && this.price[this.price.length - 1] == 0) {
-                    this.price = this.price.slice(0, this.price.length - 2);
+                let {
+                    customsType,
+                    isPickUp,
+                    cclType,
+                    bookingPiece,
+                    bookingWeight,
+                    bookingCbm,
+                    cargoName,
+                    marks,
+                } = this
+                axios({
+                    method: 'post',
+                    url: webIp + serviceApi.fastOrder,
+                    data:{
+                        trayDetail:JSON.stringify(this.trayDetail),
+                        ...this.changeData,
+                        ...this.pickUp,
+                        ...this.delivery,
+                        customsType,
+                        isPickUp,
+                        cclType,
+                        bookingPiece,
+                        bookingWeight,
+                        bookingCbm,
+                        cargoName,
+                        marks,
+
+                    },
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                      this.isPdf=true;
+                      this.chicun="";
+                      this.trayDetail.forEach((item,index)=>{
+                          this.chicun+=`${item.traySize}*${item.trayWidth}*${item.trayHeight}cm*${item.trayNumber}，`
+                      })
+
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
+                    }
+                })
+
+            },
+            priceChange(type = "input") {
+                let index = this.bookingPrice.indexOf(".");
+                this.bookingPrice = this.bookingPrice.replace(/[^\d.]/g, '')
+                let lastIndex = this.bookingPrice.lastIndexOf(".")
+                if (type == "blur" && index !== -1 && this.bookingPrice.length - 1 - index == 0) {
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
+                    return false
+                }
+                if (type == "blur" && index !== -1 && this.bookingPrice[this.bookingPrice.length - 1] == 0) {
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 2);
                     return false
                 }
                 if (index != lastIndex) {
-                    this.price = this.price.slice(0, this.price.length - 1);
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
                     return false
                 }
-                if (index !== -1 && this.price.length - 1 - index > 2) {
-                    this.price = this.price.slice(0, this.price.length - 1);
+                if (index !== -1 && this.bookingPrice.length - 1 - index > 2) {
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
                     return false
                 }
-                if (index !== -1 && this.price.length - 1 - index > 1 && this.price[this.price.length - 1] == 0) {
-                    this.price = this.price.slice(0, this.price.length - 1);
+                if (index !== -1 && this.bookingPrice.length - 1 - index > 1 && this.bookingPrice[this.bookingPrice.length - 1] == 0) {
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
                     return false
                 }
-                if (index == -1 && this.price.length > 4) {
-                    this.price = this.price.slice(0, this.price.length - 1);
+                if (index == -1 && this.bookingPrice.length > 4) {
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
                     return false
                 }
             },
             inputChange(type = "input") {
+                this.bookingCbm = this.bookingCbm.replace(/[^\d.]/g, '')
+                let index = this.bookingCbm.indexOf(".");
+                let lastIndex = this.bookingCbm.lastIndexOf(".")
+                if (type == "blur" && index !== -1 && this.bookingCbm.length - 1 - index == 0) {
+                    this.bookingCbm = this.bookingCbm.slice(0, this.bookingCbm.length - 1);
+                    return false
+                }
 
-                let index = this.input.indexOf(".");
-                let lastIndex = this.input.lastIndexOf(".")
-                if (type == "blur" && index !== -1 && this.input.length - 1 - index == 0) {
-                    this.input = this.input.slice(0, this.input.length - 1);
-                    return false
-                }
                 if (index != lastIndex) {
-                    this.input = this.input.slice(0, this.input.length - 1);
+                    this.bookingCbm = this.bookingCbm.slice(0, this.bookingCbm.length - 1);
                     return false
                 }
-                if (index !== -1 && this.input.length - 1 - index > 4) {
-                    this.input = this.input.slice(0, this.input.length - 1);
+                if (index !== -1 && this.bookingCbm.length - 1 - index > 4) {
+                    this.bookingCbm = this.bookingCbm.slice(0, this.bookingCbm.length - 1);
                     return false
                 }
-                if (index == -1 && this.input.length > 4) {
-                    this.input = this.input.slice(0, this.input.length - 1);
+                if (index == -1 && this.bookingCbm.length > 4) {
+                    this.bookingCbm = this.bookingCbm.slice(0, this.bookingCbm.length - 1);
                     return false
                 }
 
