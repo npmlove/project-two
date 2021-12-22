@@ -111,24 +111,51 @@
                     <el-input
                       placeholder="请输入始发站"
                       v-model="pol"
-                      clearable>
+                      @input="qiSearchByPage(pol)" @focus="showCityList(1,true)" @blur="showCityList(1,false)"
+                      >
                     </el-input>
+                    <div v-show="qiShowState" style="display: none;" class="open-warp-router">
+                      <div v-if="!pol" class="open-warp-router-hot">热门机场</div>
+                      <div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
+                        <span>{{item.threeLetterCode}}</span>
+                        <span>{{item.name}}</span>
+                        <span>{{item.city}}</span>
+                        <span>{{item.country}}</span>
+                      </div>
+                    </div>
                   </div>
                   <div>
                     <span>*</span>到达站/Airport of Destination
                     <el-input
                       placeholder="请输入到达站"
                       v-model="pod"
-                      clearable>
+                      @input="muSearchByPage(pod)" @focus="showCityList(2,true)" @blur="showCityList(2,false)"
+                     >
                     </el-input>
+                    <div v-show="muShowState" style="display: none;" class="open-warp-router">
+                      <div v-if="!pod" class="open-warp-router-hot">热门机场</div>
+                      <div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
+                        <span>{{item.threeLetterCode}}</span>
+                        <span>{{item.name}}</span>
+                        <span>{{item.city}}</span>
+                        <span>{{item.country}}</span>
+                      </div>
+                    </div>
                   </div>
                   <div>
                     <span>*</span>航司/Flight
                     <el-input
                       placeholder="请输入航司"
                       v-model="airCompanyCode"
-                      clearable>
+                      @input="lineSearchByPage(airCompanyCode)" @focus="showCityList(3,true)" @blur="showCityList(3,false)"
+                      >
                     </el-input>
+                    <div v-show="lineShowState" style="display: none;" class="open-warp-router">
+                      <div @mousedown="openCityClick(3,item)" v-for="(item,index) in linePageArr" :key="index" class="opne-warp-city">
+                        <span>{{item.airCompanyCode}}</span>
+                        <span>{{item.name}}</span>
+                      </div>
+                    </div>
                   </div>
                   <div>
                     <span>*</span>航班日期/Flight NO_Date
@@ -638,6 +665,12 @@
         el: '#app',
         data() {
             return {
+                qiShowState: false,
+                muShowState: false,
+                lineShowState: false,
+                qiPageArr:[],
+                muPageArr:[],
+                linePageArr:[],
                 headerMenu: false,
                 menuIndex: 1,
                 cargoType: 1,
@@ -956,6 +989,98 @@
             },
         },
         methods: {
+            openCityClick(type, item) {
+                if (type == 1) {
+                    this.pol = item.threeLetterCode
+                } else {
+                    this.pod = item.threeLetterCode
+                }
+            },
+            //起始港
+            showCityList(type, state) {
+                if (type == 1) {
+                    if (state) {
+                        this.qiSearchByPage()
+                        this.qiShowState = state //显示下拉列表
+                    } else {
+                        this.qiShowState = state //隐藏下拉框
+                    }
+                }
+                if (type == 2) {
+                    this.isShowGang = false
+                    if (state) {
+                        this.muSearchByPage()
+                        this.muShowState = state //显示下拉列表
+                    } else {
+                        this.muShowState = state //隐藏下拉框
+                    }
+                }
+                if (type == 3) {
+                    if (state) {
+                        this.lineSearchByPage()
+                        this.lineShowState = state //显示下拉列表
+                    } else {
+                        this.lineShowState = state //隐藏下拉框
+                    }
+                }
+            },
+            lineSearchByPage(val) {
+                if(val == ''){
+                    return
+                }
+                var jsonData = {
+                    keyWord: this.airCompanyCode,
+                    type: this.airCompanyCode ? '' : '2'
+                }
+                jsonData = toData(jsonData)
+                axios({
+                    method: 'get',
+                    url: webIp+serviceApi.companySearchByPage+'?'+jsonData,
+                }).then((data) =>{
+                    var data = data.data
+                    if(data.code == 200){
+                        this.linePageArr = data.data
+                    }
+                })
+            },
+            muSearchByPage(val) {
+                if(val == ''){
+                    return
+                }
+                var jsonData = {
+                    keyWord: this.pod,
+                    type: this.pod ? '' : '2'
+                }
+                jsonData = toData(jsonData)
+                axios({
+                    method: 'get',
+                    url: webIp+serviceApi.searchByPage+'?'+jsonData,
+                }).then((data) =>{
+                    var data = data.data
+                    if(data.code == 200){
+                        this.muPageArr = data.data
+                    }
+                })
+            },
+            qiSearchByPage(val) {
+                if(val == ''){
+                    return
+                }
+                var jsonData = {
+                    keyWord: this.pol,
+                    type: this.pol ? '' : '1'
+                }
+                jsonData = toData(jsonData)
+                axios({
+                    method: 'get',
+                    url: webIp+serviceApi.searchByPage+'?'+jsonData,
+                }).then((data) =>{
+                    var data = data.data
+                    if(data.code == 200){
+                        this.qiPageArr = data.data
+                    }
+                })
+            },
             goQuick(){
                 window.location.href='./quick.html'
             },
