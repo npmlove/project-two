@@ -53,6 +53,10 @@
 					</div>
 				</div>
 				<div v-else @click="loginClick" class="header-user">登录</div>
+				<div class="quick ">
+					<img src="img/quick.png">
+					<span @click="goQuick">一键订舱</span>
+				</div>
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
@@ -227,6 +231,9 @@
 				this.initData()
 			},
 			methods: {
+				goQuick(){
+					window.location.href='./quick.html'
+				},
 				valueChange(e){
 					this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
 					this.isShowYundan = false

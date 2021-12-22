@@ -3231,3 +3231,20 @@
 	   border: 1px solid #E7E8EC;
    }
 
+.quick{
+	width: 106px;
+	height: 32px;
+	background: #2273CB;
+	border-radius: 60px 60px 60px 60px;
+	opacity: 1;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 32px;
+	color: #FFFFFF;
+	cursor: pointer;
+	margin-left: 10px;
+}
+.quick > img{
+	margin-left: 5px;
+}

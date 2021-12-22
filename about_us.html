@@ -52,6 +52,10 @@
 					</div>
 				</div>
 				<div v-else @click="loginClick" class="header-user">登录</div>
+				<div class="quick ">
+					<img src="img/quick.png">
+					<span @click="goQuick">一键订舱</span>
+				</div>
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
@@ -115,6 +119,9 @@
 				}
 			},
 			methods: {
+				goQuick(){
+					window.location.href='./quick.html'
+				},
 				showHeaderMenu(type) {
 					if(type == 1){
 						this.headerMenu = true
