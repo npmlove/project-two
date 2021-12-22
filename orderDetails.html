@@ -246,7 +246,7 @@
 														<div class="title">运费计算</div>
 														<template v-for="(ite,ind) in item.feesDetails">
 															<div class="list" :key="ind">
-																<span>{{item.expenseName}}:</span>
+																<span>{{ite.expenseName}}:</span>
 																<span>{{ite.price}}*{{ite.quantity}}</span>
 																<span>￥{{ite.totalCny}}</span>
 															</div>
