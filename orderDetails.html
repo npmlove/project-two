@@ -242,7 +242,7 @@
 													<a class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</a>
 												</el-tooltip> -->
 												<a class="yunfei" style="position: relative" @mouseenter="act=index" @mouseleave="act=-1">空运费：￥{{toPriceTotal(item)}}
-													<div class="mark"   @mouseenter="act=index" @mouseleave="act=-1">
+													<div class="mark" v-show="act==index"   @mouseenter="act=index" @mouseleave="act=-1">
 														<div class="title">运费计算</div>
 														<template v-for="(ite,ind) in item.feesDetails">
 															<div class="list" :key="ind">
