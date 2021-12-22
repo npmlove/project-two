@@ -457,7 +457,7 @@
 			</div>
 			<el-dialog title="账单" :visible.sync="dialogFormVisible" width="1240px">
 				<div v-for="(item,index) in billInfos">
-					<embed v-if="billInfosIndex == index" :src="webIp && webIp+item.pdfPath" style=" width: 1200PX; height: 600px; " />
+					<embed v-if="billInfosIndex == index" :src="item.pdfPath" style=" width: 1200PX; height: 600px; " />
 				</div>
 				<div slot="footer" class="dialog-footer" style="text-align: center;">
 					<!-- <el-button @click="importPdf">导出账单</el-button> -->
@@ -471,7 +471,7 @@
 				width="80%"
 				top="0vh"
 				center>
-				<embed style="width: 100%;height: 90vh" :src=" webIp && webIp+filePath"/>
+				<embed style="width: 100%;height: 90vh" :src="filePath"/>
 			</el-dialog>
 
 			<!-- 尾部 -->
