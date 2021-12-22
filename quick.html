@@ -992,8 +992,12 @@
             openCityClick(type, item) {
                 if (type == 1) {
                     this.pol = item.threeLetterCode
-                } else {
+                }
+                if (type == 2) {
                     this.pod = item.threeLetterCode
+                }
+                if (type == 3){
+                    this.airCompanyCode = item.airCompanyCode
                 }
             },
             //起始港
