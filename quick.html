@@ -55,9 +55,9 @@
       </div>
     </div>
     <div v-else @click="loginClick" class="header-user">登录</div>
-    <div class="quick ">
+    <div class="quick " @click="goQuick">
       <img src="img/quick.png">
-      <span @click="goQuick">一键订舱</span>
+      <span>一键订舱</span>
     </div>
   </div>
   <div class="header-menu">
@@ -1029,9 +1029,7 @@
                 }
             },
             lineSearchByPage(val) {
-                if(val == ''){
-                    return
-                }
+
                 var jsonData = {
                     keyWord: this.airCompanyCode,
                     type: this.airCompanyCode ? '' : '2'
@@ -1048,9 +1046,7 @@
                 })
             },
             muSearchByPage(val) {
-                if(val == ''){
-                    return
-                }
+
                 var jsonData = {
                     keyWord: this.pod,
                     type: this.pod ? '' : '2'
@@ -1067,9 +1063,6 @@
                 })
             },
             qiSearchByPage(val) {
-                if(val == ''){
-                    return
-                }
                 var jsonData = {
                     keyWord: this.pol,
                     type: this.pol ? '' : '1'
