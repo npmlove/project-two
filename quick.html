@@ -168,7 +168,7 @@
                     <el-input
                       type="textarea"
                       :autosize="{ minRows: 3, maxRows: 3}"
-                      placeholder="请输入收货人名称名称、地址和电话"
+                      placeholder="请输入收货人名称、地址和电话"
                       resize="none"
                       maxLength="500"
                       v-model="consignee">
@@ -853,17 +853,22 @@
             },
             trayDetail: {
                 handler(newV, oldVal) {
+                    let bz = false
                     for (let i = 0; i < newV.length; i++) {
                         for (let item in newV[i]) {
                             if (newV[i][item] == "") {
                                 this.btnShow3 = false
                                 this.copybtnShow3 = false
+                                bz=true
                                 break
                             } else {
                                 this.btnShow3 = true
                                 this.copybtnShow3 = true
                             }
                         }
+                    if(bz){
+                        break
+                    }
                     }
                 },
                 deep: true
