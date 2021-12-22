@@ -244,23 +244,18 @@
 												<a class="yunfei" style="position: relative" @mouseenter="act=index" @mouseleave="act=-1">空运费：￥{{toPriceTotal(item)}}
 													<div class="mark" v-show="act==index"  @mouseenter="act=index" @mouseleave="act=-1">
 														<div class="title">运费计算</div>
-														<div class="list">
-															<span>空运费:</span>
-															<span>21*1200</span>
-															<span>￥121</span>
-														</div>
-														<div class="list">
-															<span>报关费:</span>
-															<span>￥121</span>
-														</div>
-														<div class="list">
-															<span>制单费:</span>
-															<span>￥121</span>
-														</div>
+														<template v-for="(ite,ind) in item.feesDetails">
+															<div class="list" :key="ind">
+																<span>空运费:</span>
+																<span>{{ite.price}}*{{ite.quantity}}</span>
+																<span>￥{{ite.totalCny}}</span>
+															</div>
+														</template>
+
 														<div class="line"></div>
 														<div class="list">
 															<span>合计:</span>
-															<span style="font-weight: bold;color: #FF9914;">￥23</span>
+															<span style="font-weight: bold;color: #FF9914;">￥{{item.totalCny}}</span>
 														</div>
 													</div>
 												</a>
