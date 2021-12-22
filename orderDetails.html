@@ -312,7 +312,7 @@
 									<div class="pdfBox">
 										<div class="pdf" v-for="(item,index) in orderAttachmentList">
 											<img src="img/pdf.png" @click="downLoad(item)">
-											<div  @click="preview(item)">{{item.attachmentName}}</div>
+											<div  @click="preview(item)">{{detailsArr.pol}}-{{detailsArr.pod}}-{{index==0?"托书":"托书更新"}}</div>
 										</div>
 									</div>
 
@@ -498,7 +498,6 @@
 		new Vue({
 			el: '#app',
 			data: {
-				webIp: 'http://10.8.0.1',
 				loading: false,
 				menuIndex: 0,
 				orderId: '',
