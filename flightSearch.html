@@ -249,6 +249,8 @@
                 this.map && this.map.remove();
                 this.dataInfo=null
                 this.isLoading = true
+                this.pathInfo=[]
+                this.lineArr = [];
                 axios({
                     method: 'post',
                     url: webIp + serviceApi.airLineSearch,
