@@ -48,7 +48,7 @@
         <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
         <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
           <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
-          <div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+<!--          <div class="header-bak"><a href="./quick.html">一键订舱</a></div>-->
           <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
           <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
           <div class="header-bak"><a href="./financial.html">财务管理</a></div>
@@ -56,15 +56,15 @@
         </div>
       </div>
       <div v-else @click="loginClick" class="header-user">登录</div>
-      <div class="quick " @click="goQuick">
-        <img src="img/quick.png">
-        <span >一键订舱</span>
-      </div>
+<!--      <div class="quick " @click="goQuick">-->
+<!--        <img src="img/quick.png">-->
+<!--        <span >一键订舱</span>-->
+<!--      </div>-->
     </div>
     <div class="header-menu">
       <ul class="header-menu-list com-width">
         <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
-        <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
+        <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
         <!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
         <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
       </ul>
@@ -548,7 +548,7 @@
                 if (index == 0) {
                     window.location.href = './index.html'
                 } else if (index == 1) {
-                    window.location.href = './orderList.html'
+                    window.location.href = './trackSearch.html?trackSearchInput='
                 } else if (index == 2) {
                     window.location.href = './addressSerach.html'
                 } else if (index == 3) {
