@@ -247,6 +247,7 @@
             },
             getData() {
                 this.map && this.map.remove();
+                this.dataInfo=null
                 this.isLoading = true
                 axios({
                     method: 'post',
