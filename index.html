@@ -62,7 +62,7 @@
 					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
 					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
-						<div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+<!--						<div class="header-bak"><a href="./quick.html">一键订舱</a></div>-->
 						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
 						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
 						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
@@ -70,17 +70,17 @@
 					</div>
 				</div>
 				<div v-else @click="loginClick" class="header-user">登录</div>
-				<div class="quick " @click="goQuick">
-					<img src="img/quick.png">
-					<span >一键订舱</span>
-				</div>
+<!--				<div class="quick " @click="goQuick">-->
+<!--					<img src="img/quick.png">-->
+<!--					<span >一键订舱</span>-->
+<!--				</div>-->
 
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
 					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
-					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
-					 <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
+<!--					 <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>-->
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
@@ -110,59 +110,59 @@
 				<!-- 搜索 -->
 				<div class="mod-search">
 					<div class="pos-search">
-						<div class="mod-search-top">
-							<div class="s_tab">
-								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">AI查价</div>
-								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">体积计算</div>
-							</div>
-							<div class="search-box">
-								<div class="search-box-input-ai" v-if="searchTopIndex == 0">
-									<textarea v-model="aiStr" class="box-input box-textarea" type="textarea" placeholder="输入询价信息，AI智能识别起始港、目的港、件毛体、一键查询航线价格">
-									</textarea>
-									<div class="search-item">
-										<div class="search-item-input search-item-icon1" style="position: relative;">
-											<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input banner-box-border" type="text" placeholder="起飞港"/>
-											<div v-show="qiShowState" style="display: none;" class="open-warp-router">
-												<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>
-												<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
-													<span>{{item.threeLetterCode}}</span>
-													<span>{{item.name}}</span>
-													<span>{{item.city}}</span>
-													<span>{{item.country}}</span>
-												</div>
-											</div>
-										</div>
-										<div class="search-item-arrow"></div>
-										<div class="search-item-input search-item-icon3" style="position: relative;">
-											<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input banner-box-border" type="text" placeholder="目的港"/>
-											<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>
-											<div v-show="muShowState" style="display: none;" class="open-warp-router">
-												<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>
-												<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
-													<span>{{item.threeLetterCode}}</span>
-													<span>{{item.name}}</span>
-													<span>{{item.city}}</span>
-													<span>{{item.country}}</span>
-												</div>
-											</div>
-										</div>
-										<button @click="searchClose" class="box-btn btn-close" style="flex: 0 0 80px;marginLeft: 25px;">一键清除</button>
-										<button @click="freightQueryClick(1)" style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary">立即查询</button>
-									</div>
-								</div>
-								<div class="search-box-input-volume" v-if="searchTopIndex == 1">
-									<textarea type="textarea" v-model="volumeConetn" placeholder="请输入体积信息，多个体积请换行输入或以逗号分割"></textarea>
-									<div class="search-box-volume-base">
-<!--										<div class="volume-file">-->
-<!--											<input type="file">-->
-<!--											<img src="./img/volume-file.png" alt="">-->
-<!--											<span>点击上传</span>-->
+<!--						<div class="mod-search-top">-->
+<!--							<div class="s_tab">-->
+<!--								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">AI查价</div>-->
+<!--								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">体积计算</div>-->
+<!--							</div>-->
+<!--							<div class="search-box">-->
+<!--								<div class="search-box-input-ai" v-if="searchTopIndex == 0">-->
+<!--									<textarea v-model="aiStr" class="box-input box-textarea" type="textarea" placeholder="输入询价信息，AI智能识别起始港、目的港、件毛体、一键查询航线价格">-->
+<!--									</textarea>-->
+<!--									<div class="search-item">-->
+<!--										<div class="search-item-input search-item-icon1" style="position: relative;">-->
+<!--											<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input banner-box-border" type="text" placeholder="起飞港"/>-->
+<!--											<div v-show="qiShowState" style="display: none;" class="open-warp-router">-->
+<!--												<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>-->
+<!--												<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">-->
+<!--													<span>{{item.threeLetterCode}}</span>-->
+<!--													<span>{{item.name}}</span>-->
+<!--													<span>{{item.city}}</span>-->
+<!--													<span>{{item.country}}</span>-->
+<!--												</div>-->
+<!--											</div>-->
 <!--										</div>-->
-										<button style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary" @click="intelligentComputing">智能计算</button>
-									</div>
-								</div>
-							</div>
-						</div>
+<!--										<div class="search-item-arrow"></div>-->
+<!--										<div class="search-item-input search-item-icon3" style="position: relative;">-->
+<!--											<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input banner-box-border" type="text" placeholder="目的港"/>-->
+<!--											<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>-->
+<!--											<div v-show="muShowState" style="display: none;" class="open-warp-router">-->
+<!--												<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>-->
+<!--												<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">-->
+<!--													<span>{{item.threeLetterCode}}</span>-->
+<!--													<span>{{item.name}}</span>-->
+<!--													<span>{{item.city}}</span>-->
+<!--													<span>{{item.country}}</span>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										<button @click="searchClose" class="box-btn btn-close" style="flex: 0 0 80px;marginLeft: 25px;">一键清除</button>-->
+<!--										<button @click="freightQueryClick(1)" style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary">立即查询</button>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--								<div class="search-box-input-volume" v-if="searchTopIndex == 1">-->
+<!--									<textarea type="textarea" v-model="volumeConetn" placeholder="请输入体积信息，多个体积请换行输入或以逗号分割"></textarea>-->
+<!--									<div class="search-box-volume-base">-->
+<!--&lt;!&ndash;										<div class="volume-file">&ndash;&gt;-->
+<!--&lt;!&ndash;											<input type="file">&ndash;&gt;-->
+<!--&lt;!&ndash;											<img src="./img/volume-file.png" alt="">&ndash;&gt;-->
+<!--&lt;!&ndash;											<span>点击上传</span>&ndash;&gt;-->
+<!--&lt;!&ndash;										</div>&ndash;&gt;-->
+<!--										<button style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary" @click="intelligentComputing">智能计算</button>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
 
 						<div class="mod-search-bottom com-top20">
 							<div class="s_tab s_tab_bak_color">
@@ -929,7 +929,7 @@
 					if(index == 0){
 						window.location.href = './index.html';
 					} else if (index == 1) {
-						window.location.href = './orderList.html';
+						window.location.href = './trackSearch.html?trackSearchInput=';
 					}else if(index == 2){
 						window.location.href = './addressSerach.html'
 					}else if(index == 3){
