@@ -1007,9 +1007,7 @@
 					}
 				},
 				qiSearchByPage(val) {
-					if(val == ''){
-						return
-					}
+
 					var jsonData = {
 						keyWord: this.qiSearchInput,
 						type: this.qiSearchInput ? '' : '1'
@@ -1026,9 +1024,7 @@
 					})
 				},
 				muSearchByPage(val) {
-					if(val == ''){
-						return
-					}
+
 					var jsonData = {
 						keyWord: this.muSearchInput,
 						type: this.muSearchInput ? '' : '2'
