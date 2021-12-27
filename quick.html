@@ -1269,11 +1269,15 @@
                     this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
                     return false
                 }
-                if (index !== -1 && this.bookingPrice.length - 1 - index > 2) {
+                if (index !== -1 && index >4 ) {
+                    this.bookingPrice = this.bookingPrice.slice(0, index-1);
+                    return false
+                }
+                if (index !== -1 && this.bookingPrice.length-1 - index > 2) {
                     this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
                     return false
                 }
-                if (index !== -1 && this.bookingPrice.length - 1 - index > 1 && this.bookingPrice[this.bookingPrice.length - 1] == 0) {
+                if (index !== -1 && this.bookingPrice.length-1  - index > 1 && this.bookingPrice[this.bookingPrice.length - 1] == 0) {
                     this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
                     return false
                 }
@@ -1290,7 +1294,10 @@
                     this.bookingCbm = this.bookingCbm.slice(0, this.bookingCbm.length - 1);
                     return false
                 }
-
+                if (index !== -1 && index >4 ) {
+                    this.bookingCbm = this.bookingCbm.slice(0, index-1);
+                    return false
+                }
                 if (index != lastIndex) {
                     this.bookingCbm = this.bookingCbm.slice(0, this.bookingCbm.length - 1);
                     return false
