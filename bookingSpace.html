@@ -102,7 +102,7 @@
 									<div class="booking-form-item">
 										<label class="booking-form-item-label"><span style="color: #F00;">*</span>品名</label>
 										<div class="booking-form-item-content">
-											<input v-model="cargoName" @blur="cargoNameBlur" maxlength="30" placeholder="请填写货物品名" class="booking-form-input" type="text" style="width: 200px;"/>
+											<input v-model="cargoName" @blur="cargoNameBlur" maxlength="30" placeholder="请填写货物品名,支持中英文输入" class="booking-form-input" type="text" style="width: 275px;"/>
 										</div>
 									</div>
 								</div>
@@ -396,7 +396,7 @@
 						trayHeight: ''
 					}
 				],
-				customsType: '1',
+				customsType: '2',
 				isPickUp: '1',
 				cclType: '1',
 				pickUpAddress: '',
