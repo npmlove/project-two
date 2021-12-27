@@ -185,10 +185,10 @@
         </div>
       </div>
       <div v-else @click="loginClick" class="header-user">登录</div>
-      <!--					<div class="quick " @click="goQuick">-->
-      <!--						<img src="img/quick.png">-->
-      <!--						<span >一键订舱</span>-->
-      <!--					</div>-->
+      					<div class="quick " @click="goQuick">
+      						<img src="img/quick.png">
+      						<span >一键订舱</span>
+      					</div>
     </div>
     <div class="header-menu">
       <ul class="header-menu-list com-width">
@@ -900,12 +900,13 @@
                     var arr = JSON.parse(json)
                     var price = ''
                     for (var i = 0; i < arr.length; i++) {
+                        let bx = String(arr[i].amount).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g,'$1,');
                         if (arr[i].currency == '1') {
-                            price += '￥' + arr[i].amount + '+'
+                            price += '￥' + bx + '+'
                         }
                     }
                     price = price.substring(0, price.length - 1)
-                    return price
+                    return price;
                 }
             },
             priceType2(json) {
@@ -913,14 +914,15 @@
                     var arr = JSON.parse(json)
                     var price = ''
                     for (var i = 0; i < arr.length; i++) {
+                        let bx = String(arr[i].amount).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g,'$1,');
                         if (arr[i].currency == '2') {
-                            price += 'HK$' + arr[i].amount + '+'
+                            price += 'HK$' + bx + '+'
                         } else if (arr[i].currency == '3') {
-                            price += '$' + arr[i].amount + '+'
+                            price += '$' +bx + '+'
                         } else if (arr[i].currency == '4') {
-                            price += '€' + arr[i].amount + '+'
+                            price += '€' + bx + '+'
                         } else if (arr[i].currency == '5') {
-                            price += '￡' + arr[i].amount + '+'
+                            price += '￡' + bx + '+'
                         }
                     }
                     price = price.substring(0, price.length - 1)
