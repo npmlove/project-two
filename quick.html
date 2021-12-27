@@ -1264,6 +1264,10 @@
                     this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 2);
                     return false
                 }
+                if (type == "blur" && this.bookingPrice == 0) {
+                    this.bookingPrice = "";
+                    return false
+                }
                 if( this.bookingPrice[0] == 0 && this.bookingPrice[1]==0){
                     this.bookingPrice=""
                     return false
