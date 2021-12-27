@@ -83,6 +83,7 @@
           </div>
           <ul class="userInfo-menu-list">
 <!--            <li class="menu-list-active"><a href="./quick.html">一键订舱</a></li>-->
+<!--            <li class="menu-list-active"><a href="./quick.html">一键订舱</a></li>-->
             <li><a href="./corporate.html">企业信息</a></li>
             <li><a href="./orderList.html">订单管理</a></li>
             <li><a href="./financial.html">财务管理</a></li>
@@ -397,7 +398,7 @@
                               class="radio-li">自行报关
                           </li>
                           <li @click="customsTypeClick(2)" :class="{radio_li_active: customsType == '2'}"
-                              class="radio-li">委托“17订舱”报关
+                              class="radio-li">委托报关
                           </li>
                         </ul>
                       </div>
@@ -690,7 +691,7 @@
                         trayHeight: ''
                     }
                 ],
-                customsType: '1',
+                customsType: '2',
                 isPickUp: '1',
                 cclType: '1',
                 bookingPiece: '',
@@ -1009,6 +1010,23 @@
                         this.qiShowState = state //显示下拉列表
                     } else {
                         this.qiShowState = state //隐藏下拉框
+
+                        if(!this.qiPageArr || this.qiPageArr.length==0){
+                            this.pol= "";
+                            return false
+                        }
+                        let bz = false;
+                       for(let i=0;i<this.qiPageArr.length;i++){
+                           if(this.pol.toUpperCase() == this.qiPageArr[i].threeLetterCode){
+                                bz = true;
+                               this.pol= this.qiPageArr[i].threeLetterCode;
+                                break;
+                           }
+                       }
+                       if(!bz){
+                           this.pol= "";
+                           return false
+                       }
                     }
                 }
                 if (type == 2) {
@@ -1018,6 +1036,22 @@
                         this.muShowState = state //显示下拉列表
                     } else {
                         this.muShowState = state //隐藏下拉框
+                        if(!this.muPageArr || this.muPageArr.length==0){
+                            this.pod= "";
+                            return false
+                        }
+                        let bz = false;
+                        for(let i=0;i<this.muPageArr.length;i++){
+                            if(this.pod.toUpperCase() == this.muPageArr[i].threeLetterCode){
+                                bz = true;
+                                this.pod= this.muPageArr[i].threeLetterCode;
+                                break;
+                            }
+                        }
+                        if(!bz){
+                            this.pod= "";
+                            return false
+                        }
                     }
                 }
                 if (type == 3) {
@@ -1026,6 +1060,23 @@
                         this.lineShowState = state //显示下拉列表
                     } else {
                         this.lineShowState = state //隐藏下拉框
+                        if(!this.linePageArr || this.linePageArr.length==0){
+                            this.airCompanyCode= "";
+                            return false
+                        }
+                        this.airCompanyCode = this.airCompanyCode.replace(/([a-z])/g,($1)=>{return $1.toUpperCase()})
+                        let bz = false;
+                        for(let i=0;i<this.linePageArr.length;i++){
+                            if(this.airCompanyCode == this.linePageArr[i].airCompanyCode){
+                                bz = true;
+                                this.airCompanyCode= this.linePageArr[i].airCompanyCode;
+                                break;
+                            }
+                        }
+                        if(!bz){
+                            this.airCompanyCode= "";
+                            return false
+                        }
                     }
                 }
             },
@@ -1208,6 +1259,10 @@
                 }
                 if (type == "blur" && index !== -1 && this.bookingPrice[this.bookingPrice.length - 1] == 0) {
                     this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 2);
+                    return false
+                }
+                if( this.bookingPrice[0] == 0 && this.bookingPrice[1]==0){
+                    this.bookingPrice=""
                     return false
                 }
                 if (index != lastIndex) {

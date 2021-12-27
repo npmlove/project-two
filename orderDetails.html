@@ -125,16 +125,19 @@
           color: #FF9914;
           border-bottom: 1px #FF9914 dashed;
       }
-      .length{
+
+      .length {
           font-size: 14px;
           font-weight: 500;
           color: #FFFFFF;
           margin-top: 5px;
       }
-      .length > span{
+
+      .length > span {
           opacity: 0.3;
       }
-      .submitTime{
+
+      .submitTime {
           border-radius: 20px 20px 20px 20px;
           border: 1px solid rgba(255, 255, 255, 0.30000001192092896);
           font-size: 12px;
@@ -143,7 +146,8 @@
           margin-top: 5px;
           padding: 5px;
       }
-      .btnPub{
+
+      .btnPub {
           height: 50px;
       }
   </style>
@@ -363,11 +367,14 @@
             </div>
             <div class="details-table-list">
               <div class="details-table-title">货物信息</div>
-              <div class="pdfBox">
-                <div class="pdf" v-for="(item,index) in orderAttachmentList">
-                  <img src="img/pdf.png" @click="downLoad(item)">
-                  <div @click="preview(item)">{{detailsArr.pol}}-{{detailsArr.pod}}-{{index == 0 ? "托书" : "托书更新"}}</div>
-                </div>
+              <div class="pdfBox" v-if="orderAttachmentList.length>0">
+                <template v-for="(item,index) in orderAttachmentList">
+                  <div class="pdf" :key="index" v-if="item.attachmentType==3">
+                    <img src="img/pdf.png" @click="downLoad(item)">
+                    <div @click="preview(item)">{{detailsArr.pol}}-{{detailsArr.pod}}-{{index == 0 ? "托书" : "托书更新"}}
+                    </div>
+                  </div>
+                </template>
               </div>
 
               <div class="details-table-tab">
@@ -440,10 +447,13 @@
                   <div class="details-table-tabs">
                     <span style="flex: 0 0 80px;">进仓图片：</span>
                     <div style="width: 660px;display: flex;flex-wrap: wrap;">
-                      <div v-for="(item,index) in orderAttachmentList" :key="index"
-                           style="margin-right: 10px;margin-bottom: 10px;font-size: 0;position: relative;">
-                        <img :src="item.xpath" style="width: 150px;height: 150px;"/>
-                      </div>
+                      <template v-for="(item,index) in orderAttachmentList">
+                        <div :key="index" v-if="item.attachmentType==1"
+                             style="margin-right: 10px;margin-bottom: 10px;font-size: 0;position: relative;">
+                          <img :src="item.xpath" style="width: 150px;height: 150px;"/>
+                        </div>
+                      </template>
+
                     </div>
                   </div>
                 </div>
@@ -534,7 +544,8 @@
               <button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50"
                       style="width: 100%; font-size: 18px;">
                 账单已生成，请确认
-                <div class="length">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}} <span>/{{tbcBillVO.totalCount}}</span></div>
+                <div class="length">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}}
+                  <span>/{{tbcBillVO.totalCount}}</span></div>
               </button>
             </div>
           </div>
@@ -548,11 +559,12 @@
     </div>
     <div slot="footer" class="dialog-footer" style="text-align: center;" v-if="billInfos.length> 0">
       <!-- <el-button @click="importPdf">导出账单</el-button> -->
-      <el-button style="padding: 0 40px" class="box-btn btn-prprimary com-height50" @click="zhangDanClick" type="primary" v-if="billInfos[billInfosIndex].status==0">
+      <el-button style="padding: 0 40px" class="box-btn btn-prprimary com-height50" @click="zhangDanClick"
+                 type="primary" v-if="billInfos[billInfosIndex].status==0">
         账单无误，我已确认
         <div class="submitTime">确认时间：{{countdown}}</div>
       </el-button>
-      <el-button class="btnPub" type="info" disabled  v-if="billInfos[billInfosIndex].status==1">
+      <el-button class="btnPub" type="info" disabled v-if="billInfos[billInfosIndex].status==1">
         账单已确认
       </el-button>
       <el-button class="btnPub" type="info" disabled v-if="billInfos[billInfosIndex].status==2">
@@ -625,7 +637,7 @@
             filePath: '',
             fileName: '',
             countdown: "",
-            countdownsetInterval:null
+            countdownsetInterval: null
         },
         created() {
             if (!localStorage.getItem('wxOpenId')) {
@@ -640,7 +652,7 @@
         methods: {
             showtime(time) {
                 let nowtime = new Date(),  //获取当前时间
-                    endtime = new Date(new Date(time)*1+24 * 60 * 60 * 1000);  //定义结束时间
+                    endtime = new Date(new Date(time) * 1 + 24 * 60 * 60 * 1000);  //定义结束时间
                 let lefttime = endtime.getTime() - nowtime.getTime(),  //距离结束时间的毫秒数
                     leftd = Math.floor(lefttime / (1000 * 60 * 60 * 24)),  //计算天数
                     lefth = Math.floor(lefttime / (1000 * 60 * 60) % 24),  //计算小时数
@@ -655,11 +667,11 @@
                 if (status != 0) {
                     return false
                 }
-                if(new  Date() - new Date(new Date(time)*1+24 * 60 * 60 * 1000) >=0){
-                    this.countdown =  " 00 时 00 分 00 秒";  //返回倒计时的字符串
-                    return  false
+                if (new Date() - new Date(new Date(time) * 1 + 24 * 60 * 60 * 1000) >= 0) {
+                    this.countdown = " 00 时 00 分 00 秒";  //返回倒计时的字符串
+                    return false
                 }
-                this.countdownsetInterval=setInterval( ()=> {
+                this.countdownsetInterval = setInterval(() => {
                     this.showtime(time);
                 }, 1000);
 
