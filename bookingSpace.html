@@ -1,924 +1,927 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-		<meta name="format-detection" content="telephone=no,address=no,email=no">
-		<meta name="applicable-device" content="pc,mobile">
-		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-		<meta http-equiv="Cache-Control" content="no-transform">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<meta name="renderer" content="webkit">
-		<meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
-		<meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
-		<link rel='icon' href='./img/favicon.ico' type='image/x-icon' />
-		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
-		<link rel="stylesheet" href="./css/element-ui-min.css">
-		<link rel="stylesheet" href="./css/reset.css" />
-		<link rel="stylesheet" href="./css/common.css" />
-		<script src="./js/vue.js"></script>
-		<script src="./js/axios.min.js"></script>
-		<script src="./js/element-ui.js"></script>
-		<script>
-			var _hmt = _hmt || [];
-			(function() {
-				var hm = document.createElement("script");
-				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0];
-				s.parentNode.insertBefore(hm, s);
-			})();
-		</script>
-	</head>
-	<body>
-		<div id="app">
-			<!-- 头部 -->
-			<div class="header">
-				<div class="header-img">
-					<a href="./index.html">
-						<!-- <img class="logo" src="./img/logo.png" /> -->
-						<div class="logo"></div>
-					</a>
-					<div class="logo-title"></div>
-				</div>
-				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
-					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
-					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
-						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
-						<div class="header-bak"><a href="./quick.html">一键订舱</a></div>
-						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
-						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
-						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
-						<div @click="tuiChu" class="header-bak">退出</div>
-					</div>
-				</div>
-				<div v-else @click="loginClick" class="header-user">登录</div>
-<!--				<div class="quick " @click="goQuick">-->
-<!--					<img src="img/quick.png">-->
-<!--					<span >一键订舱</span>-->
-<!--				</div>-->
-			</div>
-			<div class="header-menu">
-				<ul class="header-menu-list com-width">
-					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
-					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
-					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
-				</ul>
-			</div>
-			<!-- 订舱 -->
-			<div style="background-color: #F8FBFD;padding: 20px 0;">
-				<div class="com-width booking">
-					<div class="booking-edit">填写订舱信息</div>
-					<div class="booking-content">
-						<div class="com-width770">
-							<div class="booking-item borderEFEFEF bakFFFFFF">
-								<div class="booking-item-name">货物信息<img alt="图片" style="width: 14px;height: 14px;margin-left: 10px;cursor: pointer;" src="./img/booking-tips.png" /></div>
-								<div class="booking-form-line">
-									<div class="booking-form-item">
-										<label class="booking-form-item-label"><span style="color: #F00;">*</span>件数</label>
-										<div class="booking-form-item-content">
-											<!-- <div class="booking-form-tips-left">PCS</div> -->
-											<input v-model="bookingPiece" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="9" class="booking-form-input" type="text" />
-											<div class="booking-form-tips-right">PCS</div>
-										</div>
-									</div>
-									<div class="booking-form-item">
-										<label class="booking-form-item-label"><span style="color: #F00;">*</span>重量</label>
-										<div class="booking-form-item-content">
-											<input v-model="bookingWeight" @blur="bookingWeightBlur" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="6" class="booking-form-input" type="text" />
-											<div class="booking-form-tips-right">KG</div>
-										</div>
-									</div>
-									<div class="booking-form-item">
-										<label class="booking-form-item-label"><span style="color: #F00;">*</span>体积</label>
-										<div class="booking-form-item-content">
-											<input v-model="bookingCbm" @blur="bookingCbmBlur" onkeyup="value=value.replace(/[^\d\.]/g, '')" maxlength="9" style="width: 120px;" class="booking-form-input" type="text" />
-											<div class="booking-form-tips-right">CBM</div>
-										</div>
-									</div>
-								</div>
-								<div class="booking-form-line">
-									<div class="booking-form-item">
-										<label class="booking-form-item-label"><span style="color: #F00;">*</span>品名</label>
-										<div class="booking-form-item-content">
-											<input v-model="cargoName" @blur="cargoNameBlur" maxlength="30" placeholder="请填写货物品名" class="booking-form-input" type="text" style="width: 200px;"/>
-										</div>
-									</div>
-								</div>
-								<div :style="{visibility: !isMagnetic ? 'hidden' : 'visible'}" class="booking-form-item-tips">提示：该货物需要提供《磁检报告》</div>
-								<ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 40px;">
-									<li @click="cargoTypeClick(1)" :class="{radio_li_active: cargoType == '1'}" class="radio-li">普货</li>
-									<li @click="cargoTypeClick(2)" :class="{radio_li_active: cargoType == '2'}" class="radio-li">化工品</li>
-									<li @click="cargoTypeClick(3)" :class="{radio_li_active: cargoType == '3'}" class="radio-li">危险品</li>
-									<li @click="cargoTypeClick(4)" :class="{radio_li_active: cargoType == '4'}" class="radio-li">防疫物资</li>
-								</ul>
-								<div class="booking-item-name">包装类型</div>
-								<ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 20px;">
-									<li @click="packageTypeClick(1)" :class="{radio_li_active: packageType == '1'}" class="radio-li">散货</li>
-									<li @click="packageTypeClick(2)" :class="{radio_li_active: packageType == '2'}" class="radio-li">托盘</li>
-								</ul>
-								<div v-if="packageType == '2'" v-for="(item,index) in trayDetail" :key="index" class="booking-form-line">
-									<div class="booking-form-item">
-										<label class="booking-form-item-label"><span style="color: #F00;">*</span>托盘数量</label>
-										<div class="booking-form-item-content">
-											<input v-model="item.trayNumber" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3" class="booking-form-input" type="text" />
-										</div>
-									</div>
-									<div class="booking-form-item">
-										<label class="booking-form-item-label"><span style="color: #F00;">*</span>托盘尺寸</label>
-										<div class="booking-form-item-content">
-											<div class="booking-form-tips-left">长</div>
-											<input v-model="item.traySize" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3" class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;"/>
-											<div class="booking-form-tips-right">CM</div>
-										</div>
-									</div>
-									<div class="booking-form-item" style="margin-left: 20px;">
-										<div class="booking-form-item-content">
-											<div class="booking-form-tips-left">宽</div>
-											<input v-model="item.trayWidth" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3" class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;" />
-											<div class="booking-form-tips-right">CM</div>
-										</div>
-									</div>
-									<div class="booking-form-item" style="margin-left: 20px;">
-										<div class="booking-form-item-content">
-											<div class="booking-form-tips-left">高</div>
-											<input v-model="item.trayHeight" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3" class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;" />
-											<div class="booking-form-tips-right">CM</div>
-										</div>
-									</div>
-									<img v-if="trayDetail.length > 1" @click="trayDeleteClick(index)" style="height: 22px;margin-left: 20px;margin-top: 4px;cursor: pointer;" alt="图片" src="./img/lajixiang.png" />
-								</div>
-								<button v-if="(trayDetail.length != 10) && packageType == '2'" @click="trayAddClick" class="box-btn btn-prprimary com-width100" style="margin-left: 30px;">添加</button>
-							</div>
-							<div class="booking-item borderEFEFEF bakFFFFFF booking-serve-width">
-								<div class="booking-item-name">服务产品</div>
-								<div class="booking-form-line">
-									<div class="booking-form-item">
-										<label class="booking-form-item-label" style="width: 84px;">报关服务</label>
-										<div class="booking-form-item-content">
-											<ul class="group-radio-ul" style="font-size: 14px;">
-												<li @click="customsTypeClick(1)" :class="{radio_li_active: customsType == '1'}" class="radio-li">自行报关</li>
-												<li @click="customsTypeClick(2)" :class="{radio_li_active: customsType == '2'}" class="radio-li">委托“17订舱”报关</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="booking-form-line">
-									<div class="booking-form-item">
-										<label class="booking-form-item-label" style="width: 84px;">国内提货</label>
-										<div class="booking-form-item-content">
-											<ul class="group-radio-ul" style="font-size: 14px;">
-												<li @click="isPickUpClick(1)" :class="{radio_li_active: isPickUp == '1'}" class="radio-li">不需要</li>
-												<li @click="isPickUpClick(2)" :class="{radio_li_active: isPickUp == '2'}" class="radio-li">需要</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div v-if="isPickUp == '2'">
-									<div class="booking-form-line">
-										<div class="booking-form-item">
-											<label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货地址</label>
-											<div class="booking-form-item-content">
-												<input v-model="pickUpAddress" maxlength="50" placeholder="请填写提货地址" class="booking-form-input" type="text" style="width: 450px;"/>
-											</div>
-										</div>
-									</div>
-									<div class="booking-form-line">
-										<div class="booking-form-item">
-											<label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货联系人</label>
-											<div class="booking-form-item-content">
-												<input v-model="pickUpContacts" maxlength="15" placeholder="请填写提货联系人" class="booking-form-input" type="text" style="width: 450px;"/>
-											</div>
-										</div>
-									</div>
-									<div class="booking-form-line">
-										<div class="booking-form-item">
-											<label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
-											<div class="booking-form-item-content">
-												<input v-model="pickUpTel" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="11" placeholder="请填写联系电话" class="booking-form-input" type="text" style="width: 450px;"/>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="booking-form-line">
-									<div class="booking-form-item">
-										<label class="booking-form-item-label" style="width: 84px;">清关服务</label>
-										<div class="booking-form-item-content">
-											<ul class="group-radio-ul" style="font-size: 14px;">
-												<li @click="cclTypeClick(1)" :class="{radio_li_active: cclType == '1'}" class="radio-li">自行清关</li>
-												<li @click="cclTypeClick(2)" :class="{radio_li_active: cclType == '2'}" class="radio-li">DDU</li>
-												<li @click="cclTypeClick(3)" :class="{radio_li_active: cclType == '3'}" class="radio-li">DDP</li>
-												<li @click="cclTypeClick(4)" :class="{radio_li_active: cclType == '4'}" class="radio-li">DAP</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div v-if="cclType != '1'">
-									<div class="booking-form-line">
-										<div class="booking-form-item">
-											<label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>送货地址</label>
-											<div class="booking-form-item-content">
-												<input v-model="deliveryAddress" maxlength="200" placeholder="请填写送货地址" class="booking-form-input" type="text" style="width: 450px;"/>
-											</div>
-										</div>
-									</div>
-									<div class="booking-form-line">
-										<div class="booking-form-item">
-											<label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>送货联系人</label>
-											<div class="booking-form-item-content">
-												<input v-model="deliveryContacts" maxlength="50" placeholder="请填写送货联系人" class="booking-form-input" type="text" style="width: 450px;"/>
-											</div>
-										</div>
-									</div>
-									<div class="booking-form-line">
-										<div class="booking-form-item">
-											<label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
-											<div class="booking-form-item-content">
-												<input v-model="deliveryTel" maxlength="20" placeholder="请填写联系电话" class="booking-form-input" type="text" style="width: 450px;"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="booking-item borderEFEFEF bakFFFFFF">
-								<div class="booking-item-name">货物单价</div>
-								<ul class="booking-proportion-ul">
-									<li class="booking-proportion-item">
-										<div>比重</div>
-										<div>M</div>
-										<div>N</div>
-										<div>45KG+</div>
-										<div>100KG+</div>
-										<div>300KG+</div>
-										<div>500KG+</div>
-										<div>1000KG+</div>
-									</li>
-									<li v-for="(item,index) in proportionArr.baseRatesList" class="booking-proportion-item">
-										<div>1:{{item.vwr}}</div>
-										<div :style="{color: chargedValue == item.vwr && chargedKey == 'M'?'#F00':'#333'}">￥{{item.ratesLevel0}}</div>
-										<div :style="{color: chargedValue == item.vwr && chargedKey == 'N'?'#F00':'#333'}">￥{{item.ratesN}}</div>
-										<div :style="{color: chargedValue == item.vwr && chargedKey == '45+'?'#F00':'#333'}">￥{{item.ratesLevel1}}</div>
-										<div :style="{color: chargedValue == item.vwr && chargedKey == '100+'?'#F00':'#333'}">￥{{item.ratesLevel2}}</div>
-										<div :style="{color: chargedValue == item.vwr && chargedKey == '300+'?'#F00':'#333'}">￥{{item.ratesLevel3}}</div>
-										<div :style="{color: chargedValue == item.vwr && chargedKey == '500+'?'#F00':'#333'}">￥{{item.ratesLevel4}}</div>
-										<div :style="{color: chargedValue == item.vwr && chargedKey == '1000+'?'#F00':'#333'}">￥{{item.ratesLevel5}}</div>
-									</li>
-								</ul>
-							</div>
-						</div>
-						<div class="com-width410">
-							<div class="booking-item borderEFEFEF bakFFFFFF">
-								<div class="booking-flight-date">
-									<span>{{dateTabActive}}</span>
-									<span v-if="proportionArr.dow == '1'">周一</span>
-									<span v-if="proportionArr.dow == '2'">周二</span>
-									<span v-if="proportionArr.dow == '3'">周三</span>
-									<span v-if="proportionArr.dow == '4'">周四</span>
-									<span v-if="proportionArr.dow == '5'">周五</span>
-									<span v-if="proportionArr.dow == '6'">周六</span>
-									<span v-if="proportionArr.dow == '7'">周日</span>
-								</div>
-								<div class="booking-flight-name"><span></span>
-									<span>{{proportionArr.airCompanyName}}</span>
-									<span style="marginLeft:10px;">{{proportionArr.airCompanyCode}}</span>
-								</div>
-								<div class="booking-flight-route">
-									<div class="booking-flight-route-item">
-										<div>{{proportionArr.pol}}</div>
-										<div>{{proportionArr.polName}}</div>
-									</div>
-									<div class="booking-flight-route-tips">{{proportionArr.legCount == '1' ? '直达' : proportionArr.firstHub}}</div>
-									<div class="booking-flight-route-item">
-										<div>{{proportionArr.pod}}</div>
-										<div>{{proportionArr.podName}}</div>
-									</div>
-								</div>
-								<div class="booking-flight-date-num">
-									<div>时效：{{proportionArr.shortDuration}}天</div>
-								</div>
-							</div>
-							<div v-if="chargedJiaqian == '0' || chargedJiaqian" class="booking-price borderEFEFEF bakFFFFFF">
-								<div class="booking-price-item">
-									<div class="booking-price-item-name">国内段</div>
-									<div class="booking-price-item-list">
-										<div>空运费</div>
-										<div><span style="margin-right: 30px;">{{chargedJiaqian}}*{{bookingCw}}</span><span>￥{{Math.ceil(chargedJiaqian*bookingCw)}}</span></div>
-									</div>
-									<div v-for="(item,index) in newOtherFeeMap" :key="index" class="booking-price-item-list">
-										<div>{{item.feesName}}</div>
-										<div><span>￥{{item.fees}}</span></div>
-									</div>
-									<div v-if="customsType == '2'" class="booking-price-item-list">
-										<div>报关费</div>
-										<div><span>￥100</span></div>
-									</div>
-								</div>
-								<div class="booking-price-total">
-									<div>CNY</div>
-									<div v-if="customsType == '2'">￥{{Math.ceil(totolPrice)+100}}</div>
-									<div v-else>￥{{Math.ceil(totolPrice)}}</div>
-								</div>
-							</div>
-							<!-- <div class="booking-price borderEFEFEF bakFFFFFF">
-								<div class="booking-price-item">
-									<div class="booking-price-item-name">国际段</div>
-									<div v-for="(item,index) in abroadArr" :key="index" class="booking-price-item-list">
-										<div>{{item.name}}</div>
-										<div><span>{{item.price1}}</span></div>
-									</div>
-								</div>
-								<div class="booking-price-total">
-									<div>USD</div>
-									<div>$100</div>
-								</div>
-							</div> -->
-							<div v-if="chargedJiaqian == '0' || chargedJiaqian">
-								<button @click="submitClick" style="width: 100%;font-size: 18px;" class="box-btn btn-prprimary com-height50">提交订单</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no,address=no,email=no">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+    <meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+    <link rel='icon' href='./img/favicon.ico' type='image/x-icon'/>
+    <title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+    <link rel="stylesheet" href="./css/element-ui-min.css">
+    <link rel="stylesheet" href="./css/reset.css"/>
+    <link rel="stylesheet" href="./css/common.css"/>
+    <script src="./js/vue.js"></script>
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/element-ui.js"></script>
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</head>
+<body>
+<div id="app">
+    <!-- 头部 -->
+    <div class="header">
+        <div class="header-img">
+            <a href="./index.html">
+                <!-- <img class="logo" src="./img/logo.png" /> -->
+                <div class="logo"></div>
+            </a>
+            <div class="logo-title"></div>
+        </div>
+        <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+            <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+            <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+                <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+                <div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+                <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+                <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+                <div class="header-bak"><a href="./financial.html">财务管理</a></div>
+                <div @click="tuiChu" class="header-bak">退出</div>
+            </div>
+        </div>
+        <div v-else @click="loginClick" class="header-user">登录</div>
+        <!--				<div class="quick " @click="goQuick">-->
+        <!--					<img src="img/quick.png">-->
+        <!--					<span >一键订舱</span>-->
+        <!--				</div>-->
+    </div>
+    <div class="header-menu">
+        <ul class="header-menu-list com-width">
+            <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+            <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
+            <!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+            <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+        </ul>
+    </div>
+    <!-- 订舱 -->
+    <div style="background-color: #F8FBFD;padding: 20px 0;">
+        <div class="com-width booking">
+            <div class="booking-edit">填写订舱信息</div>
+            <div class="booking-content">
+                <div class="com-width770">
+                    <div class="booking-item borderEFEFEF bakFFFFFF">
+                        <div class="booking-item-name">货物信息<img alt="图片"
+                                                                style="width: 14px;height: 14px;margin-left: 10px;cursor: pointer;"
+                                                                src="./img/booking-tips.png"/></div>
+                        <div class="booking-form-line">
+                            <div class="booking-form-item">
+                                <label class="booking-form-item-label"><span style="color: #F00;">*</span>件数</label>
+                                <div class="booking-form-item-content">
+                                    <!-- <div class="booking-form-tips-left">PCS</div> -->
+                                    <input v-model="bookingPiece" onkeyup="value=value.replace(/[^\d]/g, '')"
+                                           maxlength="9" class="booking-form-input" type="text"/>
+                                    <div class="booking-form-tips-right">PCS</div>
+                                </div>
+                            </div>
+                            <div class="booking-form-item">
+                                <label class="booking-form-item-label"><span style="color: #F00;">*</span>重量</label>
+                                <div class="booking-form-item-content">
+                                    <input v-model="bookingWeight" @blur="bookingWeightBlur"
+                                           onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="6"
+                                           class="booking-form-input" type="text"/>
+                                    <div class="booking-form-tips-right">KG</div>
+                                </div>
+                            </div>
+                            <div class="booking-form-item">
+                                <label class="booking-form-item-label"><span style="color: #F00;">*</span>体积</label>
+                                <div class="booking-form-item-content">
+                                    <input v-model="bookingCbm" @blur="bookingCbmBlur"
+                                           onkeyup="value=value.replace(/[^\d\.]/g, '')" maxlength="9"
+                                           style="width: 120px;" class="booking-form-input" type="text"/>
+                                    <div class="booking-form-tips-right">CBM</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="booking-form-line">
+                            <div class="booking-form-item">
+                                <label class="booking-form-item-label"><span style="color: #F00;">*</span>品名</label>
+                                <div class="booking-form-item-content">
+                                    <input v-model="cargoName" @blur="cargoNameBlur" maxlength="30"
+                                           placeholder="请填写货物品名" class="booking-form-input" type="text"
+                                           style="width: 200px;"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div :style="{visibility: !isMagnetic ? 'hidden' : 'visible'}" class="booking-form-item-tips">
+                            提示：该货物需要提供《磁检报告》
+                        </div>
+                        <ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 40px;">
+                            <li @click="cargoTypeClick(1)" :class="{radio_li_active: cargoType == '1'}"
+                                class="radio-li">普货
+                            </li>
+                            <li @click="cargoTypeClick(2)" :class="{radio_li_active: cargoType == '2'}"
+                                class="radio-li">化工品
+                            </li>
+                            <li @click="cargoTypeClick(3)" :class="{radio_li_active: cargoType == '3'}"
+                                class="radio-li">危险品
+                            </li>
+                            <li @click="cargoTypeClick(4)" :class="{radio_li_active: cargoType == '4'}"
+                                class="radio-li">防疫物资
+                            </li>
+                        </ul>
+                        <div class="booking-item-name">包装类型</div>
+                        <ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 20px;">
+                            <li @click="packageTypeClick(1)" :class="{radio_li_active: packageType == '1'}"
+                                class="radio-li">散货
+                            </li>
+                            <li @click="packageTypeClick(2)" :class="{radio_li_active: packageType == '2'}"
+                                class="radio-li">托盘
+                            </li>
+                        </ul>
+                        <div v-if="packageType == '2'" v-for="(item,index) in trayDetail" :key="index"
+                             class="booking-form-line">
+                            <div class="booking-form-item">
+                                <label class="booking-form-item-label"><span style="color: #F00;">*</span>托盘数量</label>
+                                <div class="booking-form-item-content">
+                                    <input v-model="item.trayNumber" onkeyup="value=value.replace(/[^\d]/g, '')"
+                                           maxlength="3" class="booking-form-input" type="text"/>
+                                </div>
+                            </div>
+                            <div class="booking-form-item">
+                                <label class="booking-form-item-label"><span style="color: #F00;">*</span>托盘尺寸</label>
+                                <div class="booking-form-item-content">
+                                    <div class="booking-form-tips-left">长</div>
+                                    <input v-model="item.traySize" onkeyup="value=value.replace(/[^\d]/g, '')"
+                                           maxlength="3" class="booking-form-input" type="text"
+                                           style="padding: 0 30px;text-align: center;"/>
+                                    <div class="booking-form-tips-right">CM</div>
+                                </div>
+                            </div>
+                            <div class="booking-form-item" style="margin-left: 20px;">
+                                <div class="booking-form-item-content">
+                                    <div class="booking-form-tips-left">宽</div>
+                                    <input v-model="item.trayWidth" onkeyup="value=value.replace(/[^\d]/g, '')"
+                                           maxlength="3" class="booking-form-input" type="text"
+                                           style="padding: 0 30px;text-align: center;"/>
+                                    <div class="booking-form-tips-right">CM</div>
+                                </div>
+                            </div>
+                            <div class="booking-form-item" style="margin-left: 20px;">
+                                <div class="booking-form-item-content">
+                                    <div class="booking-form-tips-left">高</div>
+                                    <input v-model="item.trayHeight" onkeyup="value=value.replace(/[^\d]/g, '')"
+                                           maxlength="3" class="booking-form-input" type="text"
+                                           style="padding: 0 30px;text-align: center;"/>
+                                    <div class="booking-form-tips-right">CM</div>
+                                </div>
+                            </div>
+                            <img v-if="trayDetail.length > 1" @click="trayDeleteClick(index)"
+                                 style="height: 22px;margin-left: 20px;margin-top: 4px;cursor: pointer;" alt="图片"
+                                 src="./img/lajixiang.png"/>
+                        </div>
+                        <button v-if="(trayDetail.length != 10) && packageType == '2'" @click="trayAddClick"
+                                class="box-btn btn-prprimary com-width100" style="margin-left: 30px;">添加
+                        </button>
+                    </div>
+                    <div class="booking-item borderEFEFEF bakFFFFFF booking-serve-width">
+                        <div class="booking-item-name">服务产品</div>
+                        <div class="booking-form-line">
+                            <div class="booking-form-item">
+                                <label class="booking-form-item-label" style="width: 84px;">报关服务</label>
+                                <div class="booking-form-item-content">
+                                    <ul class="group-radio-ul" style="font-size: 14px;">
+                                        <li @click="customsTypeClick(1)" :class="{radio_li_active: customsType == '1'}"
+                                            class="radio-li">自行报关
+                                        </li>
+                                        <li @click="customsTypeClick(2)" :class="{radio_li_active: customsType == '2'}"
+                                            class="radio-li">委托“17订舱”报关
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="booking-form-line">
+                            <div class="booking-form-item">
+                                <label class="booking-form-item-label" style="width: 84px;">国内提货</label>
+                                <div class="booking-form-item-content">
+                                    <ul class="group-radio-ul" style="font-size: 14px;">
+                                        <li @click="isPickUpClick(1)" :class="{radio_li_active: isPickUp == '1'}"
+                                            class="radio-li">不需要
+                                        </li>
+                                        <li @click="isPickUpClick(2)" :class="{radio_li_active: isPickUp == '2'}"
+                                            class="radio-li">需要
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="isPickUp == '2'">
+                            <div class="booking-form-line">
+                                <div class="booking-form-item">
+                                    <label class="booking-form-item-label" style="width: 84px;"><span
+                                            style="color: #F00;">*</span>提货地址</label>
+                                    <div class="booking-form-item-content">
+                                        <input v-model="pickUpAddress" maxlength="50" placeholder="请填写提货地址"
+                                               class="booking-form-input" type="text" style="width: 450px;"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="booking-form-line">
+                                <div class="booking-form-item">
+                                    <label class="booking-form-item-label" style="width: 84px;"><span
+                                            style="color: #F00;">*</span>提货联系人</label>
+                                    <div class="booking-form-item-content">
+                                        <input v-model="pickUpContacts" maxlength="15" placeholder="请填写提货联系人"
+                                               class="booking-form-input" type="text" style="width: 450px;"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="booking-form-line">
+                                <div class="booking-form-item">
+                                    <label class="booking-form-item-label" style="width: 84px;"><span
+                                            style="color: #F00;">*</span>联系电话</label>
+                                    <div class="booking-form-item-content">
+                                        <input v-model="pickUpTel" onkeyup="value=value.replace(/[^\d]/g, '')"
+                                               maxlength="11" placeholder="请填写联系电话" class="booking-form-input"
+                                               type="text" style="width: 450px;"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="booking-form-line">
+                            <div class="booking-form-item">
+                                <label class="booking-form-item-label" style="width: 84px;">清关服务</label>
+                                <div class="booking-form-item-content">
+                                    <ul class="group-radio-ul" style="font-size: 14px;">
+                                        <li @click="cclTypeClick(1)" :class="{radio_li_active: cclType == '1'}"
+                                            class="radio-li">自行清关
+                                        </li>
+                                        <li @click="cclTypeClick(2)" :class="{radio_li_active: cclType == '2'}"
+                                            class="radio-li">DDU
+                                        </li>
+                                        <li @click="cclTypeClick(3)" :class="{radio_li_active: cclType == '3'}"
+                                            class="radio-li">DDP
+                                        </li>
+                                        <li @click="cclTypeClick(4)" :class="{radio_li_active: cclType == '4'}"
+                                            class="radio-li">DAP
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="cclType != '1'">
+                            <div class="booking-form-line">
+                                <div class="booking-form-item">
+                                    <label class="booking-form-item-label" style="width: 84px;"><span
+                                            style="color: #F00;">*</span>送货地址</label>
+                                    <div class="booking-form-item-content">
+                                        <input v-model="deliveryAddress" maxlength="200" placeholder="请填写送货地址"
+                                               class="booking-form-input" type="text" style="width: 450px;"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="booking-form-line">
+                                <div class="booking-form-item">
+                                    <label class="booking-form-item-label" style="width: 84px;"><span
+                                            style="color: #F00;">*</span>送货联系人</label>
+                                    <div class="booking-form-item-content">
+                                        <input v-model="deliveryContacts" maxlength="50" placeholder="请填写送货联系人"
+                                               class="booking-form-input" type="text" style="width: 450px;"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="booking-form-line">
+                                <div class="booking-form-item">
+                                    <label class="booking-form-item-label" style="width: 84px;"><span
+                                            style="color: #F00;">*</span>联系电话</label>
+                                    <div class="booking-form-item-content">
+                                        <input v-model="deliveryTel" maxlength="20" placeholder="请填写联系电话"
+                                               class="booking-form-input" type="text" style="width: 450px;"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="booking-item borderEFEFEF bakFFFFFF">
+                        <div class="booking-item-name">货物单价</div>
+                        <ul class="booking-proportion-ul">
+                            <li class="booking-proportion-item">
+                                <div>比重</div>
+                                <div>M</div>
+                                <div>N</div>
+                                <div>45KG+</div>
+                                <div>100KG+</div>
+                                <div>300KG+</div>
+                                <div>500KG+</div>
+                                <div>1000KG+</div>
+                            </li>
+                            <li v-for="(item,index) in proportionArr.baseRatesList" class="booking-proportion-item">
+                                <div>1:{{item.vwr}}</div>
+                                <div :style="{color: chargedValue == item.vwr && chargedKey == 'M'?'#F00':'#333'}">
+                                    ￥{{item.ratesLevel0}}
+                                </div>
+                                <div :style="{color: chargedValue == item.vwr && chargedKey == 'N'?'#F00':'#333'}">
+                                    ￥{{item.ratesN}}
+                                </div>
+                                <div :style="{color: chargedValue == item.vwr && chargedKey == '45+'?'#F00':'#333'}">
+                                    ￥{{item.ratesLevel1}}
+                                </div>
+                                <div :style="{color: chargedValue == item.vwr && chargedKey == '100+'?'#F00':'#333'}">
+                                    ￥{{item.ratesLevel2}}
+                                </div>
+                                <div :style="{color: chargedValue == item.vwr && chargedKey == '300+'?'#F00':'#333'}">
+                                    ￥{{item.ratesLevel3}}
+                                </div>
+                                <div :style="{color: chargedValue == item.vwr && chargedKey == '500+'?'#F00':'#333'}">
+                                    ￥{{item.ratesLevel4}}
+                                </div>
+                                <div :style="{color: chargedValue == item.vwr && chargedKey == '1000+'?'#F00':'#333'}">
+                                    ￥{{item.ratesLevel5}}
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="com-width410">
+                    <div class="booking-item borderEFEFEF bakFFFFFF">
+                        <div class="booking-flight-date">
+                            <span>{{dateTabActive}}</span>
+                            <span v-if="proportionArr.dow == '1'">周一</span>
+                            <span v-if="proportionArr.dow == '2'">周二</span>
+                            <span v-if="proportionArr.dow == '3'">周三</span>
+                            <span v-if="proportionArr.dow == '4'">周四</span>
+                            <span v-if="proportionArr.dow == '5'">周五</span>
+                            <span v-if="proportionArr.dow == '6'">周六</span>
+                            <span v-if="proportionArr.dow == '7'">周日</span>
+                        </div>
+                        <div class="booking-flight-name"><span></span>
+                            <span>{{proportionArr.airCompanyName}}</span>
+                            <span style="marginLeft:10px;">{{proportionArr.airCompanyCode}}</span>
+                        </div>
+                        <div class="booking-flight-route">
+                            <div class="booking-flight-route-item">
+                                <div>{{proportionArr.pol}}</div>
+                                <div>{{proportionArr.polName}}</div>
+                            </div>
+                            <div class="booking-flight-route-tips">
+                                {{proportionArr.legCount == '1' ? '直达' : proportionArr.firstHub}}
+                            </div>
+                            <div class="booking-flight-route-item">
+                                <div>{{proportionArr.pod}}</div>
+                                <div>{{proportionArr.podName}}</div>
+                            </div>
+                        </div>
+                        <div class="booking-flight-date-num">
+                            <div>时效：{{proportionArr.shortDuration}}天</div>
+                        </div>
+                    </div>
+                    <div v-if="chargedJiaqian == '0' || chargedJiaqian" class="booking-price borderEFEFEF bakFFFFFF">
+                        <div class="booking-price-item">
+                            <div class="booking-price-item-name">国内段</div>
+                            <div class="booking-price-item-list">
+                                <div>空运费</div>
+                                <div><span
+                                        style="margin-right: 30px;">{{chargedJiaqian}}*{{bookingCw}}</span><span>￥{{Math.ceil(chargedJiaqian * bookingCw)}}</span>
+                                </div>
+                            </div>
+                            <div v-for="(item,index) in newOtherFeeMap" :key="index" class="booking-price-item-list">
+                                <div>{{item.feesName}}</div>
+                                <div><span>￥{{item.fees}}</span></div>
+                            </div>
+                            <div v-if="customsType == '2'" class="booking-price-item-list">
+                                <div>报关费</div>
+                                <div><span>￥100</span></div>
+                            </div>
+                        </div>
+                        <div class="booking-price-total">
+                            <div>CNY</div>
+                            <div v-if="customsType == '2'">￥{{Math.ceil(totolPrice) + 100}}</div>
+                            <div v-else>￥{{Math.ceil(totolPrice)}}</div>
+                        </div>
+                    </div>
+                    <!-- <div class="booking-price borderEFEFEF bakFFFFFF">
+                        <div class="booking-price-item">
+                            <div class="booking-price-item-name">国际段</div>
+                            <div v-for="(item,index) in abroadArr" :key="index" class="booking-price-item-list">
+                                <div>{{item.name}}</div>
+                                <div><span>{{item.price1}}</span></div>
+                            </div>
+                        </div>
+                        <div class="booking-price-total">
+                            <div>USD</div>
+                            <div>$100</div>
+                        </div>
+                    </div> -->
+                    <div v-if="chargedJiaqian == '0' || chargedJiaqian">
+                        <button @click="submitClick" style="width: 100%;font-size: 18px;"
+                                class="box-btn btn-prprimary com-height50">提交订单
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-			<!-- 尾部 -->
-			<div class="footer">
-				<div class="com-width">
-					<div class="footer-content">
-						<div class="footer-label">
-							<div class="footer-cool" style="margin-bottom: 10px;">
-								<span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
-							</div>
-							<!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
-								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
-								<span>沪公网备XXXXXXXXXXXXX号</span>
-							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
-						</div>
-						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
-	<script src="./service/index.js"></script>
-	<script>
-		new Vue({
-			el: '#app',
-			data: {
-				//菜单
-				menuArr: [
-					{
-						name: '首页'
-					},
-					{
-						name: '订单跟踪'
-					},
-					{
-						name: '行业咨询'
-					},
-					{
-						name: '关于我们'
-					}
-				],
-				menuIndex: 0,
-				bookingPiece: '',
-				bookingWeight: '',
-				bookingCbm: '',
-				cargoName: '',
-				cargoType: '1',
-				packageType: '1',
-				trayDetail: [
-					{
-						trayNumber: '',
-						traySize: '',
-						trayWidth: '',
-						trayHeight: ''
-					}
-				],
-				customsType: '1',
-				isPickUp: '1',
-				cclType: '1',
-				pickUpAddress: '',
-				pickUpContacts: '',
-				pickUpTel: '',
-				deliveryAddress: '',
-				deliveryContacts: '',
-				deliveryTel: '',
-				airlineIdA: '',
-				cargoTypeA: '',
-				dowA: '',
-				proportionArr: [],
-				proportionJson: {},
-				weightPrice: 167,
-				chargedWeight: '',
-				chargedJiaqian: '',
-				chargedValue: '',
-				chargedKey: '',
-				otherFeeMap: {},
-				newOtherFeeMap: [],
-				totolPrice: '',
-				dateTabActive: '',
-				bookingCw: '',
-				hangxianId: '',
-				isMagnetic: false,
-				userInfo: '',
-				headerMenu: false
-			},
-			created() {
-				if(!localStorage.getItem('wxOpenId')){
-					window.location.href = './login.html'
-				}
-				if(localStorage.getItem('userInfo')){
-					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-				}
-				this.airlineIdA = getQueryVariable('airlineId')
-				this.cargoTypeA = getQueryVariable('cargoType')
-				this.dowA = getQueryVariable('dow')
-				this.dateTabActive = getQueryVariable('date')
-				this.bookingPiece = Number(getQueryVariable('bookingPiece')) || ''
-				this.bookingWeight = Number(getQueryVariable('bookingWeight')) || ''
-				this.bookingCbm = Number(getQueryVariable('bookingCbm')) || ''
-				this.initHangxian()
-				if(this.bookingWeight && this.bookingCbm){
-					setTimeout(() => {
-						this.bookingWeightBlur()
-					},1000)
-				}
-				// this.bookingCbmBlur()
-			},
-			methods: {
-				goQuick(){
-					window.location.href='./quick.html'
-				},
-				showHeaderMenu(type) {
-					if(type == 1){
-						this.headerMenu = true
-					}else {
-						this.headerMenu = false
-					}
-				},
-				tuiChu() {
-					localStorage.clear()
-					window.location.href = './login.html'
-				},
-				cargoNameBlur() {
-					axios({
-						method: 'get',
-						url: webIp+serviceApi.orderIsMagnetic+'?cargoName='+this.cargoName,
-						headers: {
-							'tokenId': localStorage.getItem('tokenId')
-						}
-					}).then((data) =>{
-						var data = data.data
-						if(data.code == 200){
-							this.isMagnetic = data.data
-						}else if(data.code == -200){
-							window.location.href = './login.html'
-						}else{
-							this.$message.error(data.message)
+    <!-- 尾部 -->
+    <div class="footer">
+        <div class="com-width">
+            <div class="footer-content">
+                <div class="footer-label">
+                    <div class="footer-cool" style="margin-bottom: 10px;">
+                        <span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank"
+                                                                                           href="./yingyezhizhaoImg.html"
+                                                                                           class="yingyezhizhao">营业执照</a></span>
+                    </div>
+                    <!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
+                        <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
+                        <span>沪公网备XXXXXXXXXXXXX号</span>
+                    </div> -->
+                    <div class="footer-ipc">上海傲晔物流科技有限公司 丨 上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
+                </div>
+                <div class="footer-img"><img alt="图片" src="./img/qcode.png"/></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="./service/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            //菜单
+            menuArr: [
+                {
+                    name: '首页'
+                },
+                {
+                    name: '订单跟踪'
+                },
+                {
+                    name: '行业咨询'
+                },
+                {
+                    name: '关于我们'
+                }
+            ],
+            menuIndex: 0,
+            bookingPiece: '',
+            bookingWeight: '',
+            bookingCbm: '',
+            cargoName: '',
+            cargoType: '1',
+            packageType: '1',
+            trayDetail: [
+                {
+                    trayNumber: '',
+                    traySize: '',
+                    trayWidth: '',
+                    trayHeight: ''
+                }
+            ],
+            customsType: '1',
+            isPickUp: '1',
+            cclType: '1',
+            pickUpAddress: '',
+            pickUpContacts: '',
+            pickUpTel: '',
+            deliveryAddress: '',
+            deliveryContacts: '',
+            deliveryTel: '',
+            airlineIdA: '',
+            cargoTypeA: '',
+            dowA: '',
+            proportionArr: [],
+            proportionJson: {},
+            weightPrice: 167,
+            chargedWeight: '',
+            chargedJiaqian: '',
+            chargedValue: '',
+            chargedKey: '',
+            otherFeeMap: {},
+            newOtherFeeMap: [],
+            totolPrice: '',
+            dateTabActive: '',
+            bookingCw: '',
+            hangxianId: '',
+            isMagnetic: false,
+            userInfo: '',
+            headerMenu: false
+        },
+        created() {
+            if (!localStorage.getItem('wxOpenId')) {
+                window.location.href = './login.html'
+            }
+            if (localStorage.getItem('userInfo')) {
+                this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+            }
+            this.airlineIdA = getQueryVariable('airlineId')
+            this.cargoTypeA = getQueryVariable('cargoType')
+            this.dowA = getQueryVariable('dow')
+            this.dateTabActive = getQueryVariable('date')
+            this.bookingPiece = Number(getQueryVariable('bookingPiece')) || ''
+            this.bookingWeight = Number(getQueryVariable('bookingWeight')) || ''
+            this.bookingCbm = Number(getQueryVariable('bookingCbm')) || ''
+            this.initHangxian()
+            if (this.bookingWeight && this.bookingCbm) {
+                setTimeout(() => {
+                    this.bookingWeightBlur()
+                }, 1000)
+            }
+            // this.bookingCbmBlur()
+        },
+        methods: {
+            goQuick() {
+                window.location.href = './quick.html'
+            },
+            showHeaderMenu(type) {
+                if (type == 1) {
+                    this.headerMenu = true
+                } else {
+                    this.headerMenu = false
+                }
+            },
+            tuiChu() {
+                localStorage.clear()
+                window.location.href = './login.html'
+            },
+            cargoNameBlur() {
+                axios({
+                    method: 'get',
+                    url: webIp + serviceApi.orderIsMagnetic + '?cargoName=' + this.cargoName,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                        this.isMagnetic = data.data
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
 
-						}
-					})
-				},
-				//用户下单
-				submitClick() {
-					var reg = /^(1[3456789])\d{9}$/
-					if(this.totolPrice == '0' || this.chargedJiaqian == '0'){
-						this.$message.error('货物计费量未达标，请重新填写')
-						return
-					}
-					if(!this.bookingPiece){
-						this.$message.error('请输入件数')
-						return
-					}else if(!this.bookingWeight){
-						this.$message.error('请输入重量')
-						return
-					}else if(!this.bookingCbm){
-						this.$message.error('请输入体积')
-						return
-					}else if(!this.cargoName){
-						this.$message.error('请输入品名')
-						return
-					}
-					if(this.packageType == '2'){
-						for(var i = 0; i < this.trayDetail.length; i++){
-							if(this.trayDetail[i].trayNumber == ''){
-								this.$message.error('请输入托盘数量')
-								return
-							}else if(this.trayDetail[i].traySize == ''){
-								this.$message.error('请输入托盘尺寸长度')
-								return
-							}else if(this.trayDetail[i].trayWidth == ''){
-								this.$message.error('请输入托盘尺寸宽度')
-								return
-							}else if(this.trayDetail[i].trayHeight == ''){
-								this.$message.error('请输入托盘尺寸高度')
-								return
-							}
-						}
-					}
-					if(this.isPickUp == '2'){
-						if(this.pickUpAddress == ''){
-							this.$message.error('请输入国内上门提货提货地址')
-							return
-						}else if(this.pickUpContacts == ''){
-							this.$message.error('请输入国内上门提货提货联系人')
-							return
-						}else if(this.pickUpTel == ''){
-							this.$message.error('请输入国内上门提货联系电话')
-							return
-						}else if(!reg.test(this.pickUpTel)){
-							this.$message.error('请输入有效的国内上门提货联系电话')
-							return
-						}
-					} else {
-						this.pickUpAddress = ''
-						this.pickUpContacts = ''
-						this.pickUpTel = ''
-					}
-					if(this.cclType != '1'){
-						if(this.deliveryAddress == ''){
-							this.$message.error('请输入清关服务送货地址')
-							return
-						}else if(this.deliveryContacts == ''){
-							this.$message.error('请输入清关服务送货联系人')
-							return
-						}else if(this.deliveryTel == ''){
-							this.$message.error('请输入清关服务联系电话')
-							return
-						}
-					} else {
-						this.deliveryAddress = ''
-						this.deliveryContacts = ''
-						this.deliveryTel = ''
-					}
-					var orderPriceList = []
+                    }
+                })
+            },
+            //用户下单
+            submitClick() {
+                var reg = /^(1[3456789])\d{9}$/
+                if (this.totolPrice == '0' || this.chargedJiaqian == '0') {
+                    this.$message.error('货物计费量未达标，请重新填写')
+                    return
+                }
+                if (!this.bookingPiece) {
+                    this.$message.error('请输入件数')
+                    return
+                } else if (!this.bookingWeight) {
+                    this.$message.error('请输入重量')
+                    return
+                } else if (!this.bookingCbm) {
+                    this.$message.error('请输入体积')
+                    return
+                } else if (!this.cargoName) {
+                    this.$message.error('请输入品名')
+                    return
+                }
+                if (this.packageType == '2') {
+                    for (var i = 0; i < this.trayDetail.length; i++) {
+                        if (this.trayDetail[i].trayNumber == '') {
+                            this.$message.error('请输入托盘数量')
+                            return
+                        } else if (this.trayDetail[i].traySize == '') {
+                            this.$message.error('请输入托盘尺寸长度')
+                            return
+                        } else if (this.trayDetail[i].trayWidth == '') {
+                            this.$message.error('请输入托盘尺寸宽度')
+                            return
+                        } else if (this.trayDetail[i].trayHeight == '') {
+                            this.$message.error('请输入托盘尺寸高度')
+                            return
+                        }
+                    }
+                }
+                if (this.isPickUp == '2') {
+                    if (this.pickUpAddress == '') {
+                        this.$message.error('请输入国内上门提货提货地址')
+                        return
+                    } else if (this.pickUpContacts == '') {
+                        this.$message.error('请输入国内上门提货提货联系人')
+                        return
+                    } else if (this.pickUpTel == '') {
+                        this.$message.error('请输入国内上门提货联系电话')
+                        return
+                    } else if (!reg.test(this.pickUpTel)) {
+                        this.$message.error('请输入有效的国内上门提货联系电话')
+                        return
+                    }
+                } else {
+                    this.pickUpAddress = ''
+                    this.pickUpContacts = ''
+                    this.pickUpTel = ''
+                }
+                if (this.cclType != '1') {
+                    if (this.deliveryAddress == '') {
+                        this.$message.error('请输入清关服务送货地址')
+                        return
+                    } else if (this.deliveryContacts == '') {
+                        this.$message.error('请输入清关服务送货联系人')
+                        return
+                    } else if (this.deliveryTel == '') {
+                        this.$message.error('请输入清关服务联系电话')
+                        return
+                    }
+                } else {
+                    this.deliveryAddress = ''
+                    this.deliveryContacts = ''
+                    this.deliveryTel = ''
+                }
+                var orderPriceList = []
 
-					var jq = {
-						expenseName: '空运费',
-						price: this.chargedJiaqian,
-						quantity: this.bookingCw,
-						currency: '1'
-					}
-					orderPriceList.push(jq)
-					if(this.newOtherFeeMap){
-						for(var q = 0; q < this.newOtherFeeMap.length; q++){
-							var mapJson = {
-								expenseName: this.newOtherFeeMap[q].feesName,
-								price: this.newOtherFeeMap[q].fees,
-								quantity: '1',
-								currency: '1'
-							}
-							orderPriceList.push(mapJson)
-						}
-					}
-					if(this.customsType == '2'){
-						var bg = {
-							expenseName: '报关费',
-							price: 100,
-							quantity: '1',
-							currency: '1'
-						}
-						orderPriceList.push(bg)
-					}
-					var order = {
-						bookingPiece: this.bookingPiece,
-						bookingWeight: this.bookingWeight,
-						bookingCbm: this.bookingCbm,
-						cargoName: this.cargoName,
-						cargoType: this.cargoType,
-						cclType: this.cclType,
-						customsType: this.customsType,
-						deliveryAddress: this.deliveryAddress,
-						deliveryContacts: this.deliveryContacts,
-						deliveryTel: this.deliveryTel,
-						isPickUp: this.isPickUp,
-						pickUpAddress: this.pickUpAddress,
-						pickUpContacts: this.pickUpContacts,
-						pickUpTel: this.pickUpTel,
-						departureDate: this.dateTabActive,
-						dow: this.dowA,
-						bookingVwr: this.chargedWeight,
-						bookingCw: this.bookingCw,
-						packageType: this.packageType,
-						trayDetail: JSON.stringify(this.trayDetail),
-						bookingPrice: this.chargedJiaqian,
-						pod: this.proportionArr.pod,
-						pol: this.proportionArr.pol,
-						airCompanyCode: this.proportionArr.airCompanyCode,
-						legCount: this.proportionArr.legCount,
-						shortDuration: this.proportionArr.shortDuration,
-						longDuration: this.proportionArr.longDuration,
-						fullLeg: this.proportionArr.fullLeg
-					}
+                var jq = {
+                    expenseName: '空运费',
+                    price: this.chargedJiaqian,
+                    quantity: this.bookingCw,
+                    currency: '1'
+                }
+                orderPriceList.push(jq)
+                if (this.newOtherFeeMap) {
+                    for (var q = 0; q < this.newOtherFeeMap.length; q++) {
+                        var mapJson = {
+                            expenseName: this.newOtherFeeMap[q].feesName,
+                            price: this.newOtherFeeMap[q].fees,
+                            quantity: '1',
+                            currency: '1'
+                        }
+                        orderPriceList.push(mapJson)
+                    }
+                }
+                if (this.customsType == '2') {
+                    var bg = {
+                        expenseName: '报关费',
+                        price: 100,
+                        quantity: '1',
+                        currency: '1'
+                    }
+                    orderPriceList.push(bg)
+                }
+                var order = {
+                    bookingPiece: this.bookingPiece,
+                    bookingWeight: this.bookingWeight,
+                    bookingCbm: this.bookingCbm,
+                    cargoName: this.cargoName,
+                    cargoType: this.cargoType,
+                    cclType: this.cclType,
+                    customsType: this.customsType,
+                    deliveryAddress: this.deliveryAddress,
+                    deliveryContacts: this.deliveryContacts,
+                    deliveryTel: this.deliveryTel,
+                    isPickUp: this.isPickUp,
+                    pickUpAddress: this.pickUpAddress,
+                    pickUpContacts: this.pickUpContacts,
+                    pickUpTel: this.pickUpTel,
+                    departureDate: this.dateTabActive,
+                    dow: this.dowA,
+                    bookingVwr: this.chargedWeight,
+                    bookingCw: this.bookingCw,
+                    packageType: this.packageType,
+                    trayDetail: JSON.stringify(this.trayDetail),
+                    bookingPrice: this.chargedJiaqian,
+                    pod: this.proportionArr.pod,
+                    pol: this.proportionArr.pol,
+                    airCompanyCode: this.proportionArr.airCompanyCode,
+                    legCount: this.proportionArr.legCount,
+                    shortDuration: this.proportionArr.shortDuration,
+                    longDuration: this.proportionArr.longDuration,
+                    fullLeg: this.proportionArr.fullLeg
+                }
 
-					var json = {
-						airlineAgentId: this.hangxianId,
-						order: order,
-						orderPriceList: orderPriceList
-					}
-					axios({
-						method: 'post',
-						url: webIp+serviceApi.getStartOrder,
-						data: json,
-						headers: {
-							'tokenId': localStorage.getItem('tokenId')
-						}
-					}).then((data) =>{
-						var data = data.data
-						if(data.code == 200){
-							window.location.href = './orderList.html'
-						}else if(data.code == -200){
-							window.location.href = './login.html'
-						}else{
-							this.$message.error(data.message)
+                var json = {
+                    airlineAgentId: this.hangxianId,
+                    order: order,
+                    orderPriceList: orderPriceList
+                }
+                axios({
+                    method: 'post',
+                    url: webIp + serviceApi.getStartOrder,
+                    data: json,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                        window.location.href = './orderList.html'
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
 
-						}
-					})
-				},
-				bookingWeightBlur() {
-					if(this.bookingCbm && this.bookingWeight){
-						this.huowuDanjia()
-						this.feiyongJisuan()
-					}else{
-						this.chargedWeight = ''
-						this.chargedValue = ''
-						this.chargedKey = ''
-						this.chargedJiaqian = ''
-						this.hangxianId = ''
-					}
-				},
-				bookingCbmBlur() {
-					var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
-					if(!reg.test(this.bookingCbm) && (this.bookingCbm != '')){
-						this.$message.error('体积最大输入四位正整数，小数保留四位')
-						return
-					}else{
-						if(this.bookingCbm && this.bookingWeight){
-							var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
-							if(!reg.test(this.bookingCbm) && (this.bookingCbm != '')){
-								this.$message.error('体积最大输入四位正整数，小数保留四位')
-								this.chargedJiaqian = ''
-							}else{
-								this.huowuDanjia()
-								this.feiyongJisuan()
-							}
-						}else{
-							this.chargedWeight = ''
-							this.chargedValue = ''
-							this.chargedKey = ''
-							this.chargedJiaqian = ''
-							this.hangxianId = ''
-						}
-					}
-				},
-				// 货物单价
-				huowuDanjia() {
-					this.chargedWeight = Math.ceil(this.bookingWeight/this.bookingCbm)
-					this.bookingCw = (this.bookingCbm*this.weightPrice) > this.bookingWeight ? Math.ceil(this.bookingCbm*this.weightPrice) : Math.ceil(this.bookingWeight)
-					var newLength = this.proportionArr.baseRatesList.length-1
-					// var newBili =
+                    }
+                })
+            },
+            bookingWeightBlur() {
+                if (this.bookingCbm && this.bookingWeight) {
+                    this.huowuDanjia()
+                    this.feiyongJisuan()
+                } else {
+                    this.chargedWeight = ''
+                    this.chargedValue = ''
+                    this.chargedKey = ''
+                    this.chargedJiaqian = ''
+                    this.hangxianId = ''
+                }
+            },
+            bookingCbmBlur() {
+                var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
+                if (!reg.test(this.bookingCbm) && (this.bookingCbm != '')) {
+                    this.$message.error('体积最大输入四位正整数，小数保留四位')
+                    return
+                } else {
+                    if (this.bookingCbm && this.bookingWeight) {
+                        var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
+                        if (!reg.test(this.bookingCbm) && (this.bookingCbm != '')) {
+                            this.$message.error('体积最大输入四位正整数，小数保留四位')
+                            this.chargedJiaqian = ''
+                        } else {
+                            this.huowuDanjia()
+                            this.feiyongJisuan()
+                        }
+                    } else {
+                        this.chargedWeight = ''
+                        this.chargedValue = ''
+                        this.chargedKey = ''
+                        this.chargedJiaqian = ''
+                        this.hangxianId = ''
+                    }
+                }
+            },
+            getPrice(index) {
+                //判断当前计算的计费重是否小于45并且判断 计费重乘当前计费重单价是否大于最低收费 或 最低收费为0
+                if (this.bookingCw < 45 && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesN) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = 'N'
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesN
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdN
+                } else if (this.bookingCw < 100 && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesLevel1) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = '45+'
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel1
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel1
+                } else if (this.bookingCw < 300 && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesLevel2) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = '100+'
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel2
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel2
+                } else if (this.bookingCw < 500 && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesLevel3) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = '300+'
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel3
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel3
+                } else if (this.bookingCw < 1000 && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesLevel4) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = '500+'
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel4
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel4
+                } else if (1000 <= this.bookingCw && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesLevel5) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = '1000+'
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel5
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel5
 
-					for(var i = 0; i < this.proportionArr.baseRatesList.length; i++){
-						if(this.chargedWeight < this.proportionArr.baseRatesList[i].vwr){
-							var index = i == 0 ? 0 : i-1
-							if(this.bookingCw < 45){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesN) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)){
-									this.chargedKey = 'N'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesN
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdN
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 100){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesLevel1) > Number(this.proportionArr.baseRatesList[index].ratesLevel1)){
-									this.chargedKey = '45+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel1
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel1
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 300){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesLevel2) > Number(this.proportionArr.baseRatesList[index].ratesLevel2)){
-									this.chargedKey = '100+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel2
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel2
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 500){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesLevel3) > Number(this.proportionArr.baseRatesList[index].ratesLevel3)){
-									this.chargedKey = '300+'
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel3
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel3
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 1000){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesLevel4) > Number(this.proportionArr.baseRatesList[index].ratesLevel4)){
-									this.chargedKey = '500+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel4
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel4
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(1000 <= this.bookingCw){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[index].ratesLevel5) > Number(this.proportionArr.baseRatesList[index].ratesLevel5)){
-									this.chargedKey = '1000+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel5
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel5
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}
-							this.chargedValue = this.proportionArr.baseRatesList[index].vwr
-							return
-						}else{
-							if(this.bookingCw < 45){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesN) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel0)){
-									this.chargedKey = 'N'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesN
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdN
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 100){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel1) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel1)){
-									this.chargedKey = '45+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel1
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel1
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 300){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel2) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel2)){
-									this.chargedKey = '100+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel2
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel2
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 500){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel3) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel3)){
-									this.chargedKey = '300+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel3
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel3
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 1000){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel4) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel4)){
-									this.chargedKey = '500+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel4
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel4
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(1000 <= this.bookingCw){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel5) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel5)){
-									this.chargedKey = '1000+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel5
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel5
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}
-							this.chargedValue = this.proportionArr.baseRatesList[newLength].vwr
-						}
-					}
-				},
-				feiyongJisuan() {
-					var newNum = ''
-					this.totolPrice = 0
-					if(this.chargedKey == 'M'){
-						newNum = this.chargedValue+'_0'
-					}else if(this.chargedKey == 'N'){
-						newNum = this.chargedValue+'_n'
-					}else if(this.chargedKey == '45+'){
-						newNum = this.chargedValue+'_1'
-					}else if(this.chargedKey == '100+'){
-						newNum = this.chargedValue+'_2'
-					}else if(this.chargedKey == '300+'){
-						newNum = this.chargedValue+'_3'
-					}else if(this.chargedKey == '500+'){
-						newNum = this.chargedValue+'_4'
-					}else if(this.chargedKey == '1000+'){
-						newNum = this.chargedValue+'_5'
-					}
-					for(var key in this.otherFeeMap){
-						if(newNum == key){
-							this.newOtherFeeMap = JSON.parse(this.otherFeeMap[key])
-						}
-					}
-					if(this.newOtherFeeMap){
-						for(var i = 0; i < this.newOtherFeeMap.length; i++){
-							this.totolPrice += Number(this.newOtherFeeMap[i].fees)
-						}
-					}
-					this.totolPrice = this.totolPrice + this.chargedJiaqian * this.bookingCw
-				},
-				//品名
-				cargoTypeClick(val){
-					this.cargoType = val
-				},
-				//散货托盘
-				packageTypeClick(val) {
-					this.packageType = val
-				},
-				//添加散货托盘数量
-				trayAddClick() {
-					var json = {
-						trayNumber: '',
-						traySize: '',
-						trayWidth: '',
-						trayHeight: ''
-					}
-					this.trayDetail.push(json)
-				},
-				trayDeleteClick(index) {
-					this.trayDetail.splice(index,1)
-				},
-				//报关类型
-				customsTypeClick(val) {
-					this.customsType = val
-				},
-				//是否上门取件
-				isPickUpClick(val) {
-					this.isPickUp = val
-				},
-				//清关类型
-				cclTypeClick(val) {
-					this.cclType = val
-				},
-				//获取航线信息
-				initHangxian() {
-					var jsonData = {
-						airlineId: this.airlineIdA,
-						cargoType: this.cargoTypeA,
-						dow: this.dowA,
-						needAirlineDetail: true
-					}
-					jsonData = toData(jsonData)
-					axios({
-						method: 'get',
-						url: webIp+serviceApi.hangxianSearchBaseRates+'?'+jsonData,
-						headers: {
-							'tokenId': localStorage.getItem('tokenId')
-						}
-					}).then((data) =>{
-						var data = data.data
-						if(data.code == 200){
-							this.proportionArr = data.data
-							this.otherFeeMap = data.data.otherFeeMap
-						}else if(data.code == -200){
-							window.location.href = './login.html'
-						}else{
-							this.$message.error(data.message)
+                }
+                // 不满足上面所有条件 说明当前订单需要使用当前比重的最低收费 M 数据
+                else {
+                    this.chargedJiaqian = (this.proportionArr.baseRatesList[index].ratesLevel0/this.bookingCw).toFixed(2)
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
+                    this.chargedKey = 'M'
+                }
+                this.chargedValue = this.proportionArr.baseRatesList[index].vwr
+            },
+            // 货物单价
+            huowuDanjia() {
+                this.chargedKey = ''
+                this.chargedWeight = Math.ceil(this.bookingWeight / this.bookingCbm)
+                this.bookingCw = (this.bookingCbm * this.weightPrice) > this.bookingWeight ? Math.ceil(this.bookingCbm * this.weightPrice) : Math.ceil(this.bookingWeight)
+                var newLength = this.proportionArr.baseRatesList.length - 1
+                // var newBili =
 
-						}
-					})
-				},
-				//登录
-				loginClick() {
-					window.location.href = './login.html'
-				},
-				// muen
-				menuClick(index) {
-					this.menuIndex = index
-					if(index == 0){
-						window.location.href = './index.html'
-					}else if(index == 1){
-						window.location.href = './trackSearch.html?trackSearchInput='
-					}else if(index == 3){
-						window.location.href = './about_us.html'
-					}
-				}
-			}
-		})
-	</script>
+                for (var i = 0; i < this.proportionArr.baseRatesList.length; i++) {
+                    if (this.chargedWeight < this.proportionArr.baseRatesList[i].vwr) {
+                        var index = i == 0 ? 0 : i - 1
+                        this.getPrice(index);
+                        return
+                    }
+                    if (i == newLength && this.chargedKey == '') {
+                        this.getPrice(newLength);
+                    }
+                }
+            },
+            feiyongJisuan() {
+                var newNum = ''
+                this.totolPrice = 0
+                if (this.chargedKey == 'M') {
+                    newNum = this.chargedValue + '_0'
+                } else if (this.chargedKey == 'N') {
+                    newNum = this.chargedValue + '_n'
+                } else if (this.chargedKey == '45+') {
+                    newNum = this.chargedValue + '_1'
+                } else if (this.chargedKey == '100+') {
+                    newNum = this.chargedValue + '_2'
+                } else if (this.chargedKey == '300+') {
+                    newNum = this.chargedValue + '_3'
+                } else if (this.chargedKey == '500+') {
+                    newNum = this.chargedValue + '_4'
+                } else if (this.chargedKey == '1000+') {
+                    newNum = this.chargedValue + '_5'
+                }
+                for (var key in this.otherFeeMap) {
+                    if (newNum == key) {
+                        this.newOtherFeeMap = JSON.parse(this.otherFeeMap[key])
+                    }
+                }
+                if (this.newOtherFeeMap) {
+                    for (var i = 0; i < this.newOtherFeeMap.length; i++) {
+                        this.totolPrice += Number(this.newOtherFeeMap[i].fees)
+                    }
+                }
+                this.totolPrice = this.totolPrice + this.chargedJiaqian * this.bookingCw
+            },
+            //品名
+            cargoTypeClick(val) {
+                this.cargoType = val
+            },
+            //散货托盘
+            packageTypeClick(val) {
+                this.packageType = val
+            },
+            //添加散货托盘数量
+            trayAddClick() {
+                var json = {
+                    trayNumber: '',
+                    traySize: '',
+                    trayWidth: '',
+                    trayHeight: ''
+                }
+                this.trayDetail.push(json)
+            },
+            trayDeleteClick(index) {
+                this.trayDetail.splice(index, 1)
+            },
+            //报关类型
+            customsTypeClick(val) {
+                this.customsType = val
+            },
+            //是否上门取件
+            isPickUpClick(val) {
+                this.isPickUp = val
+            },
+            //清关类型
+            cclTypeClick(val) {
+                this.cclType = val
+            },
+            //获取航线信息
+            initHangxian() {
+                var jsonData = {
+                    airlineId: this.airlineIdA,
+                    cargoType: this.cargoTypeA,
+                    dow: this.dowA,
+                    needAirlineDetail: true
+                }
+                jsonData = toData(jsonData)
+                axios({
+                    method: 'get',
+                    url: webIp + serviceApi.hangxianSearchBaseRates + '?' + jsonData,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                        this.proportionArr = data.data
+                        this.otherFeeMap = data.data.otherFeeMap
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
+
+                    }
+                })
+            },
+            //登录
+            loginClick() {
+                window.location.href = './login.html'
+            },
+            // muen
+            menuClick(index) {
+                this.menuIndex = index
+                if (index == 0) {
+                    window.location.href = './index.html'
+                } else if (index == 1) {
+                    window.location.href = './trackSearch.html?trackSearchInput='
+                } else if (index == 3) {
+                    window.location.href = './about_us.html'
+                }
+            }
+        }
+    })
+</script>
 </html>
