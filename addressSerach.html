@@ -187,8 +187,22 @@
                 // this.infoWindow.open(this.map, [item.longitude, item.latitude]);
                 this.markesData[index].emit('click',{target:  this.markesData[index]})
             },
-            searchAddress(type,data=null){
+
+    searchAddress(type,data=null){
                 this.map.remove(this.markesData);
+                // if(type == 2 ){
+                //     this.map.setCenter([data.longitude,data.latitude]) //设置地图中心点
+                //     this.centerMarker && this.map.remove(this.centerMarker)
+                //     this.centerMarker = new AMap.Marker({
+                //         position: [data.longitude,data.latitude],
+                //         map: this.map,
+                //         icon: "img/curraddr.png",
+                //         offset: new AMap.Pixel(-26, -13),
+                //         autoRotation: true
+                //
+                //     });
+                // }
+
                 this.act=-1
                 this.infoWindow && this.infoWindow.close();
                 this.airportsData=[];
@@ -198,6 +212,7 @@
                     placeName = this.keywords
                 }else {
                     placeName = data.prefixAddress
+                    this.keywords = data.keywordsPoint+ ","+ data.prefixAddress
                 }
                 if(!placeName){
                     this.$message.error("请输入查询地点")
@@ -215,6 +230,18 @@
                         this.isSearchList = false
                         this.airportsData = res.data.data.airports?res.data.data.airports:[];
                         this.keyData = [];
+
+                            this.map.setCenter([res.data.data.longitude,res.data.data.latitude]) //设置地图中心点
+                            this.centerMarker && this.map.remove(this.centerMarker)
+                            this.centerMarker = new AMap.Marker({
+                                position: [res.data.data.longitude,res.data.data.latitude],
+                                map: this.map,
+                                icon: "img/curraddr.png",
+                                offset: new AMap.Pixel(-26, -13),
+                                autoRotation: true
+
+                            });
+
                         this.addmarker()
                     }
                     if(res.data.code==-1){
@@ -262,7 +289,7 @@
                     center: [116.412197,39.911092],
                     layers: [googleLayer,Sate]
                 });
-                let marker = new AMap.Marker({
+                this.centerMarker = new AMap.Marker({
                     position: [116.412197,39.911092],
                     map: this.map,
                     icon: "img/curraddr.png",
@@ -325,6 +352,7 @@
                     this.markesData.push(marker)
                     this.map.setFitView();
                 })
+                this.map.setZoom(9); //设置地图层级
             },
             showHeaderMenu(type) {
                 if (type == 1) {
