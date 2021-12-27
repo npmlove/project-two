@@ -355,7 +355,7 @@
                     <div class="kg">/kg</div>
                   </div>
                   <div style="width: 200px">
-                    <span>*</span>分泡/Cut Volume
+                    <span>*</span>分泡
                     <el-select v-model="bubblePoint" placeholder="请选择">
                       <el-option
                         v-for="item in options"
@@ -366,7 +366,7 @@
                     </el-select>
                   </div>
                   <div>
-                    <span>*</span>比重/Proportion
+                    <span>*</span>比重
                     <el-input
                       placeholder="比重自动填充"
                       v-model="bookingVwr"
@@ -613,11 +613,11 @@
                     <div class="input">{{bookingPrice}} /kg</div>
                   </div>
                   <div style="width: 200px;margin-bottom: 20px">
-                    <span>*</span>分泡/Cut Volume
+                    <span>*</span>分泡
                     <div class="input">{{options[bubblePoint*1-1].label}}</div>
                   </div>
                   <div style="width: 200px;margin-bottom: 20px">
-                    <span>*</span>比重/Proportion
+                    <span>*</span>比重
                     <div class="input">{{bookingVwr}}</div>
                   </div>
                 </div>
@@ -1253,6 +1253,9 @@
                 let index = this.bookingPrice.indexOf(".");
                 this.bookingPrice = this.bookingPrice.replace(/[^\d.]/g, '')
                 let lastIndex = this.bookingPrice.lastIndexOf(".")
+                //正则判断
+                // let reg = /^[1-9]{1}[0-9]{0,3}$|^[1-9]{1}[0-9]{0,3}\.[0-9]{1,2}$|^[0-9]\.[0-9]{1,2}$/ig
+                // console.log(reg.test(this.bookingPrice))
                 if (type == "blur" && index !== -1 && this.bookingPrice.length - 1 - index == 0) {
                     this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
                     return false
@@ -1270,7 +1273,9 @@
                     return false
                 }
                 if (index !== -1 && index >4 ) {
-                    this.bookingPrice = this.bookingPrice.slice(0, index-1);
+                    let arr = this.bookingPrice.split("");
+                    arr.splice(index-1, 1)
+                    this.bookingPrice = arr.join("")
                     return false
                 }
                 if (index !== -1 && this.bookingPrice.length-1 - index > 2) {
@@ -1290,12 +1295,17 @@
                 this.bookingCbm = this.bookingCbm.replace(/[^\d.]/g, '')
                 let index = this.bookingCbm.indexOf(".");
                 let lastIndex = this.bookingCbm.lastIndexOf(".")
+                //正则判断
+                // let reg = /^[1-9]{1}[0-9]{0,3}$|^[1-9]{1}[0-9]{0,3}\.[0-9]{1,4}$|^[0-9]\.[0-9]{1,4}$/ig
+                // console.log(reg.test(this.bookingCbm))
                 if (type == "blur" && index !== -1 && this.bookingCbm.length - 1 - index == 0) {
                     this.bookingCbm = this.bookingCbm.slice(0, this.bookingCbm.length - 1);
                     return false
                 }
                 if (index !== -1 && index >4 ) {
-                    this.bookingCbm = this.bookingCbm.slice(0, index-1);
+                    let arr = this.bookingCbm.split("");
+                    arr.splice(index-1, 1)
+                    this.bookingCbm = arr.join("")
                     return false
                 }
                 if (index != lastIndex) {
