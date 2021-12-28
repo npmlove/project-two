@@ -960,9 +960,8 @@
 								let data = res.data;
 								// debugger
 								if (data.code == 200) {
-									debugger
 									let pol = data.data.pol?data.data.pol:''
-									window.location.href = './freightQuery.html?qi='+pol+'&mu='+data.data.pod+'&volume='+data.data.volume;
+									window.location.href = './freightQuery.html?qi='+pol+'&mu='+data.data.pod+'&volume='+data.data.volume+'&weight='+data.data.grossWeight+'&piece='+data.data.number+'&type='+data.data.type;
 								}
 							});
 						} else {
