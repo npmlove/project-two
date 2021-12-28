@@ -101,7 +101,7 @@
         </div>
       </div>
       <div class="order-list-manage">
-        <template v-if="!isPdf">
+        <template v-show="!isPdf">
           <div class="order-list-manage-title">填写订舱信息</div>
           <div class="tabs__nav-wrap quickBody">
             <div class="title">货物信息</div>
@@ -501,135 +501,138 @@
           </div>
           <div :class="['btn',showBtn?'active':'btn']"  @click="submit">订舱</div>
         </template>
-        <div v-else style="position: relative">
-          <div class="success">
-            <img src="img/success.png"/>
-            恭喜您，订舱成功！
-          </div>
-          <div class="colose" @click="goOrder">
-            <img src="./img/close.png">
-          </div>
-          <div id="pdf">
-            <div class="title">货物信息</div>
-            <div class="goodsInfo">
-              <div class="infoTop">
-                <div class="rowOne">
-                  <div>
-                    <span>*</span>始发站/Airport of Departure
-                    <div class="input">{{pol}}</div>
+        <template v-show="isPdf">
+          <div style="position: relative">
+            <div class="success">
+              <img src="img/success.png"/>
+              恭喜您，订舱成功！
+            </div>
+            <div class="colose" @click="goOrder">
+              <img src="./img/close.png">
+            </div>
+            <div id="pdf">
+              <div class="title">货物信息</div>
+              <div class="goodsInfo">
+                <div class="infoTop">
+                  <div class="rowOne">
+                    <div>
+                      <span>*</span>始发站/Airport of Departure
+                      <div class="input">{{pol}}</div>
+                    </div>
+                    <div>
+                      <span>*</span>到达站/Airport of Destination
+                      <div class="input">{{pod}}</div>
+                    </div>
+                    <div>
+                      <span>*</span>航司/Flight
+                      <div class="input">{{airCompanyCode}}</div>
+                    </div>
+                    <div>
+                      <span>*</span>航班日期/Flight NO_Date
+                      <div class="input">{{departureDate}}</div>
+                    </div>
                   </div>
-                  <div>
-                    <span>*</span>到达站/Airport of Destination
-                    <div class="input">{{pod}}</div>
-                  </div>
-                  <div>
-                    <span>*</span>航司/Flight
-                    <div class="input">{{airCompanyCode}}</div>
-                  </div>
-                  <div>
-                    <span>*</span>航班日期/Flight NO_Date
-                    <div class="input">{{departureDate}}</div>
-                  </div>
-                </div>
-                <div class="rowTwo">
-                  <div>
-                    发货人名称、地址和电话/Shipper's Name,Address and Telephone
-                    <div class="input">{{shipper}}</div>
-                  </div>
-                  <div>
-                    通知人/Notify Party
-                    <div class="input">{{notifier}}</div>
-                  </div>
-                  <div>
-                    收货人名称、地址和电话/Consignee's Name,Address and Telephone
-                    <div class="input">{{consignee}}</div>
-                  </div>
-                  <div>
-                    <span style="color: #FF1414;margin-right: 5px;">*</span>包装类型
-                    <div class="input">{{packageType == '1'?'散货':'托盘'}}</div>
-                  </div>
+                  <div class="rowTwo">
+                    <div>
+                      发货人名称、地址和电话/Shipper's Name,Address and Telephone
+                      <div class="input">{{shipper}}</div>
+                    </div>
+                    <div>
+                      通知人/Notify Party
+                      <div class="input">{{notifier}}</div>
+                    </div>
+                    <div>
+                      收货人名称、地址和电话/Consignee's Name,Address and Telephone
+                      <div class="input">{{consignee}}</div>
+                    </div>
+                    <div>
+                      <span style="color: #FF1414;margin-right: 5px;">*</span>包装类型
+                      <div class="input">{{packageType == '1'?'散货':'托盘'}}</div>
+                    </div>
 
+                  </div>
+                  <div class="rowThree">
+                    <table border="">
+                      <tr>
+                        <td>
+                          <p>
+                            <span>*</span>件数
+                          </p>
+                          No.of package
+                        </td>
+                        <td>
+                          <p>
+                            <span>*</span>毛重
+                          </p>
+                          G/W
+                        </td>
+                        <td>
+                          <p>
+                            <span>*</span>体积
+                          </p>
+                          Measurement
+                        </td>
+                        <td>
+                          <p>
+                            <span>*</span>货物品名
+                          </p>
+                          Nature of goods
+                        </td>
+                        <td>
+                          <p>
+                            唛头
+                          </p>
+                          Marks
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          {{bookingPiece}}
+                        </td>
+                        <td>
+                          {{bookingWeight}}
+                        </td>
+                        <td>
+                          {{bookingCbm}}
+                        </td>
+                        <td>
+                          {{cargoName}}
+                        </td>
+                        <td>
+                          {{marks}}
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="rowFive" style="display: block">
+                    <div style="margin-bottom: 20px" v-if="packageType == '2'">
+                      <span>*</span>托盘尺寸/Dimensions
+                      <div class="input">{{chicun}}</div>
+                    </div>
+                    <div style="width: 200px;margin-bottom: 20px">
+                      <span>*</span>单价/Price
+                      <div class="input">{{bookingPrice}} /kg</div>
+                    </div>
+                    <div style="width: 200px;margin-bottom: 20px">
+                      <span>*</span>分泡
+                      <div class="input">{{options[bubblePoint*1-1].label}}</div>
+                    </div>
+                    <div style="width: 200px;margin-bottom: 20px">
+                      <span>*</span>比重
+                      <div class="input">{{bookingVwr}}</div>
+                    </div>
+                  </div>
+                  <div class="tips" style="margin-top: -10px">托运人声明：请尽量保证舱位，如有特殊情况请务必及时告知TKS</div>
                 </div>
-                <div class="rowThree">
-                  <table border="">
-                    <tr>
-                      <td>
-                        <p>
-                          <span>*</span>件数
-                        </p>
-                        No.of package
-                      </td>
-                      <td>
-                        <p>
-                          <span>*</span>毛重
-                        </p>
-                        G/W
-                      </td>
-                      <td>
-                        <p>
-                          <span>*</span>体积
-                        </p>
-                        Measurement
-                      </td>
-                      <td>
-                        <p>
-                          <span>*</span>货物品名
-                        </p>
-                        Nature of goods
-                      </td>
-                      <td>
-                        <p>
-                          唛头
-                        </p>
-                        Marks
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                       {{bookingPiece}}
-                      </td>
-                      <td>
-                        {{bookingWeight}}
-                      </td>
-                      <td>
-                        {{bookingCbm}}
-                      </td>
-                      <td>
-                        {{cargoName}}
-                      </td>
-                      <td>
-                        {{marks}}
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-                <div class="rowFive" style="display: block">
-                  <div style="margin-bottom: 20px" v-if="packageType == '2'">
-                    <span>*</span>托盘尺寸/Dimensions
-                    <div class="input">{{chicun}}</div>
-                  </div>
-                  <div style="width: 200px;margin-bottom: 20px">
-                    <span>*</span>单价/Price
-                    <div class="input">{{bookingPrice}} /kg</div>
-                  </div>
-                  <div style="width: 200px;margin-bottom: 20px">
-                    <span>*</span>分泡
-                    <div class="input">{{options[bubblePoint*1-1].label}}</div>
-                  </div>
-                  <div style="width: 200px;margin-bottom: 20px">
-                    <span>*</span>比重
-                    <div class="input">{{bookingVwr}}</div>
-                  </div>
-                </div>
-                <div class="tips" style="margin-top: -10px">托运人声明：请尽量保证舱位，如有特殊情况请务必及时告知TKS</div>
               </div>
             </div>
+            <div class="download" @click="download">
+              <img src="img/download.png">
+              委托书下载
+            </div>
           </div>
-          <div class="download" @click="download">
-            <img src="img/download.png">
-            委托书下载
-          </div>
-        </div>
+        </template>
+
       </div>
     </div>
   </div>
