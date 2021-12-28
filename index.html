@@ -80,7 +80,7 @@
 				<ul class="header-menu-list com-width">
 					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
 					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-<!--					 <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>-->
+					<li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
@@ -109,157 +109,76 @@
 				</div>
 				<!-- 搜索 -->
 <!--				新版-->
-<!--				<div class="mod-search">-->
-<!--					<div class="pos-search">-->
-<!--						<div class="mod-search-top">-->
-<!--							<div class="s_tab">-->
-<!--								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">AI查价</div>-->
-<!--								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">体积计算</div>-->
-<!--							</div>-->
-<!--							<div class="search-box">-->
-<!--								<div class="search-box-input-ai" v-if="searchTopIndex == 0">-->
-<!--									<textarea v-model="aiStr" class="box-input box-textarea" type="textarea" placeholder="输入询价信息，AI智能识别起始港、目的港、件毛体、一键查询航线价格">-->
-<!--									</textarea>-->
-<!--									<div class="search-item">-->
-<!--										<div class="search-item-input search-item-icon1" style="position: relative;">-->
-<!--											<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input banner-box-border" type="text" placeholder="起飞港"/>-->
-<!--											<div v-show="qiShowState" style="display: none;" class="open-warp-router">-->
-<!--												<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>-->
-<!--												<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">-->
-<!--													<span>{{item.threeLetterCode}}</span>-->
-<!--													<span>{{item.name}}</span>-->
-<!--													<span>{{item.city}}</span>-->
-<!--													<span>{{item.country}}</span>-->
-<!--												</div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--										<div class="search-item-arrow"></div>-->
-<!--										<div class="search-item-input search-item-icon3" style="position: relative;">-->
-<!--											<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input banner-box-border" type="text" placeholder="目的港"/>-->
-<!--											<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>-->
-<!--											<div v-show="muShowState" style="display: none;" class="open-warp-router">-->
-<!--												<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>-->
-<!--												<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">-->
-<!--													<span>{{item.threeLetterCode}}</span>-->
-<!--													<span>{{item.name}}</span>-->
-<!--													<span>{{item.city}}</span>-->
-<!--													<span>{{item.country}}</span>-->
-<!--												</div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--										<button @click="searchClose" class="box-btn btn-close" style="flex: 0 0 80px;marginLeft: 25px;">一键清除</button>-->
-<!--										<button @click="freightQueryClick(1)" style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary">立即查询</button>-->
-<!--									</div>-->
-<!--								</div>-->
-<!--								<div class="search-box-input-volume" v-if="searchTopIndex == 1">-->
-<!--									<textarea type="textarea" v-model="volumeConetn" placeholder="请输入体积信息，多个体积请换行输入或以逗号分割"></textarea>-->
-<!--									<div class="search-box-volume-base">-->
-<!--&lt;!&ndash;										<div class="volume-file">&ndash;&gt;-->
-<!--&lt;!&ndash;											<input type="file">&ndash;&gt;-->
-<!--&lt;!&ndash;											<img src="./img/volume-file.png" alt="">&ndash;&gt;-->
-<!--&lt;!&ndash;											<span>点击上传</span>&ndash;&gt;-->
-<!--&lt;!&ndash;										</div>&ndash;&gt;-->
-<!--										<button style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary" @click="intelligentComputing">智能计算</button>-->
-<!--									</div>-->
-<!--								</div>-->
-<!--							</div>-->
-<!--						</div>-->
-
-<!--						<div class="mod-search-bottom com-top20">-->
-<!--							<div class="s_tab s_tab_bak_color">-->
-<!--								<div @click="searchBottomClick(0)" :class="{s_tab_current: searchBottomIndex == 0}" class="s_tab_nocurrent">运单查询</div>-->
-<!--								<div @click="searchBottomClick(1)" :class="{s_tab_current: searchBottomIndex == 1}" class="s_tab_nocurrent">航班查询</div>-->
-<!--							</div>-->
-<!--							<div class="search-box" style="padding: 15px 10px 0 10px">-->
-<!--								<div v-if="searchBottomIndex == 0" class="search-box-input" style="position: relative;">-->
-<!--									<input v-model="trackSearchInput" @focus="isShowYundan = false"  @input="valueChange" class="box-input" type="text" placeholder="全网货物跟踪，运单信息全掌握" style="width: 300px;" />-->
-<!--									<button @click="trackSearch" class="box-btn btn-warning">全网追踪</button>-->
-<!--									<div v-show="isShowYundan" style="position: absolute;bottom: -15px;font-size: 12px;color: #F00;display: none;">请输入11位且格式正确的运单号</div>-->
-<!--								</div>-->
-<!--								<div v-if="searchBottomIndex == 1" class="search-box-input">-->
-<!--									<input v-model="flightSearch" class="box-input" type="text" placeholder="全网航班,动态掌握" style="width: 300px;" />-->
-<!--									<button  @click="jumpFlight" class="box-btn btn-warning">立即查询</button>-->
-<!--								</div>-->
-<!--								<div class="search-tips">-->
-<!--									<div class="qcode">-->
-<!--										<img alt="图片" src="./img/qcode.png" />-->
-<!--									</div>-->
-<!--									<div class="qcode-text">-->
-<!--										<div class="qcode-text-tips1">关注公众号即可建立自己的<span>运单状态库</span></div>-->
-<!--										<div class="qcode-text-tips2">支持<span>全网全航线</span>运单状态<span>实时推送</span></div>-->
-<!--									</div>-->
-<!--								</div>-->
-<!--							</div>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
-
-<!--				老版-->
 				<div class="mod-search">
 					<div class="pos-search">
 						<div class="mod-search-top">
 							<div class="s_tab">
-								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">智能订舱</div>
-								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">快捷粘贴</div>
+								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">AI查价</div>
+								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">体积计算</div>
 							</div>
 							<div class="search-box">
-								<div v-if="searchTopIndex == 0">
-									<div class="search-box-input">
-										<div class="search-item">
-											<div class="search-item-input search-item-icon1" style="position: relative;">
-												<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input" type="text" placeholder="输入起飞港"/>
-												<div v-show="qiShowState" style="display: none;" class="open-warp-router">
-													<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>
-													<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
-														<span>{{item.threeLetterCode}}</span>
-														<span>{{item.name}}</span>
-														<span>{{item.city}}</span>
-														<span>{{item.country}}</span>
-													</div>
-												</div>
-											</div>
-											<div class="search-item-arrow"></div>
-											<div class="search-item-input search-item-icon3" style="position: relative;">
-												<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input" type="text" placeholder="输入目的港"/>
-												<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>
-												<div v-show="muShowState" style="display: none;" class="open-warp-router">
-													<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>
-													<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
-														<span>{{item.threeLetterCode}}</span>
-														<span>{{item.name}}</span>
-														<span>{{item.city}}</span>
-														<span>{{item.country}}</span>
-													</div>
+								<div class="search-box-input-ai" v-if="searchTopIndex == 0">
+									<textarea v-model="aiStr" class="box-input box-textarea" type="textarea" placeholder="输入询价信息，AI智能识别起始港、目的港、件毛体、一键查询航线价格">
+									</textarea>
+									<div class="search-item">
+										<div class="search-item-input search-item-icon1" style="position: relative;">
+											<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input banner-box-border" type="text" placeholder="起飞港"/>
+											<div v-show="qiShowState" style="display: none;" class="open-warp-router">
+												<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>
+												<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
+													<span>{{item.threeLetterCode}}</span>
+													<span>{{item.name}}</span>
+													<span>{{item.city}}</span>
+													<span>{{item.country}}</span>
 												</div>
 											</div>
 										</div>
-										<button @click="freightQueryClick(1)" class="box-btn btn-prprimary">立即查询</button>
+										<div class="search-item-arrow"></div>
+										<div class="search-item-input search-item-icon3" style="position: relative;">
+											<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input banner-box-border" type="text" placeholder="目的港"/>
+											<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>
+											<div v-show="muShowState" style="display: none;" class="open-warp-router">
+												<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>
+												<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
+													<span>{{item.threeLetterCode}}</span>
+													<span>{{item.name}}</span>
+													<span>{{item.city}}</span>
+													<span>{{item.country}}</span>
+												</div>
+											</div>
+										</div>
+										<button @click="searchClose" class="box-btn btn-close" style="flex: 0 0 80px;marginLeft: 25px;">一键清除</button>
+										<button @click="freightQueryClick(1)" style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary">立即查询</button>
 									</div>
-									<div class="search-san-tip">支持城市，港口，三字码输入</div>
 								</div>
-								<div v-if="searchTopIndex == 1">
-									<div class="search-box-input">
-										<textarea v-model="pasteInput" class="box-input box-textarea" type="textarea" placeholder="复制粘贴，自动识别关键字，快速获取报价方案。例如  PVG-LAX">
-										</textarea>
-										<button @click="freightQueryClick(2)" class="box-btn btn-prprimary">立即查询</button>
+								<div class="search-box-input-volume" v-if="searchTopIndex == 1">
+									<textarea type="textarea" v-model="volumeConetn" placeholder="请输入体积信息，多个体积请换行输入或以逗号分割"></textarea>
+									<div class="search-box-volume-base">
+<!--										<div class="volume-file">-->
+<!--											<input type="file">-->
+<!--											<img src="./img/volume-file.png" alt="">-->
+<!--											<span>点击上传</span>-->
+<!--										</div>-->
+										<button style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary" @click="intelligentComputing">智能计算</button>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="mod-search-bottom com-top30">
+
+						<div class="mod-search-bottom com-top20">
 							<div class="s_tab s_tab_bak_color">
 								<div @click="searchBottomClick(0)" :class="{s_tab_current: searchBottomIndex == 0}" class="s_tab_nocurrent">运单查询</div>
-								<!-- <div @click="searchBottomClick(1)" :class="{s_tab_current: searchBottomIndex == 1}" class="s_tab_nocurrent">航班查询</div> -->
+								<div @click="searchBottomClick(1)" :class="{s_tab_current: searchBottomIndex == 1}" class="s_tab_nocurrent">航班查询</div>
 							</div>
-							<div class="search-box">
+							<div class="search-box" style="padding: 15px 10px 0 10px">
 								<div v-if="searchBottomIndex == 0" class="search-box-input" style="position: relative;">
 									<input v-model="trackSearchInput" @focus="isShowYundan = false"  @input="valueChange" class="box-input" type="text" placeholder="全网货物跟踪，运单信息全掌握" style="width: 300px;" />
 									<button @click="trackSearch" class="box-btn btn-warning">全网追踪</button>
 									<div v-show="isShowYundan" style="position: absolute;bottom: -15px;font-size: 12px;color: #F00;display: none;">请输入11位且格式正确的运单号</div>
 								</div>
 								<div v-if="searchBottomIndex == 1" class="search-box-input">
-									<input v-model="searchYunDan" class="box-input" type="text" placeholder="全网航班查询，航班信息全掌握" style="width: 300px;" />
-									<button class="box-btn btn-warning">立即查询</button>
+									<input v-model="flightSearch" class="box-input" type="text" placeholder="全网航班,动态掌握" style="width: 300px;" />
+									<button  @click="jumpFlight" class="box-btn btn-warning">立即查询</button>
 								</div>
 								<div class="search-tips">
 									<div class="qcode">
@@ -274,6 +193,87 @@
 						</div>
 					</div>
 				</div>
+
+<!--				老版-->
+<!--				<div class="mod-search">-->
+<!--					<div class="pos-search">-->
+<!--						<div class="mod-search-top">-->
+<!--							<div class="s_tab">-->
+<!--								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">智能订舱</div>-->
+<!--								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">快捷粘贴</div>-->
+<!--							</div>-->
+<!--							<div class="search-box">-->
+<!--								<div v-if="searchTopIndex == 0">-->
+<!--									<div class="search-box-input">-->
+<!--										<div class="search-item">-->
+<!--											<div class="search-item-input search-item-icon1" style="position: relative;">-->
+<!--												<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input" type="text" placeholder="输入起飞港"/>-->
+<!--												<div v-show="qiShowState" style="display: none;" class="open-warp-router">-->
+<!--													<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>-->
+<!--													<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">-->
+<!--														<span>{{item.threeLetterCode}}</span>-->
+<!--														<span>{{item.name}}</span>-->
+<!--														<span>{{item.city}}</span>-->
+<!--														<span>{{item.country}}</span>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--											<div class="search-item-arrow"></div>-->
+<!--											<div class="search-item-input search-item-icon3" style="position: relative;">-->
+<!--												<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input" type="text" placeholder="输入目的港"/>-->
+<!--												<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>-->
+<!--												<div v-show="muShowState" style="display: none;" class="open-warp-router">-->
+<!--													<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>-->
+<!--													<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">-->
+<!--														<span>{{item.threeLetterCode}}</span>-->
+<!--														<span>{{item.name}}</span>-->
+<!--														<span>{{item.city}}</span>-->
+<!--														<span>{{item.country}}</span>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										<button @click="freightQueryClick(1)" class="box-btn btn-prprimary">立即查询</button>-->
+<!--									</div>-->
+<!--									<div class="search-san-tip">支持城市，港口，三字码输入</div>-->
+<!--								</div>-->
+<!--								<div v-if="searchTopIndex == 1">-->
+<!--									<div class="search-box-input">-->
+<!--										<textarea v-model="pasteInput" class="box-input box-textarea" type="textarea" placeholder="复制粘贴，自动识别关键字，快速获取报价方案。例如  PVG-LAX">-->
+<!--										</textarea>-->
+<!--										<button @click="freightQueryClick(2)" class="box-btn btn-prprimary">立即查询</button>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--						<div class="mod-search-bottom com-top30">-->
+<!--							<div class="s_tab s_tab_bak_color">-->
+<!--								<div @click="searchBottomClick(0)" :class="{s_tab_current: searchBottomIndex == 0}" class="s_tab_nocurrent">运单查询</div>-->
+<!--								&lt;!&ndash; <div @click="searchBottomClick(1)" :class="{s_tab_current: searchBottomIndex == 1}" class="s_tab_nocurrent">航班查询</div> &ndash;&gt;-->
+<!--							</div>-->
+<!--							<div class="search-box">-->
+<!--								<div v-if="searchBottomIndex == 0" class="search-box-input" style="position: relative;">-->
+<!--									<input v-model="trackSearchInput" @focus="isShowYundan = false"  @input="valueChange" class="box-input" type="text" placeholder="全网货物跟踪，运单信息全掌握" style="width: 300px;" />-->
+<!--									<button @click="trackSearch" class="box-btn btn-warning">全网追踪</button>-->
+<!--									<div v-show="isShowYundan" style="position: absolute;bottom: -15px;font-size: 12px;color: #F00;display: none;">请输入11位且格式正确的运单号</div>-->
+<!--								</div>-->
+<!--								<div v-if="searchBottomIndex == 1" class="search-box-input">-->
+<!--									<input v-model="searchYunDan" class="box-input" type="text" placeholder="全网航班查询，航班信息全掌握" style="width: 300px;" />-->
+<!--									<button class="box-btn btn-warning">立即查询</button>-->
+<!--								</div>-->
+<!--								<div class="search-tips">-->
+<!--									<div class="qcode">-->
+<!--										<img alt="图片" src="./img/qcode.png" />-->
+<!--									</div>-->
+<!--									<div class="qcode-text">-->
+<!--										<div class="qcode-text-tips1">关注公众号即可建立自己的<span>运单状态库</span></div>-->
+<!--										<div class="qcode-text-tips2">支持<span>全网全航线</span>运单状态<span>实时推送</span></div>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
 
 			</div>
 			<!-- 航班 -->
