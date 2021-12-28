@@ -101,7 +101,7 @@
         </div>
       </div>
       <div class="order-list-manage">
-        <template v-show="!isPdf">
+        <div v-show="!isPdf">
           <div class="order-list-manage-title">填写订舱信息</div>
           <div class="tabs__nav-wrap quickBody">
             <div class="title">货物信息</div>
@@ -500,9 +500,8 @@
             </div>
           </div>
           <div :class="['btn',showBtn?'active':'btn']"  @click="submit">订舱</div>
-        </template>
-        <template v-show="isPdf">
-          <div style="position: relative">
+        </div>
+        <div v-show="isPdf" style="position: relative">
             <div class="success">
               <img src="img/success.png"/>
               恭喜您，订舱成功！
@@ -631,7 +630,7 @@
               委托书下载
             </div>
           </div>
-        </template>
+
 
       </div>
     </div>
