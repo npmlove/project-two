@@ -260,6 +260,7 @@
 						vwr: isNaN(Math.ceil((this.weight)/(this.volume))) ? '' : Math.ceil((this.weight)/(this.volume)),
 						chargedWeight: chargedWeight
 					}
+					debugger
 					data = toData(data)
 					axios({
 						method: 'get',
@@ -321,8 +322,8 @@
 					} else if(type == 2) {
 						this.pod = item.threeLetterCode
 					}
-					this.initData()
-					this.initTwoCode()
+					// this.initData()
+					// this.initTwoCode()
 					this.twoLetterCode1 = []
 				},
         //起始港
@@ -343,7 +344,7 @@
 						}
 					} else if(type == 3) {
 						if (state) {
-							this.initTwoCode()
+							// this.initTwoCode()
 							this.twoLetterCodeStatus = state //显示下拉列表
 						} else {
 							this.twoLetterCodeStatus = state //隐藏下拉框
