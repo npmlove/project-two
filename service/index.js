@@ -22,7 +22,7 @@ const serviceApi = {
 	// 首页Banner广告展示
 	showBanners: publicWeb+'/t-banner/noAuth/showBanners',
 	// 首页AI文字解析,获取查价所需数据
-	aiStringIdentify: '/trackTest/identify/stringIdentify',
+	aiStringIdentify: '/track/identify/stringIdentify',
 	//三字代码查询分页
 	searchByPage: publicWeb+'/t-airport/noAuth/searchByPage',
 	//二字代码查询分页
