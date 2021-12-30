@@ -158,8 +158,8 @@
 										<label class="booking-form-item-label" style="width: 84px;">报关服务</label>
 										<div class="booking-form-item-content">
 											<ul class="group-radio-ul" style="font-size: 14px;">
+												<li @click="customsTypeClick(2)" :class="{radio_li_active: customsType == '2'}" class="radio-li">委托报关</li>
 												<li @click="customsTypeClick(1)" :class="{radio_li_active: customsType == '1'}" class="radio-li">自行报关</li>
-												<li @click="customsTypeClick(2)" :class="{radio_li_active: customsType == '2'}" class="radio-li">委托“17订舱”报关</li>
 											</ul>
 										</div>
 									</div>
