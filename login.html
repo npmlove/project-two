@@ -248,9 +248,10 @@
 				this.initQrCode()
 			},
 			mounted() {
-				setInterval(() => {
+                //停止定时调用二维码接口
+				/*setInterval(() => {
 					this.initQrCode()
-				},60000)
+				},60000)*/
 				this.initWebSocket()
 				this.daojishi()
 			},
