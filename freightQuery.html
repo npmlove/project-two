@@ -795,7 +795,7 @@
                     dow: this.dow == 0 ? 7 : this.dow,
                     pod: this.pod,
                     pol: this.pol,
-                    vwr: (this.weight=="") || (this.volume=="") ? '' : Math.ceil((this.weight) / (this.volume)),
+                    vwr: (this.weight=="") || (this.volume=="") || isNaN(this.weight/this.volume) ? '' : Math.ceil((this.weight) / (this.volume)),
                 }
                 jsonData = toData(jsonData)
                 axios({
@@ -947,7 +947,7 @@
                     chargedWeight: chargedWeight,
                     pod: this.pod,
                     pol: this.pol,
-                    vwr: (this.weight=="") || (this.volume=="") ? '' : Math.ceil((this.weight) / (this.volume)),
+                    vwr: (this.weight=="") || (this.volume=="") || isNaN(this.weight/this.volume)? '' : Math.ceil((this.weight) / (this.volume)),
                 }
                 data = toData(data)
                 axios({
@@ -979,7 +979,7 @@
                     pod: this.pod,
                     pol: this.pol,
                     twoLetterCode: codeArr.toString(),
-                    vwr:(this.weight=="") || (this.volume=="") ? '' : Math.ceil((this.weight) / (this.volume)),
+                    vwr:(this.weight=="") || (this.volume=="") || isNaN(this.weight/this.volume)? '' : Math.ceil((this.weight) / (this.volume)),
                     chargedWeight: chargedWeight
                 }
                 data = toData(data)
