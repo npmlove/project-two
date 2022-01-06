@@ -336,6 +336,8 @@
 
                     });
                     this.infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
+                    item.longitude=item.longitude.replace(/(-?[0-9]+\.?\d{6})\d*/ig,"$1")
+                    item.latitude=item.latitude.replace(/(-?[0-9]+\.?\d{6})\d*/ig,"$1")
                     if (item.expendHour != null) {
                         marker.content = `   <div class="infoBox">
         <div>机场代码:<span>${item.threeLetterCode}</span></div>
