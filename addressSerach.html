@@ -61,7 +61,7 @@
     <div v-else @click="loginClick" class="header-user">登录</div>
     <div class="quick " @click="goQuick">
       <img src="img/quick.png">
-      <span >一键订舱</span>
+      <span>一键订舱</span>
     </div>
   </div>
   <div class="header-menu">
@@ -75,38 +75,41 @@
   <div class="Map" id="Map">
     <div class="searchBox">
       <div class="search">
-        <input class="keywords" placeholder="地址、城市、机场、港口、FBA仓库..." maxlength="150" v-model.trim="keywords" @input="changeValue" @keyup.enter="searchAddress(1)" />
+        <input class="keywords" placeholder="地址、城市、机场、港口、FBA仓库..." maxlength="150" v-model.trim="keywords"
+               @input="changeValue" @keyup.enter="searchAddress(1)"/>
         <div class="dele" v-show="keywords" @click="keywords='',airportsData=[]">
           <img src="img/close.png">
         </div>
-        <div class="loading" style="width: 100%;text-align: center;position: absolute;left: 0;top:-10px;" v-if="isLoading">
+        <div class="loading" style="width: 100%;text-align: center;position: absolute;left: 0;top:-10px;"
+             v-if="isLoading">
           <img src="img/loading1.gif" style="width: 50px;height: 50px;"/>
         </div>
         <div class="btn" @click="searchAddress(1)">
           <img src="img/search.png">
         </div>
       </div>
-            <div class="searchList" v-show="isSearchList">
-                <div class="dataList" v-for="(item,index) in keyData" :key="item.keywordsPoint" @click="searchAddress(2,item)">
-                  {{item.keywordsPoint}}，{{item.prefixAddress}}
-                </div>
-            </div>
-      <div class="listBox" v-show="airportsData.length">
+      <div class="searchList" v-show="isSearchList">
+        <div class="dataList" v-for="(item,index) in keyData" :key="item.keywordsPoint" @click="searchAddress(2,item)">
+          {{item.keywordsPoint}}，{{item.prefixAddress}}
+        </div>
+      </div>
+      <div class="listBox" v-if="airportsData.length">
         <div class="title">
           <div>该地址附近的机场：</div>
           <div>
             推荐数量：<span>{{airportsData.length}}条</span>
           </div>
         </div>
-        <div :class="['list',index == act?'actList':'']" v-for="(item,index) in airportsData" :key="index" @click="itemClick(item,index)">
+        <div :class="['list',index == act?'actList':'']" v-for="(item,index) in airportsData" :key="index"
+             @click="itemClick(item,index)">
           <div class="top">
             <div>
-              <p >机场代码:<span>{{item.threeLetterCode}}</span></p>
+              <p>机场代码:<span>{{item.threeLetterCode}}</span></p>
               <p>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>{{item.country}} {{item.countryEn}}</span></p>
             </div>
             <div>
-              <p >距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>{{item.distance}}</span></p>
-              <p>预估时间:<span>{{item.expendHour}}小时{{item.expendMinute}}分</span></p>
+              <p>距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>{{item.distance}}</span></p>
+              <p v-show="item.expendHour!=null">预估时间:<span>{{item.expendHour}}小时{{item.expendMinute}}分</span></p>
             </div>
 
           </div>
@@ -123,7 +126,7 @@
           <img v-if="index != act" class="location" src="./img/locationNo.png">
           <img v-else class="location" src="./img/locationYes.png">
           <div class="active" @click.stop="goTo(item)" v-if="item.priceDate">
-              <span>￥</span><span>{{item.minPrice}}</span>/KG起
+            <span>￥</span><span>{{item.minPrice}}</span>/KG起
           </div>
 
         </div>
@@ -143,16 +146,19 @@
             menuIndex: 2,
             userInfo: '',
             headerMenu: false,
-            placeName:'',
-            keywords:'',
-            keyData:[],
-            airportsData:[],
-            map:null,
-            infoWindow:null,
-            markesData:[],
-            act:-1,
-            isSearchList:false,
-            isLoading:false
+            placeName: '',
+            keywords: '',
+            keyData: [],
+            airportsData: [],
+            map: null,
+            infoWindow: null,
+            markesData: [],
+            act: -1,
+            isSearchList: false,
+            isLoading: false,
+            googleLayer:null,
+            Sate:null,
+
 
         },
         created() {
@@ -171,24 +177,24 @@
 
         },
         methods: {
-            goQuick(){
-                window.location.href='./quick.html'
+            goQuick() {
+                window.location.href = './quick.html'
             },
-            goTo(item){
-                window.location.href=`./freightQuery.html?qi=&mu=${item.threeLetterCode}`
+            goTo(item) {
+                window.location.href = `./freightQuery.html?qi=&mu=${item.threeLetterCode}`
                 // debugger
             },
-            itemClick(item,index){
+            itemClick(item, index) {
                 // debugger
-                this.act =index;
+                this.act = index;
                 this.infoWindow.close();
                 this.map.setCenter([item.longitude, item.latitude]); //设置地图中心点
                 this.map.setZoom(9); //设置地图层级
                 // this.infoWindow.open(this.map, [item.longitude, item.latitude]);
-                this.markesData[index].emit('click',{target:  this.markesData[index]})
+                this.markesData[index].emit('click', {target: this.markesData[index]})
             },
 
-    searchAddress(type,data=null){
+            searchAddress(type, data = null) {
                 this.map.remove(this.markesData);
                 // if(type == 2 ){
                 //     this.map.setCenter([data.longitude,data.latitude]) //设置地图中心点
@@ -203,94 +209,92 @@
                 //     });
                 // }
 
-                this.act=-1
+                this.act = -1
                 this.infoWindow && this.infoWindow.close();
-                this.airportsData=[];
+                this.airportsData = [];
                 this.markesData = [];
                 let placeName = "";
-                if(type==1){
+                if (type == 1) {
                     placeName = this.keywords
-                }else {
+                } else {
                     placeName = data.prefixAddress
-                    this.keywords = data.keywordsPoint+ ","+ data.prefixAddress
+                    this.keywords = data.keywordsPoint + "," + data.prefixAddress
                 }
-                if(!placeName){
+                if (!placeName) {
                     this.$message.error("请输入查询地点")
                     return false
                 }
-                this.isLoading=true;
+                this.isLoading = true;
                 axios({
                     method: 'get',
-                    url: webIp + serviceApi.searchAirport+`?placeName=${placeName}`,
-                    data: {
-
-                    }
+                    url: webIp + serviceApi.searchAirport + `?placeName=${placeName}`,
+                    data: {}
                 }).then((res) => {
-                    if(res.data.code==200){
+                    if (res.data.code == 200) {
                         this.isSearchList = false
-                        this.airportsData = res.data.data.airports?res.data.data.airports:[];
+                        this.airportsData = res.data.data.airports ? res.data.data.airports : [];
                         this.keyData = [];
 
-                            this.map.setCenter([res.data.data.longitude,res.data.data.latitude]) //设置地图中心点
-                            this.centerMarker && this.map.remove(this.centerMarker)
-                            this.centerMarker = new AMap.Marker({
-                                position: [res.data.data.longitude,res.data.data.latitude],
-                                map: this.map,
-                                icon: "img/curraddr.png",
-                                offset: new AMap.Pixel(-26, -13),
-                                autoRotation: true
 
-                            });
+                        this.centerMarker && this.map.remove(this.centerMarker)
+                        console.log([res.data.data.longitude, res.data.data.latitude])
+                        this.centerMarker = new AMap.Marker({
+                            position: [res.data.data.longitude, res.data.data.latitude],
+                            map: this.map,
+                            icon: "img/curraddr.png",
+                            offset: new AMap.Pixel(-26, -13),
+                            autoRotation: true
 
-                        this.addmarker()
+                        });
+
+
+                        this.addmarker([res.data.data.longitude, res.data.data.latitude])
                     }
-                    if(res.data.code==-1){
+                    if (res.data.code == -1) {
                         this.$message.error(res.data.message)
                     }
-                }).finally(()=>{
-                    this.isLoading=false;
+                }).finally(() => {
+                    this.isLoading = false;
                 })
             },
-            changeValue(){
-                if(this.keywords==""){
+            changeValue() {
+                if (this.keywords == "") {
                     return false
                 }
                 axios({
                     method: 'get',
-                    url: webIp + serviceApi.placeSuggest+`?keywords=${this.keywords}`,
-                    data: {
-
-                    }
+                    url: webIp + serviceApi.placeSuggest + `?keywords=${this.keywords}`,
+                    data: {}
                 }).then((res) => {
-                    if(res.data.code==200){
+                    if (res.data.code == 200) {
                         this.isSearchList = true
-                        this.keyData=res.data.data?res.data.data:[];
+                        this.keyData = res.data.data ? res.data.data : [];
                     }
                 })
             },
             initMap() {
                 //叠加谷歌地图
-                var googleLayer = null;
+                // var googleLayer = null;
                 // 添加Google图层
-                googleLayer = new AMap.TileLayer({
+                this.googleLayer = new AMap.TileLayer({
                     // 图块取图地址
                     getTileUrl: 'https://map.shenghuoq.com/{e173754b3b1bbd62a0be9c4afea73fdfa,ce60bcadc66cea58583ddd700f7d80bea,c7d52b85d86a06df50621e669557ea05a,57cf283b871304a296c3bd8acde4cc22a,msjcyawb3bapocysk0be9c4afea73fdsd,dsasd54b3b1scw62a0be9cmxjsa73fdfa,klosib85d8uisolxf50621e669557ea05,klosyc3b87130sdkc6c3bd8acdeklsogh}/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=[x]&y=[y]&z=[z]&s=Galil',
                     zIndex: 9
                 });
                 let toolBar = new AMap.ToolBar({
-                    position:"RB",
+                    position: "RB",
                     offset: new AMap.Pixel(50, 0),
                 });
                 let scale = new AMap.Scale();
-                let Sate = new AMap.TileLayer();
+                this.Sate = new AMap.TileLayer();
                 this.map = new AMap.Map('Map', {
                     zoom: 9,
                     viewMode: '2D',
-                    center: [116.412197,39.911092],
-                    layers: [googleLayer,Sate]
+                    center: [116.412197, 39.911092],
+                    layers: [this.googleLayer, this.Sate]
                 });
                 this.centerMarker = new AMap.Marker({
-                    position: [116.412197,39.911092],
+                    position: [116.412197, 39.911092],
                     map: this.map,
                     icon: "img/curraddr.png",
                     offset: new AMap.Pixel(-26, -13),
@@ -306,22 +310,22 @@
                 this.infoWindow.open(this.map, e.target.getPosition());
                 this.map.setZoom(9); //设置地图层级
                 this.map.setCenter(e.target.getPosition()); //设置地图中心点
-                setTimeout(()=>{
-                    let dom =  document.getElementById('ratingBox')
+                setTimeout(() => {
+                    let dom = document.getElementById('ratingBox')
                     this.act = e.target.currIndex
-                    for(let i=0;i<e.target.ratingNum;i++){
-                        let  img = document.createElement("img");
+                    for (let i = 0; i < e.target.ratingNum; i++) {
+                        let img = document.createElement("img");
                         img.src = "img/xingxing.png";
                         dom.appendChild(img)
                     }
-                },40)
+                }, 40)
 
 
             },
-            addmarker() {
+            addmarker(arr) {
                 console.log(this.airportsData)
-                this.airportsData.length && this.airportsData.forEach((item,index)=>{
-                    let point=[item.longitude,item.latitude]
+                this.airportsData.length && this.airportsData.forEach((item, index) => {
+                    let point = [item.longitude, item.latitude]
                     let marker = new AMap.Marker({
                         position: point,
                         map: this.map,
@@ -353,6 +357,7 @@
                     this.map.setFitView();
                 })
                 this.map.setZoom(9); //设置地图层级
+                this.map.setCenter(arr) //设置地图中心点
             },
             showHeaderMenu(type) {
                 if (type == 1) {
