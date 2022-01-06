@@ -109,7 +109,8 @@
             </div>
             <div>
               <p>距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>{{item.distance}}</span></p>
-              <p v-show="item.expendHour!=null">预估时间:<span>{{item.expendHour}}小时{{item.expendMinute}}分</span></p>
+              <p v-if="item.expendHour!=null">预估时间:<span>{{item.expendHour}}小时{{item.expendMinute}}分</span></p>
+              <p v-else><span>&nbsp;&nbsp;&nbsp;</span></p>
             </div>
 
           </div>
@@ -156,8 +157,8 @@
             act: -1,
             isSearchList: false,
             isLoading: false,
-            googleLayer:null,
-            Sate:null,
+            googleLayer: null,
+            Sate: null,
 
 
         },
@@ -335,7 +336,8 @@
 
                     });
                     this.infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
-                    marker.content = `   <div class="infoBox">
+                    if (item.expendHour != null) {
+                        marker.content = `   <div class="infoBox">
         <div>机场代码:<span>${item.threeLetterCode}</span></div>
         <div>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>${item.country} ${item.countryEn}</span></div>
         <div>城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市:<span>${item.city} ${item.cityEn}</span></div>
@@ -350,6 +352,24 @@
 
         </div>
       </div>`;
+                    } else {
+                        marker.content = `   <div class="infoBox">
+        <div>机场代码:<span>${item.threeLetterCode}</span></div>
+        <div>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>${item.country} ${item.countryEn}</span></div>
+        <div>城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市:<span>${item.city} ${item.cityEn}</span></div>
+        <div>距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>${item.distance}</span></div>
+         <div>经&nbsp;&nbsp;纬&nbsp;&nbsp;度:<span>${item.longitude}，${item.latitude}</span></div>
+
+        <div class="address">
+          机场地址:
+          <div>${item.name}</div>
+        </div>
+        <div class="rating" id="ratingBox">推荐指数:
+
+        </div>
+      </div>`;
+                    }
+
                     marker.ratingNum = item.rating;
                     marker.currIndex = index;
                     marker.on('click', this.markerClick);
