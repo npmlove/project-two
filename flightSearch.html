@@ -292,13 +292,17 @@
                 })
             },
             line(map,type,start,end){
+                // debugger
                 let path1 = [];
-                // start[0]="1.1770019531"
-                // end[0]="-122.375"
-                if(start[0]*1 <0 && (start[0]*1+end[0]*1 > 0) ){
+                // start[0]="126.4509963989"
+                // end[0]="-118.4079971"
+                // start[1]="33.94250107"
+                // end[1]="37.4691009521"
+                map.setCenter(start)
+                if(start[0]*1 <0 && (start[0]*-1+end[0]*1 >180 ) ){
                     start[0] = start[0]*1 +360
                 }
-                if(end[0]*1 <0 && (start[0]*1+end[0]*1 > 0)){
+                if(end[0]*1 <0 && (start[0]*1+end[0]*-1 > 180)){
                     end[0] = end[0]*1 +360
                 }
                 path1.push(new AMap.LngLat(start[0], start[1], true));
