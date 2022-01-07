@@ -90,7 +90,7 @@
       </div>
       <div class="searchList" v-show="isSearchList">
         <div class="dataList" v-for="(item,index) in keyData" :key="item.keywordsPoint" @click="searchAddress(2,item)">
-          {{item.keywordsPoint}}，{{item.prefixAddress}}
+          {{item}}
         </div>
       </div>
       <div class="listBox" v-if="airportsData.length">
@@ -218,8 +218,8 @@
                 if (type == 1) {
                     placeName = this.keywords
                 } else {
-                    placeName = data.prefixAddress
-                    this.keywords = data.keywordsPoint + "," + data.prefixAddress
+                    placeName = data
+                    this.keywords = data
                 }
                 if (!placeName) {
                     this.$message.error("请输入查询地点")
