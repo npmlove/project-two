@@ -107,12 +107,35 @@
 									</div>
 								</div>
 								<div :style="{visibility: !isMagnetic ? 'hidden' : 'visible'}" class="booking-form-item-tips">提示：该货物需要提供《磁检报告》</div>
-								<ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 40px;">
-									<li @click="cargoTypeClick(1)" :class="{radio_li_active: cargoType == '1'}" class="radio-li">普货</li>
-									<li @click="cargoTypeClick(2)" :class="{radio_li_active: cargoType == '2'}" class="radio-li">化工品</li>
-									<li @click="cargoTypeClick(3)" :class="{radio_li_active: cargoType == '3'}" class="radio-li">危险品</li>
-									<li @click="cargoTypeClick(4)" :class="{radio_li_active: cargoType == '4'}" class="radio-li">防疫物资</li>
-								</ul>
+								<div class="booking-form-line">
+									<div class="booking-form-item">
+										<label class="booking-form-item-label"><span style="color: #F00;">*</span>品类</label>
+										<ul class="group-radio-ul" style="font-size: 14px;">
+											<li @click="cargoTypeClick(1)" :class="{radio_li_active: cargoType == '1'}" class="radio-li">普货</li>
+											<li @click="cargoTypeClick(2)" :class="{radio_li_active: cargoType == '2'}" class="radio-li">化工品
+											</li>
+											<li @click="cargoTypeClick(3)" :class="{radio_li_active: cargoType == '3'}" class="radio-li">危险品
+											</li>
+											<li @click="cargoTypeClick(4)" :class="{radio_li_active: cargoType == '4'}" class="radio-li">防疫物资
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="booking-form-line" style="margin-bottom: 40px;">
+									<div class="booking-form-item">
+										<label class="booking-form-item-label"><span style="color: #F00;">*</span>预计进仓时间</label>
+										<el-date-picker
+											size="mini"
+											v-model="expectedInboundTime"
+											type="datetime"
+											value-format="yyyy-MM-dd HH:mm:ss"
+              				format="yyyy-MM-dd HH:mm"
+											placeholder="选择预计进仓时间"
+											style="width: 160px;"
+											:clearable="false">
+										</el-date-picker>
+									</div>
+								</div>
 								<div class="booking-item-name">包装类型</div>
 								<ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 20px;">
 									<li @click="packageTypeClick(1)" :class="{radio_li_active: packageType == '1'}" class="radio-li">散货</li>
@@ -387,6 +410,7 @@
 				bookingCbm: '',
 				cargoName: '',
 				cargoType: '1',
+				expectedInboundTime: '', // 预计进仓时间
 				packageType: '1',
 				trayDetail: [
 					{
@@ -500,7 +524,10 @@
                 } else if (!this.cargoName) {
                     this.$message.error('请输入品名')
                     return
-                }
+                } else if (!this.expectedInboundTime) {
+									this.$message.error('请选择预计进仓时间')
+                  return
+								}
                 if (this.packageType == '2') {
                     for (var i = 0; i < this.trayDetail.length; i++) {
                         if (this.trayDetail[i].trayNumber == '') {
@@ -610,7 +637,8 @@
                     legCount: this.proportionArr.legCount,
                     shortDuration: this.proportionArr.shortDuration,
                     longDuration: this.proportionArr.longDuration,
-                    fullLeg: this.proportionArr.fullLeg
+                    fullLeg: this.proportionArr.fullLeg,
+										expectedInboundTime: this.expectedInboundTime,
                 }
 
                 var json = {
