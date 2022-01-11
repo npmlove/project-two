@@ -165,7 +165,8 @@
                       v-model="departureDate"
                       type="date"
                       value-format="yyyy-MM-dd"
-                      placeholder="请选择日期">
+                      placeholder="请选择日期"
+                      :picker-options="pickerOptions">
                     </el-date-picker>
                   </div>
                 </div>
@@ -669,6 +670,11 @@
         el: '#app',
         data() {
             return {
+                pickerOptions: {
+                  disabledDate(time) {
+                    return time.getTime() < Date.now()- 86400000;
+                  }
+                },
                 qiShowState: false,
                 muShowState: false,
                 lineShowState: false,

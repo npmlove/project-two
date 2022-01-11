@@ -131,6 +131,7 @@
 											value-format="yyyy-MM-dd HH:mm:ss"
               				format="yyyy-MM-dd HH:mm"
 											placeholder="选择预计进仓时间"
+											:picker-options="pickerOptions"
 											style="width: 160px;"
 											:clearable="false">
 										</el-date-picker>
@@ -389,6 +390,11 @@
 		new Vue({
 			el: '#app',
 			data: {
+				 pickerOptions: {
+					disabledDate(time) {
+						return time.getTime() < Date.now()- 86400000;
+					}
+				},
 				//菜单
 				menuArr: [
 					{
