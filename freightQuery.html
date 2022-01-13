@@ -608,7 +608,15 @@
                 console.log(e)
             },
             goQuick(){
-                window.location.href='./quick.html'
+              if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
+                        this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                            }
+                        })
+                    }else{
+              window.location.href='./quick.html'
+            }
             },
             getIndex(index){
                 switch (index){
@@ -1152,6 +1160,7 @@
                     return newData[0].ratesLevel5
                 }
             },
+            // --------------------------------------------------------------------------------------
             //订舱
             bookingSpace(id) {
                 if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
