@@ -87,7 +87,7 @@
 							</ul>
 						</div>
 						<div class="list-userInfo-customer">
-							<div class="userInfo-customer"><div>您的专属客服:</div><div>nana</div></div>
+							<div class="userInfo-customer"><div>您的专属客服:</div><div v-if="preQQ">{{preCustomer}}<a  :href="`tencent://message/?uin=${preQQ}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;margin-left:10px;" src="img/qq.svg"/></a></div></div>
 							<div class="userInfo-customer"><div>欢迎致电:</div><div>13567862626</div></div>
 						</div>
 					</div>
@@ -185,7 +185,7 @@
 															{{item.airCompanyName}}
 															<span style="marginLeft:5px;">{{item.airCompanyCode}}</span>
 														</div>
-														<div>出发日期：{{item.departureDate}}<a  v-if="item.qq" :href="`tencent://message/?uin=${item.qq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;" src="img/qq.svg"/></a></div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -263,7 +263,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：{{item.departureDate}} <a  v-if="item.qq" :href="`tencent://message/?uin=${item.qq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;" src="img/qq.svg"/></a></div>
+														<div>出发日期：{{item.departureDate}} </div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -329,7 +329,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：{{item.departureDate}}<a  v-if="item.qq" :href="`tencent://message/?uin=${item.qq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;" src="img/qq.svg"/></a></div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -395,7 +395,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：{{item.departureDate}}<a  v-if="item.qq" :href="`tencent://message/?uin=${item.qq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;" src="img/qq.svg"/></a></div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -470,7 +470,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：{{item.departureDate}}<a  v-if="item.qq" :href="`tencent://message/?uin=${item.qq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;" src="img/qq.svg"/></a></div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -537,7 +537,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：{{item.departureDate}}<a  v-if="item.qq" :href="`tencent://message/?uin=${item.qq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;" src="img/qq.svg"/></a></div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -604,7 +604,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：{{item.departureDate}}<a  v-if="item.qq" :href="`tencent://message/?uin=${item.qq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;" src="img/qq.svg"/></a></div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -671,7 +671,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：{{item.departureDate}}<a  v-if="item.qq" :href="`tencent://message/?uin=${item.qq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;" src="img/qq.svg"/></a></div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -749,7 +749,7 @@
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
 														<div>{{item.airCompanyName}}</div>
-														<div>出发日期：{{item.departureDate}}<a  v-if="item.qq" :href="`tencent://message/?uin=${item.qq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;" src="img/qq.svg"/></a></div>
+														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
 														<div class="nav-wrap-route-info">
@@ -864,7 +864,9 @@
 				s: '',
 				updateTime: '',
 				userInfo: '',
-				headerMenu: false
+				headerMenu: false,
+				preQQ:'',
+				preCustomer:"",
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -883,6 +885,8 @@
 				this.qiSearchByPage()
 				this.muSearchByPage()
 				this.initTwoCode()
+				this.preQQ =    JSON.parse(localStorage.getItem("userInfo")).customerServiceQq
+              this.preCustomer = JSON.parse(localStorage.getItem("userInfo")).customerService
 			},
 			methods: {
 				goQuick(){
