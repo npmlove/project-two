@@ -94,7 +94,7 @@
         <div class="list-userInfo-customer">
           <div class="userInfo-customer">
             <div>您的专属客服:</div>
-            <div>nana</div>
+            <div v-if="preQQ">{{preCustomer}}<a   :href="`tencent://message/?uin=${preQQ}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;margin-left:10px;" src="img/qq.svg"/></a></div>
           </div>
           <div class="userInfo-customer">
             <div>欢迎致电:</div>
@@ -724,6 +724,8 @@
                 bookingCbm: '',
                 cargoName: '',
                 marks: '',
+                preQQ:'',
+                preCustomer:'',
                 pickUp: {
                     pickUpAddress: '',
                     pickUpContacts: '',
@@ -802,6 +804,8 @@
             this.openId = localStorage.getItem('wxOpenId')
             this.initUserInfo()
             this.initList()
+              this.preQQ =    JSON.parse(localStorage.getItem("userInfo")).customerServiceQq
+              this.preCustomer = JSON.parse(localStorage.getItem("userInfo")).customerService
 
         },
         computed: {

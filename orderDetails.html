@@ -333,6 +333,7 @@
                   <div style="margin: 0 20px;"><img alt="图片" style="width: 16px;height: 16px;" src="./img/icon2.png"/>
                   </div>
                   <div>{{detailsArr.podName}}({{detailsArr.pod}})</div>
+                    <a  v-if="detailsArr.mscsQq" :href="`tencent://message/?uin=${detailsArr.mscsQq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;margin-left:20px;" src="img/qq.svg"/></a><span  v-if="detailsArr.mscsQq" style="color:black;margin-left: 10px;">订单问题,联系客服</span>
                 </div>
                 <div v-if="detailsArr.waybillNo" class="list-title-arr-right">运单号：{{detailsArr.waybillNo}}</div>
               </div>
