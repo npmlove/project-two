@@ -35,7 +35,7 @@
   <script src="./js/forbidden.js"></script>
   <script src="./js/forbibben.js"></script>
 </head>
-<body  onload="forbiddenDevT()">
+<body onload="forbiddenDevT()">
 <div id="app">
   <!-- 头部 -->
   <div class="header">
@@ -166,7 +166,7 @@
                     <el-date-picker
                       v-model="departureDate"
                       type="date"
-                      value-format="yyyy-MM-dd"
+                      value-format="yyyy-MM-dd "
                       placeholder="请选择日期"
                       :picker-options="pickerOptions">
                     </el-date-picker>
@@ -357,7 +357,7 @@
                     </el-input>
                     <div class="kg">/kg</div>
                   </div>
-                  <div style="width: 200px">
+                  <div>
                     <span>*</span>分泡
                     <el-select v-model="bubblePoint" placeholder="请选择">
                       <el-option
@@ -376,6 +376,17 @@
                       disabled
                       clearable>
                     </el-input>
+                  </div>
+                  <div>
+                    <span>*</span>预计进仓时间
+                    <el-date-picker
+                      v-model="expectedInboundTime"
+                      type="date"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                      format="yyyy-MM-dd HH:mm"
+                      placeholder="请选择日期"
+                      :picker-options="pickerOptions">
+                    </el-date-picker>
                   </div>
                 </div>
                 <div class="tips">托运人声明：请尽量保证舱位，如有特殊情况请务必及时告知TKS</div>
@@ -623,6 +634,10 @@
                       <span>*</span>比重
                       <div class="input">{{bookingVwr}}</div>
                     </div>
+                    <div style="width: 200px;margin-bottom: 20px">
+                      <span>*</span>预计进仓时间
+                      <div class="input">{{expectedInboundTime}}</div>
+                    </div>
                   </div>
                   <div class="tips" style="margin-top: -10px">托运人声明：请尽量保证舱位，如有特殊情况请务必及时告知TKS</div>
                 </div>
@@ -725,6 +740,7 @@
                 pod: '',//终点站
                 airCompanyCode: '',//航司
                 departureDate: '',//航班日期
+				        expectedInboundTime: '', // 预计进仓时间
                 shipper: '',//发货人
                 notifier: 'SAME AS CONSIGNEE',//通知人
                 consignee: '',//收货人
@@ -802,6 +818,7 @@
                     bookingWeight,//毛重
                     bookingCbm,//体积
                     cargoName,//品名
+                    expectedInboundTime//预期到仓时间
                 } = this;
                 return {
                     pol,//始发站
@@ -815,6 +832,7 @@
                     bookingWeight,//毛重
                     bookingCbm,//体积
                     cargoName,//品名
+                    expectedInboundTime//预期到仓时间
                 };
             },
             changePickUp() {
@@ -1205,6 +1223,13 @@
                 if(!this.showBtn){
                     return false
                 }
+                if (!this.expectedInboundTime) {
+									this.$message.error('请选择预计进仓时间')
+                  return
+								}else if(!this.departureDate) {
+									this.$message.error('航班日期')
+                  return
+								}
                 let {
                     customsType,
                     isPickUp,
