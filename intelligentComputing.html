@@ -274,7 +274,10 @@
 					data = toData(data)
 					axios({
 						method: 'get',
-						url: webIp+serviceApi.noAuthSearchBaseRates+'?'+data
+						url: webIp+serviceApi.noAuthSearchBaseRates+'?'+data,
+            headers: {
+							'tokenId': localStorage.getItem('tokenId') || ""
+						}
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
