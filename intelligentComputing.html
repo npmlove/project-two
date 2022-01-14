@@ -33,7 +33,7 @@
     <script src="./js/forbidden.js"></script>
     <script src="./js/forbibben.js"></script>
   </head>
-  <body  onload="forbiddenDevT()">
+  <body  >
     <div id="app">
       <!-- 头部 -->
       <div class="header">
@@ -48,7 +48,7 @@
           <img class="header-imgUrl" :src="userInfo.headImgUrl" />
           <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
             <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
-            <div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+            <div class="header-bak"><a @click="goQuick">一键订舱</a></div>
             <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
             <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
             <div class="header-bak"><a href="./financial.html">财务管理</a></div>
@@ -212,7 +212,15 @@
 			},
       methods: {
           goQuick(){
-              window.location.href='./quick.html'
+            if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
+                      this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
+                          confirmButtonText: '确定',
+                          callback: action => {
+                          }
+                      })
+                  }else{
+            window.location.href='./quick.html'
+          }
           },
         keyRemove() {
           this.textStr = '';
@@ -266,7 +274,10 @@
 					data = toData(data)
 					axios({
 						method: 'get',
-						url: webIp+serviceApi.noAuthSearchBaseRates+'?'+data
+						url: webIp+serviceApi.noAuthSearchBaseRates+'?'+data,
+            headers: {
+							'tokenId': localStorage.getItem('tokenId') || ""
+						}
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
