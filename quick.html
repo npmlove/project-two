@@ -887,8 +887,7 @@
             },
             changeData: {
                 handler(newV, oldVal) {
-                    let  bookingVwr = Math.ceil(newV.bookingWeight/newV.bookingCbm)
-                    this.bookingVwr = isNaN(bookingVwr)||bookingVwr==Infinity?"":bookingVwr
+                    this.bookingVwr = newV.bookingCbm +":"+newV.bookingWeight
                     for (let key in newV) {
                         if (newV[key] == "") {
                             this.btnShow = false
