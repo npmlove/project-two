@@ -32,6 +32,7 @@
 	</head>
 	<body>
 		<div id="app" style="font-size: 0;">
+			<div class="pubH">
 			<!-- 头部 -->
 			<div class="header">
 				<div class="header-img">
@@ -44,6 +45,7 @@
 					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
 					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+						<div class="header-bak"><a href="./quick.html">一键订舱</a></div>
 						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
 						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
 						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
@@ -51,12 +53,16 @@
 					</div>
 				</div>
 				<div v-else @click="loginClick" class="header-user">登录</div>
+				<div class="quick " @click="goQuick">
+					<img src="img/quick.png">
+					<span >一键订舱</span>
+				</div>
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
 					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
-					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
-					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
+					<li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
@@ -73,9 +79,10 @@
 								<div class="userInfo-youxiang">设置邮箱</div>
 							</div>
 							<ul class="userInfo-menu-list">
-								<li><a>企业信息</a></li>
-								<li class="menu-list-active"><a>订单管理</a></li>
-								<li><a>财务管理</a></li>
+								<li><a href="./quick.html">一键订舱</a></li>
+								<li><a href="./corporate.html">企业信息</a></li>
+								<li class="menu-list-active"><a href="./orderList.html">订单管理</a></li>
+								<li><a href="./financial.html">财务管理</a></li>
 							</ul>
 						</div>
 						<div class="list-userInfo-customer">
@@ -93,7 +100,7 @@
 											<el-input v-model="orderNo" onkeyup="value=value.replace(/[^\d\w]/g, '')" maxlength="15" placeholder="请输入订单号" style="width: 140px;"></el-input>
 										</el-form-item>
 										<el-form-item label="运单号">
-											<el-input v-model="waybillNo" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="11" placeholder="请输入运单号" style="width: 140px;"></el-input>
+											<el-input v-model="waybillNo" onkeyup="value=value.replace(/[^-\d]/g, '')" maxlength="11" placeholder="请输入运单号" style="width: 140px;"></el-input>
 										</el-form-item>
 										<el-form-item label="进仓编号" label-width="75px">
 											<el-input v-model="inboundNo" placeholder="请输入进仓编号" style="width: 140px;"></el-input>
@@ -163,6 +170,8 @@
 											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
 												<div style="display: flex;">
 													<div>订单号：{{item.orderNo}}</div>
+													<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
+													<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
 													<div style="margin-left: 20px;">预订日期：{{item.orderTime}}</div>
 												</div>
 												<div v-if="item.status == '5'" style="color: #F00;margin-right: 20px;">确认倒计时：{{countTime(index,item.updateTime)}} {{item.timeOutA}}</div>
@@ -171,7 +180,10 @@
 												<div class="nav-wrap-route">
 													<div class="nav-wrap-logo">
 														<img v-if="item.logoPath" alt="图片" :src="item.logoPath">
-														<div>{{item.airCompanyName}}</div>
+														<div>
+															{{item.airCompanyName}}
+															<span style="marginLeft:5px;">{{item.airCompanyCode}}</span>
+														</div>
 														<div>出发日期：{{item.departureDate}}</div>
 													</div>
 													<div class="nav-wrap-route-content">
@@ -179,33 +191,33 @@
 															<div>{{item.pol}}</div>
 															<div>{{item.polName}}</div>
 														</div>
-														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : '中转'}}</div>
+														<div class="nav-wrap-route-zhida">{{item.legCount == '1' ? '直达' : item.firstHub}}</div>
 														<div class="nav-wrap-route-info">
 															<div>{{item.pod}}</div>
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
-														<label>{{item.cargoName}}</label>
-														<label>{{item.inboundPiece}}PCS</label>
-														<label>{{item.inboundCbm}}CMB</label>
-														<label>{{item.inboundWeight}}KG</label>
-														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
-													</div>
-													<div v-else class="nav-wrap-route-remarks">
-														<label v-if="item.status == '17'">订仓数据</label>
+													<div v-if="item.bookingPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label v-if="item.showDif">订舱数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
 														<label>{{item.bookingWeight}}KG</label>
 														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
-													<div v-if="item.status == '17'" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+													<div v-if="item.showDif && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
 														<label>进仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label :style="{color: item.inboundPiece == item.bookingPiece ? '#333' : '#F00'}">{{item.inboundPiece}}PCS</label>
 														<label :style="{color: item.inboundCbm == item.bookingCbm ? '#333' : '#F00'}">{{item.inboundCbm}}CMB</label>
 														<label :style="{color: item.inboundWeight == item.bookingWeight ? '#333' : '#F00'}">{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else-if="item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
 														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
 												</div>
@@ -214,7 +226,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 												</div>
 											</div>
 										</li>
@@ -239,6 +251,8 @@
 											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
 												<div style="display: flex;">
 													<div>订单号：{{item.orderNo}}</div>
+													<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
+													<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
 													<div style="margin-left: 20px;">预订日期：{{item.orderTime}}</div>
 												</div>
 												<div v-if="item.status == '5'" style="color: #F00;margin-right: 20px;">确认倒计时：{{countTime(index,item.updateTime)}} {{item.timeOutA}}</div>
@@ -281,7 +295,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 												</div>
 											</div>
 										</li>
@@ -305,6 +319,8 @@
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
+												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
+												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
 											</div>
 											<div class="nav-wrap-content">
@@ -345,7 +361,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 												</div>
 											</div>
 										</li>
@@ -369,6 +385,8 @@
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
+												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
+												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
 											</div>
 											<div class="nav-wrap-content">
@@ -389,27 +407,27 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
-														<label>{{item.cargoName}}</label>
-														<label>{{item.inboundPiece}}PCS</label>
-														<label>{{item.inboundCbm}}CMB</label>
-														<label>{{item.inboundWeight}}KG</label>
-														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
-													</div>
-													<div v-else class="nav-wrap-route-remarks">
-														<label v-if="item.status == '17'">订仓数据</label>
+													<div v-if="item.bookingPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label v-if="item.showDif">订舱数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
 														<label>{{item.bookingWeight}}KG</label>
 														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
-													<div v-if="item.status == '17'" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+													<div v-if="item.showDif && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
 														<label>进仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label :style="{color: item.inboundPiece == item.bookingPiece ? '#333' : '#F00'}">{{item.inboundPiece}}PCS</label>
 														<label :style="{color: item.inboundCbm == item.bookingCbm ? '#333' : '#F00'}">{{item.inboundCbm}}CMB</label>
 														<label :style="{color: item.inboundWeight == item.bookingWeight ? '#333' : '#F00'}">{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else-if="item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
 														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
 												</div>
@@ -418,7 +436,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 												</div>
 											</div>
 										</li>
@@ -442,6 +460,8 @@
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
+												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
+												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
 											</div>
 											<div class="nav-wrap-content">
@@ -483,7 +503,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 												</div>
 											</div>
 										</li>
@@ -507,6 +527,8 @@
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
+												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
+												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
 											</div>
 											<div class="nav-wrap-content">
@@ -548,7 +570,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 												</div>
 											</div>
 										</li>
@@ -572,6 +594,8 @@
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
+												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
+												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
 											</div>
 											<div class="nav-wrap-content">
@@ -613,7 +637,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 												</div>
 											</div>
 										</li>
@@ -637,6 +661,8 @@
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
 											<div class="nav-wrap-order">
 												<div>订单号：{{item.orderNo}}</div>
+												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
+												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
 												<div>预订日期：{{item.orderTime}}</div>
 											</div>
 											<div class="nav-wrap-content">
@@ -657,19 +683,27 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
-														<label>{{item.cargoName}}</label>
-														<label>{{item.inboundPiece}}PCS</label>
-														<label>{{item.inboundCbm}}CMB</label>
-														<label>{{item.inboundWeight}}KG</label>
-														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
-													</div>
-													<div v-else class="nav-wrap-route-remarks">
-														<label v-if="item.status == '17'">订仓数据</label>
+													<div v-if="item.bookingPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label v-if="item.showDif">订舱数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
 														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-if="item.showDif && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label>进仓数据</label>
+														<label>{{item.cargoName}}</label>
+														<label :style="{color: item.inboundPiece == item.bookingPiece ? '#333' : '#F00'}">{{item.inboundPiece}}PCS</label>
+														<label :style="{color: item.inboundCbm == item.bookingCbm ? '#333' : '#F00'}">{{item.inboundCbm}}CMB</label>
+														<label :style="{color: item.inboundWeight == item.bookingWeight ? '#333' : '#F00'}">{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else-if="item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
 														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
 												</div>
@@ -678,7 +712,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 												</div>
 											</div>
 										</li>
@@ -703,6 +737,8 @@
 											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
 												<div style="display: flex;">
 													<div>订单号：{{item.orderNo}}</div>
+													<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
+													<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
 													<div style="margin-left: 20px;">预订日期：{{item.orderTime}}</div>
 												</div>
 												<div v-if="item.status == '5'" style="color: #F00;margin-right: 20px;">确认倒计时：{{countTime(index,item.updateTime)}} {{item.timeOutA}}</div>
@@ -725,19 +761,27 @@
 															<div>{{item.podName}}</div>
 														</div>
 													</div>
-													<div v-if="item.status > 17 && item.inboundPiece" class="nav-wrap-route-remarks">
-														<label>{{item.cargoName}}</label>
-														<label>{{item.inboundPiece}}PCS</label>
-														<label>{{item.inboundCbm}}CMB</label>
-														<label>{{item.inboundWeight}}KG</label>
-														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
-													</div>
-													<div v-else class="nav-wrap-route-remarks">
-														<label v-if="item.status == '17'">订仓数据</label>
+													<div v-if="item.bookingPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label v-if="item.showDif">订舱数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
 														<label>{{item.bookingWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-if="item.showDif && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label>进仓数据</label>
+														<label>{{item.cargoName}}</label>
+														<label :style="{color: item.inboundPiece == item.bookingPiece ? '#333' : '#F00'}">{{item.inboundPiece}}PCS</label>
+														<label :style="{color: item.inboundCbm == item.bookingCbm ? '#333' : '#F00'}">{{item.inboundCbm}}CMB</label>
+														<label :style="{color: item.inboundWeight == item.bookingWeight ? '#333' : '#F00'}">{{item.inboundWeight}}KG</label>
+														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
+													</div>
+													<div v-else-if="item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
+														<label>{{item.cargoName}}</label>
+														<label>{{item.inboundPiece}}PCS</label>
+														<label>{{item.inboundCbm}}CMB</label>
+														<label>{{item.inboundWeight}}KG</label>
 														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
 												</div>
@@ -746,7 +790,7 @@
 														<div>{{item.statusDesc}}</div>
 														<div>订舱单价 ￥{{item.bookingPrice}}</div>
 													</div>
-													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}起</div>
+													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 												</div>
 											</div>
 										</li>
@@ -766,6 +810,7 @@
 					</div>
 				</div>
 			</div>
+			</div>
 
 			<!-- 尾部 -->
 			<div class="footer">
@@ -779,7 +824,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
@@ -793,7 +838,7 @@
 			el: '#app',
 			data: {
 				loading: false,
-				menuIndex: 0,
+				menuIndex: 1,
 				userInfo: {},
 				openId: '',
 				orderNo: '',
@@ -818,7 +863,7 @@
 				s: '',
 				updateTime: '',
 				userInfo: '',
-				headerMenu: false,
+				headerMenu: false
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -826,6 +871,9 @@
 				}
 				if(localStorage.getItem('userInfo')){
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				}
+				if(getQueryVariable("type")){
+					this.typeCode = getQueryVariable("type")
 				}
 				this.openId = localStorage.getItem('wxOpenId')
 				this.initUserInfo()
@@ -835,13 +883,9 @@
 				this.muSearchByPage()
 				this.initTwoCode()
 			},
-			mounted() {
-
-			},
 			methods: {
-				tuiChu() {
-					localStorage.clear()
-					window.location.href = './login.html'
+				goQuick(){
+					window.location.href='./quick.html'
 				},
 				showHeaderMenu(type) {
 					if(type == 1){
@@ -849,6 +893,10 @@
 					}else {
 						this.headerMenu = false
 					}
+				},
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
 				},
 				//倒计时
 				countTime(index,totalTime) {
@@ -916,16 +964,17 @@
 						var arr = JSON.parse(json)
 						var price = ''
 						for(var i = 0; i < arr.length; i++){
+							let bx = String(arr[i].amount).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g,'$1,');
 							if(arr[i].currency == '1'){
-								price += '￥'+arr[i].amount+'+'
+								price += '￥'+ bx +'+'
 							}else if(arr[i].currency == '2'){
-								price += 'HK$'+arr[i].amount+'+'
+								price += 'HK$'+ bx +'+'
 							}else if(arr[i].currency == '3'){
-								price += '$'+arr[i].amount+'+'
+								price += '$'+ bx +'+'
 							}else if(arr[i].currency == '4'){
-								price += '€'+arr[i].amount+'+'
+								price += '€'+ bx +'+'
 							}else if(arr[i].currency == '5'){
-								price += '￡'+arr[i].amount+'+'
+								price += '￡'+ bx +'+'
 							}
 						}
 						price = price.substring(0, price.length - 1)
@@ -967,6 +1016,7 @@
 					})
 				},
 				tabClickData() {
+					this.pageNum=1
 					this.initData()
 					this.initOrderCountList()
 				},
@@ -1089,6 +1139,7 @@
 					window.location.href = './orderDetails.html?orderId='+orderId
 				},
 				searchClick() {
+					this.pageNum=1;
 					this.initData()
 					this.initOrderCountList()
 				},
@@ -1129,6 +1180,15 @@
 				// muen
 				menuClick(index) {
 					this.menuIndex = index
+					if(index == 0){
+						window.location.href = './index.html';
+					} else if (index == 1) {
+						window.location.href = './trackSearch.html?trackSearchInput=';
+					}else if(index == 2){
+						window.location.href = './addressSerach.html'
+					}else if(index == 3){
+						window.location.href = './about_us.html'
+					}
 				}
 			}
 		})

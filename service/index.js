@@ -1,22 +1,28 @@
-// var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境或测试环境
-var websocketUrl = 'wss://www.17dc.com/back/dcPortal/user/' //生成环境
+var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境或测试环境
+// var websocketUrl = 'wss://www.17dc.com/back/dcPortal/user/' //生成环境
 
 
 
 //开发环境
 // var webIp = 'http://10.8.0.14:6679'
-// var webIp = 'http://10.8.0.1'
-// var publicWeb = '/back/dcPortal/faw'
+var webIp = 'http://10.8.0.1'
+var publicWeb = '/back/dcPortal/faw'
 
 //测试环境或生成环境
-var webIp = ''
-var publicWeb = '/back/dcPortal/faw'
+// var webIp = ''
+// var publicWeb = '/back/dcPortalTest/faw'
+
+// //测试环境或生成环境
+// var webIp = ''
+// var publicWeb = '/back/dcPortal/faw'
 
 
 //接口
 const serviceApi = {
 	// 首页Banner广告展示
 	showBanners: publicWeb+'/t-banner/noAuth/showBanners',
+	// 首页AI文字解析,获取查价所需数据
+	aiStringIdentify: '/track/identify/stringIdentify',
 	//三字代码查询分页
 	searchByPage: publicWeb+'/t-airport/noAuth/searchByPage',
 	//二字代码查询分页
@@ -58,7 +64,43 @@ const serviceApi = {
 	//执行订单
 	orderExecuteOrder: publicWeb+'/t-order/executeOrder',
 	//是否磁性
-	orderIsMagnetic: publicWeb+'/t-order/isMagnetic'
+	orderIsMagnetic: publicWeb+'/t-order/isMagnetic',
+	//确认账单
+	billConfirmBill: publicWeb+'/t-bill/confirmBill',
+	//已确认费用账单列表
+	billList: publicWeb+'/t-bill/list',
+	//查询当前用户开票信息列表
+	invoiceInfoList: publicWeb+'/t-portal-invoice-info/list',
+	//查询当前用户快递信息列表
+	expressInfoList: publicWeb+'/t-portal-express-info/list',
+	//开票申请
+	invoiceApply: publicWeb+'/t-invoice-apply/invoiceApply',
+	//发票信息
+	invoiceInfos: publicWeb+'/t-invoice-apply/invoiceInfos',
+	//导出账单
+	billImportBillPdf: publicWeb+'/t-bill/importBillPdf',
+	// 体积计算
+	stringcal: '/track/volcalculate/stringcal',
+	//新增or修改开票信息
+	invoiceInfoSaveOrUpdate: publicWeb+'/t-portal-invoice-info/saveOrUpdate',
+	// 删除开票信息
+	deleInvoice:  publicWeb+'/t-portal-invoice-info/delete',
+	//新增or修改开票邮寄信息
+	expressInfoSaveOrUpdate: publicWeb+'/t-portal-express-info/saveOrUpdate',
+	// 删除用户快递信息
+	deleExpress:  publicWeb+'/t-portal-express-info/delete',
+	//查询航司当前情况,获取位置等
+	airLineSearch: '/track/airLine/trackFlight',
+	//通过地点关键词搜索附近机场
+	searchAirport:'/track/place/search-airport/',
+	//地点检索候选项
+	placeSuggest:'/track/place/suggest',
+	//快捷下单
+	fastOrder:publicWeb+'/t-order/fastOrder',
+
+	orderBIllList: publicWeb + '/t-rcv-records/searchByPage'
+
+
 }
 
 
@@ -87,7 +129,9 @@ function getQueryVariable(variable){
     var vars = query.split("&");
     for (var i=0;i<vars.length;i++) {
         var pair = vars[i].split("=");
-        if(pair[0] == variable){return pair[1];}
+        if(pair[0] == variable){
+        	return  decodeURI(pair[1], "utf-8");
+        }
     }
     return(false);
 }
@@ -136,14 +180,14 @@ function isDateCurrent1(arr) {
 	var newArr = []
 	for(var a = 0; a < arr.length; a++){
 		var date1 = new Date(arr[a])
-		if(date1.getTime() > date2.getTime()){
+
 			var json = {
 				date: arr[a],
 				dow: date1.getDay(),
 				isDow: date1.getDay() == 0 ? 7 : date1.getDay()
 			}
 			newArr.push(json)
-		}
+
 	}
 	return newArr
 }
@@ -160,23 +204,23 @@ function getWeekDay(data) {
 	var dateString = formatDate(data);//当天的日期，例如2020-2-28
 	var presentDate = new Date(dateString);
 	var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 21;
- 
+
 	return Array.from(new Array(21), function (val, index) {
 		return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
 	});
 }
-//获取进三周的数据
+//获取进四周的数据
 function getWeekDay1(data) {
 	var dateString = formatDate(data);//当天的日期，例如2020-2-28
 	var presentDate = new Date(dateString);
 	if(presentDate.getDay() == 0){
-		var today = 21;
-		return Array.from(new Array(21), function (val, index) {
+		var today = 28;
+		return Array.from(new Array(28), function (val, index) {
 			return formatDate(new Date(presentDate.getTime() + (today - index - 1) * 24 * 60 * 60 * 1000));
 		});
 	}else{
-		var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 21;
-		return Array.from(new Array(21), function (val, index) {
+		var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 28;
+		return Array.from(new Array(28), function (val, index) {
 			return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
 		});
 	}
@@ -193,4 +237,3 @@ function getNowM() {
 	}
 	return current_month;
 }
-

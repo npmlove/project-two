@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <meta name="applicable-device" content="pc,mobile">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="renderer" content="webkit">
+  <meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+  <meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+  <link rel='icon' href='./img/favicon.ico' type='image/x-icon'/>
+  <title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+  <!-- <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/7.0.0/swiper-bundle.min.css"> -->
+  <link rel="stylesheet" href="./css/swiper-bundle.min.css"/>
+  <link rel="stylesheet" href="./css/reset.css"/>
+  <link rel="stylesheet" href="./css/common.css"/>
+  <link rel="stylesheet" href="./css/addressSerach.css"/>
+  <script src="./js/vue.js"></script>
+  <script src="./js/axios.min.js"></script>
+  <script src="./js/swiper-bundle.min.js"></script>
+  <link rel="stylesheet" href="./css/element-ui-min.css">
+  <script src="./js/element-ui.js"></script>
+  <script type="text/javascript"
+          src="https://webapi.amap.com/maps?v=1.4.14&key=07536db46b52555c8782a4e5667fee2d&&plugin=AMap.Scale,AMap.OverView,AMap.ToolBar,AMap.Geocoder"></script>
+  <script>
+      var _hmt = _hmt || [];
+      (function () {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+      })();
+  </script>
+</head>
+<body>
+<div id="app">
+  <!-- 头部 -->
+  <div class="header">
+    <div class="header-img">
+      <a href="./index.html">
+        <div class="logo"></div>
+      </a>
+      <div class="logo-title"></div>
+    </div>
+    <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+      <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+      <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+        <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+        <div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+        <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+        <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+        <div class="header-bak"><a href="./financial.html">财务管理</a></div>
+        <div @click="tuiChu" class="header-bak">退出</div>
+      </div>
+    </div>
+    <div v-else @click="loginClick" class="header-user">登录</div>
+    <div class="quick " @click="goQuick">
+      <img src="img/quick.png">
+      <span>一键订舱</span>
+    </div>
+  </div>
+  <div class="header-menu">
+    <ul class="header-menu-list com-width">
+      <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+      <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
+      <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+      <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+    </ul>
+  </div>
+  <div class="Map" id="Map">
+    <div class="searchBox">
+      <div class="search">
+        <input class="keywords" placeholder="地址、城市、机场、港口、FBA仓库..." maxlength="150" v-model.trim="keywords"
+               @input="changeValue" @keyup.enter="searchAddress(1)"/>
+        <div class="dele" v-show="keywords" @click="keywords='',airportsData=[]">
+          <img src="img/close.png">
+        </div>
+        <div class="loading" style="width: 100%;text-align: center;position: absolute;left: 0;top:-10px;"
+             v-if="isLoading">
+          <img src="img/loading1.gif" style="width: 50px;height: 50px;"/>
+        </div>
+        <div class="btn" @click="searchAddress(1)">
+          <img src="img/search.png">
+        </div>
+      </div>
+      <div class="searchList" v-show="isSearchList">
+        <div class="dataList" v-for="(item,index) in keyData" :key="item.keywordsPoint" @click="searchAddress(2,item)">
+          {{item}}
+        </div>
+      </div>
+      <div class="listBox" v-if="airportsData.length">
+        <div class="title">
+          <div>该地址附近的机场：</div>
+          <div>
+            推荐数量：<span>{{airportsData.length}}条</span>
+          </div>
+        </div>
+        <div :class="['list',index == act?'actList':'']" v-for="(item,index) in airportsData" :key="index"
+             @click="itemClick(item,index)">
+          <div class="top">
+            <div>
+              <p>机场代码:<span>{{item.threeLetterCode}}</span></p>
+              <p>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>{{item.country}} {{item.countryEn}}</span></p>
+            </div>
+            <div>
+              <p>距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>{{item.distance}}</span></p>
+              <p v-if="item.expendHour!=null">预估时间:<span>{{item.expendHour}}小时{{item.expendMinute}}分</span></p>
+              <p v-else><span>&nbsp;&nbsp;&nbsp;</span></p>
+            </div>
+
+          </div>
+          <div class="bot">
+
+            <div class="addre">
+              <div>城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市:</div>
+              <div>{{item.city}} {{item.cityEn}}</div>
+            </div>
+            <p class="rating">推荐指数:
+              <img src="img/xingxing.png" v-for="item in item.rating" :key="item">
+            </p>
+          </div>
+          <img v-if="index != act" class="location" src="./img/locationNo.png">
+          <img v-else class="location" src="./img/locationYes.png">
+          <div class="active" @click.stop="goTo(item)" v-if="item.priceDate">
+            <span>￥</span><span>{{item.minPrice}}</span>/KG起
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+<script src="./service/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            menuIndex: 2,
+            userInfo: '',
+            headerMenu: false,
+            placeName: '',
+            keywords: '',
+            keyData: [],
+            airportsData: [],
+            map: null,
+            infoWindow: null,
+            markesData: [],
+            act: -1,
+            isSearchList: false,
+            isLoading: false,
+            googleLayer: null,
+            Sate: null,
+
+
+        },
+        created() {
+            if (!localStorage.getItem('wxOpenId')) {
+                window.location.href = './login.html'
+            }
+            if (localStorage.getItem('userInfo')) {
+                this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+            }
+        },
+        mounted() {
+            this.initMap()
+            // this.$nextTick(() => {
+            //     this.initMap()
+            // })
+
+        },
+        methods: {
+            goQuick() {
+                window.location.href = './quick.html'
+            },
+            goTo(item) {
+                window.location.href = `./freightQuery.html?qi=&mu=${item.threeLetterCode}`
+                // debugger
+            },
+            itemClick(item, index) {
+                // debugger
+                this.act = index;
+                this.infoWindow.close();
+                this.map.setCenter([item.longitude, item.latitude]); //设置地图中心点
+                this.map.setZoom(9); //设置地图层级
+                // this.infoWindow.open(this.map, [item.longitude, item.latitude]);
+                this.markesData[index].emit('click', {target: this.markesData[index]})
+            },
+
+            searchAddress(type, data = null) {
+                this.map.remove(this.markesData);
+                // if(type == 2 ){
+                //     this.map.setCenter([data.longitude,data.latitude]) //设置地图中心点
+                //     this.centerMarker && this.map.remove(this.centerMarker)
+                //     this.centerMarker = new AMap.Marker({
+                //         position: [data.longitude,data.latitude],
+                //         map: this.map,
+                //         icon: "img/curraddr.png",
+                //         offset: new AMap.Pixel(-26, -13),
+                //         autoRotation: true
+                //
+                //     });
+                // }
+
+                this.act = -1
+                this.infoWindow && this.infoWindow.close();
+                this.airportsData = [];
+                this.markesData = [];
+                let placeName = "";
+                if (type == 1) {
+                    placeName = this.keywords
+                } else {
+                    placeName = data
+                    this.keywords = data
+                }
+                if (!placeName) {
+                    this.$message.error("请输入查询地点")
+                    return false
+                }
+                this.isLoading = true;
+                axios({
+                    method: 'get',
+                    url: webIp + serviceApi.searchAirport + `?placeName=${placeName}`,
+                    data: {}
+                }).then((res) => {
+                    if (res.data.code == 200) {
+                        this.isSearchList = false
+                        this.airportsData = res.data.data.airports ? res.data.data.airports : [];
+                        this.keyData = [];
+
+
+                        this.centerMarker && this.map.remove(this.centerMarker)
+                        console.log([res.data.data.longitude, res.data.data.latitude])
+                        this.centerMarker = new AMap.Marker({
+                            position: [res.data.data.longitude, res.data.data.latitude],
+                            map: this.map,
+                            icon: "img/curraddr.png",
+                            offset: new AMap.Pixel(-26, -13),
+                            autoRotation: true
+
+                        });
+
+
+                        this.addmarker([res.data.data.longitude, res.data.data.latitude])
+                    }
+                    if (res.data.code == -1) {
+                        this.$message.error(res.data.message)
+                    }
+                }).finally(() => {
+                    this.isLoading = false;
+                })
+            },
+            changeValue() {
+                if (this.keywords == "") {
+                    return false
+                }
+                axios({
+                    method: 'get',
+                    url: webIp + serviceApi.placeSuggest + `?keywords=${this.keywords}`,
+                    data: {}
+                }).then((res) => {
+                    if (res.data.code == 200) {
+                        this.isSearchList = true
+                        this.keyData = res.data.data ? res.data.data : [];
+                    }
+                })
+            },
+            initMap() {
+                //叠加谷歌地图
+                // var googleLayer = null;
+                // 添加Google图层
+                this.googleLayer = new AMap.TileLayer({
+                    // 图块取图地址
+                    getTileUrl: 'https://map.shenghuoq.com/{e173754b3b1bbd62a0be9c4afea73fdfa,ce60bcadc66cea58583ddd700f7d80bea,c7d52b85d86a06df50621e669557ea05a,57cf283b871304a296c3bd8acde4cc22a,msjcyawb3bapocysk0be9c4afea73fdsd,dsasd54b3b1scw62a0be9cmxjsa73fdfa,klosib85d8uisolxf50621e669557ea05,klosyc3b87130sdkc6c3bd8acdeklsogh}/vt/lyrs=m@142&hl=zh-CN&gl=cn&x=[x]&y=[y]&z=[z]&s=Galil',
+                    zIndex: 9
+                });
+                let toolBar = new AMap.ToolBar({
+                    position: "RB",
+                    offset: new AMap.Pixel(50, 0),
+                });
+                let scale = new AMap.Scale();
+                this.Sate = new AMap.TileLayer();
+                this.map = new AMap.Map('Map', {
+                    zoom: 9,
+                    viewMode: '2D',
+                    center: [116.412197, 39.911092],
+                    layers: [this.googleLayer, this.Sate]
+                });
+                this.centerMarker = new AMap.Marker({
+                    position: [116.412197, 39.911092],
+                    map: this.map,
+                    icon: "img/curraddr.png",
+                    offset: new AMap.Pixel(-26, -13),
+                    autoRotation: true
+
+                });
+                this.map.addControl(toolBar);
+                this.map.addControl(scale);
+
+            },
+            markerClick(e) {
+                this.infoWindow.setContent(e.target.content);
+                this.infoWindow.open(this.map, e.target.getPosition());
+                this.map.setZoom(9); //设置地图层级
+                this.map.setCenter(e.target.getPosition()); //设置地图中心点
+                setTimeout(() => {
+                    let dom = document.getElementById('ratingBox')
+                    this.act = e.target.currIndex
+                    for (let i = 0; i < e.target.ratingNum; i++) {
+                        let img = document.createElement("img");
+                        img.src = "img/xingxing.png";
+                        dom.appendChild(img)
+                    }
+                }, 40)
+
+
+            },
+            addmarker(arr) {
+                console.log(this.airportsData)
+                this.airportsData.length && this.airportsData.forEach((item, index) => {
+                    let point = [item.longitude, item.latitude]
+                    let marker = new AMap.Marker({
+                        position: point,
+                        map: this.map,
+                        icon: "img/Frame.png",
+                        offset: new AMap.Pixel(-26, -13),
+                        autoRotation: true
+
+                    });
+                    this.infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
+                    item.longitude=item.longitude.replace(/(-?[0-9]+\.?\d{6})\d*/ig,"$1")
+                    item.latitude=item.latitude.replace(/(-?[0-9]+\.?\d{6})\d*/ig,"$1")
+                    if (item.expendHour != null) {
+                        marker.content = `   <div class="infoBox">
+        <div>机场代码:<span>${item.threeLetterCode}</span></div>
+        <div>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>${item.country} ${item.countryEn}</span></div>
+        <div>城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市:<span>${item.city} ${item.cityEn}</span></div>
+        <div>距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>${item.distance}</span></div>
+         <div>经&nbsp;&nbsp;纬&nbsp;&nbsp;度:<span>${item.longitude}，${item.latitude}</span></div>
+        <div>预估时间:<span>${item.expendHour}小时${item.expendMinute}分</span></div>
+        <div class="address">
+          机场地址:
+          <div>${item.name}</div>
+        </div>
+        <div class="rating" id="ratingBox">推荐指数:
+
+        </div>
+      </div>`;
+                    } else {
+                        marker.content = `   <div class="infoBox">
+        <div>机场代码:<span>${item.threeLetterCode}</span></div>
+        <div>国&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家:<span>${item.country} ${item.countryEn}</span></div>
+        <div>城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市:<span>${item.city} ${item.cityEn}</span></div>
+        <div>距&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;离:<span>${item.distance}</span></div>
+         <div>经&nbsp;&nbsp;纬&nbsp;&nbsp;度:<span>${item.longitude}，${item.latitude}</span></div>
+
+        <div class="address">
+          机场地址:
+          <div>${item.name}</div>
+        </div>
+        <div class="rating" id="ratingBox">推荐指数:
+
+        </div>
+      </div>`;
+                    }
+
+                    marker.ratingNum = item.rating;
+                    marker.currIndex = index;
+                    marker.on('click', this.markerClick);
+                    this.markesData.push(marker)
+                    this.map.setFitView();
+                })
+                this.map.setZoom(9); //设置地图层级
+                this.map.setCenter(arr) //设置地图中心点
+            },
+            showHeaderMenu(type) {
+                if (type == 1) {
+                    this.headerMenu = true
+                } else {
+                    this.headerMenu = false
+                }
+            },
+            tuiChu() {
+                localStorage.clear()
+                window.location.href = './login.html'
+            },
+            //登录
+            loginClick() {
+                window.location.href = './login.html'
+            },
+            // muen
+            menuClick(index) {
+                this.menuIndex = index
+                if (index == 0) {
+                    window.location.href = './index.html'
+                } else if (index == 1) {
+                    window.location.href = './trackSearch.html?trackSearchInput='
+                } else if (index == 2) {
+                    window.location.href = './addressSerach.html'
+                } else if (index == 3) {
+                    window.location.href = './about_us.html'
+                }
+            }
+        }
+    })
+</script>
+</html>

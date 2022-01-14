@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="format-detection" content="telephone=no,address=no,email=no">
+		<meta name="applicable-device" content="pc,mobile">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="Cache-Control" content="no-transform">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="renderer" content="webkit">
+		<meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+		<meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+		<link rel='icon' href='./img/favicon.ico' type='image/x-icon' />
+		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+		<link rel="stylesheet" href="./css/element-ui-min.css">
+		<link rel="stylesheet" href="./css/reset.css" />
+		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/vue.js"></script>
+		<script src="./js/axios.min.js"></script>
+		<script src="./js/element-ui.js"></script>
+		<script>
+			var _hmt = _hmt || [];
+			(function() {
+				var hm = document.createElement("script");
+				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
+				var s = document.getElementsByTagName("script")[0];
+				s.parentNode.insertBefore(hm, s);
+			})();
+		</script>
+	</head>
+	<body>
+		<div id="app" style="font-size: 0;">
+			<!-- 头部 -->
+			<div class="header">
+				<div class="header-img">
+					<a href="./index.html">
+						<!-- <img class="logo" src="./img/logo.png" /> -->
+						<div class="logo"></div>
+					</a>
+					<div class="logo-title"></div>
+				</div>
+				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+						<div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
+						<div @click="tuiChu" class="header-bak">退出</div>
+					</div>
+				</div>
+				<div v-else @click="loginClick" class="header-user">登录</div>
+				<div class="quick " @click="goQuick">
+					<img src="img/quick.png">
+					<span >一键订舱</span>
+				</div>
+			</div>
+			<div class="header-menu">
+				<ul class="header-menu-list com-width">
+					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
+					<li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+				</ul>
+			</div>
+			<!-- 展示 -->
+			<div class="about-us">
+				<div class="about-us-img"></div>
+				<div class="about-content">
+					<div class="about-content-title">公司简介</div>
+					<div class="about-content-content">
+						<div class="about-content-img">
+							<div class="left-bar-type"></div>
+							<img alt="tupian" src="./img/about.png">
+							<div class="right-bar-type"></div>
+						</div>
+						<div class="about-content-text">上海傲晔物流科技有限公司（简称“17订舱”）成立于2021年，是领先的集极速订舱、在线报关、航班跟踪、舱单生成功能于一身的国际货运智能化数字服务平台。公司融合人工智能、大数据等数字化技术研发出多款货运云系统和工具产品，集合各大航空公司优势航线、整合业内资源，依托全线平价产品、专业的服务方案、高效的反馈机制，为国际货运企业提供专业、高效、贴心的服务。</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 尾部 -->
+			<div class="footer">
+				<div class="com-width">
+					<div class="footer-content">
+						<div class="footer-label">
+							<div class="footer-cool" style="margin-bottom: 10px;">
+								<span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
+							</div>
+							<!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
+								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
+								<span>沪公网备XXXXXXXXXXXXX号</span>
+							</div> -->
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
+						</div>
+						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="./service/index.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				menuIndex: 3,
+				userInfo: '',
+				headerMenu: false
+			},
+			created() {
+				if(!localStorage.getItem('wxOpenId')){
+					window.location.href = './login.html'
+				}
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				}
+			},
+			methods: {
+				goQuick(){
+					window.location.href='./quick.html'
+				},
+				showHeaderMenu(type) {
+					if(type == 1){
+						this.headerMenu = true
+					}else {
+						this.headerMenu = false
+					}
+				},
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
+				},
+				//登录
+				loginClick() {
+					window.location.href = './login.html'
+				},
+				// muen
+				menuClick(index) {
+					this.menuIndex = index
+					if(index == 0){
+						window.location.href = './index.html';
+					} else if (index == 1) {
+						window.location.href = './trackSearch.html?trackSearchInput=';
+					}else if(index == 2){
+						window.location.href = './addressSerach.html'
+					}else if(index == 3){
+						window.location.href = './about_us.html'
+					}
+				}
+			}
+		})
+	</script>
+</html>

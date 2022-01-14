@@ -44,6 +44,7 @@
 					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
 					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+						<div class="header-bak"><a href="./quick.html">一键订舱</a></div>
 						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
 						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
 						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
@@ -51,12 +52,16 @@
 					</div>
 				</div>
 				<div v-else @click="loginClick" class="header-user">登录</div>
+				<div class="quick " @click="goQuick">
+					<img src="img/quick.png">
+					<span >一键订舱</span>
+				</div>
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
 					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
-					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
-					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
+					<li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
@@ -80,7 +85,7 @@
 									<div class="booking-form-item">
 										<label class="booking-form-item-label"><span style="color: #F00;">*</span>重量</label>
 										<div class="booking-form-item-content">
-											<input v-model="bookingWeight" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="6" class="booking-form-input" type="text" />
+											<input v-model="bookingWeight" @blur="bookingWeightBlur" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="6" class="booking-form-input" type="text" />
 											<div class="booking-form-tips-right">KG</div>
 										</div>
 									</div>
@@ -96,7 +101,7 @@
 									<div class="booking-form-item">
 										<label class="booking-form-item-label"><span style="color: #F00;">*</span>品名</label>
 										<div class="booking-form-item-content">
-											<input v-model="cargoName" @blur="cargoNameBlur" maxlength="30" placeholder="请填写货物品名" class="booking-form-input" type="text" style="width: 200px;"/>
+											<input v-model="cargoName" @blur="cargoNameBlur" maxlength="30" placeholder="请填写货物品名,支持中英文输入" class="booking-form-input" type="text" style="width: 275px;"/>
 										</div>
 									</div>
 								</div>
@@ -145,15 +150,15 @@
 								</div>
 								<button v-if="(trayDetail.length != 10) && packageType == '2'" @click="trayAddClick" class="box-btn btn-prprimary com-width100" style="margin-left: 30px;">添加</button>
 							</div>
-							<div class="booking-item borderEFEFEF bakFFFFFF">
+							<div class="booking-item borderEFEFEF bakFFFFFF booking-serve-width">
 								<div class="booking-item-name">服务产品</div>
 								<div class="booking-form-line">
 									<div class="booking-form-item">
-										<label class="booking-form-item-label" style="width: 84px;">报关</label>
+										<label class="booking-form-item-label" style="width: 84px;">报关服务</label>
 										<div class="booking-form-item-content">
 											<ul class="group-radio-ul" style="font-size: 14px;">
+												<li @click="customsTypeClick(2)" :class="{radio_li_active: customsType == '2'}" class="radio-li">委托报关</li>
 												<li @click="customsTypeClick(1)" :class="{radio_li_active: customsType == '1'}" class="radio-li">自行报关</li>
-												<li @click="customsTypeClick(2)" :class="{radio_li_active: customsType == '2'}" class="radio-li">委托“17订舱”报关</li>
 											</ul>
 										</div>
 									</div>
@@ -273,13 +278,16 @@
 									<span v-if="proportionArr.dow == '6'">周六</span>
 									<span v-if="proportionArr.dow == '7'">周日</span>
 								</div>
-								<div class="booking-flight-name"><span></span><span>{{proportionArr.airCompanyName}}</span></div>
+								<div class="booking-flight-name"><span></span>
+									<span>{{proportionArr.airCompanyName}}</span>
+									<span style="marginLeft:10px;">{{proportionArr.airCompanyCode}}</span>
+								</div>
 								<div class="booking-flight-route">
 									<div class="booking-flight-route-item">
 										<div>{{proportionArr.pol}}</div>
 										<div>{{proportionArr.polName}}</div>
 									</div>
-									<div class="booking-flight-route-tips">直达</div>
+									<div class="booking-flight-route-tips">{{proportionArr.legCount == '1' ? '直达' : proportionArr.firstHub}}</div>
 									<div class="booking-flight-route-item">
 										<div>{{proportionArr.pod}}</div>
 										<div>{{proportionArr.podName}}</div>
@@ -344,7 +352,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
@@ -387,7 +395,7 @@
 						trayHeight: ''
 					}
 				],
-				customsType: '1',
+				customsType: '2',
 				isPickUp: '1',
 				cclType: '1',
 				pickUpAddress: '',
@@ -414,7 +422,7 @@
 				hangxianId: '',
 				isMagnetic: false,
 				userInfo: '',
-				headerMenu: false,
+				headerMenu: false
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -427,47 +435,20 @@
 				this.cargoTypeA = getQueryVariable('cargoType')
 				this.dowA = getQueryVariable('dow')
 				this.dateTabActive = getQueryVariable('date')
+				this.bookingPiece = Number(getQueryVariable('bookingPiece')) || ''
+				this.bookingWeight = Number(getQueryVariable('bookingWeight')) || ''
+				this.bookingCbm = Number(getQueryVariable('bookingCbm')) || ''
 				this.initHangxian()
-			},
-			mounted() {
-
-			},
-			watch:{
-				bookingWeight() {
-					if(this.bookingCbm && this.bookingWeight){
-						this.huowuDanjia()
-						this.feiyongJisuan()
-					}else{
-						this.chargedWeight = ''
-						this.chargedValue = ''
-						this.chargedKey = ''
-						this.chargedJiaqian = ''
-						this.hangxianId = ''
-					}
-				},
-				bookingCbm() {
-					if(this.bookingCbm && this.bookingWeight){
-						var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
-						if(!reg.test(this.bookingCbm) && (this.bookingCbm != '')){
-							this.$message.error('体积最大输入四位正整数，小数保留四位')
-							this.chargedJiaqian = ''
-						}else{
-							this.huowuDanjia()
-							this.feiyongJisuan()
-						}
-					}else{
-						this.chargedWeight = ''
-						this.chargedValue = ''
-						this.chargedKey = ''
-						this.chargedJiaqian = ''
-						this.hangxianId = ''
-					}
+				if(this.bookingWeight && this.bookingCbm){
+					setTimeout(() => {
+						this.bookingWeightBlur()
+					},1000)
 				}
+				// this.bookingCbmBlur()
 			},
 			methods: {
-				tuiChu() {
-					localStorage.clear()
-					window.location.href = './login.html'
+				goQuick(){
+					window.location.href='./quick.html'
 				},
 				showHeaderMenu(type) {
 					if(type == 1){
@@ -475,6 +456,10 @@
 					}else {
 						this.headerMenu = false
 					}
+				},
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
 				},
 				cargoNameBlur() {
 					axios({
@@ -492,410 +477,365 @@
 						}else{
 							this.$message.error(data.message)
 
-						}
-					})
-				},
-				//用户下单
-				submitClick() {
-					var reg = /^(1[3456789])\d{9}$/
-					if(this.totolPrice == '0' || this.chargedJiaqian == '0'){
-						this.$message.error('货物计费量未达标，请重新填写')
-						return
-					}
-					if(!this.bookingPiece){
-						this.$message.error('请输入件数')
-						return
-					}else if(!this.bookingWeight){
-						this.$message.error('请输入重量')
-						return
-					}else if(!this.bookingCbm){
-						this.$message.error('请输入体积')
-						return
-					}else if(!this.cargoName){
-						this.$message.error('请输入品名')
-						return
-					}
-					if(this.packageType == '2'){
-						for(var i = 0; i < this.trayDetail.length; i++){
-							if(this.trayDetail[i].trayNumber == ''){
-								this.$message.error('请输入托盘数量')
-								return
-							}else if(this.trayDetail[i].traySize == ''){
-								this.$message.error('请输入托盘尺寸长度')
-								return
-							}else if(this.trayDetail[i].trayWidth == ''){
-								this.$message.error('请输入托盘尺寸宽度')
-								return
-							}else if(this.trayDetail[i].trayHeight == ''){
-								this.$message.error('请输入托盘尺寸高度')
-								return
+                    }
+                })
+            },
+            //用户下单
+            submitClick() {
+                var reg = /^(1[3456789])\d{9}$/
+                if (this.totolPrice == '0' || this.chargedJiaqian == '0') {
+                    this.$message.error('货物计费量未达标，请重新填写')
+                    return
+                }
+                if (!this.bookingPiece) {
+                    this.$message.error('请输入件数')
+                    return
+                } else if (!this.bookingWeight) {
+                    this.$message.error('请输入重量')
+                    return
+                } else if (!this.bookingCbm) {
+                    this.$message.error('请输入体积')
+                    return
+                } else if (!this.cargoName) {
+                    this.$message.error('请输入品名')
+                    return
+                }
+                if (this.packageType == '2') {
+                    for (var i = 0; i < this.trayDetail.length; i++) {
+                        if (this.trayDetail[i].trayNumber == '') {
+                            this.$message.error('请输入托盘数量')
+                            return
+                        } else if (this.trayDetail[i].traySize == '') {
+                            this.$message.error('请输入托盘尺寸长度')
+                            return
+                        } else if (this.trayDetail[i].trayWidth == '') {
+                            this.$message.error('请输入托盘尺寸宽度')
+                            return
+                        } else if (this.trayDetail[i].trayHeight == '') {
+                            this.$message.error('请输入托盘尺寸高度')
+                            return
+                        }
+                    }
+                }
+                if (this.isPickUp == '2') {
+                    if (this.pickUpAddress == '') {
+                        this.$message.error('请输入国内上门提货提货地址')
+                        return
+                    } else if (this.pickUpContacts == '') {
+                        this.$message.error('请输入国内上门提货提货联系人')
+                        return
+                    } else if (this.pickUpTel == '') {
+                        this.$message.error('请输入国内上门提货联系电话')
+                        return
+                    } else if (!reg.test(this.pickUpTel)) {
+                        this.$message.error('请输入有效的国内上门提货联系电话')
+                        return
+                    }
+                } else {
+                    this.pickUpAddress = ''
+                    this.pickUpContacts = ''
+                    this.pickUpTel = ''
+                }
+                if (this.cclType != '1') {
+                    if (this.deliveryAddress == '') {
+                        this.$message.error('请输入清关服务送货地址')
+                        return
+                    } else if (this.deliveryContacts == '') {
+                        this.$message.error('请输入清关服务送货联系人')
+                        return
+                    } else if (this.deliveryTel == '') {
+                        this.$message.error('请输入清关服务联系电话')
+                        return
+                    }
+                } else {
+                    this.deliveryAddress = ''
+                    this.deliveryContacts = ''
+                    this.deliveryTel = ''
+                }
+                var orderPriceList = []
+
+                var jq = {
+                    expenseName: '空运费',
+                    price: this.chargedJiaqian,
+                    quantity: this.bookingCw,
+                    currency: '1'
+                }
+                orderPriceList.push(jq)
+                if (this.newOtherFeeMap) {
+                    for (var q = 0; q < this.newOtherFeeMap.length; q++) {
+                        var mapJson = {
+                            expenseName: this.newOtherFeeMap[q].feesName,
+                            price: this.newOtherFeeMap[q].fees,
+                            quantity: '1',
+                            currency: '1'
+                        }
+                        orderPriceList.push(mapJson)
+                    }
+                }
+                if (this.customsType == '2') {
+                    var bg = {
+                        expenseName: '报关费',
+                        price: 100,
+                        quantity: '1',
+                        currency: '1'
+                    }
+                    orderPriceList.push(bg)
+                }
+                var order = {
+                    bookingPiece: this.bookingPiece,
+                    bookingWeight: this.bookingWeight,
+                    bookingCbm: this.bookingCbm,
+                    cargoName: this.cargoName,
+                    cargoType: this.cargoType,
+                    cclType: this.cclType,
+                    customsType: this.customsType,
+                    deliveryAddress: this.deliveryAddress,
+                    deliveryContacts: this.deliveryContacts,
+                    deliveryTel: this.deliveryTel,
+                    isPickUp: this.isPickUp,
+                    pickUpAddress: this.pickUpAddress,
+                    pickUpContacts: this.pickUpContacts,
+                    pickUpTel: this.pickUpTel,
+                    departureDate: this.dateTabActive,
+                    dow: this.dowA,
+                    bookingVwr: this.chargedWeight,
+                    bookingCw: this.bookingCw,
+                    packageType: this.packageType,
+                    trayDetail: JSON.stringify(this.trayDetail),
+                    bookingPrice: this.chargedJiaqian,
+                    pod: this.proportionArr.pod,
+                    pol: this.proportionArr.pol,
+                    airCompanyCode: this.proportionArr.airCompanyCode,
+                    legCount: this.proportionArr.legCount,
+                    shortDuration: this.proportionArr.shortDuration,
+                    longDuration: this.proportionArr.longDuration,
+                    fullLeg: this.proportionArr.fullLeg
+                }
+
+                var json = {
+                    airlineAgentId: this.hangxianId,
+                    order: order,
+                    orderPriceList: orderPriceList
+                }
+                axios({
+                    method: 'post',
+                    url: webIp + serviceApi.getStartOrder,
+                    data: json,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                        window.location.href = './orderList.html'
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
+
+                    }
+                })
+            },
+            bookingWeightBlur() {
+                if (this.bookingCbm && this.bookingWeight) {
+                    this.huowuDanjia()
+                    this.feiyongJisuan()
+                } else {
+                    this.chargedWeight = ''
+                    this.chargedValue = ''
+                    this.chargedKey = ''
+                    this.chargedJiaqian = ''
+                    this.hangxianId = ''
+                }
+            },
+            bookingCbmBlur() {
+                var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
+                if (!reg.test(this.bookingCbm) && (this.bookingCbm != '')) {
+                    this.$message.error('体积最大输入四位正整数，小数保留四位')
+                    return
+                } else {
+                    if (this.bookingCbm && this.bookingWeight) {
+                        var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
+                        if (!reg.test(this.bookingCbm) && (this.bookingCbm != '')) {
+                            this.$message.error('体积最大输入四位正整数，小数保留四位')
+                            this.chargedJiaqian = ''
+                        } else {
+                            this.huowuDanjia()
+                            this.feiyongJisuan()
+                        }
+                    } else {
+                        this.chargedWeight = ''
+                        this.chargedValue = ''
+                        this.chargedKey = ''
+                        this.chargedJiaqian = ''
+                        this.hangxianId = ''
+                    }
+                }
+            },
+            getPrice(index) {
+                //判断当前计算的计费重是否小于45并且判断 计费重乘当前计费重单价是否大于最低收费 或 最低收费为0
+                if (this.bookingCw < 45 && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesN) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = 'N'
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesN
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdN
+                } else if (this.bookingCw < 100 && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesLevel1) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = '45+'
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel1
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel1
+                } else if (this.bookingCw < 300 && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesLevel2) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = '100+'
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel2
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel2
+                } else if (this.bookingCw < 500 && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesLevel3) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = '300+'
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel3
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel3
+                } else if (this.bookingCw < 1000 && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesLevel4) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = '500+'
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel4
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel4
+                } else if (1000 <= this.bookingCw && ((Number(this.bookingCw * this.proportionArr.baseRatesList[index].ratesLevel5) > Number(this.proportionArr.baseRatesList[index].ratesLevel0)) || Number(this.proportionArr.baseRatesList[index].ratesLevel0) <= 0)) {
+                    this.chargedKey = '1000+'
+                    this.chargedJiaqian = this.proportionArr.baseRatesList[index].ratesLevel5
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel5
+
+                }
+                // 不满足上面所有条件 说明当前订单需要使用当前比重的最低收费 M 数据
+                else {
+                    this.chargedJiaqian = (this.proportionArr.baseRatesList[index].ratesLevel0/this.bookingCw).toFixed(2)
+                    this.hangxianId = this.proportionArr.baseRatesList[index].relationIdLevel0
+                    this.chargedKey = 'M'
+                }
+                this.chargedValue = this.proportionArr.baseRatesList[index].vwr
+            },
+            // 货物单价
+            huowuDanjia() {
+                this.chargedKey = ''
+                this.chargedWeight = Math.ceil(this.bookingWeight / this.bookingCbm)
+                this.bookingCw = (this.bookingCbm * this.weightPrice) > this.bookingWeight ? Math.ceil(this.bookingCbm * this.weightPrice) : Math.ceil(this.bookingWeight)
+                var newLength = this.proportionArr.baseRatesList.length - 1
+                // var newBili =
+
+                for (var i = 0; i < this.proportionArr.baseRatesList.length; i++) {
+                    if (this.chargedWeight < this.proportionArr.baseRatesList[i].vwr) {
+                        var index = i == 0 ? 0 : i - 1
+                        this.getPrice(index);
+                        return
+                    }
+                    if (i == newLength && this.chargedKey == '') {
+                        this.getPrice(newLength);
+                    }
+                }
+            },
+            feiyongJisuan() {
+                var newNum = ''
+                this.totolPrice = 0
+                if (this.chargedKey == 'M') {
+                    newNum = this.chargedValue + '_0'
+                } else if (this.chargedKey == 'N') {
+                    newNum = this.chargedValue + '_n'
+                } else if (this.chargedKey == '45+') {
+                    newNum = this.chargedValue + '_1'
+                } else if (this.chargedKey == '100+') {
+                    newNum = this.chargedValue + '_2'
+                } else if (this.chargedKey == '300+') {
+                    newNum = this.chargedValue + '_3'
+                } else if (this.chargedKey == '500+') {
+                    newNum = this.chargedValue + '_4'
+                } else if (this.chargedKey == '1000+') {
+                    newNum = this.chargedValue + '_5'
+                }
+                for (var key in this.otherFeeMap) {
+                    if (newNum == key) {
+                        this.newOtherFeeMap = JSON.parse(this.otherFeeMap[key])
+                    }
+                }
+                if (this.newOtherFeeMap) {
+                    for (var i = 0; i < this.newOtherFeeMap.length; i++) {
+                        this.totolPrice += Number(this.newOtherFeeMap[i].fees)
+                    }
+                }
+                this.totolPrice = this.totolPrice + this.chargedJiaqian * this.bookingCw
+            },
+            //品名
+            cargoTypeClick(val) {
+                this.cargoType = val
+            },
+            //散货托盘
+            packageTypeClick(val) {
+                this.packageType = val
+            },
+            //添加散货托盘数量
+            trayAddClick() {
+                var json = {
+                    trayNumber: '',
+                    traySize: '',
+                    trayWidth: '',
+                    trayHeight: ''
+                }
+                this.trayDetail.push(json)
+            },
+            trayDeleteClick(index) {
+                this.trayDetail.splice(index, 1)
+            },
+            //报关类型
+            customsTypeClick(val) {
+                this.customsType = val
+            },
+            //是否上门取件
+            isPickUpClick(val) {
+                this.isPickUp = val
+            },
+            //清关类型
+            cclTypeClick(val) {
+                this.cclType = val
+            },
+            //获取航线信息
+            initHangxian() {
+                var jsonData = {
+                    airlineId: this.airlineIdA,
+                    cargoType: this.cargoTypeA,
+                    dow: this.dowA,
+                    needAirlineDetail: true
+                }
+                jsonData = toData(jsonData)
+                axios({
+                    method: 'get',
+                    url: webIp + serviceApi.hangxianSearchBaseRates + '?' + jsonData,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                        this.proportionArr = data.data
+                        this.otherFeeMap = data.data.otherFeeMap
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
+
+                    }
+                })
+            },
+            //登录
+            loginClick() {
+                window.location.href = './login.html'
+            },
+            // muen
+            menuClick(index) {
+							this.menuIndex = index
+							if(index == 0){
+								window.location.href = './index.html';
+							} else if (index == 1) {
+								window.location.href = './trackSearch.html?trackSearchInput=';
+							}else if(index == 2){
+								window.location.href = './addressSerach.html'
+							}else if(index == 3){
+								window.location.href = './about_us.html'
 							}
-						}
-					}
-					if(this.isPickUp == '2'){
-						if(this.pickUpAddress == ''){
-							this.$message.error('请输入国内上门提货提货地址')
-							return
-						}else if(this.pickUpContacts == ''){
-							this.$message.error('请输入国内上门提货提货联系人')
-							return
-						}else if(this.pickUpTel == ''){
-							this.$message.error('请输入国内上门提货联系电话')
-							return
-						}else if(!reg.test(this.pickUpTel)){
-							this.$message.error('请输入有效的国内上门提货联系电话')
-							return
-						}
-					} else {
-						this.pickUpAddress = ''
-						this.pickUpContacts = ''
-						this.pickUpTel = ''
-					}
-					if(this.cclType != '1'){
-						if(this.deliveryAddress == ''){
-							this.$message.error('请输入清关服务送货地址')
-							return
-						}else if(this.deliveryContacts == ''){
-							this.$message.error('请输入清关服务送货联系人')
-							return
-						}else if(this.deliveryTel == ''){
-							this.$message.error('请输入清关服务联系电话')
-							return
-						}
-					} else {
-						this.deliveryAddress = ''
-						this.deliveryContacts = ''
-						this.deliveryTel = ''
-					}
-					var orderPriceList = []
-
-					var jq = {
-						expenseName: '空运费',
-						price: this.chargedJiaqian,
-						quantity: this.bookingCw,
-						currency: '1'
-					}
-					orderPriceList.push(jq)
-					if(this.newOtherFeeMap){
-						for(var q = 0; q < this.newOtherFeeMap.length; q++){
-							var mapJson = {
-								expenseName: this.newOtherFeeMap[q].feesName,
-								price: this.newOtherFeeMap[q].fees,
-								quantity: '1',
-								currency: '1'
-							}
-							orderPriceList.push(mapJson)
-						}
-					}
-					if(this.customsType == '2'){
-						var bg = {
-							expenseName: '报关费',
-							price: 100,
-							quantity: '1',
-							currency: '1'
-						}
-						orderPriceList.push(bg)
-					}
-					var order = {
-						bookingPiece: this.bookingPiece,
-						bookingWeight: this.bookingWeight,
-						bookingCbm: this.bookingCbm,
-						cargoName: this.cargoName,
-						cargoType: this.cargoType,
-						cclType: this.cclType,
-						customsType: this.customsType,
-						deliveryAddress: this.deliveryAddress,
-						deliveryContacts: this.deliveryContacts,
-						deliveryTel: this.deliveryTel,
-						isPickUp: this.isPickUp,
-						pickUpAddress: this.pickUpAddress,
-						pickUpContacts: this.pickUpContacts,
-						pickUpTel: this.pickUpTel,
-						departureDate: this.dateTabActive,
-						dow: this.dowA,
-						bookingVwr: this.chargedWeight,
-						bookingCw: this.bookingCw,
-						packageType: this.packageType,
-						trayDetail: JSON.stringify(this.trayDetail),
-						bookingPrice: this.chargedJiaqian,
-						pod: this.proportionArr.pod,
-						pol: this.proportionArr.pol,
-						airCompanyCode: this.proportionArr.airCompanyCode,
-						legCount: this.proportionArr.legCount,
-						shortDuration: this.proportionArr.shortDuration,
-						longDuration: this.proportionArr.longDuration,
-						fullLeg: this.proportionArr.fullLeg
-					}
-
-					var json = {
-						airlineAgentId: this.hangxianId,
-						order: order,
-						orderPriceList: orderPriceList
-					}
-					axios({
-						method: 'post',
-						url: webIp+serviceApi.getStartOrder,
-						data: json,
-						headers: {
-							'tokenId': localStorage.getItem('tokenId')
-						}
-					}).then((data) =>{
-						var data = data.data
-						if(data.code == 200){
-							window.location.href = './orderList.html'
-						}else if(data.code == -200){
-							window.location.href = './login.html'
-						}else{
-							this.$message.error(data.message)
-
-						}
-					})
-				},
-				bookingCbmBlur() {
-					var reg = /(^[1-9][0-9]{0,3}$)|(^[0-9]{0,4}[\.][0-9]{1,4}$)/
-					if(!reg.test(this.bookingCbm) && (this.bookingCbm != '')){
-						this.$message.error('体积最大输入四位正整数，小数保留四位')
-					}
-				},
-				// 货物单价
-				huowuDanjia() {
-					this.chargedWeight = Math.ceil(this.bookingWeight/this.bookingCbm)
-					this.bookingCw = (this.bookingCbm*this.weightPrice) > this.bookingWeight ? Math.ceil(this.bookingCbm*this.weightPrice) : Math.ceil(this.bookingWeight)
-					var newLength = this.proportionArr.baseRatesList.length-1
-					// var newBili =
-
-					for(var i = 0; i < this.proportionArr.baseRatesList.length; i++){
-						if(this.chargedWeight < this.proportionArr.baseRatesList[i].vwr){
-							if(this.bookingCw < 45){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesN) > Number(this.proportionArr.baseRatesList[i].ratesLevel0)){
-									this.chargedKey = 'N'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesN
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdN
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 100){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel1) > Number(this.proportionArr.baseRatesList[i].ratesLevel1)){
-									this.chargedKey = '45+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel1
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel1
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 300){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel2) > Number(this.proportionArr.baseRatesList[i].ratesLevel2)){
-									this.chargedKey = '100+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel2
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel2
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 500){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel3) > Number(this.proportionArr.baseRatesList[i].ratesLevel3)){
-									this.chargedKey = '300+'
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel3
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel3
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 1000){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel4) > Number(this.proportionArr.baseRatesList[i].ratesLevel4)){
-									this.chargedKey = '500+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel4
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel4
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(1000 <= this.bookingCw){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[i].ratesLevel5) > Number(this.proportionArr.baseRatesList[i].ratesLevel5)){
-									this.chargedKey = '1000+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel5
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel5
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[i].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[i].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}
-							this.chargedValue = this.proportionArr.baseRatesList[i].vwr
-							return
-						}else{
-							if(this.bookingCw < 45){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesN) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel0)){
-									this.chargedKey = 'N'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesN
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdN
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 100){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel1) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel1)){
-									this.chargedKey = '45+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel1
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel1
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 300){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel2) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel2)){
-									this.chargedKey = '100+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel2
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel2
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 500){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel3) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel3)){
-									this.chargedKey = '300+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel3
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel3
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(this.bookingCw < 1000){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel4) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel4)){
-									this.chargedKey = '500+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel4
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel4
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}else if(1000 <= this.bookingCw){
-								if(Number(this.bookingCw*this.proportionArr.baseRatesList[newLength].ratesLevel5) > Number(this.proportionArr.baseRatesList[newLength].ratesLevel5)){
-									this.chargedKey = '1000+'
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel5
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel5
-								}else{
-									this.chargedJiaqian = this.proportionArr.baseRatesList[newLength].ratesLevel0
-									this.hangxianId = this.proportionArr.baseRatesList[newLength].relationIdLevel0
-									this.chargedKey = 'M'
-								}
-							}
-							this.chargedValue = this.proportionArr.baseRatesList[newLength].vwr
-							return
-						}
-					}
-				},
-				feiyongJisuan() {
-					var newNum = ''
-					this.totolPrice = 0
-					if(this.chargedKey == 'M'){
-						newNum = this.chargedValue+'_0'
-					}else if(this.chargedKey == 'N'){
-						newNum = this.chargedValue+'_n'
-					}else if(this.chargedKey == '45+'){
-						newNum = this.chargedValue+'_1'
-					}else if(this.chargedKey == '100+'){
-						newNum = this.chargedValue+'_2'
-					}else if(this.chargedKey == '300+'){
-						newNum = this.chargedValue+'_3'
-					}else if(this.chargedKey == '500+'){
-						newNum = this.chargedValue+'_4'
-					}else if(this.chargedKey == '1000+'){
-						newNum = this.chargedValue+'_5'
-					}
-					for(var key in this.otherFeeMap){
-						if(newNum == key){
-							this.newOtherFeeMap = JSON.parse(this.otherFeeMap[key])
-						}
-					}
-					if(this.newOtherFeeMap){
-						for(var i = 0; i < this.newOtherFeeMap.length; i++){
-							this.totolPrice += Number(this.newOtherFeeMap[i].fees)
-						}
-					}
-					this.totolPrice = this.totolPrice + this.chargedJiaqian * this.bookingCw
-				},
-				//品名
-				cargoTypeClick(val){
-					this.cargoType = val
-				},
-				//散货托盘
-				packageTypeClick(val) {
-					this.packageType = val
-				},
-				//添加散货托盘数量
-				trayAddClick() {
-					var json = {
-						trayNumber: '',
-						traySize: '',
-						trayWidth: '',
-						trayHeight: ''
-					}
-					this.trayDetail.push(json)
-				},
-				trayDeleteClick(index) {
-					this.trayDetail.splice(index,1)
-				},
-				//报关类型
-				customsTypeClick(val) {
-					this.customsType = val
-				},
-				//是否上门取件
-				isPickUpClick(val) {
-					this.isPickUp = val
-				},
-				//清关类型
-				cclTypeClick(val) {
-					this.cclType = val
-				},
-				//获取航线信息
-				initHangxian() {
-					var jsonData = {
-						airlineId: this.airlineIdA,
-						cargoType: this.cargoTypeA,
-						dow: this.dowA,
-						needAirlineDetail: true
-					}
-					jsonData = toData(jsonData)
-					axios({
-						method: 'get',
-						url: webIp+serviceApi.hangxianSearchBaseRates+'?'+jsonData,
-						headers: {
-							'tokenId': localStorage.getItem('tokenId')
-						}
-					}).then((data) =>{
-						var data = data.data
-						if(data.code == 200){
-							this.proportionArr = data.data
-							this.otherFeeMap = data.data.otherFeeMap
-						}else if(data.code == -200){
-							window.location.href = './login.html'
-						}else{
-							this.$message.error(data.message)
-
-						}
-					})
-				},
-				//登录
-				loginClick() {
-					window.location.href = './login.html'
-				},
-				// muen
-				menuClick(index) {
-					this.menuIndex = index
-				}
-			}
-		})
-	</script>
+            }
+        }
+    })
+</script>
 </html>

@@ -16,13 +16,11 @@
 		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
 		<!-- <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/7.0.0/swiper-bundle.min.css"> -->
 		<link rel="stylesheet" href="./css/swiper-bundle.min.css" />
-		<link rel="stylesheet" href="./css/element-ui-min.css">
 		<link rel="stylesheet" href="./css/reset.css" />
 		<link rel="stylesheet" href="./css/common.css" />
 		<script src="./js/vue.js"></script>
 		<script src="./js/axios.min.js"></script>
 		<script src="./js/swiper-bundle.min.js"></script>
-		<script src="./js/element-ui.js"></script>
 		<script>
 			var _hmt = _hmt || [];
 			(function() {
@@ -32,23 +30,6 @@
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
-		<style>
-			.tips{
-				position: relative;
-				background: #FFFFFF;
-				border-radius: 5px 5px 5px 5px;
-				opacity: 1;
-				font-size: 10px;
-				font-weight: bold;
-				color: #333333;
-				padding: 0 10px;
-				height: 25px;
-				line-height: 25px;
-				margin-left: 40px;
-				margin-bottom: 10px;
-			}
-
-		</style>
 	</head>
 	<body>
 		<div id="app">
@@ -56,6 +37,7 @@
 			<div class="header">
 				<div class="header-img">
 					<a href="./index.html">
+						<!-- <img class="logo" src="./img/logo.png" /> -->
 						<div class="logo"></div>
 					</a>
 					<div class="logo-title"></div>
@@ -64,7 +46,6 @@
 					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
 					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
-						<div class="header-bak"><a href="./quick.html">一键订舱</a></div>
 						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
 						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
 						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
@@ -72,17 +53,12 @@
 					</div>
 				</div>
 				<div v-else @click="loginClick" class="header-user">登录</div>
-				<div class="quick " @click="goQuick">
-					<img src="img/quick.png">
-					<span >一键订舱</span>
-				</div>
-
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
 					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
-					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-					<li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
+					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
@@ -91,8 +67,8 @@
 				<div class="banner-carousel">
 					<div class="swiper-container lunbo-swiper" style="height: 380px;overflow: hidden;">
 					    <div class="swiper-wrapper">
-					    	 ${bannerContent}
-					<!--		<div class="swiper-slide banner-wrapper">
+					    	<!-- ${{bannerContent}} -->
+							<!-- <div class="swiper-slide banner-wrapper">
 								<a style="background-image: url(./img/banner1.png); background-repeat: no-repeat; background-size: cover; background-position: center center; display: block; width: 100%; height: 380px;"></a>
 							</div>
 							<div class="swiper-slide banner-wrapper">
@@ -100,7 +76,7 @@
 							</div>
 							<div class="swiper-slide banner-wrapper">
 								<a style="background-image: url(./img/banner1.png); background-repeat: no-repeat; background-size: cover; background-position: center center; display: block; width: 100%; height: 380px;"></a>
-							</div>-->
+							</div> -->
 						</div>
 						<!-- 如果需要导航按钮 -->
 						<div class="swiper-button-prev swiper-button-prev1 hide"></div>
@@ -110,77 +86,71 @@
 					</div>
 				</div>
 				<!-- 搜索 -->
-<!--				新版-->
 				<div class="mod-search">
 					<div class="pos-search">
 						<div class="mod-search-top">
 							<div class="s_tab">
-								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">AI查价</div>
-								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">体积计算</div>
+								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">智能订舱</div>
+								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">快捷粘贴</div>
 							</div>
 							<div class="search-box">
-								<div class="search-box-input-ai" v-if="searchTopIndex == 0">
-									<textarea v-model="aiStr" class="box-input box-textarea" type="textarea" placeholder="输入询价信息，AI智能识别起始港、目的港、件毛体、一键查询航线价格">
-									</textarea>
-									<div class="search-item">
-										<div class="search-item-input search-item-icon1" style="position: relative;">
-											<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input banner-box-border" type="text" placeholder="起飞港"/>
-											<div v-show="qiShowState" style="display: none;" class="open-warp-router">
-												<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>
-												<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
-													<span>{{item.threeLetterCode}}</span>
-													<span>{{item.name}}</span>
-													<span>{{item.city}}</span>
-													<span>{{item.country}}</span>
+								<div v-if="searchTopIndex == 0">
+									<div class="search-box-input">
+										<div class="search-item">
+											<div class="search-item-input search-item-icon1" style="position: relative;">
+												<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input" type="text" placeholder="输入起飞港"/>
+												<div v-show="qiShowState" style="display: none;" class="open-warp-router">
+													<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>
+													<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
+														<span>{{item.threeLetterCode}}</span>
+														<span>{{item.name}}</span>
+														<span>{{item.city}}</span>
+														<span>{{item.country}}</span>
+													</div>
+												</div>
+											</div>
+											<div class="search-item-arrow"></div>
+											<div class="search-item-input search-item-icon3" style="position: relative;">
+												<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input" type="text" placeholder="输入目的港"/>
+												<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>
+												<div v-show="muShowState" style="display: none;" class="open-warp-router">
+													<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>
+													<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
+														<span>{{item.threeLetterCode}}</span>
+														<span>{{item.name}}</span>
+														<span>{{item.city}}</span>
+														<span>{{item.country}}</span>
+													</div>
 												</div>
 											</div>
 										</div>
-										<div class="search-item-arrow"></div>
-										<div class="search-item-input search-item-icon3" style="position: relative;">
-											<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input banner-box-border" type="text" placeholder="目的港"/>
-											<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>
-											<div v-show="muShowState" style="display: none;" class="open-warp-router">
-												<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>
-												<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
-													<span>{{item.threeLetterCode}}</span>
-													<span>{{item.name}}</span>
-													<span>{{item.city}}</span>
-													<span>{{item.country}}</span>
-												</div>
-											</div>
-										</div>
-										<button @click="searchClose" class="box-btn btn-close" style="flex: 0 0 80px;marginLeft: 25px;">一键清除</button>
-										<button @click="freightQueryClick(1)" style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary">立即查询</button>
+										<button @click="freightQueryClick(1)" class="box-btn btn-prprimary">立即查询</button>
 									</div>
+									<div class="search-san-tip">支持城市，港口，三字码输入</div>
 								</div>
-								<div class="search-box-input-volume" v-if="searchTopIndex == 1">
-									<textarea type="textarea" v-model="volumeConetn" placeholder="请输入体积信息，多个体积请换行输入或以逗号分割"></textarea>
-									<div class="search-box-volume-base">
-<!--										<div class="volume-file">-->
-<!--											<input type="file">-->
-<!--											<img src="./img/volume-file.png" alt="">-->
-<!--											<span>点击上传</span>-->
-<!--										</div>-->
-										<button style="flex: 0 0 80px;marginLeft: 10px;" class="box-btn btn-prprimary" @click="intelligentComputing">智能计算</button>
+								<div v-if="searchTopIndex == 1">
+									<div class="search-box-input">
+										<textarea v-model="pasteInput" class="box-input box-textarea" type="textarea" placeholder="复制粘贴，自动识别关键字，快速获取报价方案。例如  PVG-LAX">
+										</textarea>
+										<button @click="freightQueryClick(2)" class="box-btn btn-prprimary">立即查询</button>
 									</div>
 								</div>
 							</div>
 						</div>
-
-						<div class="mod-search-bottom com-top20">
+						<div class="mod-search-bottom com-top30">
 							<div class="s_tab s_tab_bak_color">
 								<div @click="searchBottomClick(0)" :class="{s_tab_current: searchBottomIndex == 0}" class="s_tab_nocurrent">运单查询</div>
-								<div @click="searchBottomClick(1)" :class="{s_tab_current: searchBottomIndex == 1}" class="s_tab_nocurrent">航班查询</div>
+								<!-- <div @click="searchBottomClick(1)" :class="{s_tab_current: searchBottomIndex == 1}" class="s_tab_nocurrent">航班查询</div> -->
 							</div>
-							<div class="search-box" style="padding: 15px 10px 0 10px">
+							<div class="search-box">
 								<div v-if="searchBottomIndex == 0" class="search-box-input" style="position: relative;">
-									<input v-model="trackSearchInput" @focus="isShowYundan = false"  @input="valueChange" class="box-input" type="text" placeholder="全网货物跟踪，运单信息全掌握" style="width: 300px;" />
+									<input v-model="trackSearchInput" @focus="isShowYundan = false" maxlength="11" onkeyup="value=value.replace(/[^\d]/g, '')" class="box-input" type="text" placeholder="全网货物跟踪，运单信息全掌握" style="width: 300px;" />
 									<button @click="trackSearch" class="box-btn btn-warning">全网追踪</button>
-									<div v-show="isShowYundan" style="position: absolute;bottom: -15px;font-size: 12px;color: #F00;display: none;">请输入11位且格式正确的运单号</div>
+									<div v-show="isShowYundan" style="position: absolute;bottom: -15px;font-size: 12px;color: #F00;display: none;">请输入11位的运单号</div>
 								</div>
 								<div v-if="searchBottomIndex == 1" class="search-box-input">
-									<input v-model="flightSearch" class="box-input" type="text" placeholder="全网航班,动态掌握" style="width: 300px;" />
-									<button  @click="jumpFlight" class="box-btn btn-warning">立即查询</button>
+									<input v-model="searchYunDan" class="box-input" type="text" placeholder="全网航班查询，航班信息全掌握" style="width: 300px;" />
+									<button class="box-btn btn-warning">立即查询</button>
 								</div>
 								<div class="search-tips">
 									<div class="qcode">
@@ -195,88 +165,6 @@
 						</div>
 					</div>
 				</div>
-
-<!--				老版-->
-<!--				<div class="mod-search">-->
-<!--					<div class="pos-search">-->
-<!--						<div class="mod-search-top">-->
-<!--							<div class="s_tab">-->
-<!--								<div @click="searchTopClick(0)" :class="{s_tab_current: searchTopIndex == 0}" class="s_tab_nocurrent">智能订舱</div>-->
-<!--								<div @click="searchTopClick(1)" :class="{s_tab_current: searchTopIndex == 1}" class="s_tab_nocurrent">快捷粘贴</div>-->
-<!--							</div>-->
-<!--							<div class="search-box">-->
-<!--								<div v-if="searchTopIndex == 0">-->
-<!--									<div class="search-box-input">-->
-<!--										<div class="search-item">-->
-<!--											<div class="search-item-input search-item-icon1" style="position: relative;">-->
-<!--												<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input" type="text" placeholder="输入起飞港"/>-->
-<!--												<div v-show="qiShowState" style="display: none;" class="open-warp-router">-->
-<!--													<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>-->
-<!--													<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">-->
-<!--														<span>{{item.threeLetterCode}}</span>-->
-<!--														<span>{{item.name}}</span>-->
-<!--														<span>{{item.city}}</span>-->
-<!--														<span>{{item.country}}</span>-->
-<!--													</div>-->
-<!--												</div>-->
-<!--											</div>-->
-<!--											<div class="search-item-arrow"></div>-->
-<!--											<div class="search-item-input search-item-icon3" style="position: relative;">-->
-<!--												<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input" type="text" placeholder="输入目的港"/>-->
-<!--												<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>-->
-<!--												<div v-show="muShowState" style="display: none;" class="open-warp-router">-->
-<!--													<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>-->
-<!--													<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">-->
-<!--														<span>{{item.threeLetterCode}}</span>-->
-<!--														<span>{{item.name}}</span>-->
-<!--														<span>{{item.city}}</span>-->
-<!--														<span>{{item.country}}</span>-->
-<!--													</div>-->
-<!--												</div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--										<button @click="freightQueryClick(1)" class="box-btn btn-prprimary">立即查询</button>-->
-<!--									</div>-->
-<!--									<div class="search-san-tip">支持城市，港口，三字码输入</div>-->
-<!--								</div>-->
-<!--								<div v-if="searchTopIndex == 1">-->
-<!--									<div class="search-box-input">-->
-<!--										<textarea v-model="pasteInput" class="box-input box-textarea" type="textarea" placeholder="复制粘贴，自动识别关键字，快速获取报价方案。例如  PVG-LAX">-->
-<!--										</textarea>-->
-<!--										<button @click="freightQueryClick(2)" class="box-btn btn-prprimary">立即查询</button>-->
-<!--									</div>-->
-<!--								</div>-->
-<!--							</div>-->
-<!--						</div>-->
-<!--						<div class="mod-search-bottom com-top30">-->
-<!--							<div class="s_tab s_tab_bak_color">-->
-<!--								<div @click="searchBottomClick(0)" :class="{s_tab_current: searchBottomIndex == 0}" class="s_tab_nocurrent">运单查询</div>-->
-<!--								&lt;!&ndash; <div @click="searchBottomClick(1)" :class="{s_tab_current: searchBottomIndex == 1}" class="s_tab_nocurrent">航班查询</div> &ndash;&gt;-->
-<!--							</div>-->
-<!--							<div class="search-box">-->
-<!--								<div v-if="searchBottomIndex == 0" class="search-box-input" style="position: relative;">-->
-<!--									<input v-model="trackSearchInput" @focus="isShowYundan = false"  @input="valueChange" class="box-input" type="text" placeholder="全网货物跟踪，运单信息全掌握" style="width: 300px;" />-->
-<!--									<button @click="trackSearch" class="box-btn btn-warning">全网追踪</button>-->
-<!--									<div v-show="isShowYundan" style="position: absolute;bottom: -15px;font-size: 12px;color: #F00;display: none;">请输入11位且格式正确的运单号</div>-->
-<!--								</div>-->
-<!--								<div v-if="searchBottomIndex == 1" class="search-box-input">-->
-<!--									<input v-model="searchYunDan" class="box-input" type="text" placeholder="全网航班查询，航班信息全掌握" style="width: 300px;" />-->
-<!--									<button class="box-btn btn-warning">立即查询</button>-->
-<!--								</div>-->
-<!--								<div class="search-tips">-->
-<!--									<div class="qcode">-->
-<!--										<img alt="图片" src="./img/qcode.png" />-->
-<!--									</div>-->
-<!--									<div class="qcode-text">-->
-<!--										<div class="qcode-text-tips1">关注公众号即可建立自己的<span>运单状态库</span></div>-->
-<!--										<div class="qcode-text-tips2">支持<span>全网全航线</span>运单状态<span>实时推送</span></div>-->
-<!--									</div>-->
-<!--								</div>-->
-<!--							</div>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
-
 			</div>
 			<!-- 航班 -->
 			<div class="aircraft-route com-width">
@@ -321,18 +209,14 @@
 							<div v-if="item.activityState == 1" class="card-route-label">
 								{{item.activityType}}<span>最后{{item.activityDay}}天</span>
 							</div>
-							<div class="card-name">
-								<img alt="图片" v-if="item.logoPath" :src="imgUrl+item.logoPath" />
-								{{item.airlineCompanyName}}
-								<span style="marginLeft:10px;">{{item.airCompanyCode}}</span>
-							</div>
+							<div class="card-name"><img alt="图片" v-if="item.logoPath" :src="imgUrl+item.logoPath" />{{item.airlineCompanyName}}</div>
 							<div class="card-route">
 								<div class="card-route-item">
 									<div class="card-route-item-info">
 										<div>{{item.pol}}</div>
 										<div>{{item.polName}}</div>
 									</div>
-									<div class="card-route-item-icon">{{item.legCount == '1' ? '直飞' : item.firstHub}}</div>
+									<div class="card-route-item-icon">{{item.legCount == '1' ? '直飞' : '中转'}}</div>
 									<div class="card-route-item-info">
 										<div>{{item.pod}}</div>
 										<div>{{item.podName}}</div>
@@ -472,8 +356,6 @@
 			data: {
 				imgUrl: '',
 				isMoreCity: false,
-				userInfo: '',
-				headerMenu: false,
 				//菜单
 				menuArr: [{
 						name: '首页'
@@ -802,10 +684,7 @@
 				trackSearchInput: '',
 				isShowYundan: false,
 				userInfo: '',
-				headerMenu: false,
-				aiStr: '',
-				volumeConetn: '',
-				flightSearch: ''
+				headerMenu: false
 			},
 			computed: {
 				swiper() {
@@ -880,39 +759,6 @@
 				// this.muSearchInput = this.muPageArr[0].threeLetterCode
 			},
 			methods: {
-				goQuick(){
-					window.location.href='./quick.html'
-				},
-				valueChange(){
-					this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
-					this.isShowYundan = false
-					if(this.trackSearchInput.match(/-/g) && this.trackSearchInput.match(/-/g).length > 1 ){
-						let sr = this.trackSearchInput.split("");
-						sr.splice(this.trackSearchInput.lastIndexOf('-'),1)
-						this.trackSearchInput=sr.join("");
-					}
-					if(isNaN(this.trackSearchInput) && this.trackSearchInput.indexOf('-')!=3){
-						this.trackSearchInput = this.trackSearchInput.replace('-',"")
-					}
-					if(!isNaN(this.trackSearchInput) && this.trackSearchInput.length > 11){
-						this.trackSearchInput = this.trackSearchInput.slice(0,11)
-					}
-					if(isNaN(this.trackSearchInput) && this.trackSearchInput.length > 12){
-						this.trackSearchInput = this.trackSearchInput.slice(0,12)
-					}
-
-				},
-				jumpFlight(){
-					window.location.href = `./flightSearch.html?serach=${this.flightSearch}`;
-				},
-				intelligentComputing() {
-					window.location.href = `./intelligentComputing.html?volumeConetn=${this.volumeConetn}`;
-				},
-				searchClose() {
-					this.qiSearchInput = '';
-					this.muSearchInput = '';
-					this.aiStr='';
-				},
 				showHeaderMenu(type) {
 					if(type == 1){
 						this.headerMenu = true
@@ -926,97 +772,28 @@
 				},
 				trackSearch() {
 					if(!this.trackSearchInput){
-						this.isShowYundan = true;
-						return false
+						this.isShowYundan = true
+						return
+					}else if(this.trackSearchInput.length != 11){
+						this.isShowYundan = true
+						return
 					}
-					let reg1 = /^[0-9]{3}-{1}[0-9]{8}$/;
-					let reg2 = /^[0-9]{11}$/;
-					// console.log(reg2.test(this.trackSearchInput),reg1.test(this.trackSearchInput))
-					if(!reg2.test(this.trackSearchInput) && !reg1.test(this.trackSearchInput)){
-						this.isShowYundan = true;
-						return false
-					}
+					this.isShowYundan = false
+					window.location.href = './trackSearch.html?trackSearchInput='+this.trackSearchInput
 				},
-          valueChange(){
-              this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
-              this.isShowYundan = false
-              if(this.trackSearchInput.match(/-/g) && this.trackSearchInput.match(/-/g).length > 1 ){
-                  let sr = this.trackSearchInput.split("");
-                  sr.splice(this.trackSearchInput.lastIndexOf('-'),1)
-                  this.trackSearchInput=sr.join("");
-              }
-              if(isNaN(this.trackSearchInput) && this.trackSearchInput.indexOf('-')!=3){
-                  this.trackSearchInput = this.trackSearchInput.replace('-',"")
-              }
-              if(!isNaN(this.trackSearchInput) && this.trackSearchInput.length > 11){
-                  this.trackSearchInput = this.trackSearchInput.slice(0,11)
-              }
-              if(isNaN(this.trackSearchInput) && this.trackSearchInput.length > 12){
-                  this.trackSearchInput = this.trackSearchInput.slice(0,12)
-              }
-
-          },
-          trackSearch() {
-              if(!this.trackSearchInput){
-                  this.isShowYundan = true;
-                  return false
-              }
-              let reg1 = /^[0-9]{3}-{1}[0-9]{8}$/;
-              let reg2 = /^[0-9]{11}$/;
-              // console.log(reg2.test(this.trackSearchInput),reg1.test(this.trackSearchInput))
-              if(!reg2.test(this.trackSearchInput) && !reg1.test(this.trackSearchInput)){
-                  this.isShowYundan = true;
-                  return false
-              }
-              this.isShowYundan = false
-              window.location.href = './trackSearch.html?trackSearchInput='+this.trackSearchInput
-          },
 				freightQueryClick(type) {
 					if(type == '1'){
 						var boxText = /^[\u4e00-\u9fa5]+$/
-						if (this.aiStr) {
-							let str = '';
-							if (this.qiSearchInput) {
-								str += this.qiSearchInput;
-							}
-							if (this.muSearchInput) {
-								if(str) {
-									str += `-${this.muSearchInput}`;
-								} else {
-									str += this.muSearchInput;
-								}
-							}
-							axios({
-								method: 'post',
-								url: webIp+serviceApi.aiStringIdentify,
-								data: {
-									str: str ? `${str}/${this.aiStr}`: this.aiStr
-								}
-							}).then(res => {
-								let data = res.data;
-								// debugger
-								if (data.code == 200) {
-									let pol = data.data.pol?data.data.pol:''
-									window.location.href = './freightQuery.html?qi='+pol+'&mu='+data.data.pod+'&volume='+data.data.volume+'&weight='+data.data.grossWeight+'&piece='+data.data.number+'&type='+data.data.type;
-								}else {
-									this.$message.error(data.message)
-								}
-							});
-						} else {
-							if(!this.muSearchInput){
-								this.isShowGang = true
-								this.gangText = '请选择目的港'
-								return
-							} else if(boxText.test(this.muSearchInput)){
-								this.isShowGang = true
-								this.gangText = '请选择三字码'
-								return
-							}
-							window.location.href = './freightQuery.html?qi='+this.qiSearchInput+'&mu='+this.muSearchInput
+						if(!this.muSearchInput){
+							this.isShowGang = true
+							this.gangText = '请选择目的港'
+							return
+						}else if(boxText.test(this.muSearchInput)){
+							this.isShowGang = true
+							this.gangText = '请选择三字码'
+							return
 						}
-
-
-
+						window.location.href = './freightQuery.html?qi='+this.qiSearchInput+'&mu='+this.muSearchInput
 					}else if(type == '2'){
 						if(!this.pasteInput){
 							return
@@ -1049,11 +826,9 @@
 					if(index == 0){
 						window.location.href = './index.html';
 					} else if (index == 1) {
-						window.location.href = './trackSearch.html?trackSearchInput=';
-					}else if(index == 2){
-						window.location.href = './addressSerach.html'
-					}else if(index == 3){
-						window.location.href = './about_us.html'
+						window.location.href = './orderList.html';
+					} else if(index == 3){
+						window.location.href = './about_us.html';
 					}
 				},
 				searchTopClick(index) {
@@ -1127,7 +902,9 @@
 					}
 				},
 				qiSearchByPage(val) {
-
+					if(val == ''){
+						return
+					}
 					var jsonData = {
 						keyWord: this.qiSearchInput,
 						type: this.qiSearchInput ? '' : '1'
@@ -1144,7 +921,9 @@
 					})
 				},
 				muSearchByPage(val) {
-
+					if(val == ''){
+						return
+					}
 					var jsonData = {
 						keyWord: this.muSearchInput,
 						type: this.muSearchInput ? '' : '2'

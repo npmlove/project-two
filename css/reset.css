@@ -272,7 +272,7 @@ textarea::-webkit-input-placeholder {
 	font-size: 14px !important;
 }
 
-.el-input__inner {
+.el-input__inner,.el-textarea__inner {
 	border-radius: 0;
 	border-color: #E7E8EC;
 }
@@ -282,7 +282,7 @@ textarea::-webkit-input-placeholder {
 	border-color: #000000;
 }
 
-.el-select .el-input.is-focus .el-input__inner:focus {
+.el-select .el-input.is-focus .el-input__inner,.el-textarea__inner:focus {
 	border-color: #000000;
 }
 .el-tabs__item.is-active{
@@ -346,13 +346,13 @@ textarea::-webkit-input-placeholder {
 
 .input-content .input-item .input-inner {
 	background-color: #FFFFFF;
-	border: 1px solid #E7E8EC;
+	border: none;
 	height: 48px;
 	line-height: 48px;
 	box-sizing: border-box;
-	width: 100%;
-	padding: 0 10px;
+	flex: 1;
 	font-size: 14px;
+	/*padding-left: 39px;*/
 }
 
 .input-yzm {
@@ -370,19 +370,23 @@ textarea::-webkit-input-placeholder {
 }
 
 .input-icon1 {
+	width: 30px;
+	height: 30px;
 	background-image: url(../img/login_zh.png);
 	background-repeat: no-repeat;
-	background-position: left 10px center;
+	background-position: left 0px center;
 	background-size: 30px 30px;
-	padding-left: 50px !important;
+	margin: 0 10px;
 }
 
 .input-icon2 {
+	width: 25px;
+	height: 25px;
 	background-image: url(../img/login_pas.png);
 	background-repeat: no-repeat;
-	background-position: left 13px center;
+	background-position: left 0px center;
 	background-size: 25px 25px;
-	padding-left: 50px !important;
+	margin: 0 13px 0 14px;
 }
 
 .input-icon3 {
@@ -473,4 +477,11 @@ textarea::-webkit-input-placeholder {
 }
 .swiper-button-prev:after, .swiper-container-rtl .swiper-button-next:after{
 	content: '';
+}
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+	background-color: #2273CB;
+	border-color: #2273CB;
+}
+.border-btm-solid{
+	border-bottom: 1px solid #EFEFEF;
 }

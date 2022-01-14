@@ -1,605 +1,1009 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-		<meta name="format-detection" content="telephone=no,address=no,email=no">
-		<meta name="applicable-device" content="pc,mobile">
-		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-		<meta http-equiv="Cache-Control" content="no-transform">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<meta name="renderer" content="webkit">
-		<meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
-		<meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
-		<link rel='icon' href='./img/favicon.ico' type='image/x-icon' />
-		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
-		<link rel="stylesheet" href="./css/element-ui-min.css">
-		<link rel="stylesheet" href="./css/reset.css" />
-		<link rel="stylesheet" href="./css/common.css" />
-		<script src="./js/vue.js"></script>
-		<script src="./js/axios.min.js"></script>
-		<script src="./js/element-ui.js"></script>
-		<style>
-			.orderOptionsList{
-				border-bottom: 1px dashed #EFEFEF;
-			}
-			.orderOptionsList:last-child{
-				border-bottom: 0;
-			}
-		</style>
-		<script>
-			var _hmt = _hmt || [];
-			(function() {
-				var hm = document.createElement("script");
-				hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
-				var s = document.getElementsByTagName("script")[0];
-				s.parentNode.insertBefore(hm, s);
-			})();
-		</script>
-	</head>
-	<body>
-		<div id="app" style="font-size: 0;">
-			<!-- 头部 -->
-			<div class="header">
-				<div class="header-img">
-					<a href="./index.html">
-						<div class="logo"></div>
-					</a>
-					<div class="logo-title"></div>
-				</div>
-				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
-					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
-					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
-						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
-						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
-						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
-						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
-						<div @click="tuiChu" class="header-bak">退出</div>
-					</div>
-				</div>
-				<div v-else @click="loginClick" class="header-user">登录</div>
-			</div>
-			<div class="header-menu">
-				<ul class="header-menu-list com-width">
-					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
-					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
-					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
-					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
-				</ul>
-			</div>
-			<!-- 订单详情 -->
-			<div class="order-details">
-				<div class="com-width order-details-content">
-					<div class="order-details-title">
-						<a href="./orderList.html">订单管理</a>
-						<img alt="图片" src="./img/arrow_details.png" />
-						<div>订单详情</div>
-						<div>订单号：{{detailsArr.orderNo}}</div>
-					</div>
-					<div class="order-details-step">
-						<div v-for="(item,index) in activityFlowVOList" :class="{'order-details-step-active': item.position == 1 ? true : false, 'order-details-step-check': item.position == 2 ? true : false, 'order-details-spte-bak': item.position == 2 && item.state == 1 ? true : false}" :key="index" class="order-details-step-btn">
-							<img v-if="item.position == 1" alt="图片" src="./img/orderDetails_check.png">{{item.desc}}
-						</div>
-					</div>
-					<div class="order-details-table">
-						<div class="order-details-list">
-							<div v-if="detailsArr.status == '5'" class="details-table-list" style="margin-top: 0;">
-								<div class="table-list-title-arr-title">非常抱歉，您预定的仓位暂无，已为您推荐了其他方案，请尽快确认</div>
-								<div class="color9995" style="color: #999999;font-size: 14px;padding: 20px 20px 0 20px;">订舱信息</div>
-								<div class="list-route-icon">
-									<img v-if="detailsArr.logoPath" style="opacity: 0.5;" alt="tupian" :src="detailsArr.logoPath" />
-									<div class="list-route-icon-title color9995">{{detailsArr.airCompanyName}}</div>
-									<div v-if="detailsArr.dow == '1'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周一</div>
-									<div v-if="detailsArr.dow == '2'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周二</div>
-									<div v-if="detailsArr.dow == '3'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周三</div>
-									<div v-if="detailsArr.dow == '4'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周四</div>
-									<div v-if="detailsArr.dow == '5'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周五</div>
-									<div v-if="detailsArr.dow == '6'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周六</div>
-									<div v-if="detailsArr.dow == '7'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}  周日</div>
-								</div>
-								<div class="list-arr-route border-btm-da">
-									<div class="list-arr-route-yitong">
-										<div class="list-arr-route-neirong">
-											<div class="color9995">{{detailsArr.pol}}</div>
-											<div class="color9995">{{detailsArr.polName}}</div>
-										</div>
-										<div class="list-arr-route-neirong">
-											<div class="color9995">{{detailsArr.pod}}</div>
-											<div class="color9995">{{detailsArr.podName}}</div>
-										</div>
-									</div>
-									<div class="list-arr-route-jiaqian color9995">单价：{{detailsArr.bookingPrice}}元/kg</div>
-								</div>
-								<div class="tuijianhangxian">推荐航线</div>
-								<div class="orderOptionsList" v-for="(item,index) in orderOptionsList" :key="index">
-									<div class="list-route-icon">
-										<img v-if="item.logoPath" alt="tupian" :src="item.logoPath" />
-										<div class="list-route-icon-title">{{item.airCompanyName}}</div>
-										<div v-if="item.dow == '1'" class="list-route-icon-date color227">{{item.departureDate}}  周一</div>
-										<div v-if="item.dow == '2'" class="list-route-icon-date color227">{{item.departureDate}}  周二</div>
-										<div v-if="item.dow == '3'" class="list-route-icon-date color227">{{item.departureDate}}  周三</div>
-										<div v-if="item.dow == '4'" class="list-route-icon-date color227">{{item.departureDate}}  周四</div>
-										<div v-if="item.dow == '5'" class="list-route-icon-date color227">{{item.departureDate}}  周五</div>
-										<div v-if="item.dow == '6'" class="list-route-icon-date color227">{{item.departureDate}}  周六</div>
-										<div v-if="item.dow == '7'" class="list-route-icon-date color227">{{item.departureDate}}  周日</div>
-									</div>
-									<div class="list-arr-route" style="position: relative;">
-										<div class="list-arr-route-yitong">
-											<div class="list-arr-route-neirong">
-												<div>{{item.pol}}</div>
-												<div>{{item.polName}}</div>
-											</div>
-											<div class="list-arr-route-neirong">
-												<div>{{item.pod}}</div>
-												<div>{{item.podName}}</div>
-											</div>
-										</div>
-										<div v-if="item.fullLeg.split(',').length > 2" style="position: absolute;top: 0;left: 142px;">
-											<el-tooltip class="item" effect="dark" :content="item.fullLeg" placement="top-start">
-												<a>中转</a>
-											</el-tooltip>
-										</div>
-										<div class="list-tuijian-feiyong" style="margin-top: -55px;text-align: right;">
-											<!-- <el-tooltip placement="bottom">
-												<div slot="content">
-													<div>333</div>
-													<div>333</div>
-													<div>333</div>
-												</div>
-												<a class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</a>
-											</el-tooltip> -->
-											<a class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</a>
-											<div class="danjia" style="margin-bottom: 15px;">单价：{{item.bookingPrice}}元/kg</div>
-											<button @click="submitBtn('方案',item)" class="box-btn btn-prprimary com-height50" style="font-size: 18px;padding: 0 20px;">选用该方案</button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div  v-if="detailsArr.status != '5'" class="details-table-list" style="margin-top: 0;">
-								<div class="table-list-title-arr">
-									<div class="list-title-arr-left">
-										<div>{{detailsArr.polName}}({{detailsArr.pol}})</div>
-										<div style="margin: 0 20px;"><img alt="图片" style="width: 16px;height: 16px;" src="./img/icon2.png" /></div>
-										<div>{{detailsArr.podName}}({{detailsArr.pod}})</div>
-									</div>
-									<div v-if="detailsArr.waybillNo" class="list-title-arr-right">运单号：{{detailsArr.waybillNo}}</div>
-								</div>
-								<div class="list-route-icon">
-									<img v-if="detailsArr.logoPath" alt="tupian" :src="detailsArr.logoPath" />
-									<div class="list-route-icon-title">{{detailsArr.airCompanyName}}</div>
-									<div v-if="detailsArr.dow == '1'" class="list-route-icon-date">{{detailsArr.departureDate}}  周一</div>
-									<div v-if="detailsArr.dow == '2'" class="list-route-icon-date">{{detailsArr.departureDate}}  周二</div>
-									<div v-if="detailsArr.dow == '3'" class="list-route-icon-date">{{detailsArr.departureDate}}  周三</div>
-									<div v-if="detailsArr.dow == '4'" class="list-route-icon-date">{{detailsArr.departureDate}}  周四</div>
-									<div v-if="detailsArr.dow == '5'" class="list-route-icon-date">{{detailsArr.departureDate}}  周五</div>
-									<div v-if="detailsArr.dow == '6'" class="list-route-icon-date">{{detailsArr.departureDate}}  周六</div>
-									<div v-if="detailsArr.dow == '7'" class="list-route-icon-date">{{detailsArr.departureDate}}  周日</div>
-								</div>
-								<div class="list-arr-route" style="position: relative;">
-									<div class="list-arr-route-yitong">
-										<div class="list-arr-route-neirong">
-											<div>{{detailsArr.pol}}</div>
-											<div>{{detailsArr.polName}}</div>
-										</div>
-										<div class="list-arr-route-neirong">
-											<div>{{detailsArr.pod}}</div>
-											<div>{{detailsArr.podName}}</div>
-										</div>
-									</div>
-									<div v-if="detailsArr.legCount > 1" style="position: absolute;top: 0;left: 142px;">
-										<el-tooltip class="item" effect="dark" :content="detailsArr.fullLeg" placement="top-start">
-											<a>中转</a>
-										</el-tooltip>
-									</div>
-									<div class="list-arr-route-jiaqian">单价：{{detailsArr.bookingPrice}}元/kg</div>
-								</div>
-							</div>
-							<div class="details-table-list">
-								<div class="details-table-title">货物信息</div>
-								<div class="details-table-tab">
-									<div class="details-table-tab-title">订舱信息</div>
-									<div class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs"><span>品名：</span>{{detailsArr.cargoName}}</div>
-										<div v-if="detailsArr.cargoType == '1'" class="details-table-tabs"><span>类型：</span>普货</div>
-										<div v-if="detailsArr.cargoType == '2'" class="details-table-tabs"><span>类型：</span>化工品</div>
-										<div v-if="detailsArr.cargoType == '3'" class="details-table-tabs"><span>类型：</span>危险品</div>
-										<div v-if="detailsArr.cargoType == '4'" class="details-table-tabs"><span>类型：</span>防疫物资</div>
-										<div class="details-table-tabs"><span>件数：</span>{{detailsArr.bookingPiece}}PCS</div>
-										<div class="details-table-tabs"><span>体积：</span>{{detailsArr.bookingCbm}}CBM</div>
-									</div>
-									<div class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs"><span>重量：</span>{{detailsArr.bookingWeight}}KG</div>
-										<div class="details-table-tabs"><span>比重：</span>1:{{detailsArr.bookingVwr}}</div>
-										<div class="details-table-tabs"><span>计费重：</span>{{detailsArr.bookingCw}}KG</div>
-									</div>
-								</div>
-								<div v-if="detailsArr.inboundPiece" class="details-table-tab">
-									<div class="details-table-tab-title">进仓数据</div>
-									<div class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs"><span style="flex: 0 0 42px;">件数：</span>{{detailsArr.inboundPiece}}PCS</div>
-										<div class="details-table-tabs"><span style="flex: 0 0 42px;">体积：</span>{{detailsArr.inboundCbm}}CBM</div>
-										<div class="details-table-tabs"><span style="flex: 0 0 42px;">重量：</span>{{detailsArr.inboundWeight}}KGS</div>
-									</div>
-									<div class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs"><span style="flex: 0 0 42px;">比重：</span>1:{{detailsArr.inboundVwr}}</div>
-										<div class="details-table-tabs"><span style="flex: 0 0 70px;">计费重：</span>{{detailsArr.inboundCw}}KGS</div>
-										<div v-if="detailsArr.bubblePoint == '10'" class="details-table-tabs"><span>分泡比例：</span>不分泡</div>
-										<div v-if="detailsArr.bubblePoint == '1'" class="details-table-tabs"><span>分泡比例：</span>1/9</div>
-										<div v-if="detailsArr.bubblePoint == '2'" class="details-table-tabs"><span>分泡比例：</span>2/8</div>
-										<div v-if="detailsArr.bubblePoint == '3'" class="details-table-tabs"><span>分泡比例：</span>3/7</div>
-										<div v-if="detailsArr.bubblePoint == '4'" class="details-table-tabs"><span>分泡比例：</span>4/6</div>
-										<div v-if="detailsArr.bubblePoint == '5'" class="details-table-tabs"><span>分泡比例：</span>5/5</div>
-										<div v-if="detailsArr.bubblePoint == '6'" class="details-table-tabs"><span>分泡比例：</span>6/4</div>
-										<div v-if="detailsArr.bubblePoint == '7'" class="details-table-tabs"><span>分泡比例：</span>7/3</div>
-										<div v-if="detailsArr.bubblePoint == '8'" class="details-table-tabs"><span>分泡比例：</span>8/2</div>
-										<div v-if="detailsArr.bubblePoint == '9'" class="details-table-tabs"><span>分泡比例：</span>9/1</div>
-									</div>
-									<div v-if="orderCargoDetailList.length > 0" class="booking" style="margin-top: 20px;">
-										<ul class="booking-proportion-ul" style="font-size: 14px;">
-											<li class="booking-proportion-item">
-												<div>件数PCS</div>
-												<div>体积CBM</div>
-												<div>重量KGS</div>
-												<div>货物尺寸CM</div>
-												<div>包装方式</div>
-												<div>外箱情况</div>
-											</li>
-											<li v-for="(item,index) in orderCargoDetailList" class="booking-proportion-item">
-												<div>{{item.piece}}</div>
-												<div>{{item.cbm}}</div>
-												<div>{{item.weight}}</div>
-												<div>{{item.cargoSize}}</div>
-												<div v-if="item.packing == '1'">纸箱</div>
-												<div v-if="item.packing == '2'">夹板箱</div>
-												<div v-if="item.packing == '3'">托盘</div>
-												<div v-if="item.outerBox == '1'">正常</div>
-												<div v-if="item.outerBox == '2'">异常</div>
-											</li>
-										</ul>
-									</div>
-									<div v-if="orderAttachmentList.length > 0" class="details-table-details" style="display: flex;">
-										<div class="details-table-tabs">
-											<span style="flex: 0 0 80px;">进仓图片：</span>
-											<div style="width: 660px;display: flex;flex-wrap: wrap;">
-											  <div v-for="(item,index) in orderAttachmentList" :key="index" style="margin-right: 10px;margin-bottom: 10px;font-size: 0;position: relative;">
-											    <img :src="item.xpath" style="width: 150px;height: 150px;" />
-											  </div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div v-if="(detailsArr.cclType != '1') || detailsArr.isPickUp == '2'" class="details-table-list">
-								<div class="details-table-title">服务产品</div>
-								<div v-if="detailsArr.isPickUp == '2'" class="details-table-tab">
-									<div class="details-table-tab-title">国内提货</div>
-									<div class="details-table-details">
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">提货地址：</span>{{detailsArr.pickUpAddress}}</div>
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 85px;">提货联系人：</span>{{detailsArr.pickUpContacts}}</div>
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">联系电话：</span>{{detailsArr.pickUpTel}}</div>
-									</div>
-								</div>
-								<div v-if="(detailsArr.cclType != '1')" class="details-table-tab">
-									<div class="details-table-tab-title">清关服务</div>
-									<div class="details-table-details">
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">送货地址：</span>{{detailsArr.deliveryAddress}}</div>
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 85px;">送货联系人：</span>{{detailsArr.deliveryContacts}}</div>
-										<div class="details-table-tabs" style="word-break: break-all;"><span style="flex: 0 0 70px;">联系电话：</span>{{detailsArr.deliveryTel}}</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="order-details-table-zhangdan">
-							<div v-if="guonerArr.length > 0">
-								<div class="details-table-zhangdan-title">账单明细</div>
-								<div class="booking-price borderEFEFEF bakFFFFFF">
-									<div class="booking-price-item">
-										<div class="booking-price-item-name">国内段</div>
-										<div v-for="(item,index) in guonerArr" class="booking-price-item-list">
-											<div>{{item.expenseName}}</div>
-											<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
-											<div v-else><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
-										</div>
-									</div>
-									<div class="booking-price-total">
-										<div></div>
-										<div>{{guonerJiaqian}}</div>
-									</div>
-								</div>
-								<div style="margin-top: 20px;">
-									<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
-									<button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据确认</button>
-								</div>
-							</div>
-							<div v-if="guowaiArr.length > 0">
-								<div class="details-table-zhangdan-title">账单明细</div>
-								<div class="booking-price borderEFEFEF bakFFFFFF">
-									<div class="booking-price-item">
-										<div class="booking-price-item-name">国外段</div>
-										<div v-for="(item,index) in guowaiArr" class="booking-price-item-list">
-											<div>{{item.expenseName}}</div>
-											<div v-if="item.expenseName == '空运费'"><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
-											<div v-else><span style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span></div>
-										</div>
-									</div>
-									<div class="booking-price-total">
-										<div></div>
-										<div>{{guowaiJiaqian}}</div>
-									</div>
-								</div>
-								<div style="margin-top: 20px;">
-									<button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单</button>
-									<button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'" class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据确认</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <meta name="applicable-device" content="pc,mobile">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="renderer" content="webkit">
+  <meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+  <meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+  <link rel='icon' href='./img/favicon.ico' type='image/x-icon'/>
+  <title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+  <link rel="stylesheet" href="./css/element-ui-min.css">
+  <link rel="stylesheet" href="./css/reset.css"/>
+  <link rel="stylesheet" href="./css/common.css"/>
+  <script src="./js/vue.js"></script>
+  <script src="./js/axios.min.js"></script>
+  <script src="./js/element-ui.js"></script>
+  <style>
+      .orderOptionsList {
+          border-bottom: 1px dashed #EFEFEF;
+      }
 
-			<!-- 尾部 -->
-			<div class="footer">
-				<div class="com-width">
-					<div class="footer-content">
-						<div class="footer-label">
-							<div class="footer-cool" style="margin-bottom: 10px;">
-								<span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
-							</div>
-							<!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
-								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
-								<span>沪公网备XXXXXXXXXXXXX号</span>
-							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
-						</div>
-						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
-	<script src="./service/index.js"></script>
-	<script>
-		new Vue({
-			el: '#app',
-			data: {
-				loading: false,
-				menuIndex: 0,
-				orderId: '',
-				detailsArr: {},
-				statusSubmit: [5,9,3],
-				totalArOrgn: {},
-				orderOptionsList: [],
-				guonerArr: [],
-				guonerJiaqian: 0,
-				guowaiArr: [],
-				guowaiJiaqian: 0,
-				preStatus: '',
-				status: '',
-				orderCargoDetailList: [],
-				orderAttachmentList: [],
-				activityFlowVOList: [],
-				userInfo: '',
-				headerMenu: false,
-			},
-			created() {
-				if(!localStorage.getItem('wxOpenId')){
-					window.location.href = './login.html'
-				}
-				if(localStorage.getItem('userInfo')){
-					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-				}
-				this.orderId = getQueryVariable('orderId')
-				this.orderSearchDetail()
-			},
-			methods: {
-				tuiChu() {
-					localStorage.clear()
-					window.location.href = './login.html'
-				},
-				showHeaderMenu(type) {
-					if(type == 1){
-						this.headerMenu = true
-					}else {
-						this.headerMenu = false
-					}
-				},
-				submitBtn(type,item) {
-					if(type == '方案'){
-						console.log(item)
-						var data = {
-							order: {
-								activityCodeDoing: this.detailsArr.activityCodeDoing,
-								activityCodeDone: this.detailsArr.activityCodeDone,
-								status: this.detailsArr.status,
-								id: this.detailsArr.id,
-								agentId: item.agentId,
-								agentName: item.agentName,
-								airCompanyCode: item.airCompanyCode,
-								airCompanyName: item.airCompanyName,
-								bookingPrice: item.bookingPrice,
-								bubblePoint: item.bubblePoint,
-								departureDate: item.departureDate,
-								dow: item.dow,
-								flightNo: item.flightNo,
-								fullLeg: item.fullLeg,
-								orderId: item.orderId,
-								pod: item.pod,
-								pol: item.pol,
-								sortNo: item.sortNo
-							},
-							ctrlMap: {
-								ctrlFlag: 1
-							}
-						}
-						axios({
-							method: 'post',
-							url: webIp+serviceApi.orderExecuteOrder,
-							data: data,
-							headers: {
-								'tokenId': localStorage.getItem('tokenId')
-							}
-						}).then((data) =>{
-							var data = data.data
-							if(data.code == 200){
-								window.location.href = './orderList.html'
-							}else if(data.code == -200){
-								window.location.href = './login.html'
-							}else{
-								this.$message.error(data.message)
+      .orderOptionsList:last-child {
+          border-bottom: 0;
+      }
 
-							}
-						})
-					}else if(type == '取消'){
-						var data = {
-							order: {
-								activityCodeDoing: this.detailsArr.activityCodeDoing,
-								activityCodeDone: this.detailsArr.activityCodeDone,
-								status: this.detailsArr.status,
-								id: this.detailsArr.id
-							},
-							ctrlMap: {
-								ctrlFlag: 2
-							}
-						}
-						axios({
-							method: 'post',
-							url: webIp+serviceApi.orderExecuteOrder,
-							data: data,
-							headers: {
-								'tokenId': localStorage.getItem('tokenId')
-							}
-						}).then((data) =>{
-							var data = data.data
-							if(data.code == 200){
-								window.location.href = './orderList.html'
-							}else if(data.code == -200){
-								window.location.href = './login.html'
-							}else{
-								this.$message.error(data.message)
+      .mark {
+          position: absolute;
+          bottom: 25px;
+          left: -65px;
+          background: #FFFFFF;
+          border: 1px solid #FF9914;
+          box-shadow: 0px 6px 10px 0px rgba(255, 153, 20, 0.05);
+          border-radius: 5px;
+          height: auto;
+      }
 
-							}
-						})
-					}else if(type == '进仓'){
-						var data = {
-							order: {
-								activityCodeDoing: this.detailsArr.activityCodeDoing,
-								activityCodeDone: this.detailsArr.activityCodeDone,
-								status: this.detailsArr.status,
-								id: this.detailsArr.id,
-								bubblePoint: this.detailsArr.bubblePoint,
-								inboundCw: this.detailsArr.inboundCw,
-								inboundWeight: this.detailsArr.inboundWeight
-							},
-							ctrlMap: {
-								ctrlFlag: 1
-							}
-						}
-						axios({
-							method: 'post',
-							url: webIp+serviceApi.orderExecuteOrder,
-							data: data,
-							headers: {
-								'tokenId': localStorage.getItem('tokenId')
-							}
-						}).then((data) =>{
-							var data = data.data
-							if(data.code == 200){
-								window.location.href = './orderList.html'
-							}else if(data.code == -200){
-								window.location.href = './login.html'
-							}else{
-								this.$message.error(data.message)
+      .mark > .title {
+          flex: 1;
+          min-width: 222px;
+          height: 34px;
+          line-height: 34px;
+          background: #FF9914;
+          border-radius: 4px 4px 0px 0px;
+          padding-left: 15px;
+          font-size: 14px;
+          font-weight: bold;
+          color: #FFFFFF;
+          text-align: left;
+      }
 
-							}
-						})
-					}
-				},
-				//账单转化
-				priceType1(json) {
-				  if(json){
-				    var arr = JSON.parse(json)
-				    var price = ''
-				    for(var i = 0; i < arr.length; i++){
-				      if(arr[i].currency == '1'){
-				        price += '￥'+arr[i].amount+'+'
-				      }
-				    }
-				    price = price.substring(0, price.length - 1)
-				    return price
-				  }
-				},
-				priceType2(json) {
-				  if(json){
-				    var arr = JSON.parse(json)
-				    var price = ''
-				    for(var i = 0; i < arr.length; i++){
-				      if(arr[i].currency == '2'){
-				        price += 'HK$'+arr[i].amount+'+'
-				      }else if(arr[i].currency == '3'){
-				        price += '$'+arr[i].amount+'+'
-				      }else if(arr[i].currency == '4'){
-				        price += '€'+arr[i].amount+'+'
-				      }else if(arr[i].currency == '5'){
-				        price += '￡'+arr[i].amount+'+'
-				      }
-				    }
-				    price = price.substring(0, price.length - 1)
-				    return price
-				  }
-				},
-				//获取详情
-				orderSearchDetail() {
-					axios({
-						method: 'get',
-						url: webIp+serviceApi.orderSearchDetail+'?orderId='+this.orderId,
-						headers: {
-							'tokenId': localStorage.getItem('tokenId')
-						}
-					}).then((data) =>{
-						var data = data.data
-						if(data.code == 200){
-							this.detailsArr = data.data
-							if(data.data.orderOptionsList){
-								this.orderOptionsList = data.data.orderOptionsList
-							}
-							this.guonerArr = []
-							this.guowaiArr = []
-							for(var i = 0; i < this.detailsArr.orderPriceList.length; i++){
-								if(this.detailsArr.orderPriceList[i].currency == '1'){
-									this.guonerArr.push(this.detailsArr.orderPriceList[i])
-								}else{
-									this.guowaiArr.push(this.detailsArr.orderPriceList[i])
-								}
-							}
-							this.guonerJiaqian = this.priceType1(this.detailsArr.totalArOrgn)
-							this.guowaiJiaqian = this.priceType2(this.detailsArr.totalArOrgn)
-							if(this.detailsArr.status == 39){
-								this.status = this.detailsArr.preStatus
-							}else{
-								this.status = this.detailsArr.status
-							}
-							this.orderCargoDetailList = this.detailsArr.orderCargoDetailList
-							this.orderAttachmentList = this.detailsArr.orderAttachmentList
-							this.activityFlowVOList = this.detailsArr.activityFlowVOList
-						}else if(data.code == -200){
-							window.location.href = './login.html'
-						}else{
-							this.$message.error(data.message)
+      .mark > .list {
+          display: flex;
+          padding: 0 15px;
+          height: 25px;
+          align-items: center;
+          justify-content: space-between;
+      }
 
-						}
-					})
-				},
-				//登录
-				loginClick() {
-					window.location.href = './login.html'
-				},
-				// muen
-				menuClick(index) {
-					this.menuIndex = index
-				}
-			}
-		})
-	</script>
+      .mark > .list > span {
+          font-size: 12px;
+          font-weight: 500;
+          color: #000000;
+          display: block;
+          width: 40px;
+          text-align: right;
+      }
+
+      .mark > .list > span:nth-child(1) {
+          color: #666666;
+      }
+
+      .mark > .line {
+          flex: 1;
+          height: 1px;
+          border-bottom: 1px dashed #eeeeee;
+      }
+
+      .mark:after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          bottom: -9px;
+          transform: translateX(-50%);
+          background-image: url("./img/xiasj.png");
+          width: 13px;
+          height: 9px;
+      }
+
+      .pdfBox {
+          position: absolute;
+          right: 0;
+          top: 60px;
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          overflow: auto;
+      }
+
+      .pdf {
+          width: 65px;
+          height: 100%;
+          margin-bottom: 10px;
+          text-align: center;
+          font-size: 12px;
+          margin-right: 10px;
+          cursor: pointer;
+          color: #333333;
+      }
+
+      .pdf > img {
+          width: 35px;
+          height: 28px;
+          margin-bottom: 10px;
+
+      }
+
+      .yunfei {
+          color: #FF9914;
+          border-bottom: 1px #FF9914 dashed;
+      }
+
+      .length {
+          font-size: 14px;
+          font-weight: 500;
+          color: #FFFFFF;
+          margin-top: 5px;
+      }
+
+      .length > span {
+          opacity: 0.3;
+      }
+
+      .submitTime {
+          border-radius: 20px 20px 20px 20px;
+          border: 1px solid rgba(255, 255, 255, 0.30000001192092896);
+          font-size: 12px;
+          font-weight: 500;
+          color: #FFFFFF;
+          margin-top: 5px;
+          padding: 5px;
+      }
+
+      .btnPub {
+          height: 50px;
+      }
+  </style>
+  <script>
+      var _hmt = _hmt || [];
+      (function () {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+      })();
+  </script>
+</head>
+<body>
+<div id="app">
+  <div class="pubH">
+    <!-- 头部 -->
+    <div class="header">
+      <div class="header-img">
+        <a href="./index.html">
+          <!-- <img class="logo" src="./img/logo.png" /> -->
+          <div class="logo"></div>
+        </a>
+        <div class="logo-title"></div>
+      </div>
+      <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+        <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+        <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+          <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+          <div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+          <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+          <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+          <div class="header-bak"><a href="./financial.html">财务管理</a></div>
+          <div @click="tuiChu" class="header-bak">退出</div>
+        </div>
+      </div>
+      <div v-else @click="loginClick" class="header-user">登录</div>
+      					<div class="quick " @click="goQuick">
+      						<img src="img/quick.png">
+      						<span >一键订舱</span>
+      					</div>
+    </div>
+    <div class="header-menu">
+      <ul class="header-menu-list com-width">
+        <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+        <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
+        <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+        <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+      </ul>
+    </div>
+    <!-- 订单详情 -->
+    <div class="order-details">
+      <div class="com-width order-details-content">
+        <div class="order-details-title">
+          <a href="./orderList.html">订单管理</a>
+          <img alt="图片" src="./img/arrow_details.png"/>
+          <div>订单详情</div>
+          <div>订单号：{{detailsArr.orderNo}}</div>
+        </div>
+        <div class="order-details-step">
+          <div v-for="(item,index) in activityFlowVOList"
+               :class="{'order-details-step-active': item.position == 1 ? true : false, 'order-details-step-check': item.position == 2 ? true : false, 'order-details-spte-bak': item.position == 2 && item.state == 1 ? true : false}"
+               :key="index" class="order-details-step-btn">
+            <img v-if="item.position == 1" alt="图片" src="./img/orderDetails_check.png">{{item.desc}}
+          </div>
+        </div>
+        <div class="order-details-table">
+          <div class="order-details-list">
+            <div v-if="detailsArr.status == '5'" class="details-table-list" style="margin-top: 0;">
+              <div class="table-list-title-arr-title">非常抱歉，您预定的仓位暂无，已为您推荐了其他方案，请尽快确认</div>
+              <div class="color9995" style="color: #999999;font-size: 14px;padding: 20px 20px 0 20px;">订舱信息</div>
+              <div class="list-route-icon">
+                <img v-if="detailsArr.logoPath" style="opacity: 0.5;" alt="tupian" :src="detailsArr.logoPath"/>
+                <div class="list-route-icon-title color9995">{{detailsArr.airCompanyName}}<span style="marginLeft:5px;">{{detailsArr.airCompanyCode}}
+                </div>
+                <div v-if="detailsArr.dow == '1'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}
+                  周一
+                </div>
+                <div v-if="detailsArr.dow == '2'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}
+                  周二
+                </div>
+                <div v-if="detailsArr.dow == '3'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}
+                  周三
+                </div>
+                <div v-if="detailsArr.dow == '4'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}
+                  周四
+                </div>
+                <div v-if="detailsArr.dow == '5'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}
+                  周五
+                </div>
+                <div v-if="detailsArr.dow == '6'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}
+                  周六
+                </div>
+                <div v-if="detailsArr.dow == '7'" class="list-route-icon-date color9995">{{detailsArr.departureDate}}
+                  周日
+                </div>
+              </div>
+              <div class="list-arr-route border-btm-da">
+                <div class="list-arr-route-yitong">
+                  <div class="list-arr-route-neirong">
+                    <div class="color9995">{{detailsArr.pol}}</div>
+                    <div class="color9995">{{detailsArr.polName}}</div>
+                  </div>
+                  <div class="list-arr-route-neirong">
+                    <div class="color9995">{{detailsArr.pod}}</div>
+                    <div class="color9995">{{detailsArr.podName}}</div>
+                  </div>
+                </div>
+                <div class="list-arr-route-jiaqian color9995">单价：{{detailsArr.bookingPrice}}元/kg</div>
+              </div>
+              <div class="tuijianhangxian">推荐航线</div>
+              <div class="orderOptionsList" v-for="(item,index) in orderOptionsList" :key="index">
+                <div class="list-route-icon">
+                  <img v-if="item.logoPath" alt="tupian" :src="item.logoPath"/>
+                  <div class="list-route-icon-title">{{item.airCompanyName}}<span
+                    style="marginLeft:5px;">{{item.airCompanyCode}}</span></div>
+                  <div v-if="item.dow == '1'" class="list-route-icon-date color227">{{item.departureDate}} 周一</div>
+                  <div v-if="item.dow == '2'" class="list-route-icon-date color227">{{item.departureDate}} 周二</div>
+                  <div v-if="item.dow == '3'" class="list-route-icon-date color227">{{item.departureDate}} 周三</div>
+                  <div v-if="item.dow == '4'" class="list-route-icon-date color227">{{item.departureDate}} 周四</div>
+                  <div v-if="item.dow == '5'" class="list-route-icon-date color227">{{item.departureDate}} 周五</div>
+                  <div v-if="item.dow == '6'" class="list-route-icon-date color227">{{item.departureDate}} 周六</div>
+                  <div v-if="item.dow == '7'" class="list-route-icon-date color227">{{item.departureDate}} 周日</div>
+                </div>
+                <div class="list-arr-route" style="position: relative;">
+                  <div class="list-arr-route-yitong">
+                    <div class="list-arr-route-neirong">
+                      <div>{{item.pol}}</div>
+                      <div>{{item.polName}}</div>
+                    </div>
+                    <div class="list-arr-route-neirong">
+                      <div>{{item.pod}}</div>
+                      <div>{{item.podName}}</div>
+                    </div>
+                  </div>
+                  <div v-if="item.fullLeg.split(',').length > 2" style="position: absolute;top: 0;left: 142px;">
+                    <el-tooltip class="item" effect="dark" :content="item.fullLeg" placement="top-start">
+                      <a>{{item.firstHub}}</a>
+                    </el-tooltip>
+                  </div>
+                  <div class="list-tuijian-feiyong" style="margin-top: -55px;text-align: right;">
+                    <!-- <el-tooltip placement="bottom">
+                      <div slot="content">
+                        <div>333</div>
+                        <div>333</div>
+                        <div>333</div>
+                      </div>
+                      <a class="yunfei">空运费：￥{{Number(item.bookingPrice)*Number(detailsArr.bookingCw)}}</a>
+                    </el-tooltip> -->
+                    <a class="yunfei" style="position: relative" @mouseenter="act=index"
+                       @mouseleave="act=-1">空运费：￥{{toPriceTotal(item)}}
+                      <div class="mark" v-show="act==index" @mouseenter="act=index" @mouseleave="act=-1">
+                        <div class="title">运费计算</div>
+                        <template v-for="(ite,ind) in item.feesDetails">
+                          <div class="list" :key="ind">
+                            <span>{{ite.expenseName}}:</span>
+                            <span>{{ite.price}}*{{ite.quantity}}</span>
+                            <span>￥{{ite.totalCny}}</span>
+                          </div>
+                        </template>
+
+                        <div class="line"></div>
+                        <div class="list">
+                          <span>合计金额:</span>
+                          <span style="font-weight: bold;color: #FF9914;">￥{{item.totalCny}}</span>
+                        </div>
+                      </div>
+                    </a>
+                    <div class="danjia" style="margin-bottom: 15px;">单价：{{item.bookingPrice}}元/kg</div>
+                    <button @click="submitBtn('方案',item)" class="box-btn btn-prprimary com-height50"
+                            style="font-size: 18px;padding: 0 20px;">选用该方案
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-if="detailsArr.status != '5'" class="details-table-list" style="margin-top: 0;">
+              <div class="table-list-title-arr">
+                <div class="list-title-arr-left">
+                  <div>{{detailsArr.polName}}({{detailsArr.pol}})</div>
+                  <div style="margin: 0 20px;"><img alt="图片" style="width: 16px;height: 16px;" src="./img/icon2.png"/>
+                  </div>
+                  <div>{{detailsArr.podName}}({{detailsArr.pod}})</div>
+                </div>
+                <div v-if="detailsArr.waybillNo" class="list-title-arr-right">运单号：{{detailsArr.waybillNo}}</div>
+              </div>
+              <div class="list-route-icon">
+                <img v-if="detailsArr.logoPath" alt="tupian" :src="detailsArr.logoPath"/>
+                <div class="list-route-icon-title">{{detailsArr.airCompanyName}}<span
+                  style="marginLeft:5px;">{{detailsArr.airCompanyCode}}</div>
+                <div v-if="detailsArr.dow == '1'" class="list-route-icon-date">{{detailsArr.departureDate}} 周一</div>
+                <div v-if="detailsArr.dow == '2'" class="list-route-icon-date">{{detailsArr.departureDate}} 周二</div>
+                <div v-if="detailsArr.dow == '3'" class="list-route-icon-date">{{detailsArr.departureDate}} 周三</div>
+                <div v-if="detailsArr.dow == '4'" class="list-route-icon-date">{{detailsArr.departureDate}} 周四</div>
+                <div v-if="detailsArr.dow == '5'" class="list-route-icon-date">{{detailsArr.departureDate}} 周五</div>
+                <div v-if="detailsArr.dow == '6'" class="list-route-icon-date">{{detailsArr.departureDate}} 周六</div>
+                <div v-if="detailsArr.dow == '7'" class="list-route-icon-date">{{detailsArr.departureDate}} 周日</div>
+              </div>
+              <div class="list-arr-route" style="position: relative;">
+                <div class="list-arr-route-yitong">
+                  <div class="list-arr-route-neirong">
+                    <div>{{detailsArr.pol}}</div>
+                    <div>{{detailsArr.polName}}</div>
+                  </div>
+                  <div class="list-arr-route-neirong">
+                    <div>{{detailsArr.pod}}</div>
+                    <div>{{detailsArr.podName}}</div>
+                  </div>
+                </div>
+                <div v-if="detailsArr.legCount > 1" style="position: absolute;top: 0;left: 142px;">
+                  <el-tooltip class="item" effect="dark" :content="detailsArr.fullLeg" placement="top-start">
+                    <a>{{detailsArr.firstHub}}</a>
+                  </el-tooltip>
+                </div>
+                <div class="list-arr-route-jiaqian">单价：{{detailsArr.bookingPrice}}元/kg</div>
+              </div>
+            </div>
+            <div class="details-table-list">
+              <div class="details-table-title">货物信息</div>
+              <div class="pdfBox" v-if="orderAttachmentList.length>0">
+                <template v-for="(item,index) in orderAttachmentList">
+                  <div class="pdf" :key="index" v-if="item.attachmentType==3">
+                    <img src="img/pdf.png" @click="downLoad(item)">
+                    <div @click="preview(item)">{{detailsArr.pol}}-{{detailsArr.pod}}-{{index == 0 ? "托书" : "托书更新"}}
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+              <div class="details-table-tab">
+                <div class="details-table-tab-title">订舱信息</div>
+                <div class="details-table-details" style="display: flex;">
+                  <div class="details-table-tabs"><span>品名：</span>{{detailsArr.cargoName}}</div>
+                  <div v-if="detailsArr.cargoType == '1'" class="details-table-tabs"><span>类型：</span>普货</div>
+                  <div v-if="detailsArr.cargoType == '2'" class="details-table-tabs"><span>类型：</span>化工品</div>
+                  <div v-if="detailsArr.cargoType == '3'" class="details-table-tabs"><span>类型：</span>危险品</div>
+                  <div v-if="detailsArr.cargoType == '4'" class="details-table-tabs"><span>类型：</span>防疫物资</div>
+                  <div class="details-table-tabs"><span>件数：</span>{{detailsArr.bookingPiece}}PCS</div>
+                  <div class="details-table-tabs"><span>体积：</span>{{detailsArr.bookingCbm}}CBM</div>
+                </div>
+                <div class="details-table-details" style="display: flex;">
+                  <div class="details-table-tabs"><span>重量：</span>{{detailsArr.bookingWeight}}KG</div>
+                  <div class="details-table-tabs"><span>比重：</span>1:{{detailsArr.bookingVwr}}</div>
+                  <div class="details-table-tabs"><span>计费重：</span>{{detailsArr.bookingCw}}KG</div>
+                </div>
+              </div>
+              <div v-if="detailsArr.inboundPiece" class="details-table-tab">
+                <div class="details-table-tab-title">进仓数据</div>
+                <div class="details-table-details" style="display: flex;">
+                  <div class="details-table-tabs"><span style="flex: 0 0 42px;">件数：</span>{{detailsArr.inboundPiece}}PCS
+                  </div>
+                  <div class="details-table-tabs"><span style="flex: 0 0 42px;">体积：</span>{{detailsArr.inboundCbm}}CBM
+                  </div>
+                  <div class="details-table-tabs"><span style="flex: 0 0 42px;">重量：</span>{{detailsArr.inboundWeight}}KGS
+                  </div>
+                </div>
+                <div class="details-table-details" style="display: flex;">
+                  <div class="details-table-tabs"><span style="flex: 0 0 42px;">比重：</span>1:{{detailsArr.inboundVwr}}
+                  </div>
+                  <div class="details-table-tabs"><span style="flex: 0 0 70px;">计费重：</span>{{detailsArr.inboundCw}}KGS
+                  </div>
+                  <div v-if="detailsArr.bubblePoint == '10'" class="details-table-tabs"><span>分泡比例：</span>不分泡</div>
+                  <div v-if="detailsArr.bubblePoint == '1'" class="details-table-tabs"><span>分泡比例：</span>1/9</div>
+                  <div v-if="detailsArr.bubblePoint == '2'" class="details-table-tabs"><span>分泡比例：</span>2/8</div>
+                  <div v-if="detailsArr.bubblePoint == '3'" class="details-table-tabs"><span>分泡比例：</span>3/7</div>
+                  <div v-if="detailsArr.bubblePoint == '4'" class="details-table-tabs"><span>分泡比例：</span>4/6</div>
+                  <div v-if="detailsArr.bubblePoint == '5'" class="details-table-tabs"><span>分泡比例：</span>5/5</div>
+                  <div v-if="detailsArr.bubblePoint == '6'" class="details-table-tabs"><span>分泡比例：</span>6/4</div>
+                  <div v-if="detailsArr.bubblePoint == '7'" class="details-table-tabs"><span>分泡比例：</span>7/3</div>
+                  <div v-if="detailsArr.bubblePoint == '8'" class="details-table-tabs"><span>分泡比例：</span>8/2</div>
+                  <div v-if="detailsArr.bubblePoint == '9'" class="details-table-tabs"><span>分泡比例：</span>9/1</div>
+                </div>
+                <div v-if="orderCargoDetailList.length > 0" class="booking" style="margin-top: 20px;">
+                  <ul class="booking-proportion-ul" style="font-size: 14px;">
+                    <li class="booking-proportion-item">
+                      <div>件数PCS</div>
+                      <div>体积CBM</div>
+                      <div>重量KGS</div>
+                      <div>货物尺寸CM</div>
+                      <div>包装方式</div>
+                      <div>外箱情况</div>
+                    </li>
+                    <li v-for="(item,index) in orderCargoDetailList" class="booking-proportion-item">
+                      <div>{{item.piece}}</div>
+                      <div>{{item.cbm}}</div>
+                      <div>{{item.weight}}</div>
+                      <div>{{item.cargoSize}}</div>
+                      <div v-if="item.packing == '1'">纸箱</div>
+                      <div v-if="item.packing == '2'">夹板箱</div>
+                      <div v-if="item.packing == '3'">托盘</div>
+                      <div v-if="item.outerBox == '1'">正常</div>
+                      <div v-if="item.outerBox == '2'">异常</div>
+                    </li>
+                  </ul>
+                </div>
+                <div v-if="orderAttachmentList.length > 0" class="details-table-details" style="display: flex;">
+                  <div class="details-table-tabs">
+                    <span style="flex: 0 0 80px;">进仓图片：</span>
+                    <div style="width: 660px;display: flex;flex-wrap: wrap;">
+                      <template v-for="(item,index) in orderAttachmentList">
+                        <div :key="index" v-if="item.attachmentType==1"
+                             style="margin-right: 10px;margin-bottom: 10px;font-size: 0;position: relative;">
+                          <img :src="item.xpath" style="width: 150px;height: 150px;"/>
+                        </div>
+                      </template>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-if="(detailsArr.cclType != '1') || detailsArr.isPickUp == '2'" class="details-table-list">
+              <div class="details-table-title">服务产品</div>
+              <div v-if="detailsArr.isPickUp == '2'" class="details-table-tab">
+                <div class="details-table-tab-title">国内提货</div>
+                <div class="details-table-details">
+                  <div class="details-table-tabs" style="word-break: break-all;"><span
+                    style="flex: 0 0 70px;">提货地址：</span>{{detailsArr.pickUpAddress}}
+                  </div>
+                  <div class="details-table-tabs" style="word-break: break-all;"><span
+                    style="flex: 0 0 85px;">提货联系人：</span>{{detailsArr.pickUpContacts}}
+                  </div>
+                  <div class="details-table-tabs" style="word-break: break-all;"><span
+                    style="flex: 0 0 70px;">联系电话：</span>{{detailsArr.pickUpTel}}
+                  </div>
+                </div>
+              </div>
+              <div v-if="(detailsArr.cclType != '1')" class="details-table-tab">
+                <div class="details-table-tab-title">清关服务</div>
+                <div class="details-table-details">
+                  <div class="details-table-tabs" style="word-break: break-all;"><span
+                    style="flex: 0 0 70px;">送货地址：</span>{{detailsArr.deliveryAddress}}
+                  </div>
+                  <div class="details-table-tabs" style="word-break: break-all;"><span
+                    style="flex: 0 0 85px;">送货联系人：</span>{{detailsArr.deliveryContacts}}
+                  </div>
+                  <div class="details-table-tabs" style="word-break: break-all;"><span
+                    style="flex: 0 0 70px;">联系电话：</span>{{detailsArr.deliveryTel}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="order-details-table-zhangdan">
+            <div>
+              <div class="details-table-zhangdan-title">账单详情</div>
+              <div class="booking-price borderEFEFEF bakFFFFFF">
+                <div v-if="guonerArr.length > 0" class="booking-price-item">
+                  <div class="booking-price-item-name">国内段</div>
+                  <div v-for="(item,index) in guonerArr" class="booking-price-item-list">
+                    <div>{{item.expenseName}}</div>
+                    <div v-if="item.expenseName == '空运费'"><span
+                      style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span>
+                    </div>
+                    <div v-else><span
+                      style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="booking-price-total">
+                  <div></div>
+                  <div>{{guonerJiaqian}}</div>
+                </div>
+              </div>
+            </div>
+            <div v-if="guowaiArr.length > 0" style="margin-top: 20px;">
+              <div class="details-table-zhangdan-title">账单明细</div>
+              <div class="booking-price borderEFEFEF bakFFFFFF">
+                <div class="booking-price-item">
+                  <div class="booking-price-item-name">国外段</div>
+                  <div v-for="(item,index) in guowaiArr" class="booking-price-item-list">
+                    <div>{{item.expenseName}}</div>
+                    <div v-if="item.expenseName == '空运费'"><span
+                      style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span>
+                    </div>
+                    <div v-else><span
+                      style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="booking-price-total">
+                  <div></div>
+                  <div>{{guowaiJiaqian}}</div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 20px;">
+              <button @click="submitBtn('取消')" v-if="statusSubmit.indexOf(detailsArr.status) > -1"
+                      class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">取消订单
+              </button>
+              <button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'"
+                      class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据确认
+              </button>
+              <button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50"
+                      style="width: 100%; font-size: 18px;">
+                账单已生成，请确认
+                <div class="length">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}}
+                  <span>/{{tbcBillVO.totalCount}}</span></div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <el-dialog title="账单" :visible.sync="dialogFormVisible" width="1240px">
+    <div v-for="(item,index) in billInfos">
+      <embed v-if="billInfosIndex == index" :src="item.pdfPath" style=" width: 1200PX; height: 600px; "/>
+    </div>
+    <div slot="footer" class="dialog-footer" style="text-align: center;" v-if="billInfos.length> 0">
+      <!-- <el-button @click="importPdf">导出账单</el-button> -->
+      <el-button style="padding: 0 40px" class="box-btn btn-prprimary com-height50" @click="zhangDanClick"
+                 type="primary" v-if="billInfos[billInfosIndex].status==0">
+        账单无误，我已确认
+        <div class="submitTime">确认时间：{{countdown}}</div>
+      </el-button>
+      <el-button class="btnPub" type="info" disabled v-if="billInfos[billInfosIndex].status==1">
+        账单已确认
+      </el-button>
+      <el-button class="btnPub" type="info" disabled v-if="billInfos[billInfosIndex].status==2">
+        修改中
+      </el-button>
+      <el-button class="btnPub" @click="nextStep">下一张账单（{{(billInfosIndex + 1)}}/{{billInfos.length}}）</el-button>
+    </div>
+  </el-dialog>
+  <el-dialog
+    title=""
+    :visible.sync="centerDialogVisible"
+    width="80%"
+    top="0vh"
+    center>
+    <embed style="width: 100%;height: 90vh" :src="filePath"/>
+  </el-dialog>
+
+  <!-- 尾部 -->
+  <div class="footer">
+    <div class="com-width">
+      <div class="footer-content">
+        <div class="footer-label">
+          <div class="footer-cool" style="margin-bottom: 10px;">
+            <span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank"
+                                                                               href="./yingyezhizhaoImg.html"
+                                                                               class="yingyezhizhao">营业执照</a></span>
+          </div>
+          <!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
+            <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
+            <span>沪公网备XXXXXXXXXXXXX号</span>
+          </div> -->
+          <div class="footer-ipc">上海傲晔物流科技有限公司 丨 上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
+        </div>
+        <div class="footer-img"><img alt="图片" src="./img/qcode.png"/></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script src="./service/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            loading: false,
+            menuIndex: 0,
+            orderId: '',
+            detailsArr: {},
+            statusSubmit: [5, 9, 3],
+            totalArOrgn: {},
+            orderOptionsList: [],
+            guonerArr: [],
+            guonerJiaqian: 0,
+            guowaiArr: [],
+            guowaiJiaqian: 0,
+            preStatus: '',
+            status: '',
+            orderCargoDetailList: [],
+            orderAttachmentList: [],
+            activityFlowVOList: [],
+            userInfo: '',
+            headerMenu: false,
+            isTbcBillVO: false,
+            billInfosIndex: 0,
+            billInfos: [],
+            tbcBillVO: {},
+            dialogFormVisible: false,
+            act: -1,
+            centerDialogVisible: false,
+            filePath: '',
+            fileName: '',
+            countdown: "",
+            countdownsetInterval: null
+        },
+        created() {
+            if (!localStorage.getItem('wxOpenId')) {
+                window.location.href = './login.html'
+            }
+            if (localStorage.getItem('userInfo')) {
+                this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+            }
+            this.orderId = getQueryVariable('orderId')
+            this.orderSearchDetail()
+        },
+        methods: {
+            showtime(time) {
+                let nowtime = new Date(),  //获取当前时间
+                    endtime = new Date(new Date(time) * 1 + 24 * 60 * 60 * 1000);  //定义结束时间
+                let lefttime = endtime.getTime() - nowtime.getTime(),  //距离结束时间的毫秒数
+                    leftd = Math.floor(lefttime / (1000 * 60 * 60 * 24)),  //计算天数
+                    lefth = Math.floor(lefttime / (1000 * 60 * 60) % 24),  //计算小时数
+                    leftm = Math.floor(lefttime / (1000 * 60) % 60),  //计算分钟数
+                    lefts = Math.floor(lefttime / 1000 % 60);  //计算秒数
+                this.countdown = lefth + " 时 " + leftm + " 分 " + lefts + " 秒 ";  //返回倒计时的字符串
+            },
+            countdownChange() {
+                this.countdownsetInterval && clearInterval(this.countdownsetInterval);
+                let status = this.billInfos[this.billInfosIndex].status
+                let time = this.billInfos[this.billInfosIndex].billCreateTime
+                if (status != 0) {
+                    return false
+                }
+                if (new Date() - new Date(new Date(time) * 1 + 24 * 60 * 60 * 1000) >= 0) {
+                    this.countdown = " 00 时 00 分 00 秒";  //返回倒计时的字符串
+                    return false
+                }
+                this.countdownsetInterval = setInterval(() => {
+                    this.showtime(time);
+                }, 1000);
+
+            },
+            goQuick() {
+                window.location.href = './quick.html'
+            },
+            downLoad(item) {
+
+                axios({
+                    method: "get",
+                    url: webIp + item.xpath,
+                    responseType: 'blob',//接受使用分片方式
+                }).then((res) => {
+                    let url = window.URL.createObjectURL(res.data)
+                    let a = document.createElement('a');//创建a标签
+                    a.id = "download"
+                    a.href = url;//标签路径
+                    a.download = item.attachmentName;//下载文件名称
+                    a.click();//模拟点击
+                }).catch((err) => {
+                    console.log("err", err)
+                });
+            },
+            preview(item) {
+                this.centerDialogVisible = true;
+                this.filePath = item.xpath
+                this.fileName = item.attachmentName
+            },
+            importPdf() {
+                var data = {
+                    pdfPath: this.billInfos[this.billInfosIndex].pdfPath
+                }
+                axios({
+                    method: 'post',
+                    url: webIp + serviceApi.billImportBillPdf,
+                    data: data,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                        this.dialogFormVisible = false
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
+
+                    }
+                })
+            },
+            nextStep() {
+                let index = this.billInfosIndex + 1;
+                if (index >= this.billInfos.length) {
+                    this.billInfosIndex = 0
+                } else {
+                    this.billInfosIndex++
+                }
+                // if(this.billInfosIndex == 0){
+                // 	this.billInfosIndex = 1
+                // }else if(this.billInfosIndex == 1){
+                // 	this.billInfosIndex = 0
+                // }
+            },
+            zhangDanClick() {
+                var data = {
+                    billId: this.billInfos[this.billInfosIndex].billId
+                }
+                axios({
+                    method: 'post',
+                    url: webIp + serviceApi.billConfirmBill,
+                    data: data,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                        this.dialogFormVisible = false
+                        this.orderSearchDetail()
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
+
+                    }
+                })
+            },
+            showHeaderMenu(type) {
+                if (type == 1) {
+                    this.headerMenu = true
+                } else {
+                    this.headerMenu = false
+                }
+            },
+            tuiChu() {
+                localStorage.clear()
+                window.location.href = './login.html'
+            },
+            toPriceTotal(item) {
+                var num = Math.ceil((item.bubblePoint / 10 * this.detailsArr.bookingCw + (1 - item.bubblePoint / 10) * this.detailsArr.bookingWeight))
+                var price = num * item.bookingPrice
+                return price
+            },
+            submitBtn(type, item) {
+                if (type == '方案') {
+                    console.log(item)
+                    var data = {
+                        order: {
+                            activityCodeDoing: this.detailsArr.activityCodeDoing,
+                            activityCodeDone: this.detailsArr.activityCodeDone,
+                            status: this.detailsArr.status,
+                            id: this.detailsArr.id,
+                            agentId: item.agentId,
+                            agentName: item.agentName,
+                            airCompanyCode: item.airCompanyCode,
+                            airCompanyName: item.airCompanyName,
+                            bookingPrice: item.bookingPrice,
+                            bubblePoint: item.bubblePoint,
+                            departureDate: item.departureDate,
+                            dow: item.dow,
+                            flightNo: item.flightNo,
+                            firstHub: item.firstHub,
+                            fullLeg: item.fullLeg,
+                            orderId: item.orderId,
+                            pod: item.pod,
+                            pol: item.pol,
+                            sortNo: item.sortNo,
+                            bookingCw: this.detailsArr.bookingCw,
+                            bookingWeight: this.detailsArr.bookingWeight
+                        },
+                        ctrlMap: {
+                            ctrlFlag: 1
+                        }
+                    }
+                    axios({
+                        method: 'post',
+                        url: webIp + serviceApi.orderExecuteOrder,
+                        data: data,
+                        headers: {
+                            'tokenId': localStorage.getItem('tokenId')
+                        }
+                    }).then((data) => {
+                        var data = data.data
+                        if (data.code == 200) {
+                            window.location.href = './orderList.html'
+                        } else if (data.code == -200) {
+                            window.location.href = './login.html'
+                        } else {
+                            this.$message.error(data.message)
+
+                        }
+                    })
+                } else if (type == '取消') {
+                    var data = {
+                        order: {
+                            activityCodeDoing: this.detailsArr.activityCodeDoing,
+                            activityCodeDone: this.detailsArr.activityCodeDone,
+                            status: this.detailsArr.status,
+                            id: this.detailsArr.id
+                        },
+                        ctrlMap: {
+                            ctrlFlag: 2
+                        }
+                    }
+                    axios({
+                        method: 'post',
+                        url: webIp + serviceApi.orderExecuteOrder,
+                        data: data,
+                        headers: {
+                            'tokenId': localStorage.getItem('tokenId')
+                        }
+                    }).then((data) => {
+                        var data = data.data
+                        if (data.code == 200) {
+                            window.location.href = './orderList.html'
+                        } else if (data.code == -200) {
+                            window.location.href = './login.html'
+                        } else {
+                            this.$message.error(data.message)
+
+                        }
+                    })
+                } else if (type == '进仓') {
+                    var data = {
+                        order: {
+                            activityCodeDoing: this.detailsArr.activityCodeDoing,
+                            activityCodeDone: this.detailsArr.activityCodeDone,
+                            status: this.detailsArr.status,
+                            id: this.detailsArr.id,
+                            bubblePoint: this.detailsArr.bubblePoint,
+                            inboundCw: this.detailsArr.inboundCw,
+                            inboundWeight: this.detailsArr.inboundWeight
+                        },
+                        ctrlMap: {
+                            ctrlFlag: 1
+                        }
+                    }
+                    axios({
+                        method: 'post',
+                        url: webIp + serviceApi.orderExecuteOrder,
+                        data: data,
+                        headers: {
+                            'tokenId': localStorage.getItem('tokenId')
+                        }
+                    }).then((data) => {
+                        var data = data.data
+                        if (data.code == 200) {
+                            window.location.href = './orderList.html'
+                        } else if (data.code == -200) {
+                            window.location.href = './login.html'
+                        } else {
+                            this.$message.error(data.message)
+
+                        }
+                    })
+                } else if (type == '账单') {
+                    this.dialogFormVisible = true
+                    this.countdownChange();
+                }
+            },
+            //账单转化
+            priceType1(json) {
+                if (json) {
+                    var arr = JSON.parse(json)
+                    var price = ''
+                    for (var i = 0; i < arr.length; i++) {
+                        let bx = String(arr[i].amount).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g,'$1,');
+                        if (arr[i].currency == '1') {
+                            price += '￥' + bx + '+'
+                        }
+                    }
+                    price = price.substring(0, price.length - 1)
+                    return price;
+                }
+            },
+            priceType2(json) {
+                if (json) {
+                    var arr = JSON.parse(json)
+                    var price = ''
+                    for (var i = 0; i < arr.length; i++) {
+                        let bx = String(arr[i].amount).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g,'$1,');
+                        if (arr[i].currency == '2') {
+                            price += 'HK$' + bx + '+'
+                        } else if (arr[i].currency == '3') {
+                            price += '$' +bx + '+'
+                        } else if (arr[i].currency == '4') {
+                            price += '€' + bx + '+'
+                        } else if (arr[i].currency == '5') {
+                            price += '￡' + bx + '+'
+                        }
+                    }
+                    price = price.substring(0, price.length - 1)
+                    return price
+                }
+            },
+            //获取详情
+            orderSearchDetail() {
+                axios({
+                    method: 'get',
+                    url: webIp + serviceApi.orderSearchDetail + '?orderId=' + this.orderId,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                        this.detailsArr = data.data
+                        if (data.data.orderOptionsList) {
+                            this.orderOptionsList = data.data.orderOptionsList
+                        }
+                        this.guonerArr = []
+                        this.guowaiArr = []
+                        for (var i = 0; i < this.detailsArr.orderPriceList.length; i++) {
+                            if (this.detailsArr.orderPriceList[i].currency == '1') {
+                                this.guonerArr.push(this.detailsArr.orderPriceList[i])
+                            } else {
+                                this.guowaiArr.push(this.detailsArr.orderPriceList[i])
+                            }
+                        }
+                        this.guonerJiaqian = this.priceType1(this.detailsArr.totalArOrgn)
+                        this.guowaiJiaqian = this.priceType2(this.detailsArr.totalArOrgn)
+                        if (this.detailsArr.status == 39) {
+                            this.status = this.detailsArr.preStatus
+                        } else {
+                            this.status = this.detailsArr.status
+                        }
+                        this.orderCargoDetailList = this.detailsArr.orderCargoDetailList
+                        this.orderAttachmentList = this.detailsArr.orderAttachmentList
+                        this.activityFlowVOList = this.detailsArr.activityFlowVOList
+                        if (this.detailsArr.tbcBillVO == null) {
+                            this.isTbcBillVO = false
+                        } else {
+                            this.isTbcBillVO = true
+                            this.tbcBillVO = this.detailsArr.tbcBillVO
+                            this.billInfos = this.detailsArr.tbcBillVO.billInfos
+                            for (var q = 0; q < this.billInfos.length; q++) {
+                                if (this.billInfos[q].status == 0) {
+                                    this.isTbcBillVO = true
+                                    return
+                                } else {
+                                    this.isTbcBillVO = false
+                                }
+                            }
+                        }
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
+
+                    }
+                })
+            },
+            //登录
+            loginClick() {
+                window.location.href = './login.html'
+            },
+            // muen
+            menuClick(index) {
+                this.menuIndex = index
+                if(index == 0){
+                    window.location.href = './index.html';
+                } else if (index == 1) {
+                    window.location.href = './trackSearch.html?trackSearchInput=';
+                }else if(index == 2){
+                    window.location.href = './addressSerach.html'
+                }else if(index == 3){
+                    window.location.href = './about_us.html'
+                }
+            }
+        }
+    })
+</script>
 </html>
-

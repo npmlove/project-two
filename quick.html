@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <meta name="applicable-device" content="pc,mobile">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="renderer" content="webkit">
+  <meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+  <meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+  <link rel='icon' href='./img/favicon.ico' type='image/x-icon'/>
+  <title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+  <link rel="stylesheet" href="./css/element-ui-min.css">
+  <link rel="stylesheet" href="./css/reset.css"/>
+  <link rel="stylesheet" href="./css/common.css"/>
+  <link rel="stylesheet" href="./css/corporate.css"/>
+  <link rel="stylesheet" href="./css/quick.css"/>
+  <script src="./js/vue.js"></script>
+  <script src="./js/axios.min.js"></script>
+  <script src="./js/element-ui.js"></script>
+  <script>
+      var _hmt = _hmt || [];
+      (function () {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+      })();
+  </script>
+</head>
+<body>
+<div id="app">
+  <!-- 头部 -->
+  <div class="header">
+    <div class="header-img">
+      <a href="./index.html">
+        <!-- <img class="logo" src="./img/logo.png" /> -->
+        <div class="logo"></div>
+      </a>
+      <div class="logo-title"></div>
+    </div>
+    <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+      <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+      <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+        <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+        <div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+        <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+        <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+        <div class="header-bak"><a href="./financial.html">财务管理</a></div>
+        <div @click="tuiChu" class="header-bak">退出</div>
+      </div>
+    </div>
+    <div v-else @click="loginClick" class="header-user">登录</div>
+    <div class="quick " @click="goQuick">
+      <img src="img/quick.png">
+      <span>一键订舱</span>
+    </div>
+  </div>
+  <div class="header-menu">
+    <ul class="header-menu-list com-width">
+      <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+      <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
+      <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+      <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+    </ul>
+  </div>
+  <!-- 订单管理 -->
+  <div class="order-list">
+    <div class="com-width order-list-content">
+      <div class="order-list-userInfo">
+        <div class="list-userInfo-menu">
+          <div class="userInfo-touxiang-list">
+            <div class="userInfo-touxiang-img">
+              <img alt="图片" :src="userInfo.headImgUrl"/>
+            </div>
+            <div class="userInfo-huanyin">欢迎您{{userInfo.nickname}}</div>
+            <div class="userInfo-youxiang">设置邮箱</div>
+          </div>
+          <ul class="userInfo-menu-list">
+<!--            <li class="menu-list-active"><a href="./quick.html">一键订舱</a></li>-->
+            <li class="menu-list-active"><a href="./quick.html">一键订舱</a></li>
+            <li><a href="./corporate.html">企业信息</a></li>
+            <li><a href="./orderList.html">订单管理</a></li>
+            <li><a href="./financial.html">财务管理</a></li>
+          </ul>
+        </div>
+        <div class="list-userInfo-customer">
+          <div class="userInfo-customer">
+            <div>您的专属客服:</div>
+            <div>nana</div>
+          </div>
+          <div class="userInfo-customer">
+            <div>欢迎致电:</div>
+            <div>13567862626</div>
+          </div>
+        </div>
+      </div>
+      <div class="order-list-manage">
+        <div v-show="!isPdf">
+          <div class="order-list-manage-title">填写订舱信息</div>
+          <div class="tabs__nav-wrap quickBody">
+            <div class="title">货物信息</div>
+            <div class="goodsInfo">
+              <div class="infoTop">
+                <div class="rowOne">
+                  <div>
+                    <span>*</span>始发站/Airport of Departure
+                    <el-input
+                      placeholder="请输入始发站"
+                      v-model="pol"
+                      @input="qiSearchByPage(pol)" @focus="showCityList(1,true)" @blur="showCityList(1,false)"
+                      >
+                    </el-input>
+                    <div v-show="qiShowState" style="display: none;" class="open-warp-router">
+                      <div v-if="!pol" class="open-warp-router-hot">热门机场</div>
+                      <div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
+                        <span>{{item.threeLetterCode}}</span>
+                        <span>{{item.name}}</span>
+                        <span>{{item.city}}</span>
+                        <span>{{item.country}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <span>*</span>到达站/Airport of Destination
+                    <el-input
+                      placeholder="请输入到达站"
+                      v-model="pod"
+                      @input="muSearchByPage(pod)" @focus="showCityList(2,true)" @blur="showCityList(2,false)"
+                     >
+                    </el-input>
+                    <div v-show="muShowState" style="display: none;" class="open-warp-router">
+                      <div v-if="!pod" class="open-warp-router-hot">热门机场</div>
+                      <div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
+                        <span>{{item.threeLetterCode}}</span>
+                        <span>{{item.name}}</span>
+                        <span>{{item.city}}</span>
+                        <span>{{item.country}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <span>*</span>航司/Flight
+                    <el-input
+                      placeholder="请输入航司"
+                      v-model="airCompanyCode"
+                      @input="lineSearchByPage(airCompanyCode)" @focus="showCityList(3,true)" @blur="showCityList(3,false)"
+                      >
+                    </el-input>
+                    <div v-show="lineShowState" style="display: none;" class="open-warp-router">
+                      <div @mousedown="openCityClick(3,item)" v-for="(item,index) in linePageArr" :key="index" class="opne-warp-city">
+                        <span>{{item.airCompanyCode}}</span>
+                        <span>{{item.name}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <span>*</span>航班日期/Flight NO_Date
+                    <el-date-picker
+                      v-model="departureDate"
+                      type="date"
+                      value-format="yyyy-MM-dd"
+                      placeholder="请选择日期">
+                    </el-date-picker>
+                  </div>
+                </div>
+                <div class="rowTwo">
+                  <div>
+                    发货人名称、地址和电话/Shipper's Name,Address and Telephone
+                    <el-input
+                      type="textarea"
+                      :autosize="{ minRows: 3, maxRows: 3}"
+                      placeholder="请输入发货人名称、地址和电话"
+                      resize="none"
+                      maxLength="500"
+                      v-model="shipper">
+                    </el-input>
+                  </div>
+                  <div>
+                    通知人/Notify Party
+                    <el-input
+                      type="textarea"
+                      :autosize="{ minRows: 3, maxRows: 3}"
+                      placeholder="请输入通知人"
+                      resize="none"
+                      maxLength="500"
+                      v-model="notifier">
+                    </el-input>
+                  </div>
+                  <div>
+                    收货人名称、地址和电话/Consignee's Name,Address and Telephone
+                    <el-input
+                      type="textarea"
+                      :autosize="{ minRows: 3, maxRows: 3}"
+                      placeholder="请输入收货人名称、地址和电话"
+                      resize="none"
+                      maxLength="500"
+                      v-model="consignee">
+                    </el-input>
+                  </div>
+
+                </div>
+                <div class="rowThree">
+                  <table border="">
+                    <tr>
+                      <td>
+                        <p>
+                          <span>*</span>件数
+                        </p>
+                        No.of package
+                      </td>
+                      <td>
+                        <p>
+                          <span>*</span>毛重
+                        </p>
+                        G/W
+                      </td>
+                      <td>
+                        <p>
+                          <span>*</span>体积
+                        </p>
+                        Measurement
+                      </td>
+                      <td>
+                        <p>
+                          <span>*</span>货物品名
+                        </p>
+                        Nature of goods
+                      </td>
+                      <td>
+                        <p>
+                          唛头
+                        </p>
+                        Marks
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <el-input
+                          placeholder="请输入内容"
+                          v-model="bookingPiece"
+                          maxLength="4"
+                          onkeyup="value=value.replace(/[^\d]/g, '')"
+                          clearable>
+                        </el-input>
+                      </td>
+                      <td>
+                        <el-input
+                          placeholder="请输入内容"
+                          v-model="bookingWeight"
+                          maxLength="6"
+                          onkeyup="value=value.replace(/[^\d]/g, '')"
+                          clearable>
+                        </el-input>
+                      </td>
+                      <td>
+                        <el-input
+                          placeholder="请输入内容"
+                          v-model="bookingCbm"
+
+                          @input="inputChange"
+                          @blur="inputChange('blur')"
+                          clearable>
+                        </el-input>
+                      </td>
+                      <td>
+                        <el-input
+                          placeholder="请输入内容"
+                          v-model="cargoName"
+                          maxLength="100"
+                          clearable>
+                        </el-input>
+                      </td>
+                      <td>
+                        <el-input
+                          placeholder="请输入内容"
+                          v-model="marks"
+                          maxLength="100"
+                          clearable>
+                        </el-input>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="rowFour">
+                  <div><span style="color: #FF1414;margin-right: 5px">*</span>包装类型</div>
+                  <ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 20px;">
+                    <li @click="packageTypeClick(1)" :class="{radio_li_active: packageType == '1'}" class="radio-li">散货
+                    </li>
+                    <li @click="packageTypeClick(2)" :class="{radio_li_active: packageType == '2'}" class="radio-li">托盘
+                    </li>
+                  </ul>
+                </div>
+                <div class="list booking">
+                  <div v-if="packageType == '2'" v-for="(item,index) in trayDetail" :key="index"
+                       class="booking-form-line"
+                       style="padding-left: 0px">
+                    <div class="booking-form-item">
+                      <label class="booking-form-item-label"><span
+                        style="color: #FF1414;margin-right: 5px">*</span>托盘数量</label>
+                      <div class="booking-form-item-content">
+                        <input v-model="item.trayNumber" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3"
+                               class="booking-form-input" type="text"/>
+                      </div>
+                    </div>
+                    <div class="booking-form-item" style="padding-left: 30px">
+                      <label class="booking-form-item-label"><span
+                        style="color: #FF1414;margin-right: 5px">*</span>托盘尺寸</label>
+                      <div class="booking-form-item-content">
+                        <div class="booking-form-tips-left">长</div>
+                        <input v-model="item.traySize" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3"
+                               class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;"/>
+                        <div class="booking-form-tips-right">CM</div>
+                      </div>
+                    </div>
+                    <div class="booking-form-item" style="margin-left: 20px;">
+                      <div class="booking-form-item-content">
+                        <div class="booking-form-tips-left">宽</div>
+                        <input v-model="item.trayWidth" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3"
+                               class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;"/>
+                        <div class="booking-form-tips-right">CM</div>
+                      </div>
+                    </div>
+                    <div class="booking-form-item" style="margin-left: 20px;">
+                      <div class="booking-form-item-content">
+                        <div class="booking-form-tips-left">高</div>
+                        <input v-model="item.trayHeight" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="3"
+                               class="booking-form-input" type="text" style="padding: 0 30px;text-align: center;"/>
+                        <div class="booking-form-tips-right">CM</div>
+                      </div>
+                    </div>
+                    <img v-if="trayDetail.length > 1" @click="trayDeleteClick(index)"
+                         style="height: 22px;margin-left: 20px;margin-top: 4px;cursor: pointer;" alt="图片"
+                         src="./img/lajixiang.png"/>
+                  </div>
+                  <button v-if="(trayDetail.length != 10) && packageType == '2'" @click="trayAddClick"
+                          class="box-btn btn-prprimary com-width100" style="margin-bottom: 20px">添加
+                  </button>
+                </div>
+                <div class="rowFive">
+                  <div>
+                    <span>*</span>单价/Price
+                    <el-input
+                      placeholder="请输入单价"
+                      v-model="bookingPrice"
+                      @input="priceChange"
+                      @blur="priceChange('blur')"
+                      clearable>
+                    </el-input>
+                    <div class="kg">/kg</div>
+                  </div>
+                  <div style="width: 200px">
+                    <span>*</span>分泡
+                    <el-select v-model="bubblePoint" placeholder="请选择">
+                      <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </div>
+                  <div>
+                    <span>*</span>比重
+                    <el-input
+                      placeholder="比重自动填充"
+                      v-model="bookingVwr"
+                      disabled
+                      clearable>
+                    </el-input>
+                  </div>
+                </div>
+                <div class="tips">托运人声明：请尽量保证舱位，如有特殊情况请务必及时告知TKS</div>
+              </div>
+              <div class="infoCen" style="margin-top: 20px">
+                <div class="title">货物类型</div>
+                <ul class="group-radio-ul" style="font-size: 14px;">
+                  <li @click="cargoTypeClick(1)" :class="{radio_li_active: cargoType == '1'}" class="radio-li">普货</li>
+                  <li @click="cargoTypeClick(2)" :class="{radio_li_active: cargoType == '2'}" class="radio-li">化工品</li>
+                  <li @click="cargoTypeClick(3)" :class="{radio_li_active: cargoType == '3'}" class="radio-li">危险品</li>
+                  <li @click="cargoTypeClick(4)" :class="{radio_li_active: cargoType == '4'}" class="radio-li">防疫物资</li>
+                </ul>
+              </div>
+              <div class="infobot booking">
+                <div class="booking-item  bakFFFFFF booking-serve-width" style="padding-left: 0">
+                  <div class="title">服务产品</div>
+                  <div class="booking-form-line">
+                    <div class="booking-form-item">
+                      <label class="booking-form-item-label">报关服务</label>
+                      <div class="booking-form-item-content">
+                        <ul class="group-radio-ul" style="font-size: 14px;">
+                          <li @click="customsTypeClick(2)" :class="{radio_li_active: customsType == '2'}"
+                              class="radio-li">委托报关
+                          </li>
+                          <li @click="customsTypeClick(1)" :class="{radio_li_active: customsType == '1'}"
+                              class="radio-li">自行报关
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="booking-form-line">
+                    <div class="booking-form-item">
+                      <label class="booking-form-item-label">国内提货</label>
+                      <div class="booking-form-item-content">
+                        <ul class="group-radio-ul" style="font-size: 14px;">
+                          <li @click="isPickUpClick(1)" :class="{radio_li_active: isPickUp == '1'}" class="radio-li">不需要
+                          </li>
+                          <li @click="isPickUpClick(2)" :class="{radio_li_active: isPickUp == '2'}" class="radio-li">需要
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-if="isPickUp == '2'" style="padding-left: 60px">
+                    <div class="booking-form-line">
+                      <div class="booking-form-item">
+                        <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货地址</label>
+                        <div class="booking-form-item-content">
+                          <input v-model=" pickUp.pickUpAddress" maxlength="50" placeholder="请填写提货地址"
+                                 class="booking-form-input"
+                                 type="text" style="width: 450px;"/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="booking-form-line">
+                      <div class="booking-form-item">
+                        <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货联系人</label>
+                        <div class="booking-form-item-content">
+                          <input v-model=" pickUp.pickUpContacts" maxlength="15" placeholder="请填写提货联系人"
+                                 class="booking-form-input"
+                                 type="text" style="width: 450px;"/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="booking-form-line">
+                      <div class="booking-form-item">
+                        <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
+                        <div class="booking-form-item-content">
+                          <input v-model=" pickUp.pickUpTel" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="11"
+                                 placeholder="请填写联系电话" class="booking-form-input" type="text" style="width: 450px;"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="booking-form-line">
+                    <div class="booking-form-item">
+                      <label class="booking-form-item-label">清关服务</label>
+                      <div class="booking-form-item-content">
+                        <ul class="group-radio-ul" style="font-size: 14px;">
+                          <li @click="cclTypeClick(1)" :class="{radio_li_active: cclType == '1'}" class="radio-li">自行清关
+                          </li>
+                          <li @click="cclTypeClick(2)" :class="{radio_li_active: cclType == '2'}" class="radio-li">DDU
+                          </li>
+                          <li @click="cclTypeClick(3)" :class="{radio_li_active: cclType == '3'}" class="radio-li">DDP
+                          </li>
+                          <li @click="cclTypeClick(4)" :class="{radio_li_active: cclType == '4'}" class="radio-li">DAP
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-if="cclType != '1'" style="padding-left: 60px">
+                    <div class="booking-form-line">
+                      <div class="booking-form-item">
+                        <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>送货地址</label>
+                        <div class="booking-form-item-content">
+                          <input v-model="delivery.deliveryAddress" maxlength="200" placeholder="请填写送货地址"
+                                 class="booking-form-input" type="text" style="width: 450px;"/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="booking-form-line">
+                      <div class="booking-form-item">
+                        <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>送货联系人</label>
+                        <div class="booking-form-item-content">
+                          <input v-model="delivery.deliveryContacts" maxlength="50" placeholder="请填写送货联系人"
+                                 class="booking-form-input" type="text" style="width: 450px;"/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="booking-form-line">
+                      <div class="booking-form-item">
+                        <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
+                        <div class="booking-form-item-content">
+                          <input v-model="delivery.deliveryTel" maxlength="20" placeholder="请填写联系电话"
+                                 class="booking-form-input"
+                                 type="text" style="width: 450px;"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div :class="['btn',showBtn?'active':'btn']"  @click="submit">订舱</div>
+        </div>
+        <div v-show="isPdf" style="position: relative">
+            <div class="success">
+              <img src="img/success.png"/>
+              恭喜您，订舱成功！
+            </div>
+            <div class="colose" @click="goOrder">
+              <img src="./img/close.png">
+            </div>
+            <div id="pdf">
+              <div class="title">货物信息</div>
+              <div class="goodsInfo">
+                <div class="infoTop">
+                  <div class="rowOne">
+                    <div>
+                      <span>*</span>始发站/Airport of Departure
+                      <div class="input">{{pol}}</div>
+                    </div>
+                    <div>
+                      <span>*</span>到达站/Airport of Destination
+                      <div class="input">{{pod}}</div>
+                    </div>
+                    <div>
+                      <span>*</span>航司/Flight
+                      <div class="input">{{airCompanyCode}}</div>
+                    </div>
+                    <div>
+                      <span>*</span>航班日期/Flight NO_Date
+                      <div class="input">{{departureDate}}</div>
+                    </div>
+                  </div>
+                  <div class="rowTwo">
+                    <div>
+                      发货人名称、地址和电话/Shipper's Name,Address and Telephone
+                      <div class="input">{{shipper}}</div>
+                    </div>
+                    <div>
+                      通知人/Notify Party
+                      <div class="input">{{notifier}}</div>
+                    </div>
+                    <div>
+                      收货人名称、地址和电话/Consignee's Name,Address and Telephone
+                      <div class="input">{{consignee}}</div>
+                    </div>
+                    <div>
+                      <span style="color: #FF1414;margin-right: 5px;">*</span>包装类型
+                      <div class="input">{{packageType == '1'?'散货':'托盘'}}</div>
+                    </div>
+
+                  </div>
+                  <div class="rowThree">
+                    <table border="">
+                      <tr>
+                        <td>
+                          <p>
+                            <span>*</span>件数
+                          </p>
+                          No.of package
+                        </td>
+                        <td>
+                          <p>
+                            <span>*</span>毛重
+                          </p>
+                          G/W
+                        </td>
+                        <td>
+                          <p>
+                            <span>*</span>体积
+                          </p>
+                          Measurement
+                        </td>
+                        <td>
+                          <p>
+                            <span>*</span>货物品名
+                          </p>
+                          Nature of goods
+                        </td>
+                        <td>
+                          <p>
+                            唛头
+                          </p>
+                          Marks
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          {{bookingPiece}}
+                        </td>
+                        <td>
+                          {{bookingWeight}}
+                        </td>
+                        <td>
+                          {{bookingCbm}}
+                        </td>
+                        <td>
+                          {{cargoName}}
+                        </td>
+                        <td>
+                          {{marks}}
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="rowFive" style="display: block">
+                    <div style="margin-bottom: 20px" v-if="packageType == '2'">
+                      <span>*</span>托盘尺寸/Dimensions
+                      <div class="input">{{chicun}}</div>
+                    </div>
+                    <div style="width: 200px;margin-bottom: 20px">
+                      <span>*</span>单价/Price
+                      <div class="input">{{bookingPrice}} /kg</div>
+                    </div>
+                    <div style="width: 200px;margin-bottom: 20px">
+                      <span>*</span>分泡
+                      <div class="input">{{options[bubblePoint*1-1].label}}</div>
+                    </div>
+                    <div style="width: 200px;margin-bottom: 20px">
+                      <span>*</span>比重
+                      <div class="input">{{bookingVwr}}</div>
+                    </div>
+                  </div>
+                  <div class="tips" style="margin-top: -10px">托运人声明：请尽量保证舱位，如有特殊情况请务必及时告知TKS</div>
+                </div>
+              </div>
+            </div>
+            <div class="download" @click="download">
+              <img src="img/download.png">
+              委托书下载
+            </div>
+          </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 尾部 -->
+  <div class="footer">
+    <div class="com-width">
+      <div class="footer-content">
+        <div class="footer-label">
+          <div class="footer-cool" style="margin-bottom: 10px;">
+            <span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank"
+                                                                               href="./yingyezhizhaoImg.html"
+                                                                               class="yingyezhizhao">营业执照</a></span>
+          </div>
+          <!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
+            <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
+            <span>沪公网备XXXXXXXXXXXXX号</span>
+          </div> -->
+          <div class="footer-ipc">上海傲晔物流科技有限公司 丨 上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
+        </div>
+        <div class="footer-img"><img alt="图片" src="./img/qcode.png"/></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+<script src="./service/index.js"></script>
+<!--<script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script>-->
+<!--<script src="https://cdn.bootcss.com/jspdf/1.3.4/jspdf.debug.js"></script>-->
+<script src="./js/html2canvas.js"></script>
+<script src="./js/jspdf.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                qiShowState: false,
+                muShowState: false,
+                lineShowState: false,
+                qiPageArr:[],
+                muPageArr:[],
+                linePageArr:[],
+                headerMenu: false,
+                menuIndex: 1,
+                cargoType: 1,
+                packageType: 1,
+                input: '',
+                value1: '',
+                textarea2: '',
+                price: "",
+                notify: "SAME AS CONSIGNEE",
+                isPdf: false,
+                trayDetail: [
+                    {
+                        trayNumber: '',
+                        traySize: '',
+                        trayWidth: '',
+                        trayHeight: ''
+                    }
+                ],
+                customsType: '2',
+                isPickUp: '1',
+                cclType: '1',
+                bookingPiece: '',
+                bookingWeight: '',
+                bookingCbm: '',
+                cargoName: '',
+                marks: '',
+                pickUp: {
+                    pickUpAddress: '',
+                    pickUpContacts: '',
+                    pickUpTel: '',
+                },
+                delivery: {
+                    deliveryAddress: '',
+                    deliveryContacts: '',
+                    deliveryTel: '',
+                },
+
+
+                pol: '',//始发站
+                pod: '',//终点站
+                airCompanyCode: '',//航司
+                departureDate: '',//航班日期
+                shipper: '',//发货人
+                notifier: 'SAME AS CONSIGNEE',//通知人
+                consignee: '',//收货人
+                bookingPrice: '',//单价
+                bubblePoint: '10',//分泡
+                bookingVwr: '',//比重
+                airlineIdA: '',
+                cargoTypeA: '',
+                dowA: '',
+                options: [{
+                    value: '1',
+                    label: '1/9分泡'
+                }, {
+                    value: '2',
+                    label: '2/8分泡'
+                }, {
+                    value: '3',
+                    label: '3/7分泡'
+                }, {
+                    value: '4',
+                    label: '4/6分泡'
+                }, {
+                    value: '5',
+                    label: '5/5分泡'
+                }, {
+                    value: '6',
+                    label: '6/4分泡'
+                }, {
+                    value: '7',
+                    label: '7/3分泡'
+                }, {
+                    value: '8',
+                    label: '8/2分泡'
+                }, {
+                    value: '9',
+                    label: '9/1分泡'
+                }, {
+                    value: '10',
+                    label: '不分泡'
+                }],
+                chicun:"",
+                btnShow: false,
+                btnShow1: false,
+                btnShow2: false,
+                btnShow3: false,
+                showBtn: false,
+                fileName:"",
+                filePath:""
+
+            }
+        },
+        created() {
+            if (!localStorage.getItem('wxOpenId')) {
+                window.location.href = './login.html'
+            }
+            if (localStorage.getItem('userInfo')) {
+                this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+            }
+            this.openId = localStorage.getItem('wxOpenId')
+            this.initUserInfo()
+            this.initList()
+
+        },
+        computed: {
+            changeData() {
+                const {
+                    pol,//始发站
+                    pod,//终点站
+                    airCompanyCode,//航司
+                    departureDate,//航班日期
+                    bookingPrice,//单价
+                    bubblePoint,//分泡
+                    bookingVwr,//比重
+                    bookingPiece,//件数
+                    bookingWeight,//毛重
+                    bookingCbm,//体积
+                    cargoName,//品名
+                } = this;
+                return {
+                    pol,//始发站
+                    pod,//终点站
+                    airCompanyCode,//航司
+                    departureDate,//航班日期
+                    bookingPrice,//单价
+                    bubblePoint,//分泡
+                    bookingVwr,//比重
+                    bookingPiece,//件数
+                    bookingWeight,//毛重
+                    bookingCbm,//体积
+                    cargoName,//品名
+                };
+            },
+            changePickUp() {
+                return {...this.pickUp}
+            },
+            changeDelivery() {
+                return {...this.delivery}
+            },
+            isShow() {
+                const {
+                    btnShow,
+                    btnShow1,
+                    btnShow2,
+                    btnShow3,
+                    isPickUp,
+                    cclType,
+                    packageType
+                } = this
+                return {
+                    btnShow,
+                    btnShow1,
+                    btnShow2,
+                    btnShow3,
+                    isPickUp,
+                    cclType,
+                    packageType
+                }
+            }
+
+
+        },
+        watch: {
+            isShow: {
+                handler(newV, oldVal) {
+                    this.showBtn = false;
+                    let arr = [];
+                    let sum = 0;
+                    if (this.isPickUp == 2) {
+                        arr.push(true)
+                    }
+                    if ([2, 3, 4].includes(this.cclType * 1)) {
+                        arr.push(true)
+                    }
+                    if (this.packageType == 2) {
+                        arr.push(true)
+                    }
+                    if (this.isPickUp == 2 || [2, 3, 4].includes(this.cclType * 1) || this.packageType == 2) {
+                        for (let key in newV) {
+                            if (newV[key]) {
+                                sum++
+                            }
+                        }
+                        console.log(sum - 3, arr.length)
+                        if (sum - 3 == arr.length + 1) {
+                            this.showBtn = true
+                        } else {
+                            this.showBtn = false
+                        }
+                    } else if (this.btnShow) {
+                        this.showBtn = true
+                    }
+
+
+                },
+                deep: true
+            },
+            changeData: {
+                handler(newV, oldVal) {
+                    let  bookingVwr = Math.ceil(newV.bookingWeight/newV.bookingCbm)
+                    this.bookingVwr = isNaN(bookingVwr)||bookingVwr==Infinity?"":bookingVwr
+                    for (let key in newV) {
+                        if (newV[key] == "") {
+                            this.btnShow = false
+                            break
+                        } else {
+                            this.btnShow = true
+                        }
+                    }
+                },
+                deep: true
+            },
+            trayDetail: {
+                handler(newV, oldVal) {
+                    let bz = false
+                    for (let i = 0; i < newV.length; i++) {
+                        for (let item in newV[i]) {
+                            if (newV[i][item] == "") {
+                                this.btnShow3 = false
+                                this.copybtnShow3 = false
+                                bz=true
+                                break
+                            } else {
+                                this.btnShow3 = true
+                                this.copybtnShow3 = true
+                            }
+                        }
+                    if(bz){
+                        break
+                    }
+                    }
+                },
+                deep: true
+            },
+            packageType: {
+                handler(newV, oldVal) {
+                    if (newV == 1) {
+                        this.btnShow3 = false
+                        // this.trayDetail = [
+                        //     {
+                        //         trayNumber: '',
+                        //         traySize: '',
+                        //         trayWidth: '',
+                        //         trayHeight: ''
+                        //     }
+                        // ]
+                    }else if (this.copybtnShow3) {
+                        this.btnShow3 = true
+                    }
+                },
+                deep: true
+            },
+            isPickUp: {
+                handler(newV, oldVal) {
+                    if (newV == 1) {
+                        this.btnShow1 = false;
+                        // this.pickUp = {
+                        //     pickUpAddress: '',
+                        //     pickUpContacts: '',
+                        //     pickUpTel: '',
+                        // }
+                    }else if (this.copybtnShow1) {
+                        this.btnShow1 = true
+                    }
+                },
+                deep: true
+            },
+            cclType: {
+                handler(newV, oldVal) {
+
+                    if (newV == 1) {
+                        this.btnShow2 = false
+                        // this.delivery = {
+                        //     deliveryAddress: '',
+                        //     deliveryContacts: '',
+                        //     deliveryTel: '',
+                        // }
+                    }else if (this.copybtnShow2) {
+                        this.btnShow2 = true
+                    }
+
+
+                },
+                deep: true
+            },
+            changePickUp: {
+                handler(newV, oldVal) {
+                    for (let key in newV) {
+                        if (newV[key] == "") {
+                            this.btnShow1 = false
+                            this.copybtnShow1 = false
+                            break
+                        } else {
+                            this.btnShow1 = true
+                            this.copybtnShow1 = true
+                        }
+                    }
+                },
+                deep: true
+            },
+            changeDelivery: {
+                handler(newV, oldVal) {
+                    for (let key in newV) {
+                        if (newV[key] == "") {
+                            this.btnShow2 = false
+                            this.copybtnShow2 = false
+                            break
+                        } else {
+                            this.btnShow2 = true
+                            this.copybtnShow2 = true
+                        }
+                    }
+                },
+                deep: true
+            },
+        },
+        methods: {
+            openCityClick(type, item) {
+                if (type == 1) {
+                    this.pol = item.threeLetterCode
+                }
+                if (type == 2) {
+                    this.pod = item.threeLetterCode
+                }
+                if (type == 3){
+                    this.airCompanyCode = item.airCompanyCode
+                }
+            },
+            //起始港
+            showCityList(type, state) {
+                if (type == 1) {
+                    if (state) {
+                        this.qiSearchByPage()
+                        this.qiShowState = state //显示下拉列表
+                    } else {
+                        this.qiShowState = state //隐藏下拉框
+
+                        if(!this.qiPageArr || this.qiPageArr.length==0){
+                            this.pol= "";
+                            return false
+                        }
+                        let bz = false;
+                       for(let i=0;i<this.qiPageArr.length;i++){
+                           if(this.pol.toUpperCase() == this.qiPageArr[i].threeLetterCode){
+                                bz = true;
+                               this.pol= this.qiPageArr[i].threeLetterCode;
+                                break;
+                           }
+                       }
+                       if(!bz){
+                           this.pol= "";
+                           return false
+                       }
+                    }
+                }
+                if (type == 2) {
+                    this.isShowGang = false
+                    if (state) {
+                        this.muSearchByPage()
+                        this.muShowState = state //显示下拉列表
+                    } else {
+                        this.muShowState = state //隐藏下拉框
+                        if(!this.muPageArr || this.muPageArr.length==0){
+                            this.pod= "";
+                            return false
+                        }
+                        let bz = false;
+                        for(let i=0;i<this.muPageArr.length;i++){
+                            if(this.pod.toUpperCase() == this.muPageArr[i].threeLetterCode){
+                                bz = true;
+                                this.pod= this.muPageArr[i].threeLetterCode;
+                                break;
+                            }
+                        }
+                        if(!bz){
+                            this.pod= "";
+                            return false
+                        }
+                    }
+                }
+                if (type == 3) {
+                    if (state) {
+                        this.lineSearchByPage()
+                        this.lineShowState = state //显示下拉列表
+                    } else {
+                        this.lineShowState = state //隐藏下拉框
+                        if(!this.linePageArr || this.linePageArr.length==0){
+                            this.airCompanyCode= "";
+                            return false
+                        }
+                        this.airCompanyCode = this.airCompanyCode.replace(/([a-z])/g,($1)=>{return $1.toUpperCase()})
+                        let bz = false;
+                        for(let i=0;i<this.linePageArr.length;i++){
+                            if(this.airCompanyCode == this.linePageArr[i].airCompanyCode){
+                                bz = true;
+                                this.airCompanyCode= this.linePageArr[i].airCompanyCode;
+                                break;
+                            }
+                        }
+                        if(!bz){
+                            this.airCompanyCode= "";
+                            return false
+                        }
+                    }
+                }
+            },
+            lineSearchByPage(val) {
+
+                var jsonData = {
+                    keyWord: this.airCompanyCode,
+                    type: this.airCompanyCode ? '' : '2'
+                }
+                jsonData = toData(jsonData)
+                axios({
+                    method: 'get',
+                    url: webIp+serviceApi.companySearchByPage+'?'+jsonData,
+                }).then((data) =>{
+                    var data = data.data
+                    if(data.code == 200){
+                        this.linePageArr = data.data
+                    }
+                })
+            },
+            muSearchByPage(val) {
+
+                var jsonData = {
+                    keyWord: this.pod,
+                    type: this.pod ? '' : '2'
+                }
+                jsonData = toData(jsonData)
+                axios({
+                    method: 'get',
+                    url: webIp+serviceApi.searchByPage+'?'+jsonData,
+                }).then((data) =>{
+                    var data = data.data
+                    if(data.code == 200){
+                        this.muPageArr = data.data
+                    }
+                })
+            },
+            qiSearchByPage(val) {
+                var jsonData = {
+                    keyWord: this.pol,
+                    type: this.pol ? '' : '1'
+                }
+                jsonData = toData(jsonData)
+                axios({
+                    method: 'get',
+                    url: webIp+serviceApi.searchByPage+'?'+jsonData,
+                }).then((data) =>{
+                    var data = data.data
+                    if(data.code == 200){
+                        this.qiPageArr = data.data
+                    }
+                })
+            },
+            goQuick(){
+                window.location.href='./quick.html'
+            },
+            download() {
+
+                axios({
+                    method: "get",
+                    url: webIp+this.filePath,
+                    responseType: 'blob',//接受使用分片方式
+                }).then((res) => {
+                    let url = window.URL.createObjectURL(res.data)
+                    let a = document.createElement('a');//创建a标签
+                    a.id="download"
+                    a.href = url;//标签路径
+                    a.download = this.fileName;//下载文件名称
+                    a.click();//模拟点击
+
+                }).catch((err) => {
+                    console.log("err",err)
+                });
+                return false
+                // document.body.scrollTop = document.documentElement.scrollTop = 0;
+                // var target = document.getElementById("pdf");
+                // target.style.background = "#FFFFFF";
+                // target.style.border = "none";
+                // html2canvas(target, {
+                //     allowTaint: true,
+                // }).then(canvas => {            //内容的宽度
+                //     let contentWidth = canvas.width;            //内容高度
+                //     let contentHeight = canvas.height;            //一页pdf显示html页面生成的canvas高度,a4纸的尺寸[595.28,841.89];
+                //     let pageHeight = contentWidth / 592.28 * 841.89;            //未生成pdf的html页面高度
+                //     let leftHeight = contentHeight;            //页面偏移
+                //     let position = 0;            //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+                //     let imgWidth = 595.28;
+                //     let imgHeight = 592.28 / contentWidth * contentHeight;            //canvas转图片数据
+                //     let pageData = canvas.toDataURL('image/jpeg', 1.0);            //新建JsPDF对象
+                //     let PDF = new jsPDF('', 'pt', 'a4');            //判断是否分页
+                //     if (leftHeight < pageHeight) {
+                //         PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight)
+                //     } else {
+                //         while (leftHeight > 0) {
+                //             PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight);
+                //             leftHeight -= pageHeight;
+                //             position -= 841.89;
+                //             if (leftHeight > 0) {
+                //                 PDF.addPage()
+                //             }
+                //         }
+                //     }            //保存文件
+                //     PDF.save( `${this.pol}-${this.pod}-${this.airCompanyCode}-${this.departureDate}-托书.pdf`)
+                // })
+
+            },
+            submit() {
+                if(!this.showBtn){
+                    return false
+                }
+                let {
+                    customsType,
+                    isPickUp,
+                    cclType,
+                    bookingPiece,
+                    bookingWeight,
+                    bookingCbm,
+                    cargoName,
+                    marks,
+                    shipper,
+                    notifier,
+                    consignee,
+                    packageType,
+                    cargoType
+                } = this
+                axios({
+                    method: 'post',
+                    url: webIp + serviceApi.fastOrder,
+                    data:{
+                        order:{
+                            trayDetail:JSON.stringify(this.trayDetail),
+                            ...this.changeData,
+                            ...this.pickUp,
+                            ...this.delivery,
+                            customsType,
+                            isPickUp,
+                            cclType,
+                            bookingPiece,
+                            bookingWeight,
+                            bookingCbm,
+                            cargoName,
+                            marks,
+                            shipper,
+                            notifier,
+                            consignee,
+                            packageType,
+                            cargoType
+                        }
+                    },
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                      this.isPdf=true;
+                      this.chicun="";
+                      this.trayDetail.forEach((item,index)=>{
+                          this.chicun+=`${item.traySize}*${item.trayWidth}*${item.trayHeight}cm*${item.trayNumber}，`
+                      })
+                        this.filePath = data.data.xpath;
+                        this.fileName = data.data.attachmentName;
+                        // window.location.href=data.data.xpath
+
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
+                    }
+                })
+
+            },
+            priceChange(type = "input") {
+                let index = this.bookingPrice.indexOf(".");
+                this.bookingPrice = this.bookingPrice.replace(/[^\d.]/g, '')
+                let lastIndex = this.bookingPrice.lastIndexOf(".")
+                //正则判断
+                // let reg = /^[1-9]{1}[0-9]{0,3}$|^[1-9]{1}[0-9]{0,3}\.[0-9]{1,2}$|^[0-9]\.[0-9]{1,2}$/ig
+                // console.log(reg.test(this.bookingPrice))
+                if (type == "blur" && index !== -1 && this.bookingPrice.length - 1 - index == 0) {
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
+                    return false
+                }
+                if (type == "blur" && index !== -1 && this.bookingPrice[this.bookingPrice.length - 1] == 0) {
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 2);
+                    return false
+                }
+                if (type == "blur" && this.bookingPrice == 0) {
+                    this.bookingPrice = "";
+                    return false
+                }
+                if( this.bookingPrice[0] == 0 && this.bookingPrice[1]==0){
+                    this.bookingPrice=""
+                    return false
+                }
+                if (index != lastIndex) {
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
+                    return false
+                }
+                if (index !== -1 && index >4 ) {
+                    let arr = this.bookingPrice.split("");
+                    arr.splice(index-1, 1)
+                    this.bookingPrice = arr.join("")
+                    return false
+                }
+                if (index !== -1 && this.bookingPrice.length-1 - index > 2) {
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
+                    return false
+                }
+                if (index !== -1 && this.bookingPrice.length-1  - index > 1 && this.bookingPrice[this.bookingPrice.length - 1] == 0) {
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
+                    return false
+                }
+                if (index == -1 && this.bookingPrice.length > 4) {
+                    this.bookingPrice = this.bookingPrice.slice(0, this.bookingPrice.length - 1);
+                    return false
+                }
+            },
+            inputChange(type = "input") {
+                this.bookingCbm = this.bookingCbm.replace(/[^\d.]/g, '')
+                let index = this.bookingCbm.indexOf(".");
+                let lastIndex = this.bookingCbm.lastIndexOf(".")
+                //正则判断
+                // let reg = /^[1-9]{1}[0-9]{0,3}$|^[1-9]{1}[0-9]{0,3}\.[0-9]{1,4}$|^[0-9]\.[0-9]{1,4}$/ig
+                // console.log(reg.test(this.bookingCbm))
+                if (type == "blur" && index !== -1 && this.bookingCbm.length - 1 - index == 0) {
+                    this.bookingCbm = this.bookingCbm.slice(0, this.bookingCbm.length - 1);
+                    return false
+                }
+                if (index !== -1 && index >4 ) {
+                    let arr = this.bookingCbm.split("");
+                    arr.splice(index-1, 1)
+                    this.bookingCbm = arr.join("")
+                    return false
+                }
+                if (index != lastIndex) {
+                    this.bookingCbm = this.bookingCbm.slice(0, this.bookingCbm.length - 1);
+                    return false
+                }
+                if (index !== -1 && this.bookingCbm.length - 1 - index > 4) {
+                    this.bookingCbm = this.bookingCbm.slice(0, this.bookingCbm.length - 1);
+                    return false
+                }
+                if (index == -1 && this.bookingCbm.length > 4) {
+                    this.bookingCbm = this.bookingCbm.slice(0, this.bookingCbm.length - 1);
+                    return false
+                }
+
+
+            },
+            //报关类型
+            customsTypeClick(val) {
+                this.customsType = val
+            },
+            //是否上门取件
+            isPickUpClick(val) {
+                this.isPickUp = val
+            },
+            //清关类型
+            cclTypeClick(val) {
+                this.cclType = val
+            },
+            //删除散货托盘数量
+            trayDeleteClick(index) {
+                this.trayDetail.splice(index, 1)
+            },
+            //添加散货托盘数量
+            trayAddClick() {
+                var json = {
+                    trayNumber: '',
+                    traySize: '',
+                    trayWidth: '',
+                    trayHeight: ''
+                }
+                this.trayDetail.push(json)
+            },
+            cargoTypeClick(act) {
+                this.cargoType = act
+            },
+            packageTypeClick(act) {
+                this.packageType = act
+            },
+            initList() {
+            },
+            initUserInfo() {
+                axios({
+                    method: 'get',
+                    url: webIp + serviceApi.userUserInfo + '?openId=' + this.openId,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then((data) => {
+                    var data = data.data
+                    if (data.code == 200) {
+                        this.userInfo = data.data.tportalUser
+                    } else if (data.code == -200) {
+                        window.location.href = './login.html'
+                    } else {
+                        this.$message.error(data.message)
+                    }
+                })
+            },
+
+            showHeaderMenu(type) {
+                if (type == 1) {
+                    this.headerMenu = true
+                } else {
+                    this.headerMenu = false
+                }
+            },
+            tuiChu() {
+                localStorage.clear()
+                window.location.href = './login.html'
+            },
+            //登录
+            loginClick() {
+                window.location.href = './login.html'
+            },
+            // muen
+            menuClick(index) {
+                this.menuIndex = index
+                if(index == 0){
+                    window.location.href = './index.html';
+                } else if (index == 1) {
+                    window.location.href = './trackSearch.html?trackSearchInput=';
+                }else if(index == 2){
+                    window.location.href = './addressSerach.html'
+                }else if(index == 3){
+                    window.location.href = './about_us.html'
+                }
+            },
+            goOrder(){
+                window.location.href = './orderList.html?type=1'
+            }
+        }
+    })
+</script>
+</html>

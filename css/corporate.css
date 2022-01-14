@@ -1,0 +1,65 @@
+/*table组件样式*/
+.com__table > .el-table__header > tr, th {
+    background: #F7F7F7 !important;
+    color: #333333 !important;
+    border: none !important;
+    border-bottom: 1px solid #EBEEF5 !important;
+}
+
+
+.tableList {
+    flex: 1;
+}
+
+.tableList {
+    margin-top: 40px;
+}
+
+.tableList > .title {
+    margin-bottom: 20px;
+}
+
+.tableList > .title > span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333333;
+    margin-right: 30px;
+}
+
+.tableList .btn {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 12px;
+    font-weight: bold;
+    color: #2273CB;
+    cursor: pointer;
+}
+.dialog-footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.infoList > div{
+
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+.infoList > div >span{
+    margin-left: 15px;
+}
+.infoList > div:last-child > img{
+    width: 100px;
+    height: 150px;
+    margin-left: 15px;
+}
+.submitInfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+

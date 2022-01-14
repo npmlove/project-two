@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no,address=no,email=no">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+    <meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+    <link rel='icon' href='./img/favicon.ico' type='image/x-icon' />
+    <title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/common.css" />
+    <link rel="stylesheet" href="./css/element-ui-min.css">
+    <link rel="stylesheet" href="/css/intelligentComputing.css">
+    <script src="./js/vue.js"></script>
+    <script src="./js/element-ui.js"></script>
+    <script src="./js/axios.min.js"></script>
+    <script>
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- 头部 -->
+      <div class="header">
+        <div class="header-img">
+          <a href="./index.html">
+            <!-- <img class="logo" src="./img/logo.png" /> -->
+            <div class="logo"></div>
+          </a>
+          <div class="logo-title"></div>
+        </div>
+        <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+          <img class="header-imgUrl" :src="userInfo.headImgUrl" />
+          <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+            <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+            <div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+            <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+            <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+            <div class="header-bak"><a href="./financial.html">财务管理</a></div>
+            <div @click="tuiChu" class="header-bak">退出</div>
+          </div>
+        </div>
+        <div v-else @click="loginClick" class="header-user">登录</div>
+        <div class="quick " @click="goQuick">
+          <img src="img/quick.png">
+          <span >一键订舱</span>
+        </div>
+      </div>
+      <div class="header-menu">
+        <ul class="header-menu-list com-width">
+          <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+          <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
+          <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+          <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+        </ul>
+      </div>
+      <div class="intelligent-computing-title com-width">
+        体积计算
+      </div>
+      <div class="intelligent-computing-box com-width">
+        <div class="box">
+          <div class="box-left">
+            <div class="box-left-title">输入结果</div>
+            <div class="box-left-content">
+              <textarea name="name" v-model="textStr" placeholder="请输入体积信息，多个体积请换行输入或以逗号分割"></textarea>
+              <div class="box-left-content-base">
+<!--                <div class="file">-->
+<!--                  <input type="file">-->
+<!--                  <img src="./img/volume-file.png" alt="">-->
+<!--                  <span>点我上传</span>-->
+<!--                </div>-->
+                <button class="box-btn btn-close" @click="keyRemove" style="flex: 0 0 80px;">一键清除</button>
+                <button style="flex: 0 0 80px;marginLeft: 20px;" @click="inquire" class="box-btn btn-prprimary">立即查询</button>
+              </div>
+            </div>
+          </div>
+          <div class="box-right">
+            <div class="box-right-title">识别结果</div>
+            <div class="box-right-content">
+              <ul v-if="multipliers">
+                <li v-for="(item,index) in multipliers.multipliers" :key="index">{{item}}</li>
+              </ul>
+              <div class="total">{{multipliers && multipliers.totalNum}}</div>
+              <div class="result">{{multipliers && multipliers.totalVal}}</div>
+              <div class="monery">{{(multipliers && multipliers.totalVal.replace(/[^0-9|.]/ig,"")) || 0}} <span>CBM</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="intelligent-computing-search com-width">
+        <div class="computing-search-input-box">
+          <img src="./img/icon1.png" alt="">
+          <input type="text" @input="qiSearchByPage" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="pol" placeholder="起飞港" />
+          <div v-show="qiShowState" style="display: none;" class="open-warp-router">
+            <div v-if="!pol" class="open-warp-router-hot">热门机场</div>
+            <div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
+              <span>{{item.threeLetterCode}}</span>
+              <span>{{item.name}}</span>
+              <span>{{item.city}}</span>
+              <span>{{item.country}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="computing-search-segmentation"></div>
+        <div class="computing-search-input-box">
+          <img src="./img/icon3.png" alt="">
+          <input type="text" @input="muSearchByPage" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="pod" placeholder="目的港" />
+          <div v-show="muShowState" style="display: none;" class="open-warp-router">
+            <div v-if="!pod" class="open-warp-router-hot">热门机场</div>
+            <div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
+              <span>{{item.threeLetterCode}}</span>
+              <span>{{item.name}}</span>
+              <span>{{item.city}}</span>
+              <span>{{item.country}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="computing-search-list">
+          <span>件</span>
+          <input maxlength="4" v-model="piece" onkeyup="value=value.replace(/[^\d]/g, '')"  type="text" placeholder="PCS" />
+        </div>
+        <div class="computing-search-list">
+          <span>重量</span>
+          <input maxlength="6" v-model="weight" onkeyup="value=value.replace(/[^\d]/g, '')" type="text" placeholder="KG" />
+        </div>
+        <div class="computing-search-list">
+          <span>体积</span>
+          <input maxlength="4" v-model="volume" onkeyup="value=value.replace(/[^\d\.]/g, '')" type="text" placeholder="CBM" />
+        </div>
+        <div class="computing-search-result">
+          <div class="name">货物比重</div>
+          <div class="total" v-if="((Math.ceil(weight/volume)) != 'Infinity') && !isNaN(Math.ceil(weight/volume)) && weight && volume">1:{{Math.ceil(weight/volume)}}</div>
+          <div class="total" v-else>0</div>
+        </div>
+        <div class="computing-search-result">
+          <div class="name">计费重</div>
+          <div class="total" v-if="volume && weight">{{Math.ceil(Number(volume)*weightPrice) > weight ? Math.ceil(Number(volume)*weightPrice) : weight}}KG</div>
+          <div class="total" v-else>0KG</div>
+        </div>
+        <button type="button" class="computing-search-enquiry" @click="enquiry">一键询价</button>
+      </div>
+      <!-- 尾部 -->
+			<div class="footer">
+				<div class="com-width">
+					<div class="footer-content">
+						<div class="footer-label">
+							<div class="footer-cool" style="margin-bottom: 10px;">
+								<span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
+							</div>
+							<!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
+								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
+								<span>沪公网备XXXXXXXXXXXXX号</span>
+							</div> -->
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
+						</div>
+						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
+					</div>
+				</div>
+			</div>
+    </div>
+  </body>
+  <script src="./service/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        userInfo: '',
+        headerMenu: false,
+        menuIndex: 0,
+        pod: '',
+				pol: '',
+        qiPageArr: [],
+				qiShowState: false,
+				muPageArr: [],
+				muShowState: false,
+        twoLetterCode1: [],
+        piece: '',
+        volume: '',
+        weight: '',
+        weightPrice: 167,
+        textStr: '',
+        multipliers: null
+      },
+      created() {
+				if(!localStorage.getItem('wxOpenId')){
+					window.location.href = './login.html'
+				}
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				}
+        this.textStr = getQueryVariable('volumeConetn');
+        if (this.textStr) {
+          this.inquire();
+        }
+        this.qiSearchByPage();
+        this.muSearchByPage();
+			},
+      methods: {
+          goQuick(){
+              window.location.href='./quick.html'
+          },
+        keyRemove() {
+          this.textStr = '';
+        },
+        inquire() {
+          // if (!this.textStr) {
+          //   return false;
+          // }
+          axios({
+            method: 'post',
+            url: webIp+serviceApi.stringcal,
+            data: {
+              textStr: this.textStr
+            }
+          }).then(res => {
+            let data = res.data;
+            if (data.code == 200) {
+              this.multipliers = data.data;
+              this.volume = this.multipliers.totalVal?this.multipliers.totalVal.replace(/[^0-9|.]/ig,""):""
+            }
+
+          });
+        },
+        enquiry() {
+            if(!this.pod){
+                this.$message.error('请输入目的港')
+                return false;
+            }
+          window.location.href = `./freightQuery.html?qi=${this.pol}&mu=${this.pod}&piece=${this.piece}&volume=${this.volume}&weight=${this.weight}`;
+        },
+        //获取运价查询
+				initData(){
+					var codeArr = JSON.parse(JSON.stringify(this.twoLetterCode1))
+					if(this.volume && this.weight){
+						var chargedWeight = Math.ceil(Number(this.volume)*this.weightPrice) > this.weight ? Math.ceil(Number(this.volume)*this.weightPrice) : this.weight
+					}else{
+						var chargedWeight = ''
+					}
+					var data = {
+						cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
+						dow: this.dow == 0 ? 7 : this.dow,
+						pageNum: this.pageNum,
+						pageSize: this.pageSize,
+						pod: this.pod,
+						pol: this.pol,
+						twoLetterCode: codeArr.toString(),
+						vwr: isNaN(Math.ceil((this.weight)/(this.volume))) ? '' : Math.ceil((this.weight)/(this.volume)),
+						chargedWeight: chargedWeight
+					}
+					debugger
+					data = toData(data)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.noAuthSearchBaseRates+'?'+data
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.weekDatePrice = []
+							for(var q = 0; q < data.data.weekRatesVOS.length; q++){
+								this.weekDatePrice.push(data.data.weekRatesVOS[q].value)
+							}
+							this.priceArr = data.data.freightQueryVOS
+							if(this.priceArr == null){
+								this.priceArr = []
+								return
+							}
+							for(var i = 0; i < this.priceArr.length; i++){
+								this.priceArr[i].sortMTop = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','top')
+								this.priceArr[i].sortMBottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'M','bottom')
+								this.priceArr[i].sort45Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'45','top')
+								this.priceArr[i].sort45Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'45','bottom')
+								this.priceArr[i].sort100Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'100','top')
+								this.priceArr[i].sort100Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'100','bottom')
+								this.priceArr[i].sort300Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'300','top')
+								this.priceArr[i].sort300Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'300','bottom')
+								this.priceArr[i].sort500Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'500','top')
+								this.priceArr[i].sort500Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'500','bottom')
+								this.priceArr[i].sort1000Top = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'1000','top')
+								this.priceArr[i].sort1000Bottom = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)),'1000','bottom')
+							}
+						}else{
+							this.priceArr = []
+						}
+					})
+				},
+        //获取二字码
+				initTwoCode() {
+					var jsonData = {
+						cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
+						dow: this.dow == 0 ? 7 : this.dow,
+						pod: this.pod,
+						pol: this.pol,
+						vwr: isNaN(Math.ceil(this.weight/this.volume)) ? '' : Math.ceil(this.weight/this.volume)
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.twoCodeSearchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.twoCodeArr = data.data
+						}
+					})
+				},
+        openCityClick(type, item) {
+					if (type == 1) {
+						this.pol = item.threeLetterCode
+					} else if(type == 2) {
+						this.pod = item.threeLetterCode
+					}
+					// this.initData()
+					// this.initTwoCode()
+					this.twoLetterCode1 = []
+				},
+        //起始港
+				showCityList(type, state) {
+					if (type == 1) {
+						if (state) {
+							this.qiSearchByPage()
+							this.qiShowState = state //显示下拉列表
+						} else {
+							this.qiShowState = state //隐藏下拉框
+						}
+					} else if(type == 2) {
+						if (state) {
+							this.muSearchByPage()
+							this.muShowState = state //显示下拉列表
+						} else {
+							this.muShowState = state //隐藏下拉框
+						}
+					} else if(type == 3) {
+						if (state) {
+							// this.initTwoCode()
+							this.twoLetterCodeStatus = state //显示下拉列表
+						} else {
+							this.twoLetterCodeStatus = state //隐藏下拉框
+						}
+					}
+				},
+        muSearchByPage() {
+					var jsonData = {
+						keyWord: this.pod,
+						type: this.pod ? '' : '2'
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.searchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.muPageArr = data.data
+						}
+					})
+				},
+        qiSearchByPage() {
+					var jsonData = {
+						keyWord: this.pol,
+						type: this.pol ? '' : '1'
+					}
+					jsonData = toData(jsonData)
+					axios({
+						method: 'get',
+						url: webIp+serviceApi.searchByPage+'?'+jsonData,
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.qiPageArr = data.data
+						}
+					})
+				},
+        showHeaderMenu(type) {
+					if(type == 1){
+						this.headerMenu = true
+					}else {
+						this.headerMenu = false
+					}
+				},
+        tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
+				},
+        loginClick() {
+					window.location.href = './login.html'
+				},
+        menuClick(index) {
+            this.menuIndex = index
+            if(index == 0){
+                window.location.href = './index.html';
+            } else if (index == 1) {
+                window.location.href = './trackSearch.html?trackSearchInput=';
+            }else if(index == 2){
+                window.location.href = './addressSerach.html'
+            }else if(index == 3){
+                window.location.href = './about_us.html'
+            }
+				},
+      }
+    })
+  </script>
+</html>

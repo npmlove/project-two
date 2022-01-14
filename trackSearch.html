@@ -32,6 +32,7 @@
 	</head>
 	<body>
 		<div id="app">
+			<div class="pubH">
 			<!-- 头部 -->
 			<div class="header">
 				<div class="header-img">
@@ -44,6 +45,7 @@
 					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
 					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+						<div class="header-bak"><a href="./quick.html">一键订舱</a></div>
 						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
 						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
 						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
@@ -51,16 +53,19 @@
 					</div>
 				</div>
 				<div v-else @click="loginClick" class="header-user">登录</div>
+				<div class="quick " @click="goQuick">
+					<img src="img/quick.png">
+					<span >一键订舱</span>
+				</div>
 			</div>
 			<div class="header-menu">
 				<ul class="header-menu-list com-width">
 					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
-					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">订单跟踪</li>
-					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">行业咨询</li> -->
+					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
+					<li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
-
 			<!-- 运价查询 -->
 			<div class="modify-search-box">
 				<div class="modify-search-img"></div>
@@ -85,8 +90,11 @@
 					</div>
 				</div>
 			</div>
-
-			<div class="com-width track-details rest-table">
+			<div class="loading" style="width: 100%;text-align: center;margin-top: 20px" v-show="isLoading">
+				<img src="./img/loading1.gif" style="width: 90px;height: 90px">
+				<p style="color: #181818">正在加载中...</p>
+			</div>
+			<div  v-show="!isLoading" class="com-width track-details rest-table">
 				<div style="font-size: 16px;font-weight: 400;color: #999;">货物基本信息</div>
 				<el-table :data="tableData1" border stripe style="width: 100%">
 					<template slot="empty">
@@ -173,7 +181,7 @@
 					</el-tab-pane>
 				</el-tabs> -->
 			</div>
-
+			</div>
 			<!-- 尾部 -->
 			<div class="footer">
 				<div class="com-width">
@@ -186,7 +194,7 @@
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
@@ -199,7 +207,7 @@
 		new Vue({
 			el: '#app',
 			data: {
-				menuIndex: 0,
+				menuIndex: 1,
 				trackSearchInput: '',
 				data: '',
 				activeName: 'first',
@@ -208,25 +216,26 @@
 				tableData3: [],
 				userInfo: '',
 				headerMenu: false,
+				isLoading:false,
+			},
+			created() {
+				// if(!localStorage.getItem('wxOpenId')){
+				// 	window.location.href = './login.html'
+				// }
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				}
 			},
 			mounted() {
 				if(localStorage.getItem('userInfo')){
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 				}
 				this.trackSearchInput = getQueryVariable('trackSearchInput')
-				this.initData()
+				this.trackSearchInput && this.initData()
 			},
 			methods: {
-				tuiChu() {
-					localStorage.clear()
-					window.location.href = './login.html'
-				},
-				showHeaderMenu(type) {
-					if(type == 1){
-						this.headerMenu = true
-					}else {
-						this.headerMenu = false
-					}
+				goQuick(){
+					window.location.href='./quick.html'
 				},
 				valueChange(e){
 					this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
@@ -247,12 +256,25 @@
 					}
 
 				},
+				showHeaderMenu(type) {
+					if(type == 1){
+						this.headerMenu = true
+					}else {
+						this.headerMenu = false
+					}
+				},
+				tuiChu() {
+					localStorage.clear()
+					window.location.href = './login.html'
+				},
 				//物流追踪
 				initData() {
 					var jsonData = {
 						awb: this.trackSearchInput
 					}
+					jsonData.awb = jsonData.awb.replace('-',"")
 					jsonData = toData(jsonData)
+					this.isLoading = true;
 					axios({
 						method: 'get',
 						url: webIp+serviceApi.trackSearchWeekRates+'?'+jsonData,
@@ -270,6 +292,11 @@
 						}else{
 							this.$message.error('查询失败')
 						}
+					}).finally(()=>{
+						setTimeout(()=>{
+							this.isLoading = false;
+						},100)
+
 					})
 				},
 				//立即查询
@@ -294,6 +321,15 @@
 				// muen
 				menuClick(index) {
 					this.menuIndex = index
+					if(index == 0){
+						window.location.href = './index.html';
+					} else if (index == 1) {
+						window.location.href = './trackSearch.html?trackSearchInput=';
+					}else if(index == 2){
+						window.location.href = './addressSerach.html'
+					}else if(index == 3){
+						window.location.href = './about_us.html'
+					}
 				}
 			}
 		})
