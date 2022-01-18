@@ -249,6 +249,7 @@
 					}else{
 						var chargedWeight = ''
 					}
+          chargedWeight = chargedWeight === 'null' ? '' : chargedWeight
 					var data = {
 						cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
 						dow: this.dow == 0 ? 7 : this.dow,
@@ -258,7 +259,7 @@
 						pol: this.pol,
 						twoLetterCode: codeArr.toString(),
 						vwr: isNaN(Math.ceil((this.weight)/(this.volume))) ? '' : Math.ceil((this.weight)/(this.volume)),
-						chargedWeight: chargedWeight
+						chargedWeight: chargedWeight || ''
 					}
 					debugger
 					data = toData(data)
