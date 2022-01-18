@@ -5,16 +5,16 @@ var websocketUrl = 'wss://www.17dc.com/back/dcPortal/user/' //生成环境
 
 //开发环境
 // var webIp = 'http://10.8.0.14:6679'
-var webIp = 'http://10.8.0.1'
-var publicWeb = '/back/dcPortal/faw'
+// var webIp = 'http://10.8.0.1'
+// var publicWeb = '/back/dcPortal/faw'
 
 //测试环境或生成环境
 // var webIp = ''
 // var publicWeb = '/back/dcPortalTest/faw'
 
 // //测试环境或生成环境
-// var webIp = ''
-// var publicWeb = '/back/dcPortal/faw'
+var webIp = ''
+var publicWeb = '/back/dcPortal/faw'
 
 
 //接口
