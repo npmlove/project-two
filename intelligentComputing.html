@@ -65,7 +65,7 @@
         <ul class="header-menu-list com-width">
           <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
           <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-          <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+          <!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li> -->
           <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
         </ul>
       </div>
@@ -259,6 +259,7 @@
 					}else{
 						var chargedWeight = ''
 					}
+          chargedWeight = chargedWeight === 'null' ? '' : chargedWeight
 					var data = {
 						cargoType: this.aircraftRadioName == '散货' ? 1 : 2,
 						dow: this.dow == 0 ? 7 : this.dow,
@@ -268,13 +269,16 @@
 						pol: this.pol,
 						twoLetterCode: codeArr.toString(),
 						vwr: isNaN(Math.ceil((this.weight)/(this.volume))) ? '' : Math.ceil((this.weight)/(this.volume)),
-						chargedWeight: chargedWeight
+						chargedWeight: chargedWeight || ''
 					}
 					debugger
 					data = toData(data)
 					axios({
 						method: 'get',
-						url: webIp+serviceApi.noAuthSearchBaseRates+'?'+data
+						url: webIp+serviceApi.noAuthSearchBaseRates+'?'+data,
+            headers: {
+							'tokenId': localStorage.getItem('tokenId') || ""
+						}
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){

@@ -67,7 +67,7 @@
     <ul class="header-menu-list com-width">
       <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
       <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-      <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+      <!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li> -->
       <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
     </ul>
   </div>
@@ -901,8 +901,7 @@
             },
             changeData: {
                 handler(newV, oldVal) {
-                    let  bookingVwr = Math.ceil(newV.bookingWeight/newV.bookingCbm)
-                    this.bookingVwr = isNaN(bookingVwr)||bookingVwr==Infinity?"":bookingVwr
+                    this.bookingVwr = newV.bookingCbm +":"+newV.bookingWeight
                     for (let key in newV) {
                         if (newV[key] == "") {
                             this.btnShow = false
