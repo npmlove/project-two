@@ -91,7 +91,7 @@
         </div>
       </div>
       <div class="searchList" v-show="isSearchList">
-        <div class="dataList" v-for="(item,index) in keyData" :key="item.keywordsPoint" @click="searchAddress(2,item)">
+        <div class="dataList" v-for="(item,index) in keyData" :key="item.keywordsPoint" @click="searchAddress(2,item)" :title="item" style="overflow: hidden;white-space:nowrap;text-overflow: ellipsis;">
           {{item}}
         </div>
       </div>
