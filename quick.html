@@ -32,8 +32,10 @@
           s.parentNode.insertBefore(hm, s);
       })();
   </script>
+  <script src="./js/forbidden.js"></script>
+  <script src="./js/forbibben.js"></script>
 </head>
-<body>
+<body  >
 <div id="app">
   <!-- 头部 -->
   <div class="header">
@@ -48,7 +50,7 @@
       <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
       <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
         <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
-        <div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+        <div class="header-bak"><a @click="goQuick">一键订舱</a></div>
         <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
         <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
         <div class="header-bak"><a href="./financial.html">财务管理</a></div>
@@ -65,7 +67,7 @@
     <ul class="header-menu-list com-width">
       <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
       <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-      <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+      <!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li> -->
       <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
     </ul>
   </div>
@@ -83,7 +85,7 @@
           </div>
           <ul class="userInfo-menu-list">
 <!--            <li class="menu-list-active"><a href="./quick.html">一键订舱</a></li>-->
-            <li class="menu-list-active"><a href="./quick.html">一键订舱</a></li>
+            <li class="menu-list-active"><a @click="goQuick">一键订舱</a></li>
             <li><a href="./corporate.html">企业信息</a></li>
             <li><a href="./orderList.html">订单管理</a></li>
             <li><a href="./financial.html">财务管理</a></li>
@@ -92,7 +94,7 @@
         <div class="list-userInfo-customer">
           <div class="userInfo-customer">
             <div>您的专属客服:</div>
-            <div>nana</div>
+            <div v-if="preQQ">{{preCustomer}}<a   :href="`tencent://message/?uin=${preQQ}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;margin-left:10px;" src="img/qq.svg"/></a></div>
           </div>
           <div class="userInfo-customer">
             <div>欢迎致电:</div>
@@ -164,8 +166,9 @@
                     <el-date-picker
                       v-model="departureDate"
                       type="date"
-                      value-format="yyyy-MM-dd"
-                      placeholder="请选择日期">
+                      value-format="yyyy-MM-dd "
+                      placeholder="请选择日期"
+                      :picker-options="pickerOptions">
                     </el-date-picker>
                   </div>
                 </div>
@@ -354,7 +357,7 @@
                     </el-input>
                     <div class="kg">/kg</div>
                   </div>
-                  <div style="width: 200px">
+                  <div>
                     <span>*</span>分泡
                     <el-select v-model="bubblePoint" placeholder="请选择">
                       <el-option
@@ -373,6 +376,17 @@
                       disabled
                       clearable>
                     </el-input>
+                  </div>
+                  <div>
+                    <span>*</span>预计进仓时间
+                    <el-date-picker
+                      v-model="expectedInboundTime"
+                      type="datetime"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                      format="yyyy-MM-dd HH:mm"
+                      placeholder="请选择日期"
+                      :picker-options="pickerOptions">
+                    </el-date-picker>
                   </div>
                 </div>
                 <div class="tips">托运人声明：请尽量保证舱位，如有特殊情况请务必及时告知TKS</div>
@@ -669,6 +683,11 @@
         el: '#app',
         data() {
             return {
+                pickerOptions: {
+                  disabledDate(time) {
+                    return time.getTime() < Date.now()- 86400000;
+                  }
+                },
                 qiShowState: false,
                 muShowState: false,
                 lineShowState: false,
@@ -701,6 +720,8 @@
                 bookingCbm: '',
                 cargoName: '',
                 marks: '',
+                preQQ:'',
+                preCustomer:'',
                 pickUp: {
                     pickUpAddress: '',
                     pickUpContacts: '',
@@ -717,6 +738,7 @@
                 pod: '',//终点站
                 airCompanyCode: '',//航司
                 departureDate: '',//航班日期
+				        expectedInboundTime: '', // 预计进仓时间
                 shipper: '',//发货人
                 notifier: 'SAME AS CONSIGNEE',//通知人
                 consignee: '',//收货人
@@ -778,6 +800,8 @@
             this.openId = localStorage.getItem('wxOpenId')
             this.initUserInfo()
             this.initList()
+              this.preQQ =    JSON.parse(localStorage.getItem("userInfo")).customerServiceQq
+              this.preCustomer = JSON.parse(localStorage.getItem("userInfo")).customerService
 
         },
         computed: {
@@ -794,6 +818,7 @@
                     bookingWeight,//毛重
                     bookingCbm,//体积
                     cargoName,//品名
+                    expectedInboundTime//预期到仓时间
                 } = this;
                 return {
                     pol,//始发站
@@ -807,6 +832,7 @@
                     bookingWeight,//毛重
                     bookingCbm,//体积
                     cargoName,//品名
+                    expectedInboundTime//预期到仓时间
                 };
             },
             changePickUp() {
@@ -875,8 +901,7 @@
             },
             changeData: {
                 handler(newV, oldVal) {
-                    let  bookingVwr = Math.ceil(newV.bookingWeight/newV.bookingCbm)
-                    this.bookingVwr = isNaN(bookingVwr)||bookingVwr==Infinity?"":bookingVwr
+                    this.bookingVwr = newV.bookingCbm +":"+newV.bookingWeight
                     for (let key in newV) {
                         if (newV[key] == "") {
                             this.btnShow = false
@@ -1133,7 +1158,15 @@
                 })
             },
             goQuick(){
-                window.location.href='./quick.html'
+              if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
+                        this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                            }
+                        })
+                    }else{
+              window.location.href='./quick.html'
+            }
             },
             download() {
 
@@ -1189,6 +1222,13 @@
                 if(!this.showBtn){
                     return false
                 }
+                if (!this.expectedInboundTime) {
+									this.$message.error('请选择预计进仓时间')
+                  return
+								}else if(!this.departureDate) {
+									this.$message.error('航班日期')
+                  return
+								}
                 let {
                     customsType,
                     isPickUp,

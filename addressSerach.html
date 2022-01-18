@@ -36,8 +36,10 @@
           s.parentNode.insertBefore(hm, s);
       })();
   </script>
+  <script src="./js/forbidden.js"></script>
+  <script src="./js/forbibben.js"></script>
 </head>
-<body>
+<body  >
 <div id="app">
   <!-- 头部 -->
   <div class="header">
@@ -51,7 +53,7 @@
       <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
       <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
         <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
-        <div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+        <div class="header-bak"><a @click="goQuick">一键订舱</a></div>
         <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
         <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
         <div class="header-bak"><a href="./financial.html">财务管理</a></div>
@@ -68,7 +70,7 @@
     <ul class="header-menu-list com-width">
       <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
       <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-      <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+      <!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li> -->
       <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
     </ul>
   </div>
@@ -89,7 +91,7 @@
         </div>
       </div>
       <div class="searchList" v-show="isSearchList">
-        <div class="dataList" v-for="(item,index) in keyData" :key="item.keywordsPoint" @click="searchAddress(2,item)">
+        <div class="dataList" v-for="(item,index) in keyData" :key="item.keywordsPoint" @click="searchAddress(2,item)" :title="item" style="overflow: hidden;white-space:nowrap;text-overflow: ellipsis;">
           {{item}}
         </div>
       </div>
@@ -178,8 +180,16 @@
 
         },
         methods: {
-            goQuick() {
-                window.location.href = './quick.html'
+            goQuick(){
+              if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
+                        this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                            }
+                        })
+                    }else{
+              window.location.href='./quick.html'
+            }
             },
             goTo(item) {
                 window.location.href = `./freightQuery.html?qi=&mu=${item.threeLetterCode}`

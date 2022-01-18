@@ -29,8 +29,10 @@
 				s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
+		<script src="./js/forbidden.js"></script>
+		<script src="./js/forbibben.js"></script>
 	</head>
-	<body>
+	<body >
 		<div id="app">
 			<!-- 头部 -->
 			<div class="header">
@@ -44,7 +46,7 @@
 					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
 					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
-						<div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+						<div class="header-bak"><a @click="goQuick">一键订舱</a></div>
 						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
 						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
 						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
@@ -61,7 +63,7 @@
 				<ul class="header-menu-list com-width">
 					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
 					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-					<li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li> -->
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
@@ -106,12 +108,36 @@
 									</div>
 								</div>
 								<div :style="{visibility: !isMagnetic ? 'hidden' : 'visible'}" class="booking-form-item-tips">提示：该货物需要提供《磁检报告》</div>
-								<ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 40px;">
-									<li @click="cargoTypeClick(1)" :class="{radio_li_active: cargoType == '1'}" class="radio-li">普货</li>
-									<li @click="cargoTypeClick(2)" :class="{radio_li_active: cargoType == '2'}" class="radio-li">化工品</li>
-									<li @click="cargoTypeClick(3)" :class="{radio_li_active: cargoType == '3'}" class="radio-li">危险品</li>
-									<li @click="cargoTypeClick(4)" :class="{radio_li_active: cargoType == '4'}" class="radio-li">防疫物资</li>
-								</ul>
+								<div class="booking-form-line">
+									<div class="booking-form-item">
+										<label class="booking-form-item-label"><span style="color: #F00;">*</span>品类</label>
+										<ul class="group-radio-ul" style="font-size: 14px;">
+											<li @click="cargoTypeClick(1)" :class="{radio_li_active: cargoType == '1'}" class="radio-li">普货</li>
+											<li @click="cargoTypeClick(2)" :class="{radio_li_active: cargoType == '2'}" class="radio-li">化工品
+											</li>
+											<li @click="cargoTypeClick(3)" :class="{radio_li_active: cargoType == '3'}" class="radio-li">危险品
+											</li>
+											<li @click="cargoTypeClick(4)" :class="{radio_li_active: cargoType == '4'}" class="radio-li">防疫物资
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="booking-form-line" style="margin-bottom: 40px;">
+									<div class="booking-form-item">
+										<label class="booking-form-item-label"><span style="color: #F00;">*</span>预计进仓时间</label>
+										<el-date-picker
+											size="mini"
+											v-model="expectedInboundTime"
+											type="datetime"
+											value-format="yyyy-MM-dd HH:mm:ss"
+              				format="yyyy-MM-dd HH:mm"
+											placeholder="选择预计进仓时间"
+											:picker-options="pickerOptions"
+											style="width: 160px;"
+											:clearable="false">
+										</el-date-picker>
+									</div>
+								</div>
 								<div class="booking-item-name">包装类型</div>
 								<ul class="group-radio-ul" style="padding-left: 25px;font-size: 14px;margin-bottom: 20px;">
 									<li @click="packageTypeClick(1)" :class="{radio_li_active: packageType == '1'}" class="radio-li">散货</li>
@@ -365,6 +391,11 @@
 		new Vue({
 			el: '#app',
 			data: {
+				 pickerOptions: {
+					disabledDate(time) {
+						return time.getTime() < Date.now()- 86400000;
+					}
+				},
 				//菜单
 				menuArr: [
 					{
@@ -386,6 +417,7 @@
 				bookingCbm: '',
 				cargoName: '',
 				cargoType: '1',
+				expectedInboundTime: '', // 预计进仓时间
 				packageType: '1',
 				trayDetail: [
 					{
@@ -448,7 +480,15 @@
 			},
 			methods: {
 				goQuick(){
-					window.location.href='./quick.html'
+				if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
+							this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
+								confirmButtonText: '确定',
+								callback: action => {
+								}
+							})
+						}else{
+				window.location.href='./quick.html'
+				}
 				},
 				showHeaderMenu(type) {
 					if(type == 1){
@@ -499,7 +539,10 @@
                 } else if (!this.cargoName) {
                     this.$message.error('请输入品名')
                     return
-                }
+                } else if (!this.expectedInboundTime) {
+									this.$message.error('请选择预计进仓时间')
+                  return
+								}
                 if (this.packageType == '2') {
                     for (var i = 0; i < this.trayDetail.length; i++) {
                         if (this.trayDetail[i].trayNumber == '') {
@@ -609,7 +652,8 @@
                     legCount: this.proportionArr.legCount,
                     shortDuration: this.proportionArr.shortDuration,
                     longDuration: this.proportionArr.longDuration,
-                    fullLeg: this.proportionArr.fullLeg
+                    fullLeg: this.proportionArr.fullLeg,
+										expectedInboundTime: this.expectedInboundTime,
                 }
 
                 var json = {

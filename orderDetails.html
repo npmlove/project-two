@@ -160,8 +160,10 @@
           s.parentNode.insertBefore(hm, s);
       })();
   </script>
+  <script src="./js/forbidden.js"></script>
+  <script src="./js/forbibben.js"></script>
 </head>
-<body>
+<body  > 
 <div id="app">
   <div class="pubH">
     <!-- 头部 -->
@@ -177,7 +179,7 @@
         <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
         <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
           <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
-          <div class="header-bak"><a href="./quick.html">一键订舱</a></div>
+          <div class="header-bak"><a @click="goQuick">一键订舱</a></div>
           <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
           <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
           <div class="header-bak"><a href="./financial.html">财务管理</a></div>
@@ -194,7 +196,7 @@
       <ul class="header-menu-list com-width">
         <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
         <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-        <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+        <!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li> -->
         <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
       </ul>
     </div>
@@ -331,6 +333,7 @@
                   <div style="margin: 0 20px;"><img alt="图片" style="width: 16px;height: 16px;" src="./img/icon2.png"/>
                   </div>
                   <div>{{detailsArr.podName}}({{detailsArr.pod}})</div>
+                    <a  v-if="detailsArr.mscsQq" :href="`tencent://message/?uin=${detailsArr.mscsQq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;margin-left:20px;" src="img/qq.svg"/></a><span  v-if="detailsArr.mscsQq" style="color:black;margin-left: 10px;">订单问题,联系客服</span>
                 </div>
                 <div v-if="detailsArr.waybillNo" class="list-title-arr-right">运单号：{{detailsArr.waybillNo}}</div>
               </div>
@@ -676,8 +679,16 @@
                 }, 1000);
 
             },
-            goQuick() {
-                window.location.href = './quick.html'
+            goQuick(){
+              if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
+                        this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                            }
+                        })
+                    }else{
+              window.location.href='./quick.html'
+            }
             },
             downLoad(item) {
 

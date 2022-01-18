@@ -92,14 +92,16 @@ const serviceApi = {
 	//查询航司当前情况,获取位置等
 	airLineSearch: '/track/airLine/trackFlight',
 	//通过地点关键词搜索附近机场
-	searchAirport:'/track/place/search-airport/',
+	searchAirport: publicWeb+'/t-track/noAuth/placeSearchAirport',
 	//地点检索候选项
-	placeSuggest:'/track/place/suggest',
+	placeSuggest: publicWeb+'/t-track/noAuth/placeSuggest',
 	//快捷下单
 	fastOrder:publicWeb+'/t-order/fastOrder',
 
-	orderBIllList: publicWeb + '/t-rcv-records/searchByPage'
+	orderBIllList: publicWeb + '/t-rcv-records/searchByPage',
 
+	//帐单确认
+	billDetail: publicWeb+'/t-bill/billDetail'
 
 }
 
