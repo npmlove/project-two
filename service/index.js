@@ -99,6 +99,10 @@ const serviceApi = {
 	fastOrder:publicWeb+'/t-order/fastOrder',
 
 	orderBIllList: publicWeb + '/t-rcv-records/searchByPage',
+	// 确认费用账单列表
+	consureBillList: publicWeb + '/t-bill/list',
+	// 记录查看
+	applyDetail: publicWeb +'/t-bill/applyDetail',
 
 	//帐单确认
 	billDetail: publicWeb+'/t-bill/billDetail'
