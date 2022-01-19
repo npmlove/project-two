@@ -98,7 +98,11 @@ const serviceApi = {
 	//快捷下单
 	fastOrder:publicWeb+'/t-order/fastOrder',
 
-	orderBIllList: publicWeb + '/t-rcv-records/searchByPage'
+	orderBIllList: publicWeb + '/t-rcv-records/searchByPage',
+	// 确认费用账单列表
+	consureBillList: publicWeb + '/t-bill/list',
+	// 记录查看
+	applyDetail: publicWeb +'/t-bill/applyDetail'
 
 
 }
