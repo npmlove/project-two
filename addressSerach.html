@@ -274,7 +274,7 @@
                 }
                 axios({
                     method: 'get',
-                    url: webIp + serviceApi.placeSuggest + `?keywords=${this.keywords}`,
+                    url: webIp + serviceApi.placeSuggest + `?keywords=${encodeURI(this.keywords)}`,
                     data: {}
                 }).then((res) => {
                     if (res.data.code == 200) {
