@@ -226,7 +226,7 @@
                 this.markesData = [];
                 let placeName = "";
                 if (type == 1) {
-                    placeName = this.keywords
+                    placeName = encodeURI(this.keywords)
                 } else {
                     placeName = data
                     this.keywords = data
