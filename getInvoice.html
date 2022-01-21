@@ -308,7 +308,7 @@
         <div style="margin:0 auto">
             <div>
                 <span class="invoiceTitle">开票方式</span> 
-                <el-radio-group v-model="invoiceData[pageIndex].merge">
+                <el-radio-group v-model="invoiceData[pageIndex].merge ">
                     <el-radio label="1" style="margin-left:15px">月结标签</el-radio>
                     <el-radio label="2">单独开票</el-radio>
                 </el-radio-group>
@@ -331,17 +331,18 @@
                         <br/>
                         <div style="display:flex;flex-wrap: wrap;">
                             <el-form-item label="开票币种" label-width="110px" style="margin-top: 20px;flex:0 0 50%;">
-                                <el-select v-model="invoiceData[pageIndex].form[index].applyCurrency" placeholder="请选择">
+                                <el-select v-model="invoiceData[pageIndex].form[index].applyCurrency" placeholder="请选择" @change="(val)=>changeCurrency(val,index)">
                                     <el-option
                                       v-for="item in invoiceMoneyType"
                                       :key="item.value"
                                       :label="item.label"
+                                      :disabled = "item.disabled"
                                       :value="item.value">
                                     </el-option>
                                   </el-select>
                             </el-form-item>
                             <el-form-item label="开票金额   ￥" label-width="110px" style="margin-top: 20px;flex:0 0 50%;position: relative;">
-                                <el-input v-model="invoiceData[pageIndex].form[index].applyAmount" style="width: 280px;"></el-input> 
+                                <el-input v-model="invoiceData[pageIndex].form[index].applyAmount" style="width: 280px;" :disable="invoiceData[pageIndex].form[index].disableInvoAmount"></el-input> 
                                 <span style="position: absolute;color:#797979;font-size: 10px;margin-left: 15px;" v-if="invoiceData[pageIndex].form[index].applyCurrency != '1'">{{`该票只能${moneyMess[invoiceData[pageIndex].form[index].applyCurrency.slice(-1)-2]}付款`}}</span>
                             </el-form-item>
                             <el-form-item label="开票抬头" label-width="110px" style="margin-top: 20px;flex:0 0 50%;">
@@ -518,9 +519,9 @@
         data: {
             leaveTimes:"",//页面显示倒计时
             orderTimer:'',//页面定时器
-            currentIndex:"",
-            pageIndex:0,
-            billDetail:[],
+            currentIndex:"", //新增抬头和邮件地址索引
+            pageIndex:0, //当前账单索引
+            billDetail:[], //发票信息之前所有数据
             invoiceData:[{ifSubmit:false,merge:"1",form:[{invoiceType:"2",applyCurrency:"1",applyAmount:"",invoiceTitle:"",dutyParagraph:"",openBank:"",companyTel:"",postInfo:"",recipientEmail:""}]}],
             //开票币种
             invoiceMoneyType:[{
@@ -540,9 +541,11 @@
             invoiceTitle:[],
             //邮寄信息
             postInfo:[],
+
             //新增抬头弹框
             ifDialTitle:false,
             ifDialData:{data1:"",data2:"",data3:"",data4:"",data5:"",data6:""},
+
             //新增邮件弹框
             ifDialEmail:false,
             dialEmailData:{data1:"",data2:"",data3:"",data4:""},
@@ -600,7 +603,8 @@
             // console.log(this.invoiceData)
             await this.initExpressInfoList()
             await this.initInvoiceInfoList()
-            this.initData()
+            await this.initData()
+            
             
         },
         mounted(){
@@ -610,10 +614,19 @@
             clearInterval(this.orderTimer)
         },
         methods: {
+            //开票币种切换
+            changeCurrency(val,index){
+                //切换到美金直接把美金所有金额转成人民币赋值到对应开票金额处
+                if(val == 3) {
+                    this.invoiceData[this.pageIndex].form[index].applyAmount = this.billDetail[this.pageIndex].summationInfos.filter(item=>item.currency == val)[0].totalOrgn
+                    this.invoiceData[this.pageIndex].form[index].disableInvoAmount = true
+                }
+            },
             //改变页数
             changePageNum(num) {
                 this.pageIndex = this.pageIndex + num
                 this.startInterval()
+                this.setCurrencyDisable()
             },
             //更改邮寄信息下拉框 并给邮箱地址赋值
             changePostInfo(val,index){
@@ -635,7 +648,7 @@
 						}
 					})
 				},
-				initExpressInfoList() {
+			initExpressInfoList() {
 					axios({
 						method: 'get',
 						url: webIp+serviceApi.expressInfoList,
@@ -650,8 +663,15 @@
 					})
 				},
 
+                //开票费用涉及币种在发票信息的开票抬头中可选
+            setCurrencyDisable(){
+                    this.invoiceMoneyType.forEach(item=>item.disabled = false)
+                    if(this.billDetail[this.pageIndex].summationInfos.every(item=>item.currency != 3)){
+                        this.invoiceMoneyType[1].disabled = true
+                    }
+                },
               //定时器时间处理  
-             formatTime(time) {
+            formatTime(time) {
                 this.hours = Math.floor(time / 3600)
                 this.minute = Math.floor(Math.floor(time % 3600) / 60)
                 this.second = time % 60
@@ -691,6 +711,7 @@
                 }).then(res=>{
                     if(res.status == 200) {
                         this.billDetail = res.data.data
+                        this.setCurrencyDisable()
                         this.billDetail.forEach((item,index)=>{
                             item.apply.forEach((item2,index2)=>{
                                 if(item2){
@@ -720,7 +741,6 @@
                                             item2.recipientTel = item3.recipientTel
                                         }
                                     })
-                                    console.log(item2,"xxxx")
                                     this.invoiceData[index].form[index2] = item2 
                                 }
                             })
@@ -730,7 +750,7 @@
                     }
                 })
             },
-            //设置一个选项只能选择一次
+            //设置开票抬头下拉框 一个选项只能选择一次
             setSelectDisable(clear,index){
                 if(clear){
                     this.invoiceData[this.pageIndex].form[index].dutyParagraph = ''
