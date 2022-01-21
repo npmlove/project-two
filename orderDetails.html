@@ -546,9 +546,7 @@
               </button>
               <button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50"
                       style="width: 100%; font-size: 18px;">
-                账单已生成，请确认
-                <div class="length">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}}
-                  <span>/{{tbcBillVO.totalCount}}</span></div>
+                  确认费用并开票
               </button>
             </div>
           </div>
@@ -901,9 +899,14 @@
                         }
                     })
                 } else if (type == '账单') {
-                    this.dialogFormVisible = true
-                    this.countdownChange();
-                }
+                    // this.dialogFormVisible = true
+                    // this.countdownChange();
+                    localStorage.setItem("leftTime", this.billInfos.map(item=>new Date(item.billCreateTime).getTime())) 
+                   
+
+                    window.location.href = './getInvoice.html?orderId='+this.orderId+"&billId="+this.billInfos.map(item=>item.billId)
+                    
+                 }
             },
             //账单转化
             priceType1(json) {

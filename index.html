@@ -126,7 +126,7 @@
 									</textarea>
 									<div class="search-item">
 										<div class="search-item-input search-item-icon1" style="position: relative;">
-											<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input banner-box-border" type="text" placeholder="起飞港"/>
+											<input @input="qiSearchByPage(qiSearchInput)" @focus="showCityList(1,true)" @keyup.enter = "onlyOneChoose(1)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input banner-box-border" type="text" placeholder="起飞港"/>
 											<div v-show="qiShowState" style="display: none;" class="open-warp-router">
 												<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>
 												<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
@@ -139,7 +139,7 @@
 										</div>
 										<div class="search-item-arrow"></div>
 										<div class="search-item-input search-item-icon3" style="position: relative;">
-											<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input banner-box-border" type="text" placeholder="目的港"/>
+											<input @input="muSearchByPage(muSearchInput)" @focus="showCityList(2,true)" @keyup.enter = "onlyOneChoose(2)" @blur="showCityList(2,false)" v-model="muSearchInput" class="box-input banner-box-border" type="text" placeholder="目的港"/>
 											<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>
 											<div v-show="muShowState" style="display: none;" class="open-warp-router">
 												<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>
@@ -880,6 +880,27 @@
 				// this.muSearchInput = this.muPageArr[0].threeLetterCode
 			},
 			methods: {
+				//仅有一个选项 enter直接选中
+				onlyOneChoose(index) {
+					if(index == 1){
+						if(this.qiPageArr.length>1) {
+							return 
+						}
+						else {
+							this.qiSearchInput = this.qiPageArr[0].threeLetterCode
+							this.qiShowState = false
+						}
+					} 
+					else if (index == 2) {
+						if(this.muPageArr.length>1) {
+							return 
+						}
+						else {
+							this.muSearchInput = this.muPageArr[0].threeLetterCode
+							this.muShowState = false
+						}
+					}
+				},
 				goQuick(){
 					if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
                     this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
