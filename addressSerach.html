@@ -226,7 +226,7 @@
                 this.markesData = [];
                 let placeName = "";
                 if (type == 1) {
-                    placeName = encodeURI(this.keywords)
+                    placeName = encodeURIComponent(this.keywords)
                 } else {
                     placeName = data
                     this.keywords = data
@@ -274,7 +274,7 @@
                 }
                 axios({
                     method: 'get',
-                    url: webIp + serviceApi.placeSuggest + `?keywords=${encodeURI(this.keywords)}`,
+                    url: webIp + serviceApi.placeSuggest + `?keywords=${encodeURIComponent(this.keywords)}`,
                     data: {}
                 }).then((res) => {
                     if (res.data.code == 200) {
