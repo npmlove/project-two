@@ -903,7 +903,7 @@
             },
             changeData: {
                 handler(newV, oldVal) {
-                    this.bookingVwr = Math.ceil(newV.bookingCbm / newV.bookingWeight )
+                    this.bookingVwr = Math.ceil( newV.bookingWeight / newV.bookingCbm )
                     for (let key in newV) {
                         if (newV[key] == "") {
                             this.btnShow = false
