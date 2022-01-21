@@ -39,7 +39,6 @@
 			<div class="header">
 				<div class="header-img">
 					<a href="./index.html">
-						<!-- <img class="logo" src="./img/logo.png" /> -->
 						<div class="logo"></div>
 					</a>
 					<div class="logo-title"></div>
@@ -230,6 +229,9 @@
 				}
 			},
 			mounted() {
+				if(localStorage.getItem('userInfo')){
+					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+				}
 				this.trackSearchInput = getQueryVariable('trackSearchInput')
 				this.trackSearchInput && this.initData()
 			},
