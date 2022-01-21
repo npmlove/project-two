@@ -17,7 +17,7 @@ var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境
 
 // hotfix环境
 var webIp = ''
-var publicWeb = '/back/dcPortalHotfix/faw'
+var publicWeb = '/back/dcPortal/faw'
 
 
 //接口
