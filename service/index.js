@@ -1,5 +1,5 @@
 var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境或测试环境
-// var websocketUrl = 'wss://www.17dc.com/back/dcPortal/user/' //生产环境
+// var websocketUrl = 'wss://www.17dc.com/back/dcPortal/user/' //生成环境
 
 
 
@@ -8,17 +8,8 @@ var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境
 // var publicWeb = '/back/dcPortal/faw'
 
 //测试环境或生成环境
-// var webIp = ''
-// var publicWeb = '/back/dcPortalTest/faw'
-
-//测试环境或生成环境
-// var webIp = ''
-// var publicWeb = '/back/dcPortal/faw'
-
-// hotfix环境
 var webIp = ''
 var publicWeb = '/back/dcPortal/faw'
-
 
 //接口
 const serviceApi = {
