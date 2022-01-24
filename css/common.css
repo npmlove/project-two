@@ -12,6 +12,89 @@
 	align-items: center;
 	position: relative;
 }
+.header-userInfo{
+	position: relative;
+	align-items: center;
+	display: flex;
+}
+.header-userInfo .header-imgUrl{
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	border-radius: 50%;
+}
+.header-userInfo .header-userInfo-menu{
+	z-index: 9999999;
+	top: 60px;
+	right: 0;
+	position: absolute;
+	width: 180px;
+	background: #FFFFFF;
+	box-shadow: 0px 2px 10px 0px rgba(51, 51, 51, 0.2);
+}
+.header-userInfo .header-userInfo-menu > div{
+	height: 40px;
+	line-height: 40px;
+	padding-left: 38px;
+	font-size: 14px;
+	font-weight: 500;
+	color: #333;
+}
+.header-userInfo .header-userInfo-menu > div.header-bak{
+	cursor: pointer;
+	background-size: 18px 18px;
+	background-position: left 10px center;
+	background-repeat: no-repeat;
+}
+.header-userInfo .header-userInfo-menu .header-bak:nth-of-type(2) {
+	background-image: url(../img/userInfo_icon4.png);
+}
+.header-userInfo .header-userInfo-menu .header-bak:nth-of-type(3) {
+	background-image: url(../img/userInfo_icon1.png);
+}
+.header-userInfo .header-userInfo-menu .header-bak:nth-of-type(4) {
+	background-image: url(../img/userInfo_icon2.png);
+}
+.header-userInfo .header-userInfo-menu .header-bak:nth-of-type(5) {
+	background-image: url(../img/userInfo_icon3.png);
+}
+.header-userInfo .header-userInfo-menu > div.header-bak:hover{
+	background: #2273CB;
+	color: #FFF;
+	background-size: 18px 18px;
+	background-position: left 10px center;
+	background-repeat: no-repeat;
+}
+
+.header-userInfo .header-userInfo-menu .header-bak:hover:nth-of-type(2) {
+	background-image: url(../img/userInfo_icon8.png);
+}
+.header-userInfo .header-userInfo-menu .header-bak:hover:nth-of-type(3) {
+	background-image: url(../img/userInfo_icon5.png);
+}
+.header-userInfo .header-userInfo-menu .header-bak:hover:nth-of-type(4) {
+	background-image: url(../img/userInfo_icon6.png);
+}
+.header-userInfo .header-userInfo-menu .header-bak:hover:nth-of-type(5) {
+	background-image: url(../img/userInfo_icon7.png);
+}
+
+.header-userInfo .header-userInfo-menu > div > a{
+	color: #333;
+	padding: 0;
+	display: block;
+}
+.header-userInfo .header-userInfo-menu > div.header-bak:hover > a{
+	color: #FFF;
+}
+.header-userInfo .header-userInfo-menu .header-userInfo-menu-name{
+	border-bottom: 1px dashed rgba(51, 51, 51, 0.2);
+	padding: 0;
+	text-align: center;
+}
+.header-userInfo .header-userInfo-menu > div:last-child{
+	border-top: 1px dashed rgba(51, 51, 51, 0.2);
+}
 
 .header-img {
 	display: flex;

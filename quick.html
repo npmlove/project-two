@@ -67,7 +67,7 @@
     <ul class="header-menu-list com-width">
       <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
       <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-      <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+      <!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li> -->
       <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
     </ul>
   </div>
@@ -372,7 +372,7 @@
                     <span>*</span>比重
                     <el-input
                       placeholder="比重自动填充"
-                      v-model="bookingVwr"
+                      v-model="computedBookingVwr"
                       disabled
                       clearable>
                     </el-input>
@@ -632,7 +632,7 @@
                     </div>
                     <div style="width: 200px;margin-bottom: 20px">
                       <span>*</span>比重
-                      <div class="input">{{bookingVwr}}</div>
+                      <div class="input">{{ computedBookingVwr }}</div>
                     </div>
                   </div>
                   <div class="tips" style="margin-top: -10px">托运人声明：请尽量保证舱位，如有特殊情况请务必及时告知TKS</div>
@@ -860,9 +860,11 @@
                     cclType,
                     packageType
                 }
-            }
-
-
+            },
+            // 显示用
+            computedBookingVwr() {
+              return this.bookingVwr ? `1 : ${this.bookingVwr}` : ''
+            },
         },
         watch: {
             isShow: {
@@ -901,7 +903,7 @@
             },
             changeData: {
                 handler(newV, oldVal) {
-                    this.bookingVwr = newV.bookingCbm +":"+newV.bookingWeight
+                    this.bookingVwr = Math.ceil( newV.bookingWeight / newV.bookingCbm )
                     for (let key in newV) {
                         if (newV[key] == "") {
                             this.btnShow = false
