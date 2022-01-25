@@ -389,7 +389,7 @@
                
             </div>
             <div class="pageFoot">
-                <el-button  style="border-radius: 4px;padding: -5px -10px;flex:0 0 30%">导出账单(pdf)</el-button>
+                <el-button  style="border-radius: 4px;padding: -5px -10px;flex:0 0 30%" @click="downLoadPdf">导出账单(pdf)</el-button>
                 <el-button type="primary"  style="border-radius: 4px;flex:0 0 30%" @click="subMitInvoice" :disabled="invoiceData[pageIndex].ifSubmit">
                     <div style="color:#fff;font-size: 15px;" v-if="!invoiceData[pageIndex].ifSubmit">费用已确认,并提交开票</div>
                     <div  style="color:red;font-size:10px;margin-top: 5px;transform: translateY(5px);" v-if="!invoiceData[pageIndex].ifSubmit">确认倒计时:{{leaveTimes}}</div>
@@ -600,6 +600,10 @@
             this.invoiceData.forEach((item,index)=>{
                 item.leftTime = leftTime[index]
             })
+            let pdfPath = localStorage.getItem("pdfPath").split(",")
+            this.invoiceData.forEach((item,index)=>{
+                item.pdfPath = pdfPath[index]
+            })
             // console.log(this.invoiceData)
             await this.initExpressInfoList()
             await this.initInvoiceInfoList()
@@ -614,6 +618,23 @@
             clearInterval(this.orderTimer)
         },
         methods: {
+            downLoadPdf(){
+                axios({
+                    method: "get",
+                    url: this.invoiceData[this.pageIndex].pdfPath,
+                    responseType: "arraybuffer", //接受使用分片方式
+                }).then((res) => {
+                    const aLink = document.createElement("a");
+                    let blob = new Blob([res], {
+                    type: "application/pdf",
+                    });
+                    aLink.href = URL.createObjectURL(blob);
+                    aLink.setAttribute("download", "开票账单"); // 设置下载文件名称
+                    aLink.click();
+                    document.body.appendChild(aLink);
+                });
+            },
+          
             //开票币种切换
             changeCurrency(val,index){
                 //切换到美金直接把美金所有金额转成人民币赋值到对应开票金额处
@@ -786,7 +807,7 @@
                 },0)
                 let invoiceTotal =0
                 this.invoiceData[this.pageIndex].form.forEach(item=>{
-                    invoiceTotal += item.applyAmount
+                    invoiceTotal += Number(item.applyAmount)
                 })
                 for (let i=0;i<this.invoiceData[this.pageIndex].form.length;i++) {
                     let {invoiceType,applyCurrency,applyAmount,invoiceTitle,dutyParagraph,openBank,companyTel,postInfo,recipientEmail} = this.invoiceData[this.pageIndex].form[i]
@@ -795,14 +816,13 @@
                         return this.$message.warning("请填写全部的发票信息后,进行开票操作")
                     }
                 }
-                
+                console.log(totalMoney,invoiceTotal)
                 if(totalMoney != invoiceTotal) {
                     this.$alert('开票金额与账单不符，开票提交失败', '提示', {
                         confirmButtonText: '确定',
                      });
                     return 
                 }
-                
                 let resCopy = JSON.parse(JSON.stringify(this.invoiceData[this.pageIndex].form)) 
                  resCopy.map((item,index)=>{
                     item.accountBank = item.openBank.split("-")[0]
