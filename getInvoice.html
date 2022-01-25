@@ -308,7 +308,7 @@
         <div style="margin:0 auto">
             <div>
                 <span class="invoiceTitle">开票方式</span> 
-                <el-radio-group v-model="invoiceData[pageIndex].merge ">
+                <el-radio-group v-model="invoiceData[pageIndex].merge" :disabled="invoiceData[pageIndex].ifSubmit">
                     <el-radio label="1" style="margin-left:15px">月结标签</el-radio>
                     <el-radio label="2">单独开票</el-radio>
                 </el-radio-group>
@@ -319,7 +319,7 @@
                     <i class="el-icon-delete" style="margin-left: 6px;"  v-if="invoiceData[pageIndex].form.length > 1" @click="deleteInvoice(index)"></i> 
                 </div>
                 <div style="margin:20px 0 0 15px">
-                    <el-form label-position="left">
+                    <el-form label-position="left" :disabled="invoiceData[pageIndex].ifSubmit">
                         <el-form-item label="发票类型" label-width="110px">
                             <el-radio-group v-model="invoiceData[pageIndex].form[index].invoiceType">
                                 <el-radio label="2" border>电子普票</el-radio>
@@ -383,7 +383,7 @@
                             </el-form-item>
                         </div>
                     </el-form>
-                    <el-button type="primary" style="border-radius: 4px;" @click="addInvoice" v-if="index == invoiceData[pageIndex].form.length-1">添加发票</el-button>
+                    <el-button type="primary" :disabled="invoiceData[pageIndex].ifSubmit" style="border-radius: 4px;" @click="addInvoice" v-if="index == invoiceData[pageIndex].form.length-1">添加发票</el-button>
                     
                 </div>
                
@@ -635,7 +635,7 @@
 
             //开票抬头和邮寄信息 接口数据
             initInvoiceInfoList() {
-					axios({
+					return axios({
 						method: 'get',
 						url: webIp+serviceApi.invoiceInfoList,
 						headers: {
@@ -649,7 +649,7 @@
 					})
 				},
 			initExpressInfoList() {
-					axios({
+					return axios({
 						method: 'get',
 						url: webIp+serviceApi.expressInfoList,
 						headers: {
@@ -715,12 +715,15 @@
                         this.billDetail.forEach((item,index)=>{
                             item.apply.forEach((item2,index2)=>{
                                 if(item2){
+                                    if(item2.status == 0) {
+                                        this.invoiceData[index].ifSubmit = true
+                                    }
                                     item2.applyCurrency = String(item2.applyCurrency)
                                     item2.postInfo = item2.recipient
                                     item2.invoiceType = String(item2.invoiceType)
                                     item2.oldBill = true
                                     this.invoiceTitle.forEach(item3=>{
-                                        if(item3.id == item2.invoiceInfoId) {
+                                        if(item3.id == Number(item2.invoiceInfoId)) {
                                             item2.invoiceTitle = item3.invoiceTitle
                                             item2.openBank = item3.bankAccount + '-' + item3.accountBank
                                             item2.companyTel = item3.companyAddress + '-' + item3.companyTel
@@ -733,7 +736,7 @@
                                         }
                                     })
                                     this.postInfo.forEach(item3=>{
-                                        if(item3.id == item2.expressInfoId) {
+                                        if(item3.id == Number(item2.expressInfoId)) {
                                             item2.postInfo = item3.recipient
                                             item2.recipient = item3.recipient
                                             item2.recipientAddress = item3.recipientAddress
@@ -745,6 +748,7 @@
                                 }
                             })
                         })
+                        console.log(this.billDetail)
                     } else {
                         this.$message.error(res.message)
                     }
@@ -829,12 +833,17 @@
                         'tokenId': localStorage.getItem('tokenId')
                     }
                 }).then(res=>{
-
+                    if(res.data.code == 200) {
+                        this.invoiceData[this.pageIndex].ifSubmit = true
+                        this.$alert('请根据申请的发票抬头付款', '提示', {
+                            confirmButtonText: '确定',
+                        });
+                    }
+                    else {
+                        this.$message.error(res.data.message)
+                    }
                 })
-                this.invoiceData[this.pageIndex].ifSubmit = true
-                this.$alert('请根据申请的发票抬头付款', '提示', {
-                    confirmButtonText: '确定',
-                });
+               
             },
             //邮箱验证
             testEmail() {
