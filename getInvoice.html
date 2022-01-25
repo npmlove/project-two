@@ -713,6 +713,7 @@
                         this.billDetail = res.data.data
                         this.setCurrencyDisable()
                         this.billDetail.forEach((item,index)=>{
+                            if(item.apply) {
                             item.apply.forEach((item2,index2)=>{
                                 if(item2){
                                     if(item2.status == 0) {
@@ -747,6 +748,7 @@
                                     this.invoiceData[index].form[index2] = item2 
                                 }
                             })
+                            }
                         })
                         console.log(this.billDetail)
                     } else {
@@ -794,12 +796,12 @@
                     }
                 }
                 
-                // if(totalMoney != invoiceTotal) {
-                //     this.$alert('开票金额与账单不符，开票提交失败', '提示', {
-                //         confirmButtonText: '确定',
-                //      });
-                //     return 
-                // }
+                if(totalMoney != invoiceTotal) {
+                    this.$alert('开票金额与账单不符，开票提交失败', '提示', {
+                        confirmButtonText: '确定',
+                     });
+                    return 
+                }
                 
                 let resCopy = JSON.parse(JSON.stringify(this.invoiceData[this.pageIndex].form)) 
                  resCopy.map((item,index)=>{
@@ -810,7 +812,7 @@
                     item.companyTel = item.companyTel.split("-")[1]
                     item.departureDate = this.billDetail[this.pageIndex].checkInfo.departureDate
                     item.expressInfoId = this.postInfo.filter(item2=>item2.recipient == item.postInfo)[0].id
-                    item.id = this.billDetail[this.pageIndex].apply[0].id
+                    item.id = this.billDetail[this.pageIndex].apply && this.billDetail[this.pageIndex].apply[0].id
                     item.invoiceInfoId = this.invoiceTitle.filter(item2=>item2.invoiceTitle == item.invoiceTitle)[0].id
                     item.recipient = this.postInfo.filter(item2=>item2.recipient == item.postInfo)[0].recipient
                     item.recipientAddress = this.postInfo.filter(item2=>item2.recipient == item.postInfo)[0].recipientAddress
