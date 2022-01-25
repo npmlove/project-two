@@ -474,6 +474,8 @@
 			data: {
 				imgUrl: '',
 				isMoreCity: false,
+				userInfo: '',
+				headerMenu: false,
 				//菜单
 				menuArr: [{
 						name: '首页'
@@ -965,9 +967,41 @@
 						this.isShowYundan = true;
 						return false
 					}
-					this.isShowYundan = false
-					window.location.href = './trackSearch.html?trackSearchInput='+this.trackSearchInput
 				},
+          valueChange(){
+              this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
+              this.isShowYundan = false
+              if(this.trackSearchInput.match(/-/g) && this.trackSearchInput.match(/-/g).length > 1 ){
+                  let sr = this.trackSearchInput.split("");
+                  sr.splice(this.trackSearchInput.lastIndexOf('-'),1)
+                  this.trackSearchInput=sr.join("");
+              }
+              if(isNaN(this.trackSearchInput) && this.trackSearchInput.indexOf('-')!=3){
+                  this.trackSearchInput = this.trackSearchInput.replace('-',"")
+              }
+              if(!isNaN(this.trackSearchInput) && this.trackSearchInput.length > 11){
+                  this.trackSearchInput = this.trackSearchInput.slice(0,11)
+              }
+              if(isNaN(this.trackSearchInput) && this.trackSearchInput.length > 12){
+                  this.trackSearchInput = this.trackSearchInput.slice(0,12)
+              }
+
+          },
+          trackSearch() {
+              if(!this.trackSearchInput){
+                  this.isShowYundan = true;
+                  return false
+              }
+              let reg1 = /^[0-9]{3}-{1}[0-9]{8}$/;
+              let reg2 = /^[0-9]{11}$/;
+              // console.log(reg2.test(this.trackSearchInput),reg1.test(this.trackSearchInput))
+              if(!reg2.test(this.trackSearchInput) && !reg1.test(this.trackSearchInput)){
+                  this.isShowYundan = true;
+                  return false
+              }
+              this.isShowYundan = false
+              window.location.href = './trackSearch.html?trackSearchInput='+this.trackSearchInput
+          },
 				freightQueryClick(type) {
 					if(type == '1'){
 						var boxText = /^[\u4e00-\u9fa5]+$/

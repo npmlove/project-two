@@ -69,7 +69,7 @@
     <ul class="header-menu-list com-width">
       <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
       <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-      <!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li> -->
+      <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
       <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
     </ul>
   </div>
@@ -225,7 +225,7 @@
                 this.markesData = [];
                 let placeName = "";
                 if (type == 1) {
-                    placeName = encodeURI(this.keywords)
+                    placeName = encodeURIComponent(this.keywords)
                 } else {
                     placeName = data
                     this.keywords = data
@@ -273,7 +273,7 @@
                 }
                 axios({
                     method: 'get',
-                    url: webIp + serviceApi.placeSuggest + `?keywords=${this.keywords}`,
+                    url: webIp + serviceApi.placeSuggest + `?keywords=${encodeURIComponent(this.keywords)}`,
                     data: {}
                 }).then((res) => {
                     if (res.data.code == 200) {

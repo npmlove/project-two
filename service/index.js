@@ -4,18 +4,12 @@ var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境
 
 
 //开发环境
-// var webIp = 'http://10.8.0.14:6679'
 var webIp = 'http://10.8.0.1'
 var publicWeb = '/back/dcPortal/faw'
 
 //测试环境或生成环境
 // var webIp = ''
-// var publicWeb = '/back/dcPortalTest/faw'
-
-// //测试环境或生成环境
-// var webIp = ''
 // var publicWeb = '/back/dcPortal/faw'
-
 
 //接口
 const serviceApi = {
@@ -99,6 +93,10 @@ const serviceApi = {
 	fastOrder:publicWeb+'/t-order/fastOrder',
 
 	orderBIllList: publicWeb + '/t-rcv-records/searchByPage',
+	// 确认费用账单列表
+	consureBillList: publicWeb + '/t-bill/list',
+	// 记录查看
+	applyDetail: publicWeb +'/t-bill/applyDetail',
 
 	//帐单确认
 	billDetail: publicWeb+'/t-bill/billDetail'
