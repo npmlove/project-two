@@ -183,11 +183,11 @@
 						<div v-if="!typeImg" class="login-content input-content" style="margin: 40px 37px 0;">
 							<div class="input-item">
 								<div class="input-icon1"></div>
-								<input  v-model="tel" maxlength="11" @focus="isError = false" placeholder="账号" class="pub input-inner" type="text" />
+								<input  v-model="tel" maxlength="11" @focus="isError = false" placeholder="请输入手机号" class="pub input-inner" type="text" />
 							</div>
 							<div class="input-item com-top30">
 								<div class="input-icon2"></div>
-								<input v-model="password" @focus="isError = false" @keyup.enter="submitClick" placeholder="密码" class="pub input-inner" type="password" />
+								<input v-model="password" @focus="isError = false" @keyup.enter="submitClick" placeholder="请输入密码" class="pub input-inner" type="password" />
 							</div>
 							<div class="input-tips" :style="{visibility: !isError ? 'hidden' : 'visible'}">{{errorText}}</div>
 							<div class="input-text"><a href="./register_pass.html">忘记密码</a></div>

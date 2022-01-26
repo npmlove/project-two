@@ -392,10 +392,10 @@
                   <div v-if="detailsArr.cargoType == '3'" class="details-table-tabs"><span>类型：</span>危险品</div>
                   <div v-if="detailsArr.cargoType == '4'" class="details-table-tabs"><span>类型：</span>防疫物资</div>
                   <div class="details-table-tabs"><span>件数：</span>{{detailsArr.bookingPiece}}PCS</div>
-                  <div class="details-table-tabs"><span>体积：</span>{{detailsArr.bookingCbm}}CBM</div>
+                  <div class="details-table-tabs"><span>重量：</span>{{detailsArr.bookingWeight}}KG</div>
                 </div>
                 <div class="details-table-details" style="display: flex;">
-                  <div class="details-table-tabs"><span>重量：</span>{{detailsArr.bookingWeight}}KG</div>
+                  <div class="details-table-tabs"><span>体积：</span>{{detailsArr.bookingCbm}}CBM</div>
                   <div class="details-table-tabs"><span>比重：</span>1:{{detailsArr.bookingVwr}}</div>
                   <div class="details-table-tabs"><span>计费重：</span>{{detailsArr.bookingCw}}KG</div>
                 </div>
@@ -405,9 +405,9 @@
                 <div class="details-table-details" style="display: flex;">
                   <div class="details-table-tabs"><span style="flex: 0 0 42px;">件数：</span>{{detailsArr.inboundPiece}}PCS
                   </div>
-                  <div class="details-table-tabs"><span style="flex: 0 0 42px;">体积：</span>{{detailsArr.inboundCbm}}CBM
-                  </div>
                   <div class="details-table-tabs"><span style="flex: 0 0 42px;">重量：</span>{{detailsArr.inboundWeight}}KGS
+                  </div>
+                  <div class="details-table-tabs"><span style="flex: 0 0 42px;">体积：</span>{{detailsArr.inboundCbm}}CBM
                   </div>
                 </div>
                 <div class="details-table-details" style="display: flex;">
@@ -444,8 +444,8 @@
                     <thead>
                       <tr>
                         <th>件数PCS</th>
-                        <th>体积CBM</th>
                         <th>重量KGS</th>
+                        <th>体积CBM</th>
                         <th>长CM</th>
                         <th>宽CM</th>
                         <th>高CM</th>
@@ -457,8 +457,8 @@
                     <tbody>
                       <tr v-for="(item,index) in orderCargoDetailList">
                         <td>{{item.piece}}</td>
-                        <td>{{item.cbm}}</td>
                         <td>{{item.weight}}</td>
+                        <td>{{item.cbm}}</td>
                         <td>{{item.length}}</td>
                         <td>{{item.width}}</td>
                         <td>{{item.height}}</td>
