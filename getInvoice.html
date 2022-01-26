@@ -826,7 +826,7 @@
                  resCopy.map((item,index)=>{
                     item.accountBank = item.openBank.split("-")[0]
                     item.bankAccount = item.openBank.split("-")[1]
-                    item.billId = this.billIds[index]
+                    item.billId = this.billIds[this.pageIndex]
                     item.companyAddress = item.companyTel.split("-")[0]
                     item.companyTel = item.companyTel.split("-")[1]
                     item.departureDate = this.billDetail[this.pageIndex].checkInfo.departureDate
