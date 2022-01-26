@@ -36,7 +36,7 @@
         }
       .paydetails{
           margin-top: 20px;
-          height: 200px;
+          /* height: 200px; */
       }
       .getdetails{
           margin-top: 20px;
@@ -289,7 +289,7 @@
                     <span v-for="(item,index) in billDetail[pageIndex]?.summationInfos" :key="index">
                         {{moneyChina[item.currency-1]}}:{{item.totalOrgn}}{{moneyCode[item.currency-1]}}
                     </span>
-                    <span style="color:red;font-weight:bolder;margin-left:15px">合计人民币总费用 :{{billDetail[pageIndex]?.summationInfos.reduce((a,b)=>{ return a+b.totalCny},0)}}CNY</span> ;
+                    <span style="color:red;font-weight:bolder;margin-left:15px">合计人民币总费用 :{{billDetail[pageIndex]?.summationInfos[0].totalCny}}CNY</span> ;
                 </div>
             </div>
 
@@ -342,7 +342,7 @@
                                   </el-select>
                             </el-form-item>
                             <el-form-item label="开票金额   ￥" label-width="110px" style="margin-top: 20px;flex:0 0 50%;position: relative;">
-                                <el-input v-model="invoiceData[pageIndex].form[index].applyAmount" style="width: 280px;" :disable="invoiceData[pageIndex].form[index].disableInvoAmount"></el-input> 
+                                <el-input v-model="invoiceData[pageIndex].form[index].applyAmount" style="width: 280px;" :disabled="invoiceData[pageIndex].form[index].disableInvoAmount"></el-input> 
                                 <span style="position: absolute;color:#797979;font-size: 10px;margin-left: 15px;" v-if="invoiceData[pageIndex].form[index].applyCurrency != '1'">{{`该票只能${moneyMess[invoiceData[pageIndex].form[index].applyCurrency.slice(-1)-2]}付款`}}</span>
                             </el-form-item>
                             <el-form-item label="开票抬头" label-width="110px" style="margin-top: 20px;flex:0 0 50%;">
@@ -639,8 +639,11 @@
             changeCurrency(val,index){
                 //切换到美金直接把美金所有金额转成人民币赋值到对应开票金额处
                 if(val == 3) {
-                    this.invoiceData[this.pageIndex].form[index].applyAmount = this.billDetail[this.pageIndex].summationInfos.filter(item=>item.currency == val)[0].totalOrgn
+                    this.invoiceData[this.pageIndex].form[index].applyAmount = this.billDetail[this.pageIndex].summationInfos.filter(item=>item.currency == val)[0].totalCny
                     this.invoiceData[this.pageIndex].form[index].disableInvoAmount = true
+                } else {
+                    this.invoiceData[this.pageIndex].form[index].applyAmount = ""
+                    this.invoiceData[this.pageIndex].form[index].disableInvoAmount = false
                 }
             },
             //改变页数
@@ -839,6 +842,11 @@
                     item.recipientEmail = this.postInfo.filter(item2=>item2.recipient == item.postInfo)[0].recipientEmail
                     item.recipientTel = this.postInfo.filter(item2=>item2.recipient == item.postInfo)[0].recipientTel	
                     item.merge =this.invoiceData[this.pageIndex].merge
+                    if(item.applyCurrency == 1) {
+                        item.applyAmountOrgn = item.applyAmount
+                    } else {
+                        item.applyAmountOrgn = this.billDetail[this.pageIndex].summationInfos.filter(item=>item.currency ==3)[0].totalOrgn
+                    }
                 })
                 resCopy.forEach(item=>{
                     delete item.applicant
@@ -865,7 +873,6 @@
                         this.$message.error(res.data.message)
                     }
                 })
-               
             },
             //邮箱验证
             testEmail() {
