@@ -805,9 +805,7 @@
             },
             //提交开票按钮
             subMitInvoice() {
-                let totalMoney = this.billDetail[this.pageIndex].summationInfos.reduce((a,b)=>{ 
-                    return a+b.totalCny
-                },0)
+                let totalMoney = this.billDetail[this.pageIndex].summationInfos[0].totalCny
                 let invoiceTotal =0
                 this.invoiceData[this.pageIndex].form.forEach(item=>{
                     invoiceTotal += Number(item.applyAmount)
@@ -819,7 +817,6 @@
                         return this.$message.warning("请填写全部的发票信息后,进行开票操作")
                     }
                 }
-                console.log(totalMoney,invoiceTotal)
                 if(totalMoney != invoiceTotal) {
                     this.$alert('开票金额与账单不符，开票提交失败', '提示', {
                         confirmButtonText: '确定',
