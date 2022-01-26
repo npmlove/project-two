@@ -2347,53 +2347,76 @@
 }
 
 .booking .booking-proportion-ul .booking-proportion-item>div:nth-of-type(1) {
-	flex: 0 0 100px;
+	flex: 0 0 60px;
 	text-align: center;
 	margin-bottom: 20px;
 }
 
 .booking .booking-proportion-ul .booking-proportion-item>div:nth-of-type(2) {
-	flex: 0 0 90px;
+	flex: 0 0 80px;
 	text-align: center;
 	margin-bottom: 20px;
 }
 
 .booking .booking-proportion-ul .booking-proportion-item>div:nth-of-type(3) {
-	flex: 0 0 90px;
+	flex: 0 0 80px;
 	text-align: center;
 	margin-bottom: 20px;
 }
 
 .booking .booking-proportion-ul .booking-proportion-item>div:nth-of-type(4) {
-	flex: 0 0 90px;
+	flex: 0 0 60px;
 	text-align: center;
 	margin-bottom: 20px;
 }
 
 .booking .booking-proportion-ul .booking-proportion-item>div:nth-of-type(5) {
-	flex: 0 0 90px;
+	flex: 0 0 60px;
 	text-align: center;
 	margin-bottom: 20px;
 }
 
 .booking .booking-proportion-ul .booking-proportion-item>div:nth-of-type(6) {
-	flex: 0 0 90px;
+	flex: 0 0 60px;
 	text-align: center;
 	margin-bottom: 20px;
 }
 
 .booking .booking-proportion-ul .booking-proportion-item>div:nth-of-type(7) {
-	flex: 0 0 90px;
+	flex: 0 0 80px;
 	text-align: center;
 	margin-bottom: 20px;
 }
 
 .booking .booking-proportion-ul .booking-proportion-item>div:nth-of-type(8) {
-	flex: 0 0 90px;
+	flex: 0 0 80px;
 	text-align: center;
 	margin-bottom: 20px;
 }
-
+.booking .booking-proportion-ul .booking-proportion-item>div:nth-of-type(9) {
+	flex: 0 0 100px;
+	text-align: center;
+	margin-bottom: 20px;
+}
+.booking .booking-proportion-table {
+	border: 1px solid #000;
+	width: 100%;
+}
+.booking .booking-proportion-table thead {
+	background: #e7ecef;
+}
+.booking .booking-proportion-table th,
+.booking .booking-proportion-table td {
+	padding: 10px 0;
+	border: 1px solid #000;
+	font-size: 14px;
+	color: #333;
+	font-weight: normal;
+	text-align: center;
+}
+.booking .booking-proportion-table th {
+	color: #999;
+}
 .calendar-lowprice-cla {
 	width: 1200px;
 	min-width: 1200px;
@@ -2955,6 +2978,14 @@
 .details-table-list .details-table-tab .details-table-details .details-table-tabs span{
 	color: #999999;
 }
+.image-preview-message-box {
+	width: auto;
+}
+.ellipsis {
+	overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 
 .table-list-title-arr{
@@ -3343,4 +3374,20 @@
 .pubH{
 	background-color: #F8FBFD;
 	min-height: calc(100vh - 140px)
+}
+.register-system-info {
+	font-size: 12px;
+	color: #fff;
+}
+.register-system-info:hover {
+	color: #2273CB;
+}
+.header-user-center-btn {
+	margin-left: 10px;
+}
+.header-user-center-btn a {
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+	color: #333;
 }

@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="./css/common.css"/>
   <script src="./js/vue.js"></script>
   <script src="./js/axios.min.js"></script>
+  <script src="./js/dayjs.min.js"></script>
   <script src="./js/element-ui.js"></script>
   <style>
       .orderOptionsList {
@@ -177,10 +178,11 @@
       </div>
       <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
         <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+        <div class="header-user-center-btn" @mousemove.stop><a href="./orderList.html">个人中心</a></div>
         <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
           <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
           <div class="header-bak"><a @click="goQuick">一键订舱</a></div>
-          <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+          <div class="header-bak"><a href="./corporate.html">企业信息</a></div>
           <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
           <div class="header-bak"><a href="./financial.html">财务管理</a></div>
           <div @click="tuiChu" class="header-bak">退出</div>
@@ -368,6 +370,7 @@
                 <div class="list-arr-route-jiaqian">单价：{{detailsArr.bookingPrice}}元/kg</div>
               </div>
             </div>
+            <!-- 货物信息 -->
             <div class="details-table-list">
               <div class="details-table-title">货物信息</div>
               <div class="pdfBox" v-if="orderAttachmentList.length>0">
@@ -423,45 +426,85 @@
                   <div v-if="detailsArr.bubblePoint == '8'" class="details-table-tabs"><span>分泡比例：</span>8/2</div>
                   <div v-if="detailsArr.bubblePoint == '9'" class="details-table-tabs"><span>分泡比例：</span>9/1</div>
                 </div>
-                <div v-if="orderCargoDetailList.length > 0" class="booking" style="margin-top: 20px;">
-                  <ul class="booking-proportion-ul" style="font-size: 14px;">
-                    <li class="booking-proportion-item">
-                      <div>件数PCS</div>
-                      <div>体积CBM</div>
-                      <div>重量KGS</div>
-                      <div>货物尺寸CM</div>
-                      <div>包装方式</div>
-                      <div>外箱情况</div>
-                    </li>
-                    <li v-for="(item,index) in orderCargoDetailList" class="booking-proportion-item">
-                      <div>{{item.piece}}</div>
-                      <div>{{item.cbm}}</div>
-                      <div>{{item.weight}}</div>
-                      <div>{{item.cargoSize}}</div>
-                      <div v-if="item.packing == '1'">纸箱</div>
-                      <div v-if="item.packing == '2'">夹板箱</div>
-                      <div v-if="item.packing == '3'">托盘</div>
-                      <div v-if="item.outerBox == '1'">正常</div>
-                      <div v-if="item.outerBox == '2'">异常</div>
-                    </li>
-                  </ul>
-                </div>
                 <div v-if="orderAttachmentList.length > 0" class="details-table-details" style="display: flex;">
-                  <div class="details-table-tabs">
+                  <div class="details-table-tabs" style="align-items: flex-start;">
                     <span style="flex: 0 0 80px;">进仓图片：</span>
                     <div style="width: 660px;display: flex;flex-wrap: wrap;">
-                      <template v-for="(item,index) in orderAttachmentList">
+                      <template v-for="(item,index) in totalImages">
                         <div :key="index" v-if="item.attachmentType==1"
                              style="margin-right: 10px;margin-bottom: 10px;font-size: 0;position: relative;">
-                          <img :src="item.xpath" style="width: 150px;height: 150px;"/>
+                          <img :src="item.xpath" style="width: 80px; height: 80px; cursor: zoom-in;" @click="previewImage({ url: item.xpath })" />
                         </div>
                       </template>
-
                     </div>
+                  </div>
+                </div>
+                <div v-if="orderCargoDetailList.length > 0" class="booking" style="margin-top: 20px;">
+                  <table class="booking-proportion-table">
+                    <thead>
+                      <tr>
+                        <th>件数PCS</th>
+                        <th>体积CBM</th>
+                        <th>重量KGS</th>
+                        <th>长CM</th>
+                        <th>宽CM</th>
+                        <th>高CM</th>
+                        <th>包装方式</th>
+                        <th>外箱情况</th>
+                        <th style="width: 120px">进仓图片</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(item,index) in orderCargoDetailList">
+                        <td>{{item.piece}}</td>
+                        <td>{{item.cbm}}</td>
+                        <td>{{item.weight}}</td>
+                        <td>{{item.length}}</td>
+                        <td>{{item.width}}</td>
+                        <td>{{item.height}}</td>
+                        <td v-if="item.packing == '1'">纸箱</td>
+                        <td v-if="item.packing == '2'">夹板箱</td>
+                        <td v-if="item.packing == '3'">托盘</td>
+                        <td v-if="item.outerBox == '1'">正常</td>
+                        <td v-if="item.outerBox == '2'">异常</td>
+                        <td>
+                          <div style="display: flex; align-items: center; flex-wrap: wrap;">
+                            <img src="" v-for="item in item.orderAttachments" style="margin: 2px; width: 36px; height: 36px; cursor: zoom-in;" @click="previewImage(item)">
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- 进仓指引 -->
+            <div class="details-table-list" v-if="detailsArr.inboundNo">
+              <div class="details-table-title">进仓指引</div>
+              <div class="details-table-tab">
+                <div class="details-table-details" style="display: flex;">
+                  <div class="details-table-tabs"><span>进仓编号：</span>{{ detailsArr.inboundNo }}</div>
+                  <div class="details-table-tabs"><span>预计进仓时间：</span>{{ dayjs(detailsArr.expectedInboundTime).format('YYYY-MM-DD HH:mm') }}</div>
+                  <div class="details-table-tabs"><span>最晚进仓时间：</span>{{ detailsArr.latestInboundDate }}</div>
+                </div>
+                <div class="details-table-details" style="display: flex;">
+                  <div class="details-table-tabs"><span>仓库名称：</span>{{ detailsArr.warehouseName || '暂无' }}</div>
+                </div>
+                <div class="details-table-details" style="display: flex;">
+                  <div class="details-table-tabs"><span>仓库地址：</span>{{ detailsArr.warehouseAddress || '暂无' }}</div>
+                </div>
+                <div class="details-table-details" style="display: flex;">
+                  <div class="details-table-tabs"><span>仓库电话：</span>{{ detailsArr.warehouseTel || '暂无' }}</div>
+                </div>
+                <div class="details-table-details" style="display: flex;" v-if="mapData.xpath">
+                  <div class="details-table-tabs">
+                    <img src="./img/entry-guide_map-download.png" style="width: 40px; cursor: zoom-in;" @click="previewDocx({ xpath: mapData.xpath })">
+                    <span style="margin-left: 20px; cursor: pointer;" @click="downloadFile({ url: mapData.xpath, name: mapData.attachmentName, type: mapData.fileType })">{{ mapData.attachmentName }}</span>
                   </div>
                 </div>
               </div>
             </div>
+            <!-- 服务产品 -->
             <div v-if="(detailsArr.cclType != '1') || detailsArr.isPickUp == '2'" class="details-table-list">
               <div class="details-table-title">服务产品</div>
               <div v-if="detailsArr.isPickUp == '2'" class="details-table-tab">
@@ -574,14 +617,6 @@
       <el-button class="btnPub" @click="nextStep">下一张账单（{{(billInfosIndex + 1)}}/{{billInfos.length}}）</el-button>
     </div>
   </el-dialog>
-  <el-dialog
-    title=""
-    :visible.sync="centerDialogVisible"
-    width="80%"
-    top="0vh"
-    center>
-    <embed style="width: 100%;height: 90vh" :src="filePath"/>
-  </el-dialog>
 
   <!-- 尾部 -->
   <div class="footer">
@@ -589,9 +624,7 @@
       <div class="footer-content">
         <div class="footer-label">
           <div class="footer-cool" style="margin-bottom: 10px;">
-            <span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank"
-                                                                               href="./yingyezhizhaoImg.html"
-                                                                               class="yingyezhizhao">营业执照</a></span>
+            <span>Copyright © 2020-2021 17dc.com  丨  <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px; vertical-align: top;" /><a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011802004581" class="register-system-info">沪公网安备 31011802004581号</a>  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
           </div>
           <!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
             <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
@@ -634,11 +667,12 @@
             tbcBillVO: {},
             dialogFormVisible: false,
             act: -1,
-            centerDialogVisible: false,
             filePath: '',
             fileName: '',
             countdown: "",
-            countdownsetInterval: null
+            countdownsetInterval: null,
+            mapData: {},
+            totalImages: [],
         },
         created() {
             if (!localStorage.getItem('wxOpenId')) {
@@ -651,6 +685,7 @@
             this.orderSearchDetail()
         },
         methods: {
+          dayjs,
             showtime(time) {
                 let nowtime = new Date(),  //获取当前时间
                     endtime = new Date(new Date(time) * 1 + 24 * 60 * 60 * 1000);  //定义结束时间
@@ -704,11 +739,6 @@
                 }).catch((err) => {
                     console.log("err", err)
                 });
-            },
-            preview(item) {
-                this.centerDialogVisible = true;
-                this.filePath = item.xpath
-                this.fileName = item.attachmentName
             },
             importPdf() {
                 var data = {
@@ -957,6 +987,7 @@
                         if (data.data.orderOptionsList) {
                             this.orderOptionsList = data.data.orderOptionsList
                         }
+                        this.totalImages = this.detailsArr.orderAttachmentList.filter(item => item.attachmentType === 1),
                         this.guonerArr = []
                         this.guowaiArr = []
                         for (var i = 0; i < this.detailsArr.orderPriceList.length; i++) {
@@ -975,6 +1006,9 @@
                         }
                         this.orderCargoDetailList = this.detailsArr.orderCargoDetailList
                         this.orderAttachmentList = this.detailsArr.orderAttachmentList
+                        this.mapData = this.orderAttachmentList.find((item) => {
+                          return item.attachmentType === 5;
+                        }) || {};
                         this.activityFlowVOList = this.detailsArr.activityFlowVOList
                         if (this.detailsArr.tbcBillVO == null) {
                             this.isTbcBillVO = false
@@ -1015,7 +1049,64 @@
                 }else if(index == 3){
                     window.location.href = './about_us.html'
                 }
-            }
+            },
+            // MessageBox预览image
+            previewImage({ url, title = "预览" }) {
+              ELEMENT.MessageBox({
+                dangerouslyUseHTMLString: true,
+                title,
+                message: `<img src="${url}" style="min-width: 100%; max-width: 80vw; max-height: 60vh" />`,
+                center: true,
+                showConfirmButton: false,
+                customClass: "image-preview-message-box",
+              })
+                .then(() => {})
+                .catch(() => {});
+            },
+            // MessageBox预览docx
+            previewDocx({ xpath, title = "预览"}) {
+              const url = this.getDocxViewUrl(xpath)
+              ELEMENT.MessageBox({
+                dangerouslyUseHTMLString: true,
+                title,
+                message: `<iframe src="${url}" style="width: 60vw; height: 80vh"></iframe>`,
+                center: true,
+                showConfirmButton: false,
+                customClass: "image-preview-message-box",
+              })
+                .then(() => { })
+                .catch(() => { });
+            },
+            // 下载文件
+            downloadFile({ url, name = '未命名', type }) {
+              var tagA = document.createElement("a");
+              name = `${name}${type ? `.${type}` : ''}`
+              tagA.href = url;
+              tagA.setAttribute("download", name); // 设置下载文件名称
+              document.body.appendChild(tagA);
+              tagA.click();
+              document.body.removeChild(tagA)
+            },
+            // 获取docx预览地址，区分线上本地测试开发环境
+            getDocxViewUrl(xpath) {
+              var url = this.getDocxUrl(xpath)
+              console.log(url)
+              var docViewer = `https://view.officeapps.live.com/op/embed.aspx?src=` // 微软预览
+              return `${docViewer}${url}`
+            },
+            // 获取docx实际地址
+            getDocxUrl(xpath) {
+              // 处理域名前缀问题
+              var host = getHost()
+              function getHost() {
+                if (window.location.host === '' || window.location.host.includes(`10.8.0.1`)) {
+                  return `https://17dc.shenghuoq.com`
+                } else {
+                  return window.location.origin
+                }
+              }
+              return `${host}${xpath}`
+            },
         }
     })
 </script>

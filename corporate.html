@@ -48,10 +48,11 @@
     </div>
     <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
       <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+      <div class="header-user-center-btn" @mousemove.stop><a href="./orderList.html">个人中心</a></div>
       <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
         <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
         <div class="header-bak"><a @click="goQuick">一键订舱</a></div>
-        <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+        <div class="header-bak"><a href="./corporate.html">企业信息</a></div>
         <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
         <div class="header-bak"><a href="./financial.html">财务管理</a></div>
         <div @click="tuiChu" class="header-bak">退出</div>
@@ -102,7 +103,7 @@
         </div>
       </div>
       <div class="order-list-manage">
-        <div class="order-list-manage-title">企业认证</div>
+        <div class="order-list-manage-title">企业信息</div>
         <div class="tabs__nav-wrap">
           <el-tabs v-model="typeCode" type="border-card" @tab-click="tabClickData">
 <!--            <el-tab-pane label="企业信息" name="企业信息">-->
@@ -234,9 +235,7 @@
       <div class="footer-content">
         <div class="footer-label">
           <div class="footer-cool" style="margin-bottom: 10px;">
-            <span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank"
-                                                                               href="./yingyezhizhaoImg.html"
-                                                                               class="yingyezhizhao">营业执照</a></span>
+            <span>Copyright © 2020-2021 17dc.com  丨  <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px; vertical-align: top;" /><a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011802004581" class="register-system-info">沪公网安备 31011802004581号</a>  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
           </div>
           <!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
             <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
