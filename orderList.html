@@ -207,14 +207,14 @@
 														</div>
 													</div>
 													<div v-if="item.bookingPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
-														<label v-if="item.showDif">订舱数据</label>
+														<label v-if="item.status == 17">订舱数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
 														<label>{{item.bookingWeight}}KG</label>
 														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
-													<div v-if="item.showDif && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;" :style="{color: item.inboundPiece == item.bookingPiece ? '#333' : '#F00'}">
+													<div v-if="item.status == 17 && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px; color: #F00;">
 														<label>进仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.inboundPiece}}PCS</label>
@@ -424,14 +424,14 @@
 														</div>
 													</div>
 													<div v-if="item.bookingPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;">
-														<label v-if="item.showDif">订舱数据</label>
+														<label v-if="item.status == 17">订舱数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.bookingPiece}}PCS</label>
 														<label>{{item.bookingCbm}}CMB</label>
 														<label>{{item.bookingWeight}}KG</label>
 														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
-													<div v-if="item.showDif && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;" :style="{color: item.inboundPiece == item.bookingPiece ? '#333' : '#F00'}">
+													<div v-if="item.status == 17 && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px; color: #F00;">
 														<label>进仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.inboundPiece}}PCS</label>
