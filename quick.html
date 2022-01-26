@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="./css/quick.css"/>
   <script src="./js/vue.js"></script>
   <script src="./js/axios.min.js"></script>
+  <script src="./js/dayjs.min.js"></script>
   <script src="./js/element-ui.js"></script>
   <script>
       var _hmt = _hmt || [];
@@ -169,7 +170,7 @@
                       type="date"
                       value-format="yyyy-MM-dd "
                       placeholder="请选择日期"
-                      :picker-options="pickerOptions">
+                      :picker-options="departureDatePickerOptions">
                     </el-date-picker>
                   </div>
                 </div>
@@ -386,7 +387,7 @@
                       value-format="yyyy-MM-dd HH:mm:ss"
                       format="yyyy-MM-dd HH:mm"
                       placeholder="请选择日期"
-                      :picker-options="pickerOptions">
+                      :picker-options="expectedInboundTimePickerOptions">
                     </el-date-picker>
                   </div>
                 </div>
@@ -682,11 +683,6 @@
         el: '#app',
         data() {
             return {
-                pickerOptions: {
-                  disabledDate(time) {
-                    return time.getTime() < Date.now()- 86400000;
-                  }
-                },
                 qiShowState: false,
                 muShowState: false,
                 lineShowState: false,
@@ -804,6 +800,25 @@
 
         },
         computed: {
+            departureDatePickerOptions() {
+                return {
+                  disabledDate(time) {
+                    return time.getTime() < Date.now()- 86400000;
+                  }
+              }
+            },
+            expectedInboundTimePickerOptions() {
+              const departureDate = this.departureDate
+                return {                  
+                  disabledDate(time) {
+                    if (!departureDate) {
+                      return time.getTime() < Date.now()- 86400000;
+                    } else {
+                      return (time.getTime() < Date.now()- 86400000) || (time.getTime() > dayjs(departureDate).valueOf());
+                    }
+                  }
+              }
+            },
             changeData() {
                 const {
                     pol,//始发站
@@ -902,7 +917,7 @@
             },
             changeData: {
                 handler(newV, oldVal) {
-                    this.bookingVwr = Math.ceil( newV.bookingWeight / newV.bookingCbm )
+                    this.bookingVwr = newV.bookingCbm ? Math.ceil( newV.bookingWeight / newV.bookingCbm ) : ''
                     for (let key in newV) {
                         if (newV[key] == "") {
                             this.btnShow = false
@@ -1230,6 +1245,10 @@
 									this.$message.error('航班日期')
                   return
 								}
+                if ( dayjs(this.expectedInboundTime).valueOf() > dayjs(this.departureDate).valueOf() ) {
+                  this.$message.error('请选择早于航班日期的预计进仓时间')
+                  return
+                }
                 let {
                     customsType,
                     isPickUp,
