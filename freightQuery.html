@@ -47,10 +47,11 @@
     </div>
     <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
       <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+      <div class="header-user-center-btn" @mousemove.stop><a href="./orderList.html">个人中心</a></div>
       <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
         <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
         <div class="header-bak"><a @click="goQuick">一键订舱</a></div>
-        <div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+        <div class="header-bak"><a href="./corporate.html">企业信息</a></div>
         <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
         <div class="header-bak"><a href="./financial.html">财务管理</a></div>
         <div @click="tuiChu" class="header-bak">退出</div>

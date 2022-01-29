@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <meta name="applicable-device" content="pc,mobile">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="renderer" content="webkit">
+  <meta name="description" content="领先的国际货运智能化数字服务平台，拥有极速订舱、在线报关、航班跟踪、舱单生成四大功能，为国际货运企业提供灵活、专业、高效的一站式国际货运解决方案。">
+  <meta name="keywords" content="空运,货运代理,航空货运,空运价格,国际货代,国际空运,订舱,空运货物查询跟踪,订舱报价,空运舱位,空运费查询,跨境物流,走空运找哪里">
+  <link rel='icon' href='./img/favicon.ico' type='image/x-icon'/>
+  <title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
+  <link rel="stylesheet" href="./css/element-ui-min.css">
+  <link rel="stylesheet" href="./css/reset.css"/>
+  <link rel="stylesheet" href="./css/common.css"/>
+  <script src="./js/vue.js"></script>
+  <script src="./js/axios.min.js"></script>
+  <script src="./js/element-ui.js"></script>
+  <style>
+     
+      .content{
+       width: 100%;
+       height: 500px;  
+ background-color: rgba(238, 241, 246, 1);
+      }
+      .uesedetails{
+          margin-top:20px;
+          height: 100px;
+          background-color:rgba(242, 242, 242, 1);;
+          margin-left: 15px;
+        }
+      .paydetails{
+          margin-top: 20px;
+          /* height: 200px; */
+      }
+      .getdetails{
+          margin-top: 20px;
+      }
+      .pageFoot {
+          margin-top: 50px;
+          display: flex;
+          justify-content: space-between;
+      }
+      .invoiceTitle {
+          font-size: 23px;
+          font-weight: 700;
+      }
+      .orderOptionsList {
+          border-bottom: 1px dashed #EFEFEF;
+      }
+
+      .orderOptionsList:last-child {
+          border-bottom: 0;
+      }
+
+      .mark {
+          position: absolute;
+          bottom: 25px;
+          left: -65px;
+          background: #FFFFFF;
+          border: 1px solid #FF9914;
+          box-shadow: 0px 6px 10px 0px rgba(255, 153, 20, 0.05);
+          border-radius: 5px;
+          height: auto;
+      }
+
+      .mark > .title {
+          flex: 1;
+          min-width: 222px;
+          height: 34px;
+          line-height: 34px;
+          background: #FF9914;
+          border-radius: 4px 4px 0px 0px;
+          padding-left: 15px;
+          font-size: 14px;
+          font-weight: bold;
+          color: #FFFFFF;
+          text-align: left;
+      }
+
+      .mark > .list {
+          display: flex;
+          padding: 0 15px;
+          height: 25px;
+          align-items: center;
+          justify-content: space-between;
+      }
+
+      .mark > .list > span {
+          font-size: 12px;
+          font-weight: 500;
+          color: #000000;
+          display: block;
+          width: 40px;
+          text-align: right;
+      }
+
+      .mark > .list > span:nth-child(1) {
+          color: #666666;
+      }
+
+      .mark > .line {
+          flex: 1;
+          height: 1px;
+          border-bottom: 1px dashed #eeeeee;
+      }
+
+      .mark:after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          bottom: -9px;
+          transform: translateX(-50%);
+          background-image: url("./img/xiasj.png");
+          width: 13px;
+          height: 9px;
+      }
+
+      .pdfBox {
+          position: absolute;
+          right: 0;
+          top: 60px;
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          overflow: auto;
+      }
+
+      .pdf {
+          width: 65px;
+          height: 100%;
+          margin-bottom: 10px;
+          text-align: center;
+          font-size: 12px;
+          margin-right: 10px;
+          cursor: pointer;
+          color: #333333;
+      }
+
+      .pdf > img {
+          width: 35px;
+          height: 28px;
+          margin-bottom: 10px;
+
+      }
+
+      .yunfei {
+          color: #FF9914;
+          border-bottom: 1px #FF9914 dashed;
+      }
+
+      .length {
+          font-size: 14px;
+          font-weight: 500;
+          color: #FFFFFF;
+          margin-top: 5px;
+      }
+
+      .length > span {
+          opacity: 0.3;
+      }
+
+      .submitTime {
+          border-radius: 20px 20px 20px 20px;
+          border: 1px solid rgba(255, 255, 255, 0.30000001192092896);
+          font-size: 12px;
+          font-weight: 500;
+          color: #FFFFFF;
+          margin-top: 5px;
+          padding: 5px;
+      }
+
+      .btnPub {
+          height: 50px;
+      }
+  </style>
+  <script>
+      var _hmt = _hmt || [];
+      (function () {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?6557743b6903181767d9b1a4d7458530";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+      })();
+  </script>
+  <script src="./js/forbidden.js"></script>
+  <script src="./js/forbibben.js"></script>
+</head>
+<body  > 
+<div id="app">
+  <div class="pubH">
+    <!-- 头部 -->
+    <div class="header">
+      <div class="header-img">
+        <a href="./index.html">
+          <!-- <img class="logo" src="./img/logo.png" /> -->
+          <div class="logo"></div>
+        </a>
+        <div class="logo-title"></div>
+      </div>
+      <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
+        <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+        <div class="header-user-center-btn" @mousemove.stop><a href="./orderList.html">个人中心</a></div>
+        <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
+          <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
+          <div class="header-bak"><a @click="goQuick">一键订舱</a></div>
+          <div class="header-bak"><a href="./corporate.html">企业信息</a></div>
+          <div class="header-bak"><a href="./orderList.html">订单管理</a></div>
+          <div class="header-bak"><a href="./financial.html">财务管理</a></div>
+          <div @click="tuiChu" class="header-bak">退出</div>
+        </div>
+      </div>
+      <div v-else @click="loginClick" class="header-user">登录</div>
+      					<div class="quick " @click="goQuick">
+      						<img src="img/quick.png">
+      						<span >一键订舱</span>
+      					</div>
+    </div>
+    <div class="header-menu">
+      <ul class="header-menu-list com-width">
+        <li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
+        <li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
+        <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
+        <li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
+      </ul>
+    </div>
+    <!-- 订单详情 -->
+    <div class="order-details">
+      <div class="com-width order-details-content">
+        <div class="order-details-title">
+          <a href="./orderList.html">订单管理</a>
+          <img alt="图片" src="./img/arrow_details.png"/>
+          <a :href=`./orderDetails.html?orderId=${orderId}`>订单详情</a>
+          <img alt="图片" src="./img/arrow_details.png"/>
+          <div style="color:silver;margin-right:15px">确认账单</div>
+          <div>订单号:{{detailsArr.orderNo}}</div>
+        </div>
+       <div class="invoicePageBody">
+        <div style="margin: 0 auto;">
+            <div style="font-size: 23px;font-weight:700;padding-top:10px">订舱客户:{{billDetail[this.pageIndex]?.checkInfo.reconciliationUnit}}</div>
+            <div class="uesedetails" style="padding:0 20px">
+                <div style="display:flex;justify-content: space-around;border-bottom:1px solid silver;">
+                    <div style="height: 50px;line-height: 50px;flex:1;text-align: center;">主单号</div>
+                    <div style="height: 50px;line-height: 50px;flex:1;text-align: center;">航班日期</div>
+                    <div style="height: 50px;line-height: 50px;flex:1;text-align: center;">航线</div>
+                    <div style="height: 50px;line-height: 50px;flex:1;text-align: center;">实际数据</div>
+                    <div style="height: 50px;line-height: 50px;flex:1;text-align: center;">计费重</div>
+                </div>
+                <div style="display:flex;justify-content: space-around;">
+                    <div style="height: 50px;line-height: 50px;flex:1;text-align: center;">{{billDetail[this.pageIndex]?.checkInfo.waybillNo}}</div> 
+                    <div style="height: 50px;line-height: 50px;flex:1;text-align: center;">{{billDetail[pageIndex]?.checkInfo.departureDate}}</div>
+                    <div style="height: 50px;line-height: 50px;flex:1;text-align: center;">{{billDetail[pageIndex]?.checkInfo.fullLeg?billDetail[pageIndex]?.checkInfo.fullLeg.split(",").join("-"):""}}</div>
+                    <div style="height: 50px;line-height: 50px;flex:1;text-align: center;">
+                        {{billDetail[pageIndex]?.checkInfo.inboundPiece}}/{{billDetail[pageIndex]?.checkInfo.inboundWeight}}/{{billDetail[pageIndex]?.checkInfo.inboundCbm}}
+                    </div>
+                    <div style="height: 50px;line-height: 50px;flex:1;text-align: center;">{{billDetail[pageIndex]?.checkInfo.inboundCw}}</div>
+                </div>
+
+            </div>
+            <div class="paydetails">
+                <div style="text-align: center;font-size: 23px;font-weight: 700;">费用明细单</div>
+                <div style="margin-top:20px;margin-left:15px;">
+                <el-table class="financial-table" :data="billDetail[pageIndex]?.fees" stripe style="width: 100%">
+                    <el-table-column prop="expenseName" label="费用项目" min-width="140">
+                    </el-table-column>
+                    <el-table-column prop="price" label="单价" min-width="140">
+                    </el-table-column>
+                    <el-table-column prop="quantity" label="数量" min-width="100"></el-table-column>
+                    <el-table-column prop="exchangeRate" label="汇率" min-width="180">
+                    </el-table-column>
+                    <el-table-column prop="totalOrgn" label="总费用" min-width="120">
+                    </el-table-column>
+                    <el-table-column prop="currency" label="币种" min-width="120">
+                        <template slot-scope="scope">
+                            <div>
+                                {{moneyCode[scope.row.currency-1]}}
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="remark" label="备注" min-width="120">
+                    </el-table-column>
+                </el-table>
+                <div style="font-size: 14px;text-align: center;margin-top: 20px;">
+                    <span>合计:</span>
+                    <span v-for="(item,index) in billDetail[pageIndex]?.summationInfos" :key="index">
+                        {{moneyChina[item.currency-1]}}:{{item.totalOrgn}}{{moneyCode[item.currency-1]}}
+                    </span>
+                    <span style="color:red;font-weight:bolder;margin-left:15px">合计人民币总费用 :{{billDetail[pageIndex]?.summationInfos[0].totalCny}}CNY</span> ;
+                </div>
+            </div>
+
+            </div>
+            <div class="getdetails">
+                <div style="font-size: 23px;font-weight:700;">收款信息</div>
+                <div style="font-size: 14px;margin-top: 20px;margin-left: 15px;">公司开户名：上海飞莱达供应链管理有限公司
+                    <span style="margin-left: 20px;">人民币账号：43908171451</span>
+                    <span style="margin-left: 20px;">开户行：中国银行上海市万科支行</span>
+                </div>
+            </div>
+                       
+        </div>
+        <div style="text-align: center;font-size: 23px;font-weight: 700;margin-top:40px">开票申请</div>
+        
+        <div style="margin:0 auto">
+            <div>
+                <span class="invoiceTitle">开票方式</span> 
+                <el-radio-group v-model="invoiceData[pageIndex].merge" :disabled="invoiceData[pageIndex].ifSubmit">
+                    <el-radio label="1" style="margin-left:15px">月结标签</el-radio>
+                    <el-radio label="2">单独开票</el-radio>
+                </el-radio-group>
+            </div>
+            <div style="margin-top:20px" v-for="(item,index) in invoiceData[pageIndex].form" :key="index">
+                <div class="invoiceTitle" style="color:skyblue;">
+                    发票信息{{invoiceData[pageIndex].form.length>1?index+1:""}}
+                    <i class="el-icon-delete" style="margin-left: 6px;"  v-if="invoiceData[pageIndex].form.length > 1" @click="deleteInvoice(index)"></i> 
+                </div>
+                <div style="margin:20px 0 0 15px">
+                    <el-form label-position="left" :disabled="invoiceData[pageIndex].ifSubmit">
+                        <el-form-item label="发票类型" label-width="110px">
+                            <el-radio-group v-model="invoiceData[pageIndex].form[index].invoiceType">
+                                <el-radio label="2" border>电子普票</el-radio>
+                                <el-radio label="0" border>纸质普票</el-radio>
+                                <el-radio label="1" border>纸质专票</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <span v-if="invoiceData[pageIndex].form[index].invoiceType == 2" style="color:#797979;font-size: 14px;margin-left:110px">提示：电子发票只支持增值税普通发票</span>
+                        <br/>
+                        <div style="display:flex;flex-wrap: wrap;">
+                            <el-form-item label="开票币种" label-width="110px" style="margin-top: 20px;flex:0 0 50%;">
+                                <el-select v-model="invoiceData[pageIndex].form[index].applyCurrency" placeholder="请选择" @change="(val)=>changeCurrency(val,index)">
+                                    <el-option
+                                      v-for="item in invoiceMoneyType"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :disabled = "item.disabled"
+                                      :value="item.value">
+                                    </el-option>
+                                  </el-select>
+                            </el-form-item>
+                            <el-form-item label="开票金额   ￥" label-width="110px" style="margin-top: 20px;flex:0 0 50%;position: relative;">
+                                <el-input v-model="invoiceData[pageIndex].form[index].applyAmount" style="width: 280px;" :disabled="invoiceData[pageIndex].form[index].disableInvoAmount"></el-input> 
+                                <span style="position: absolute;color:#797979;font-size: 10px;margin-left: 15px;" v-if="invoiceData[pageIndex].form[index].applyCurrency != '1'">{{`该票只能${moneyMess[invoiceData[pageIndex].form[index].applyCurrency.slice(-1)-2]}付款`}}</span>
+                            </el-form-item>
+                            <el-form-item label="开票抬头" label-width="110px" style="margin-top: 20px;flex:0 0 50%;">
+                                <el-select v-model="invoiceData[pageIndex].form[index].invoiceTitle" placeholder="请选择" @change="(val)=>chooseInvoTit(val,index)" clearable @clear="setSelectDisable(true,index)">
+                                    <el-option
+                                      v-for="item in invoiceTitle"
+                                      :key="item.id"
+                                      :label="item.invoiceTitle"
+                                      :disabled="item.disabled"
+                                      :value="item.invoiceTitle">
+                                    </el-option>
+                                  </el-select>
+                            <span style="margin-left: 10px;font-size: 14px;color:#02A7F0" @click="newInvoiceTitle(index)">+新增抬头</span>
+                                </el-form-item>
+                            <br/>
+                            <el-form-item label="纳税人识别号" label-width="110px" style="margin-top: 20px;flex:0 0 50%;">
+                                <el-input v-model="invoiceData[pageIndex].form[index].dutyParagraph"  style="width: 280px;" disabled></el-input>
+                            </el-form-item>
+                            <el-form-item label="开户行及账号" label-width="110px" style="margin-top: 20px;flex:0 0 100%;">
+                                <el-input v-model="invoiceData[pageIndex].form[index].openBank"  style="width: 500px;" disabled></el-input>
+                            </el-form-item>
+                            <el-form-item label="公司地址及电话" label-width="110px" style="margin-top: 20px;flex:0 0 100%;">
+                                <el-input v-model="invoiceData[pageIndex].form[index].companyTel"  style="width: 500px;" disabled></el-input>
+                            </el-form-item>
+                            <el-form-item label="邮寄信息" label-width="110px" style="margin-top: 20px;flex:0 0 50%;">
+                                <el-select v-model="invoiceData[pageIndex].form[index].postInfo" placeholder="请选择" @change="val=>changePostInfo(val,index)">
+                                    <el-option
+                                      v-for="item in postInfo"
+                                      :key="item.id"
+                                      :label="item.recipient"
+                                      :value="item.recipient">
+                                    </el-option>
+                                  </el-select>
+                                  <span style="margin-left: 10px;font-size: 14px;color:#02A7F0" @click="newEmailAddress(index)">+新增邮件地址</span>
+                            </el-form-item>
+                            <el-form-item label="邮箱地址" label-width="110px" style="margin-top: 20px;flex:0 0 50%;">
+                                <el-input v-model="invoiceData[pageIndex].form[index].recipientEmail"  style="width: 280px;"></el-input>
+                            </el-form-item>
+                        </div>
+                    </el-form>
+                    <el-button type="primary" :disabled="invoiceData[pageIndex].ifSubmit" style="border-radius: 4px;" @click="addInvoice" v-if="index == invoiceData[pageIndex].form.length-1">添加发票</el-button>
+                    
+                </div>
+               
+            </div>
+            <div class="pageFoot">
+                <el-button  style="border-radius: 4px;padding: -5px -10px;flex:0 0 30%" @click="downLoadPdf">导出账单(pdf)</el-button>
+                <el-button type="primary"  style="border-radius: 4px;flex:0 0 30%" @click="subMitInvoice" :disabled="invoiceData[pageIndex].ifSubmit">
+                    <div style="color:#fff;font-size: 15px;" v-if="!invoiceData[pageIndex].ifSubmit">费用已确认,并提交开票</div>
+                    <div  style="color:red;font-size:10px;margin-top: 5px;transform: translateY(5px);" v-if="!invoiceData[pageIndex].ifSubmit">确认倒计时:{{leaveTimes}}</div>
+                    <div v-if="invoiceData[pageIndex].ifSubmit">费用已确认，开票已提交</div>
+                </el-button>
+                <div style="display: flex;align-items: center;">
+                    <el-button style="border-radius: 4px;" v-if="this.invoiceData.length>1 && this.pageIndex != 0" @click="changePageNum(-1)">上一张</el-button>
+                    <el-button style="border-radius: 4px;" v-if="this.invoiceData.length>1 && this.pageIndex != this.invoiceData.length-1" @click="changePageNum(1)">下一张</el-button>
+                </div>
+            </div>
+            <!-- 新增抬头弹框 -->
+            <el-dialog
+                :visible.sync="ifDialTitle"
+                width="800px"
+            >
+               <div style="text-align: center;margin-bottom: 25px;">新增开票信息</div> 
+               <el-form style="width: 600px;margin:0 auto">
+                   <el-form-item label="发票抬头" required label-width="120px">
+                        <el-input style="width: 450px;" v-model="ifDialData.data1" maxlength="30"></el-input>
+                   </el-form-item>
+                   <el-form-item label="纳税人识别号" required label-width="120px"> 
+                        <el-input 
+                            style="width: 450px;"
+                            v-model="ifDialData.data2" 
+                            maxlength="20"
+                            onkeyup="this.value = this.value.replace(/[^\da-zA-Z]/g,'');" 
+                            @blur="ifDialData.data2 = $event.target.value"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="公司地址" required label-width="120px">
+                        <el-input style="width: 450px;" v-model="ifDialData.data3" maxlength="50"></el-input>
+                    </el-form-item>
+                    <el-form-item label="公司电话" required label-width="120px">
+                        <el-input 
+                            style="width: 450px;" 
+                            v-model="ifDialData.data4"
+                            maxlength="11"
+                            onkeyup="this.value = this.value.replace(/[^\d]/g,'');" 
+                            @blur="ifDialData.data4 = $event.target.value"
+                        >
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="开户行" required label-width="120px">
+                        <el-input style="width: 450px;" v-model="ifDialData.data5" maxlength="30"></el-input>
+                    </el-form-item>
+                    <el-form-item label="银行账号" required label-width="120px">
+                        <el-input 
+                            style="width: 450px;" 
+                            v-model="ifDialData.data6"
+                            maxlength="19"
+                            onkeyup="this.value = this.value.replace(/[^\d]/g,'');" 
+                            @blur="ifDialData.data6 = $event.target.value"
+                        >
+                        </el-input>
+                    </el-form-item>
+                    <div style="margin-top:15px;text-align:center">
+                        <el-button type="primary" style="border-radius:4px;width: 110px;" @click="dialTitleConfirm">确定</el-button>
+                        <el-button type="primary" style="border-radius:4px;width: 110px;" @click="dialTitleCancel">取消</el-button>
+                    </div>
+               </el-form>
+            </el-dialog>
+            <!-- 新增邮件地址弹框 -->
+            <el-dialog
+            :visible.sync="ifDialEmail"
+            width="800px"
+        >
+           <div style="text-align: center;margin-bottom: 25px;">新建邮寄地址</div> 
+           <el-form style="width: 600px;margin:0 auto">
+               <el-form-item label="收件人" required label-width="120px">
+                    <el-input style="width: 450px;" v-model="dialEmailData.data1" maxlength="30"></el-input>
+               </el-form-item>
+               <el-form-item label="联系电话" required label-width="120px"> 
+                    <el-input 
+                        style="width: 450px;" 
+                        v-model="dialEmailData.data2" 
+                        maxlength="11"
+                        onkeyup="this.value = this.value.replace(/[^\d]/g,'');" 
+                        @blur="dialEmailData.data2 = $event.target.value"
+                    >
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="邮箱地址" required label-width="120px">
+                    <el-input style="width: 450px;" v-model="dialEmailData.data3"@blur="testEmail"></el-input>
+                </el-form-item>
+                <el-form-item label="地址" required label-width="120px">
+                    <el-input style="width: 450px;" v-model="dialEmailData.data4" maxlength="50"></el-input>
+                </el-form-item>
+                <div style="margin-top:15px;text-align:center">
+                    <el-button type="primary" style="border-radius:4px;width: 110px;" @click="dialEmailConfirm">确定</el-button>
+                    <el-button type="primary" style="border-radius:4px;width: 110px;" @click="dialEmailCancel">取消</el-button>
+                </div>
+           </el-form>
+        </el-dialog>
+        </div>
+       </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 尾部 -->
+  <div class="footer">
+    <div class="com-width">
+      <div class="footer-content">
+        <div class="footer-label">
+          <div class="footer-cool" style="margin-bottom: 10px;">
+            <span>Copyright © 2020-2021 17dc.com  丨  <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px; vertical-align: top;" /><a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011802004581" class="register-system-info">沪公网安备 31011802004581号</a>  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
+          </div>
+          <!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
+            <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
+            <span>沪公网备XXXXXXXXXXXXX号</span>
+          </div> -->
+          <div class="footer-ipc">上海傲晔物流科技有限公司 丨 上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
+        </div>
+        <div class="footer-img"><img alt="图片" src="./img/qcode.png"/></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script src="./service/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            leaveTimes:"",//页面显示倒计时
+            orderTimer:'',//页面定时器
+            currentIndex:"", //新增抬头和邮件地址索引
+            pageIndex:0, //当前账单索引
+            billDetail:[], //发票信息之前所有数据
+            invoiceData:[{ifSubmit:false,merge:"1",form:[{invoiceType:"2",applyCurrency:"1",applyAmount:"",invoiceTitle:"",dutyParagraph:"",openBank:"",companyTel:"",postInfo:"",recipientEmail:""}]}],
+            //开票币种
+            invoiceMoneyType:[{
+              value: '1',
+              label: 'CNY'
+              }, {
+              value: '3',
+              label: 'USD'
+              }
+            ],
+            //币种编码
+            moneyCode:['CNY','HKD','USD','EUR','GBP'],
+            moneyChina:['人民币','港币',"美金",'欧元','英镑'],
+            //币种中文
+            moneyMess:["港币","美金","英镑"],
+            //开票抬头
+            invoiceTitle:[],
+            //邮寄信息
+            postInfo:[],
+
+            //新增抬头弹框
+            ifDialTitle:false,
+            ifDialData:{data1:"",data2:"",data3:"",data4:"",data5:"",data6:""},
+
+            //新增邮件弹框
+            ifDialEmail:false,
+            dialEmailData:{data1:"",data2:"",data3:"",data4:""},
+
+            loading: false,
+            menuIndex: 0,
+            orderId: '',
+            detailsArr: {},
+            statusSubmit: [5, 9, 3],
+            totalArOrgn: {},
+            orderOptionsList: [],
+            guonerArr: [],
+            guonerJiaqian: 0,
+            guowaiArr: [],
+            guowaiJiaqian: 0,
+            preStatus: '',
+            status: '',
+            orderCargoDetailList: [],
+            orderAttachmentList: [],
+            activityFlowVOList: [],
+            userInfo: '',
+            headerMenu: false,
+            isTbcBillVO: false,
+            billInfosIndex: 0,
+            billInfos: [],
+            tbcBillVO: {},
+            dialogFormVisible: false,
+            act: -1,
+            centerDialogVisible: false,
+            filePath: '',
+            fileName: '',
+            countdown: "",
+            countdownsetInterval: null
+        },
+        async created() {
+            if (!localStorage.getItem('wxOpenId')) {
+                window.location.href = './login.html'
+            }
+            if (localStorage.getItem('userInfo')) {
+                this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+            }
+            this.orderId = getQueryVariable('orderId')
+            let bills = getQueryVariable('billId').split(",")
+            this.billIds = bills.map(item=>Number(item))
+            let result = []
+            let copy = this.invoiceData[0]
+            for(let i =0;i<this.billIds.length;i++){
+                result.push(JSON.parse(JSON.stringify(copy)))
+            }
+            this.invoiceData = result
+            let leftTime = localStorage.getItem("leftTime").split(",")
+            this.invoiceData.forEach((item,index)=>{
+                item.leftTime = leftTime[index]
+            })
+            let pdfPath = localStorage.getItem("pdfPath").split(",")
+            this.invoiceData.forEach((item,index)=>{
+                item.pdfPath = pdfPath[index]
+            })
+            // console.log(this.invoiceData)
+            await this.initExpressInfoList()
+            await this.initInvoiceInfoList()
+            await this.initData()
+            
+            
+        },
+        mounted(){
+            this.startInterval()
+        },
+        beforeDestroy() {
+            clearInterval(this.orderTimer)
+        },
+        methods: {
+            downLoadPdf(){
+                axios({
+                    method: "get",
+                    url: this.invoiceData[this.pageIndex].pdfPath,
+                    responseType: "arraybuffer", //接受使用分片方式
+                }).then((res) => {
+                    const aLink = document.createElement("a");
+                    let blob = new Blob([res], {
+                    type: "application/pdf",
+                    });
+                    aLink.href = URL.createObjectURL(blob);
+                    aLink.setAttribute("download", "开票账单"); // 设置下载文件名称
+                    aLink.click();
+                    document.body.appendChild(aLink);
+                });
+            },
+          
+            //开票币种切换
+            changeCurrency(val,index){
+                //切换到美金直接把美金所有金额转成人民币赋值到对应开票金额处
+                if(val == 3) {
+                    this.invoiceData[this.pageIndex].form[index].applyAmount = this.billDetail[this.pageIndex].summationInfos.filter(item=>item.currency == val)[0].totalCny
+                    this.invoiceData[this.pageIndex].form[index].disableInvoAmount = true
+                } else {
+                    this.invoiceData[this.pageIndex].form[index].applyAmount = ""
+                    this.invoiceData[this.pageIndex].form[index].disableInvoAmount = false
+                }
+            },
+            //改变页数
+            changePageNum(num) {
+                this.pageIndex = this.pageIndex + num
+                this.startInterval()
+                this.setCurrencyDisable()
+            },
+            //更改邮寄信息下拉框 并给邮箱地址赋值
+            changePostInfo(val,index){
+                this.invoiceData[this.pageIndex].form[index].recipientEmail = this.postInfo.filter(item=>item.recipient == val)[0].recipientEmail
+            },
+
+            //开票抬头和邮寄信息 接口数据
+            initInvoiceInfoList() {
+					return axios({
+						method: 'get',
+						url: webIp+serviceApi.invoiceInfoList,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.invoiceTitle = data.data
+						}
+					})
+				},
+			initExpressInfoList() {
+					return axios({
+						method: 'get',
+						url: webIp+serviceApi.expressInfoList,
+						headers: {
+							'tokenId': localStorage.getItem('tokenId')
+						}
+					}).then((data) =>{
+						var data = data.data
+						if(data.code == 200){
+							this.postInfo = data.data
+						}
+					})
+				},
+
+                //开票费用涉及币种在发票信息的开票抬头中可选
+            setCurrencyDisable(){
+                    this.invoiceMoneyType.forEach(item=>item.disabled = false)
+                    if(this.billDetail[this.pageIndex].summationInfos.every(item=>item.currency != 3)){
+                        this.invoiceMoneyType[1].disabled = true
+                    }
+                },
+              //定时器时间处理  
+            formatTime(time) {
+                this.hours = Math.floor(time / 3600)
+                this.minute = Math.floor(Math.floor(time % 3600) / 60)
+                this.second = time % 60
+                this.hours =
+                    this.hours.toString().length === 1 ? `0${this.hours}` : this.hours
+                this.minute =
+                    this.minute.toString().length === 1 ? `0${this.minute}` : this.minute
+                this.second =
+                    this.second.toString().length === 1 ? `0${this.second}` : this.second
+                return this.hours + '时' + this.minute + '分' + this.second + '秒'
+            },
+            //页面定时器
+            startInterval(){
+                if(this.orderTimer) {
+                    clearInterval(this.orderTimer)
+                }
+                let time =(this.invoiceData[this.pageIndex].leftTime/1000 + 3600 -new Date().getTime()/1000).toFixed(0)
+                if(time<0) {
+                    this.leaveTimes = "00时00分00秒"
+                }
+                else {
+                    this.orderTimer = setInterval(()=>{
+                        time--
+                        this.leaveTimes = this.formatTime(time)
+                    },1000)
+                }
+            },
+            //初始进页面获取数据
+            initData() {
+                axios({
+                    method: 'post',
+                    url: webIp + serviceApi.billDetail,
+                    data: {billIds:this.billIds,orderId:Number(this.orderId)},
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then(res=>{
+                    if(res.status == 200) {
+                        this.billDetail = res.data.data
+                        this.setCurrencyDisable()
+                        this.billDetail.forEach((item,index)=>{
+                            if(item.apply) {
+                            item.apply.forEach((item2,index2)=>{
+                                if(item2){
+                                    if(item2.status == 0) {
+                                        this.invoiceData[index].ifSubmit = true
+                                    }
+                                    item2.applyCurrency = String(item2.applyCurrency)
+                                    item2.postInfo = item2.recipient
+                                    item2.invoiceType = String(item2.invoiceType)
+                                    item2.oldBill = true
+                                    this.invoiceTitle.forEach(item3=>{
+                                        if(item3.id == Number(item2.invoiceInfoId)) {
+                                            item2.invoiceTitle = item3.invoiceTitle
+                                            item2.openBank = item3.bankAccount + '-' + item3.accountBank
+                                            item2.companyTel = item3.companyAddress + '-' + item3.companyTel
+                                            item2.dutyParagraph = item3.dutyParagraph
+                                            item2.bankAccount = item3.bankAccount
+                                            item2.accountBank = item3.accountBank
+                                            item2.companyAddress = item3.companyAddress
+                                            item2.companyTel = item3.companyTel
+                                            item2.invoiceTitle = item3.invoiceTitle
+                                        }
+                                    })
+                                    this.postInfo.forEach(item3=>{
+                                        if(item3.id == Number(item2.expressInfoId)) {
+                                            item2.postInfo = item3.recipient
+                                            item2.recipient = item3.recipient
+                                            item2.recipientAddress = item3.recipientAddress
+                                            item2.recipientEmail = item3.recipientEmail
+                                            item2.recipientTel = item3.recipientTel
+                                        }
+                                    })
+                                    this.invoiceData[index].form[index2] = item2 
+                                }
+                            })
+                            }
+                        })
+                        console.log(this.billDetail)
+                    } else {
+                        this.$message.error(res.message)
+                    }
+                })
+            },
+            //设置开票抬头下拉框 一个选项只能选择一次
+            setSelectDisable(clear,index){
+                if(clear){
+                    this.invoiceData[this.pageIndex].form[index].dutyParagraph = ''
+                    this.invoiceData[this.pageIndex].form[index].companyTel = ''
+                    this.invoiceData[this.pageIndex].form[index].openBank = ''
+                }
+                this.invoiceTitle.forEach(item=>item.disabled = false)
+                let invoTitArray = this.invoiceData[this.pageIndex].form.map(item=>item.invoiceTitle)
+                this.invoiceTitle.forEach(item1=>{
+                    if(invoTitArray.some(item2=>(item2 == item1.invoiceTitle))) {
+                        item1.disabled = true
+                    }
+                })
+            },
+            //开票抬头选择框选择 
+            chooseInvoTit(value,index){
+               this.setSelectDisable()
+               let result = this.invoiceTitle.filter(item=>item.invoiceTitle == value)
+               this.invoiceData[this.pageIndex].form[index].dutyParagraph = result[0].dutyParagraph
+               this.invoiceData[this.pageIndex].form[index].companyTel = result[0].companyAddress+"-"+result[0].companyTel
+               this.invoiceData[this.pageIndex].form[index].openBank = result[0].accountBank+"-"+result[0].bankAccount
+            },
+            //提交开票按钮
+            subMitInvoice() {
+                let totalMoney = this.billDetail[this.pageIndex].summationInfos[0].totalCny
+                let invoiceTotal =0
+                this.invoiceData[this.pageIndex].form.forEach(item=>{
+                    invoiceTotal += Number(item.applyAmount)
+                })
+                for (let i=0;i<this.invoiceData[this.pageIndex].form.length;i++) {
+                    let {invoiceType,applyCurrency,applyAmount,invoiceTitle,dutyParagraph,openBank,companyTel,postInfo,recipientEmail} = this.invoiceData[this.pageIndex].form[i]
+                    console.log(this.invoiceData[this.pageIndex].form[i])
+                    if(!invoiceType || !applyCurrency|| !applyAmount|| !invoiceTitle|| !dutyParagraph|| !openBank|| !companyTel || !postInfo|| !recipientEmail) {
+                        return this.$message.warning("请填写全部的发票信息后,进行开票操作")
+                    }
+                }
+                if(totalMoney != invoiceTotal) {
+                    this.$alert('开票金额与账单不符，开票提交失败', '提示', {
+                        confirmButtonText: '确定',
+                     });
+                    return 
+                }
+                let resCopy = JSON.parse(JSON.stringify(this.invoiceData[this.pageIndex].form)) 
+                 resCopy.map((item,index)=>{
+                    item.accountBank = item.openBank.split("-")[0]
+                    item.bankAccount = item.openBank.split("-")[1]
+                    item.billId = this.billIds[this.pageIndex]
+                    item.companyAddress = item.companyTel.split("-")[0]
+                    item.companyTel = item.companyTel.split("-")[1]
+                    item.departureDate = this.billDetail[this.pageIndex].checkInfo.departureDate
+                    item.expressInfoId = this.postInfo.filter(item2=>item2.recipient == item.postInfo)[0].id
+                    item.id = this.billDetail[this.pageIndex].apply && this.billDetail[this.pageIndex].apply[0].id
+                    item.invoiceInfoId = this.invoiceTitle.filter(item2=>item2.invoiceTitle == item.invoiceTitle)[0].id
+                    item.recipient = this.postInfo.filter(item2=>item2.recipient == item.postInfo)[0].recipient
+                    item.recipientAddress = this.postInfo.filter(item2=>item2.recipient == item.postInfo)[0].recipientAddress
+                    item.recipientEmail = this.postInfo.filter(item2=>item2.recipient == item.postInfo)[0].recipientEmail
+                    item.recipientTel = this.postInfo.filter(item2=>item2.recipient == item.postInfo)[0].recipientTel	
+                    item.merge =this.invoiceData[this.pageIndex].merge
+                    if(item.applyCurrency == 1) {
+                        item.applyAmountOrgn = item.applyAmount
+                    } else {
+                        item.applyAmountOrgn = this.billDetail[this.pageIndex].summationInfos.filter(item=>item.currency ==3)[0].totalOrgn
+                    }
+                })
+                resCopy.forEach(item=>{
+                    delete item.applicant
+                    delete item.applicantId
+                    delete item.certificationBody
+                    delete item.openBank
+                    delete item.postInfo
+                })
+                axios({
+                    method: 'post',
+                    url: webIp + serviceApi.invoiceApply,
+                    data: resCopy,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    }
+                }).then(res=>{
+                    if(res.data.code == 200) {
+                        this.invoiceData[this.pageIndex].ifSubmit = true
+                        this.$alert('请根据申请的发票抬头付款', '提示', {
+                            confirmButtonText: '确定',
+                        });
+                    }
+                    else {
+                        this.$message.error(res.data.message)
+                    }
+                })
+            },
+            //邮箱验证
+            testEmail() {
+                const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+([.])([a-zA-Z])+/
+                if( !mailReg.test(this.dialEmailData.data3)) {
+                    return this.$message.error("请输入正确的邮箱格式")
+                }
+            },
+            //删除发票信息 
+            deleteInvoice(index) {
+                     this.invoiceData[this.pageIndex].form.splice(index,1)
+            },
+            //添加发票
+            addInvoice() {
+                if(this.invoiceData[this.pageIndex].form.length>19) {
+                    this.$message.warning("一张账单最多开20张发票")
+                    return
+                }
+                this.invoiceData[this.pageIndex].form.push({invoiceType:"2",applyCurrency:"1",applyAmount:"",invoiceTitle:"",dutyParagraph:"",openBank:"",companyTel:"",postInfo:"",recipientEmail:""})
+            },
+            //新增抬头确认
+            dialTitleConfirm(){
+                if(Object.values(this.ifDialData).some(item=>item=="")) {
+                    this.$message.warning("请填写全部信息后,再点击确定")
+                    return
+                }
+                axios({
+                    method: 'post',
+                    url: webIp + serviceApi.invoiceInfoSaveOrUpdate,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    },
+                    data: {
+                        invoiceTitle: this.ifDialData.data1,
+                        dutyParagraph: this.ifDialData.data2,
+                        companyAddress: this.ifDialData.data3,
+                        companyTel:this.ifDialData.data4,
+                        accountBank: this.ifDialData.data5,
+                        bankAccount: this.ifDialData.data6,
+                        id: ''
+                    }
+                }).then(res=>{
+                    if(res.code == 200) {
+                        this.$message.error("新增抬头成功")
+                        this.initInvoiceInfoList()
+                        this.invoiceData[this.pageIndex].form[this.currentIndex].invoiceTitle = this.ifDialData.data1
+                        this.invoiceData[this.pageIndex].form[this.currentIndex].dutyParagraph = this.ifDialData.data2
+                        this.invoiceData[this.pageIndex].form[this.currentIndex].companyTel = this.ifDialData.data5+'-'+this.ifDialData.data6
+                        this.invoiceData[this.pageIndex].form[this.currentIndex].openBank = this.ifDialData.data3+'-'+this.ifDialData.data4
+                        this.setSelectDisable()
+                        this.ifDialTitle = false
+                    } else {
+                        this.$message.error("新增抬头失败")
+                    }
+                })
+                
+               
+            },
+            //新增抬头取消
+            dialTitleCancel(){
+                this.ifDialTitle = false
+            },
+            //新增抬头弹框
+            newInvoiceTitle(index){
+                this.currentIndex = index
+                this.ifDialData = {data1:"",data2:"",data3:"",data4:"",data5:"",data6:""}
+                this.ifDialTitle = true
+            },
+            //新增邮件地址确认
+            dialEmailConfirm(){
+                if(Object.values(this.dialEmailData).some(item=>item=="")) {
+                    this.$message.warning("请填写全部信息后,再点击确定")
+                    return
+                }
+                const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+([.])([a-zA-Z])+/
+                if( !mailReg.test(this.dialEmailData.data3)) {
+                    return this.$message.error("请输入正确的邮箱格式")
+                }
+                axios({
+                    method: 'post',
+                    url: webIp + serviceApi.expressInfoSaveOrUpdate,
+                    headers: {
+                        'tokenId': localStorage.getItem('tokenId')
+                    },
+                    data: {
+                        recipient: this.dialEmailData.data1,
+                        recipientAddress: this.dialEmailData.data4,
+                        recipientEmail: this.dialEmailData.data3,
+                        recipientTel: this.dialEmailData.data2,
+                        id: ''
+                    }
+                }).then(res=>{
+                    if(res.data.code == 200) {
+                        this.$message.error("新增邮件地址成功")
+                        this.initExpressInfoList()
+                        this.invoiceData[this.pageIndex].form[this.currentIndex].postInfo = this.dialEmailData.data1
+                        this.invoiceData[this.pageIndex].form[this.currentIndex].recipientEmail = this.dialEmailData.data3
+                        this.ifDialEmail = false
+                    }
+                    else {
+                        this.$message.error("新增邮件地址失败")
+                    }
+                })
+              
+            },
+            //新增邮件地址取消
+            dialEmailCancel(){
+                this.ifDialEmail = false
+            },
+            //打开邮件地址弹框
+            newEmailAddress(index){
+                this.currentIndex = index
+                this.dialEmailData = {data1:"",data2:"",data3:"",data4:""}
+                this.ifDialEmail = true
+            },
+           goQuick(){
+              if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
+                        this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                            }
+                        })
+                    }else{
+              window.location.href='./quick.html'
+            }
+            },
+           showHeaderMenu(type) {
+                if (type == 1) {
+                    this.headerMenu = true
+                } else {
+                    this.headerMenu = false
+                }
+            },
+           tuiChu() {
+                localStorage.clear()
+                window.location.href = './login.html'
+            },
+            
+            //登录
+            loginClick() {
+                window.location.href = './login.html'
+            },
+            // muen invoice
+            menuClick(index) {
+                this.menuIndex = index
+                if(index == 0){
+                    window.location.href = './index.html';
+                } else if (index == 1) {
+                    window.location.href = './trackSearch.html?trackSearchInput=';
+                }else if(index == 2){
+                    window.location.href = './addressSerach.html'
+                }else if(index == 3){
+                    window.location.href = './about_us.html'
+                }
+            }
+        }
+    })
+</script>
+</html>
