@@ -594,6 +594,11 @@
                   <div class="length">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}}
                     <span>/{{tbcBillVO.totalCount}}</span></div>
               </button>
+              <div v-if="detailsArr.status == '17'" style="text-align:center;margin-top: 20px;">
+                <span style="border-bottom: 1px dashed;padding:0 10px;padding-bottom:6px;font-size: 20px;color:#979696;font-weight: 700;">
+                    进仓数据有异议,请联系客服
+                </span>
+              </div>
             </div>
           </div>
         </div>
