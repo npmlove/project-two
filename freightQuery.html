@@ -548,10 +548,11 @@
                 this.currentDayWeekDate = this.currentDayWeekDate.sort()
             }
             this.currentDayWeekDate = isDateCurrent1(this.currentDayWeekDate)
-
-            this.dateArr = JSON.parse(JSON.stringify(this.currentDayWeekDate)).slice(0, 7)
             this.currentDay = formatDate(myDate.toLocaleDateString())
             this.bookingDate = this.currentDay
+            // 获取当前日期index，取以当前日期为开始的一周7天显示在页面上
+            var currentDayIndex = this.currentDayWeekDate.findIndex(item => item.date === this.currentDay)
+            this.dateArr = JSON.parse(JSON.stringify(this.currentDayWeekDate)).slice(currentDayIndex, currentDayIndex + 7)
             // this.dateTabActive = this.splitDate(this.currentDay)
 
             var mmWeek = []
@@ -912,8 +913,24 @@
                 if(item.disabled){
                     return false
                 }
-                let start = index * 7;
-                this.dateArr = this.currentDayWeekDate.slice(start,index * 7 + 7)
+                // let start = index * 7;
+                // this.dateArr = this.currentDayWeekDate.slice(start,index * 7 + 7)
+                // 效果为选中日期后居中显示前3后3，如果前面可选数量小于3，显示从可选开始的7个，如果后面可选小于3，显示最后7个
+                var nowDate = formatDate(new Date().toLocaleDateString())
+                var nowDateIndex = this.currentDayWeekDate.findIndex(item => item.date === nowDate)
+                // 当前日期之后的日期
+                var enableDateArr = this.currentDayWeekDate.slice(nowDateIndex)
+                var dateIndex = enableDateArr.findIndex(item => item.date === date)
+                var start = (function() {
+                  if (dateIndex + 1 < 4) {
+                    return 0
+                  }
+                  if (dateIndex + 1 >= enableDateArr.length - 3) {
+                    return enableDateArr.length - 7
+                  }
+                  return dateIndex - 3
+                })()
+                this.dateArr = enableDateArr.slice(start, start + 7)
                 this.dateArr.forEach((item,index)=>{
                     if(item.date == date){
                         this.dateValue = index;
