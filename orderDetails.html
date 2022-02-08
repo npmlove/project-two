@@ -937,12 +937,11 @@
                         }
                     })
                 } else if (type == '账单') {
-                    this.dialogFormVisible = true
-                    this.countdownChange();
-                    // localStorage.setItem("leftTime", this.billInfos.map(item=>new Date(item.billCreateTime).getTime())) 
-                    // localStorage.setItem("pdfPath", this.billInfos.map(item=>item.pdfPath))
-                    // window.location.href = './getInvoice.html?orderId='+this.orderId+"&billId="+this.billInfos.map(item=>item.billId)
-                    
+                    // this.dialogFormVisible = true
+                    // this.countdownChange();
+                    localStorage.setItem("leftTime", this.billInfos.map(item=>new Date(item.billCreateTime).getTime())) 
+                    localStorage.setItem("pdfPath", this.billInfos.map(item=>item.pdfPath))
+                    window.location.href = './getInvoice.html?orderId='+this.orderId+"&billId="+this.billInfos.map(item=>item.billId)
                  }
             },
             //账单转化
