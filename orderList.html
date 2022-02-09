@@ -238,7 +238,8 @@
 													</div>
 													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 													<el-button v-if="item.billFlag == 1" type="primary" style="border-radius: 4px;margin-top: 10px;">账单已发起,请确认</el-button>
-
+													<!-- showMap 暂时这么写，表示有地图已有地图 -->
+													<el-button v-if="item.status === 9 && item.showMap" type="primary" style="border-radius: 4px;margin-top: 10px;">进仓地图已生成，可点击预览或下载</el-button>
 												</div>
 											</div>
 										</li>
@@ -377,7 +378,8 @@
 													</div>
 													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 													<el-button v-if="item.billFlag == 1" type="primary" style="border-radius: 4px;margin-top: 10px;">账单已发起,请确认</el-button>
-
+													<!-- showMap 暂时这么写，表示有地图已有地图 -->
+													<el-button v-if="item.status === 9 && item.showMap" type="primary" style="border-radius: 4px;margin-top: 10px;">进仓地图已生成，可点击预览或下载</el-button>
 												</div>
 											</div>
 										</li>
@@ -898,6 +900,8 @@
 													</div>
 													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 													<el-button v-if="item.billFlag == 1" type="primary" style="border-radius: 4px;margin-top: 10px;">账单已发起,请确认</el-button>
+													<!-- showMap 暂时这么写，表示有地图已有地图 -->
+													<el-button v-if="item.status === 9 && item.showMap" type="primary" style="border-radius: 4px;margin-top: 10px;">进仓地图已生成，可点击预览或下载</el-button>
 												</div>
 											</div>
 										</li>
