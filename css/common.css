@@ -2975,6 +2975,14 @@
 	align-items: center;
 	margin-right: 30px;
 }
+.details-table-list .details-table-tab .details-table-details.multiple-row {
+	flex-wrap: wrap;
+	width: 540px;
+}
+.details-table-list .details-table-tab .details-table-details.multiple-row .details-table-tabs {
+	min-width: 33%;
+	margin-right: 0;
+}
 .details-table-list .details-table-tab .details-table-details .details-table-tabs span{
 	color: #999999;
 }

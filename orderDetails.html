@@ -385,16 +385,40 @@
 
               <div class="details-table-tab">
                 <div class="details-table-tab-title">订舱信息</div>
-                <div class="details-table-details" style="display: flex;">
+                <div class="details-table-details multiple-row" style="display: flex;">
                   <div class="details-table-tabs"><span>品名：</span>{{detailsArr.cargoName}}</div>
                   <div v-if="detailsArr.cargoType == '1'" class="details-table-tabs"><span>类型：</span>普货</div>
                   <div v-if="detailsArr.cargoType == '2'" class="details-table-tabs"><span>类型：</span>化工品</div>
                   <div v-if="detailsArr.cargoType == '3'" class="details-table-tabs"><span>类型：</span>危险品</div>
                   <div v-if="detailsArr.cargoType == '4'" class="details-table-tabs"><span>类型：</span>防疫物资</div>
+                  <div v-if="detailsArr.packageType === 1" class="details-table-tabs"><span>包装：</span>散货</div>
+                  <div v-if="detailsArr.packageType === 2" class="details-table-tabs"><span>包装：</span>托盘</div>          
+                </div>
+                <div v-if="trayDetail.length > 0 && detailsArr.packageType === 2" class="booking" style="margin-top: 20px; width: 400px">
+                  <table class="booking-proportion-table">
+                    <thead>
+                      <tr>
+                        <th>数量</th>
+                        <th>长CM</th>
+                        <th>宽CM</th>
+                        <th>高CM</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- 不要问我为什么是trayNumber和traySize，原前端开发人员定义的 -->
+                      <tr v-for="(item,index) in trayDetail">
+                        <td>{{ item.trayNumber }}</td>
+                        <td>{{ item.traySize }}</td>
+                        <td>{{ item.trayWidth }}</td>
+                        <td>{{ item.trayHeight }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="details-table-tab-title">订舱数据</div>
+                <div class="details-table-details multiple-row" style="display: flex;">
                   <div class="details-table-tabs"><span>件数：</span>{{detailsArr.bookingPiece}}PCS</div>
                   <div class="details-table-tabs"><span>重量：</span>{{detailsArr.bookingWeight}}KG</div>
-                </div>
-                <div class="details-table-details" style="display: flex;">
                   <div class="details-table-tabs"><span>体积：</span>{{detailsArr.bookingCbm}}CBM</div>
                   <div class="details-table-tabs"><span>比重：</span>1:{{detailsArr.bookingVwr}}</div>
                   <div class="details-table-tabs"><span>计费重：</span>{{detailsArr.bookingCw}}KG</div>
@@ -402,15 +426,13 @@
               </div>
               <div v-if="detailsArr.inboundPiece" class="details-table-tab">
                 <div class="details-table-tab-title">进仓数据</div>
-                <div class="details-table-details" style="display: flex;">
+                <div class="details-table-details multiple-row" style="display: flex;">
                   <div class="details-table-tabs"><span style="flex: 0 0 42px;">件数：</span>{{detailsArr.inboundPiece}}PCS
                   </div>
                   <div class="details-table-tabs"><span style="flex: 0 0 42px;">重量：</span>{{detailsArr.inboundWeight}}KGS
                   </div>
                   <div class="details-table-tabs"><span style="flex: 0 0 42px;">体积：</span>{{detailsArr.inboundCbm}}CBM
                   </div>
-                </div>
-                <div class="details-table-details" style="display: flex;">
                   <div class="details-table-tabs"><span style="flex: 0 0 42px;">比重：</span>1:{{detailsArr.inboundVwr}}
                   </div>
                   <div class="details-table-tabs"><span style="flex: 0 0 70px;">计费重：</span>{{detailsArr.inboundCw}}KGS
@@ -681,6 +703,7 @@
             countdownsetInterval: null,
             mapData: {},
             totalImages: [],
+            trayDetail: [], // 订舱托盘数据
         },
         created() {
             if (!localStorage.getItem('wxOpenId')) {
@@ -1012,6 +1035,7 @@
                             this.status = this.detailsArr.status
                         }
                         this.orderCargoDetailList = this.detailsArr.orderCargoDetailList
+                        this.trayDetail = JSON.parse(this.detailsArr.trayDetail)
                         this.orderAttachmentList = this.detailsArr.orderAttachmentList
                         this.mapData = this.orderAttachmentList.find((item) => {
                           return item.attachmentType === 5;
