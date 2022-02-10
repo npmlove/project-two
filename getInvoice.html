@@ -310,7 +310,7 @@
             <div>
                 <span class="invoiceTitle">开票方式</span> 
                 <el-radio-group v-model="invoiceData[pageIndex].merge" :disabled="invoiceData[pageIndex].ifSubmit">
-                    <el-radio label="1" style="margin-left:15px">月结标签</el-radio>
+                    <el-radio label="1" style="margin-left:15px">月结开票</el-radio>
                     <el-radio label="2">单独开票</el-radio>
                 </el-radio-group>
             </div>
@@ -618,19 +618,20 @@
         },
         methods: {
             downLoadPdf(){
+                console.log(this.invoiceData[this.pageIndex].pdfPath)
                 axios({
                     method: "get",
                     url: this.invoiceData[this.pageIndex].pdfPath,
-                    responseType: "arraybuffer", //接受使用分片方式
+                    responseType: 'blob',//接受使用分片方式
                 }).then((res) => {
-                    const aLink = document.createElement("a");
-                    let blob = new Blob([res], {
-                    type: "application/pdf",
-                    });
-                    aLink.href = URL.createObjectURL(blob);
-                    aLink.setAttribute("download", "开票账单"); // 设置下载文件名称
-                    aLink.click();
-                    document.body.appendChild(aLink);
+                    let url = window.URL.createObjectURL(res.data)
+                    let a = document.createElement('a');//创建a标签
+                    a.id = "download"
+                    a.href = url;//标签路径
+                    a.download = "开票账单";//下载文件名称
+                    a.click();//模拟点击
+                }).catch((err) => {
+                    console.log("err", err)
                 });
             },
           
@@ -648,6 +649,7 @@
             //改变页数
             changePageNum(num) {
                 this.pageIndex = this.pageIndex + num
+
                 this.startInterval()
                 this.setCurrencyDisable()
             },
