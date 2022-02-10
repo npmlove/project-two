@@ -590,8 +590,8 @@
               <button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50"
                       style="width: 100%; font-size: 18px;">
                   <!-- 确认费用并开票 -->
-                  账单已生成，请确认
-                  <div class="length">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}}
+                  {{tbcBillVO.tbcNum == 0?'账单已生成，请确认':'确认费用并开票'}}
+                  <div class="length" v-if="tbcBillVO.tbcNum != 0">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}}
                     <span>/{{tbcBillVO.totalCount}}</span></div>
               </button>
               
@@ -1019,14 +1019,14 @@
                             this.isTbcBillVO = true
                             this.tbcBillVO = this.detailsArr.tbcBillVO
                             this.billInfos = this.detailsArr.tbcBillVO.billInfos
-                            for (var q = 0; q < this.billInfos.length; q++) {
-                                if (this.billInfos[q].status == 0) {
-                                    this.isTbcBillVO = true
-                                    return
-                                } else {
-                                    this.isTbcBillVO = false
-                                }
-                            }
+                            // for (var q = 0; q < this.billInfos.length; q++) {
+                            //     if (this.billInfos[q].status == 0) {
+                            //         this.isTbcBillVO = true
+                            //         return
+                            //     } else {
+                            //         this.isTbcBillVO = false
+                            //     }
+                            // }
                         }
                     } else if (data.code == -200) {
                         window.location.href = './login.html'
