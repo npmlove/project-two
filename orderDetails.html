@@ -312,7 +312,6 @@
                             <span>￥{{ite.totalCny}}</span>
                           </div>
                         </template>
-
                         <div class="line"></div>
                         <div class="list">
                           <span>合计金额:</span>
@@ -339,7 +338,7 @@
                 </div>
                 <div v-if="detailsArr.waybillNo" class="list-title-arr-right">运单号：{{detailsArr.waybillNo}}</div>
               </div>
-              <div class="list-route-icon">
+              <div class="list-route-icon">              
                 <img v-if="detailsArr.logoPath" alt="tupian" :src="detailsArr.logoPath"/>
                 <div class="list-route-icon-title">{{detailsArr.airCompanyName}}<span
                   style="marginLeft:5px;">{{detailsArr.airCompanyCode}}</div>
@@ -367,7 +366,11 @@
                     <a>{{detailsArr.firstHub}}</a>
                   </el-tooltip>
                 </div>
-                <div class="list-arr-route-jiaqian">单价：{{detailsArr.bookingPrice}}元/kg</div>
+                <!-- 价格和分泡比例 -->
+                <aside class="order-aside-info">
+                  <div><span class="title">单价：</span>{{detailsArr.bookingPrice}}元/kg</div>
+                  <div style="margin-top: 10px;"><span class="title">分泡比例：</span>{{ detailsArr.bubblePointText }}</div>
+                </aside>
               </div>
             </div>
             <!-- 货物信息 -->
@@ -437,16 +440,6 @@
                   </div>
                   <div class="details-table-tabs"><span style="flex: 0 0 70px;">计费重：</span>{{detailsArr.inboundCw}}KGS
                   </div>
-                  <div v-if="detailsArr.bubblePoint == '10'" class="details-table-tabs"><span>分泡比例：</span>不分泡</div>
-                  <div v-if="detailsArr.bubblePoint == '1'" class="details-table-tabs"><span>分泡比例：</span>1/9</div>
-                  <div v-if="detailsArr.bubblePoint == '2'" class="details-table-tabs"><span>分泡比例：</span>2/8</div>
-                  <div v-if="detailsArr.bubblePoint == '3'" class="details-table-tabs"><span>分泡比例：</span>3/7</div>
-                  <div v-if="detailsArr.bubblePoint == '4'" class="details-table-tabs"><span>分泡比例：</span>4/6</div>
-                  <div v-if="detailsArr.bubblePoint == '5'" class="details-table-tabs"><span>分泡比例：</span>5/5</div>
-                  <div v-if="detailsArr.bubblePoint == '6'" class="details-table-tabs"><span>分泡比例：</span>6/4</div>
-                  <div v-if="detailsArr.bubblePoint == '7'" class="details-table-tabs"><span>分泡比例：</span>7/3</div>
-                  <div v-if="detailsArr.bubblePoint == '8'" class="details-table-tabs"><span>分泡比例：</span>8/2</div>
-                  <div v-if="detailsArr.bubblePoint == '9'" class="details-table-tabs"><span>分泡比例：</span>9/1</div>
                 </div>
                 <div v-if="orderAttachmentList.length > 0" class="details-table-details" style="display: flex;">
                   <div class="details-table-tabs" style="align-items: flex-start;">
@@ -1018,6 +1011,19 @@
                             this.orderOptionsList = data.data.orderOptionsList
                         }
                         this.totalImages = this.detailsArr.orderAttachmentList.filter(item => item.attachmentType === 1),
+                        // 分泡比例文本
+                        this.detailsArr.bubblePointText = {
+                          1: '1/9',
+                          2: '2/8',
+                          3: '3/7',
+                          4: '4/6',
+                          5: '5/5',
+                          6: '6/4',
+                          7: '7/3',
+                          8: '8/2',
+                          9: '9/1',
+                          10: '不分泡',
+                        }[this.detailsArr.bubblePoint]
                         this.guonerArr = []
                         this.guowaiArr = []
                         for (var i = 0; i < this.detailsArr.orderPriceList.length; i++) {

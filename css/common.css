@@ -3021,6 +3021,15 @@
 	display: flex;
 	align-items: center;
 	font-size: 0;
+	position: relative;
+}
+.order-aside-info {
+	width: 160px;
+	font-size: 14px;
+}
+.order-aside-info .title {
+	font-weight: bold;
+
 }
 .list-route-icon > img{
 	height: 20px;
