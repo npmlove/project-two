@@ -3391,3 +3391,10 @@
 	font-weight: 500;
 	color: #333;
 }
+.footer-ipc a {
+	color: #fff;
+	font-size: 12px;
+}
+.footer-ipc a:hover {
+	color: #2273CB;
+}
