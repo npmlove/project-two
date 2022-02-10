@@ -875,7 +875,7 @@
 														<label>{{item.bookingWeight}}KG</label>
 														<label>{{item.packageType == '1' ? '散货' : '托盘'}}</label>
 													</div>
-													<div v-if="item.showDif && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;" :style="{color: item.inboundPiece == item.bookingPiece ? '#333' : '#F00'}">
+													<div v-if="item.showDif && item.inboundPiece" class="nav-wrap-route-remarks" style="margin-top: 10px;color:red">
 														<label>进仓数据</label>
 														<label>{{item.cargoName}}</label>
 														<label>{{item.inboundPiece}}PCS</label>
