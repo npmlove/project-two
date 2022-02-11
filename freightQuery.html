@@ -491,6 +491,8 @@
             twoLetterCodeStatus: false,
             twoCodeArr: [],
             dow: '',
+            time1:0,
+            time2:0,
             pageNum: 0,
             pageSize: 10,
             currWeekDate: '',
@@ -614,6 +616,11 @@
 						else {
 							this.pol = this.qiPageArr[0].threeLetterCode
 							this.qiShowState = false
+              this.time1++
+							if(this.time1>1) {
+							  this.submitQuery()
+							  this.time1=0
+							}
 						}
 					} 
 					else if (index == 2) {
@@ -623,6 +630,11 @@
 						else {
 							this.pod = this.muPageArr[0].threeLetterCode
 							this.muShowState = false
+              this.time2++
+							if(this.time2>1) {
+							  this.submitQuery()
+							  this.time2=0
+							}
 						}
 					}
 				},

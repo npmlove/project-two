@@ -117,7 +117,7 @@
                     <el-input
                       placeholder="请输入始发站"
                       v-model="pol"
-                      @input="qiSearchByPage(pol)" @focus="showCityList(1,true)" @blur="showCityList(1,false)"
+                      @input="qiSearchByPage(pol)"  @focus="showCityList(1,true)" @keyup.enter.native = "onlyOneChoose(1)" @blur="showCityList(1,false)"
                       >
                     </el-input>
                     <div v-show="qiShowState" style="display: none;" class="open-warp-router">
@@ -135,7 +135,7 @@
                     <el-input
                       placeholder="请输入到达站"
                       v-model="pod"
-                      @input="muSearchByPage(pod)" @focus="showCityList(2,true)" @blur="showCityList(2,false)"
+                      @input="muSearchByPage(pod)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" @keyup.enter.native = "onlyOneChoose(2)"
                      >
                     </el-input>
                     <div v-show="muShowState" style="display: none;" class="open-warp-router">
@@ -153,7 +153,7 @@
                     <el-input
                       placeholder="请输入航司"
                       v-model="airCompanyCode"
-                      @input="lineSearchByPage(airCompanyCode)" @focus="showCityList(3,true)" @blur="showCityList(3,false)"
+                      @input="lineSearchByPage(airCompanyCode)" @focus="showCityList(3,true)" @blur="showCityList(3,false)" @keyup.enter.native = "onlyOneChoose(3)"
                       >
                     </el-input>
                     <div v-show="lineShowState" style="display: none;" class="open-warp-router">
@@ -1034,6 +1034,36 @@
             },
         },
         methods: {
+         //仅有一个选项 enter直接选中
+         onlyOneChoose(index) {
+					if(index == 1){
+						if(this.qiPageArr.length>1) {
+							return 
+						}
+						else {
+							this.pol = this.qiPageArr[0].threeLetterCode
+							this.qiShowState = false
+						}
+					} 
+					else if (index == 2) {
+						if(this.muPageArr.length>1) {
+							return 
+						}
+						else {
+							this.pod = this.muPageArr[0].threeLetterCode
+							this.muShowState = false
+						}
+					}
+          else if (index == 3) {
+						if(this.linePageArr.length>1) {
+							return 
+						}
+						else {
+							this.airCompanyCode = this.linePageArr[0].airCompanyCode
+							this.lineShowState = false
+						}
+					}
+				},
             openCityClick(type, item) {
                 if (type == 1) {
                     this.pol = item.threeLetterCode
