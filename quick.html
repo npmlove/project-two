@@ -810,7 +810,7 @@
             }
             this.openId = localStorage.getItem('wxOpenId')
             this.initUserInfo()
-            this.initList()
+            this.loadSearchData()
               this.preQQ =    JSON.parse(localStorage.getItem("userInfo")).customerServiceQq
               this.preCustomer = JSON.parse(localStorage.getItem("userInfo")).customerService
 
@@ -1474,7 +1474,22 @@
             packageTypeClick(act) {
                 this.packageType = act
             },
-            initList() {
+            // 载入search携带的数据
+            loadSearchData() {
+              const search = location.search.slice(1)
+              const searchArr = search.split('&')
+              const searchObj = searchArr.reduce((obj, item) => {
+                const key = item.split('=')[0]
+                const val = item.split('=')[1]
+                obj[key] = val
+                return obj
+              }, {})
+              searchObj.pol && (this.pol = searchObj.pol)
+              searchObj.pod && (this.pod = searchObj.pod)
+              searchObj.piece && (this.bookingPiece = searchObj.piece)
+              searchObj.volume && (this.bookingCbm = searchObj.volume)
+              searchObj.weight && (this.bookingWeight = searchObj.weight)
+              searchObj.airCompanyCode && (this.airCompanyCode = searchObj.airCompanyCode)
             },
             initUserInfo() {
                 axios({
