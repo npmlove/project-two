@@ -403,11 +403,16 @@
               </div>
               <div class="wrapper-content-item">
                 <div class="wrapper-content-item-text">
-                  <label>化工品包装要求（能接）：</label>托盘、散货
+                  <!-- 先这么写 -->
+                  <label>包装要求（能接）：</label>{{ {
+                    0: '散货和托盘',
+                    1: '散货',
+                    2: '托盘'
+                  }[item.acceptCargoType] }}
                 </div>
-                <div class="wrapper-content-item-text">
+                <!-- <div class="wrapper-content-item-text">
                   <label>其他政策：</label>重货，泡货价格另议
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="result-wrapper-content flightInof" v-if="item.isShowType==2">
