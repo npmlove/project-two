@@ -35,6 +35,10 @@
 			.order-list-manage .el-tabs__nav.is-top > div:nth-of-type(10){
 				color: #F00 !important;
 			}
+		      .el-tabs__item {
+       padding: 0 13px;
+   
+}
 		</style>
 	</head>
 	<body  >
@@ -169,7 +173,7 @@
 						</div>
 						<div class="tabs__nav-wrap">
 							<el-tabs v-model="typeCode" type="border-card" @tab-click="tabClickData">
-							    <el-tab-pane label="全部订单" name="全部订单">
+							    <el-tab-pane :label="'全部订单('+orderCountAll+')'" name="全部订单">
 									<div v-if="total == '0'" style="text-align: center;">
 										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
@@ -254,7 +258,7 @@
 										</el-pagination>
 									</div>
 								</el-tab-pane>
-							    <el-tab-pane label="待审核" name="1">
+							    <el-tab-pane :label="'待审核('+orderCountCheck+')'" name="1">
 									<div v-if="total == '0'" style="text-align: center;">
 										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
@@ -325,7 +329,7 @@
 										</el-pagination>
 									</div>
 								</el-tab-pane>
-							    <el-tab-pane label="待进仓" name="2">
+							    <el-tab-pane :label="'待进仓('+orderCountPreWareHouse+')'"  name="2">
 									<div v-if="total == '0'" style="text-align: center;">
 										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
@@ -394,7 +398,7 @@
 										</el-pagination>
 									</div>
 								</el-tab-pane>
-							    <el-tab-pane label="操作中" name="3">
+							    <el-tab-pane :label="'操作中('+orderCountOperating+')'" name="3">
 									<div v-if="total == '0'" style="text-align: center;">
 										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
@@ -471,7 +475,7 @@
 										</el-pagination>
 									</div>
 								</el-tab-pane>
-								<el-tab-pane label="海关安检" name="4">
+								<el-tab-pane :label="'海关安检('+orderCountSecurity+')'" name="4">
 									<div v-if="total == '0'" style="text-align: center;">
 										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
@@ -540,7 +544,7 @@
 										</el-pagination>
 									</div>
 								</el-tab-pane>
-								<el-tab-pane label="运输中" name="5">
+								<el-tab-pane :label="'运输中('+orderCountTransit+')'" name="5">
 									<div v-if="total == '0'" style="text-align: center;">
 										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
@@ -609,7 +613,7 @@
 										</el-pagination>
 									</div>
 								</el-tab-pane>
-								<el-tab-pane label="已完成" name="6">
+								<el-tab-pane :label="'已完成('+orderCountCompleted+')'" name="6">
 									<div v-if="total == '0'" style="text-align: center;">
 										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
@@ -678,7 +682,7 @@
 										</el-pagination>
 									</div>
 								</el-tab-pane>
-								<el-tab-pane label="已取消" name="7">
+								<el-tab-pane :label="'已取消('+orderCountCancelled+')'"  name="7">
 									<div v-if="total == '0'" style="text-align: center;">
 										<img alt="图片" src="./img/null.png" style="width: 262px; height: 201px;padding: 20px 0;">
 										<div style="font-size: 14px;padding-bottom: 10px;color: #999;">暂无订单</div>
@@ -968,6 +972,14 @@
 				typeCode: '全部订单',
 				total: 0,
 				dataArr: [],
+				orderCountAll:0,
+				orderCountCheck:0,
+				orderCountPreWareHouse:0,
+				orderCountOperating:0,
+				orderCountSecurity:0,
+				orderCountTransit:0,
+				orderCountCompleted:0,
+                orderCountCancelled:0,
 				orderCountError: 0,
 				orderCountWait: 0,
 				timeOut: '',
@@ -1133,6 +1145,14 @@
 						if(data.code == 200){
 							this.orderCountError = data.data.errorCount
 							this.orderCountWait = data.data.backlogCount
+							this.orderCountAll = data.data.allCount
+				            this.orderCountCheck = data.data.checkCount
+				            this.orderCountPreWareHouse = data.data.preWarehouseCount
+				            this.orderCountOperating = data.data.operatingCount
+				            this.orderCountSecurity = data.data.securityCount
+				            this.orderCountTransit = data.data.transitCount
+				            this.orderCountCompleted = data.data.completedCount
+                            this.orderCountCancelled = data.data.cancelledCount
 						}else if(data.code == -200){
 							window.location.href = './login.html'
 						}else{
