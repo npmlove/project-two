@@ -368,7 +368,7 @@
                   </div>
                   <div>
                     <span>*</span>分泡
-                    <el-select v-model="bubblePoint" placeholder="请选择">
+                    <el-select v-model="bubblePoint" placeholder="请选择" @change="changeEstimateVal('bubblePoint')">
                       <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -705,7 +705,7 @@
               <span>￥{{ computedAirFreight }}</span>
             </div>
           </li>
-          <li>
+          <li v-show="computedCustomsFees > 0">
             <span class="item-title">报关费</span>
             <div class="item-price">
               <span>100 * 1</span>
@@ -883,7 +883,6 @@
                 bookingPriceEstimate: '', // 预估单价
                 bookingWeightEstimate: '', // 预估重量
                 bookingCbmEstimate: '', // 预估体积
-                bookingPieceEstimate: '', // 预估件数
                 bubblePointEstimate: '10', // 预估分泡
                 
             }
@@ -905,7 +904,7 @@
         computed: {
           // 显示预估账单
           showComputedBillDialog() {
-            return this.computedInboundCw && this.bookingPriceEstimate
+            return this.computedInboundCw && this.bookingPriceEstimate && this.bookingWeightEstimate && this.bookingCbmEstimate && this.bubblePointEstimate
           },
           // 空运费
           computedAirFreight() {
@@ -913,7 +912,7 @@
           },
           // 报关费
           computedCustomsFees() {
-            return 100 * 1
+            return 100 * (this.customsType == 2 ? 1 : 0)
           },
           // 预估总费用
           totalFees() {
@@ -928,7 +927,6 @@
             // inboundCw: 计费重
             const inboundWeight = this.bookingWeightEstimate
             const inboundCbm = this.bookingCbmEstimate
-            const inboundPiece = this.bookingPieceEstimate
             const currentBubblePoint = this.options.find(item => item.value === this.bubblePointEstimate)
             if (currentBubblePoint.value === '10') {
               return Math.max(inboundCbm * 167, inboundWeight)
@@ -1188,7 +1186,6 @@
             this.bookingPriceEstimate = this.bookingPrice // 预估单价
             this.bookingWeightEstimate = this.bookingWeight // 预估重量
             this.bookingCbmEstimate = this.bookingCbm // 预估体积
-            this.bookingPieceEstimate = this.bookingPiece // 预估件数
             this.bubblePointEstimate = this.bubblePoint // 预估分泡
             
           },
