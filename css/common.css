@@ -3424,3 +3424,33 @@
 .footer-ipc a:hover {
 	color: #2273CB;
 }
+.order-list-count-down-wrap {
+	padding: 10px 0;
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+}
+.order-list-count-down-wrap .count-down-text {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 10px;
+	border: 1px solid #000;
+	width: 80px;
+	height: 20px;
+}
+.order-list-count-down-wrap .tab-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 10px;
+	border-radius: 2px;
+	width: 70px;
+	height: 24px;
+	background: #EFEFEF;
+	cursor: pointer;
+}
+.order-list-count-down-wrap .tab-btn.active {
+	background: #409EFF;
+	color: #fff;
+}

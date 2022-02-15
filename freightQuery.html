@@ -326,7 +326,7 @@
                   <img alt="图片" v-if="item.logoPath" style="margin-right: 10px;height: 20px;width: auto;"
                        :src="item.logoPath"/>
                   {{item.name}}
-                  <span style="marginLeft:10px;">{{item.airCompanyCode}}</span>
+                  <span style="margin-left:10px;">{{item.airCompanyCode}}</span>
                 </div>
                 <div style="display: flex;width: auto;flex: 0 0 130px;justify-content: flex-end;">
                   <div v-if="item.legCount == '1'" class="li-tag1">时效快</div>
@@ -373,7 +373,7 @@
                 </li>
               </ul>
               <div style="margin-top: 15px;text-align: right;">
-                <button @click="bookingSpace(item.id)" class="box-btn btn-prprimary com-width110 com-height50"
+                <button @click="bookingSpace(item)" class="box-btn btn-prprimary com-width110 com-height50"
                         style="margin-right: 30px;font-size: 16px;font-weight: 500;">订舱
                 </button>
                 <button class="box-btn el-button--warning com-width110 com-height50"
@@ -403,11 +403,16 @@
               </div>
               <div class="wrapper-content-item">
                 <div class="wrapper-content-item-text">
-                  <label>化工品包装要求（能接）：</label>托盘、散货
+                  <!-- 先这么写 -->
+                  <label>包装要求（能接）：</label>{{ {
+                    0: '散货和托盘',
+                    1: '散货',
+                    2: '托盘'
+                  }[item.acceptCargoType] }}
                 </div>
-                <div class="wrapper-content-item-text">
+                <!-- <div class="wrapper-content-item-text">
                   <label>其他政策：</label>重货，泡货价格另议
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="result-wrapper-content flightInof" v-if="item.isShowType==2">
@@ -1216,7 +1221,8 @@
             },
             // --------------------------------------------------------------------------------------
             //订舱
-            bookingSpace(id) {
+            bookingSpace(item) {
+              const id = item.id
                 if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
                     this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
                         confirmButtonText: '确定',
@@ -1224,9 +1230,40 @@
                         }
                     })
                 } else {
-                    var dow = this.dow == 0 ? 7 : this.dow
-                    var aircraftRadioName = this.aircraftRadioName == '散货' ? 1 : 2
-                    window.location.href = './bookingSpace.html?airlineId=' + id + '&cargoType=' + aircraftRadioName + '&dow=' + dow + '&date=' + this.bookingDate + '&bookingPiece=' + this.piece + '&bookingWeight=' + this.weight + '&bookingCbm=' + this.volume
+                    // 普通订舱
+                    // var dow = this.dow == 0 ? 7 : this.dow
+                    // var aircraftRadioName = this.aircraftRadioName == '散货' ? 1 : 2
+                    // window.location.href = './bookingSpace.html?airlineId=' + id + '&cargoType=' + aircraftRadioName + '&dow=' + dow + '&date=' + this.bookingDate + '&bookingPiece=' + this.piece + '&bookingWeight=' + this.weight + '&bookingCbm=' + this.volume
+
+                    // 一键订舱
+                    const searchObj = {
+                      pol: this.pol, // 起飞港
+                      pod: this.pod, // 目的港
+                      piece: Number(this.piece), // 件
+                      volume: Number(this.volume), // 体积
+                      weight: Number(this.weight), // 重量
+                      airCompanyCode: item.airCompanyCode, // 航司代码
+                    }
+                    // 为了兼容IE Object Array 方法不能用
+                    let searchArr = []
+                    for (const key in searchObj) {
+                      const val = searchObj[key]
+                      if (val) {
+                        searchArr.push({
+                          key: key,
+                          value: val,
+                        })
+                      }
+                    }
+                    const search = searchArr.reduce((str, item, index) => {
+                      if (str.includes('?')) {
+                        str += `&${item.key}=${item.value}`
+                      } else {
+                        str += `?${item.key}=${item.value}`
+                      }
+                      return str
+                    }, '')
+                    window.location.href = `./quick.html${search}`
                 }
 
             },

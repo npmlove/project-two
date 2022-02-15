@@ -440,6 +440,21 @@
                   <div v-if="isPickUp == '2'" style="padding-left: 60px">
                     <div class="booking-form-line">
                       <div class="booking-form-item">
+                        <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货时间</label>
+                        <div class="booking-form-item-content">
+                          <el-date-picker
+                            v-model="pickUp.pickUpTime"
+                            type="datetime"
+                            value-format="yyyy-MM-dd HH:mm"
+                            format="yyyy-MM-dd HH:mm"
+                            placeholder="请选择提货时间"
+                            :picker-options="pickUpTimePickerOptions">
+                          </el-date-picker>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="booking-form-line">
+                      <div class="booking-form-item">
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货地址</label>
                         <div class="booking-form-item-content">
                           <input v-model=" pickUp.pickUpAddress" maxlength="50" placeholder="请填写提货地址"
@@ -725,6 +740,7 @@
                     pickUpAddress: '',
                     pickUpContacts: '',
                     pickUpTel: '',
+                    pickUpTime: '',
                 },
                 delivery: {
                     deliveryAddress: '',
@@ -798,7 +814,7 @@
             }
             this.openId = localStorage.getItem('wxOpenId')
             this.initUserInfo()
-            this.initList()
+            this.loadSearchData()
               this.preQQ =    JSON.parse(localStorage.getItem("userInfo")).customerServiceQq
               this.preCustomer = JSON.parse(localStorage.getItem("userInfo")).customerService
 
@@ -821,6 +837,13 @@
                       return (time.getTime() < Date.now()- 86400000) || (time.getTime() > dayjs(departureDate).valueOf());
                     }
                   }
+              }
+            },
+            pickUpTimePickerOptions() {
+              return {
+                disabledDate(time) {
+                  return time.getTime() < Date.now()- 86400000;
+                }
               }
             },
             changeData() {
@@ -1009,7 +1032,7 @@
             changePickUp: {
                 handler(newV, oldVal) {
                     for (let key in newV) {
-                        if (newV[key] == "") {
+                        if (newV[key] == "" || newV[key] == null) {
                             this.btnShow1 = false
                             this.copybtnShow1 = false
                             break
@@ -1455,7 +1478,22 @@
             packageTypeClick(act) {
                 this.packageType = act
             },
-            initList() {
+            // 载入search携带的数据
+            loadSearchData() {
+              const search = location.search.slice(1)
+              const searchArr = search.split('&')
+              const searchObj = searchArr.reduce((obj, item) => {
+                const key = item.split('=')[0]
+                const val = item.split('=')[1]
+                obj[key] = val
+                return obj
+              }, {})
+              searchObj.pol && (this.pol = searchObj.pol)
+              searchObj.pod && (this.pod = searchObj.pod)
+              searchObj.piece && (this.bookingPiece = searchObj.piece)
+              searchObj.volume && (this.bookingCbm = searchObj.volume)
+              searchObj.weight && (this.bookingWeight = searchObj.weight)
+              searchObj.airCompanyCode && (this.airCompanyCode = searchObj.airCompanyCode)
             },
             initUserInfo() {
                 axios({

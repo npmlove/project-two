@@ -174,6 +174,14 @@
 									</div>
 								</div>
 							</el-form>
+							<div class="order-list-count-down-wrap">
+								<span style="color: #409EFF">
+									自动刷新
+									<i class="el-icon-refresh"></i>
+								</span>
+								<!-- <span class="count-down-text">{{ currentCountDownText }}</span> -->
+								<div class="tab-btn" v-for="item in countDownList" :key="item.val" :class="{ active: countDown === item.val }" @click="tabCountDownTime(item.val)">{{ item.text }}</div>
+							</div>
 						</div>
 						<div class="tabs__nav-wrap">
 							<el-tabs v-model="typeCode" type="border-card" @tab-click="tabClickData">
@@ -246,8 +254,7 @@
 													</div>
 													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 													<el-button v-if="item.billFlag == 1" type="primary" style="border-radius: 4px;margin-top: 10px;">账单已发起,请确认</el-button>
-													<!-- showMap 暂时这么写，表示有地图已有地图 -->
-													<el-button v-if="item.status === 9 && item.showMap" type="primary" style="border-radius: 4px;margin-top: 10px;">进仓地图已生成，可点击预览或下载</el-button>
+													<el-button v-if="item.status === 9 && item.hasInboundMap" type="primary" style="border-radius: 4px;margin-top: 10px;">进仓地图已生成，可点击预览或下载</el-button>
 												</div>
 											</div>
 										</li>
@@ -386,8 +393,7 @@
 													</div>
 													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 													<el-button v-if="item.billFlag == 1" type="primary" style="border-radius: 4px;margin-top: 10px;">账单已发起,请确认</el-button>
-													<!-- showMap 暂时这么写，表示有地图已有地图 -->
-													<el-button v-if="item.status === 9 && item.showMap" type="primary" style="border-radius: 4px;margin-top: 10px;">进仓地图已生成，可点击预览或下载</el-button>
+													<el-button v-if="item.status === 9 && item.hasInboundMap" type="primary" style="border-radius: 4px;margin-top: 10px;">进仓地图已生成，可点击预览或下载</el-button>
 												</div>
 											</div>
 										</li>
@@ -908,8 +914,7 @@
 													</div>
 													<div v-if="priceType(item.totalArOrgn)" class="nav-wrap-price">{{priceType(item.totalArOrgn)}}</div>
 													<el-button v-if="item.billFlag == 1" type="primary" style="border-radius: 4px;margin-top: 10px;">账单已发起,请确认</el-button>
-													<!-- showMap 暂时这么写，表示有地图已有地图 -->
-													<el-button v-if="item.status === 9 && item.showMap" type="primary" style="border-radius: 4px;margin-top: 10px;">进仓地图已生成，可点击预览或下载</el-button>
+													<el-button v-if="item.status === 9 && item.hasInboundMap" type="primary" style="border-radius: 4px;margin-top: 10px;">进仓地图已生成，可点击预览或下载</el-button>
 												</div>
 											</div>
 										</li>
@@ -995,6 +1000,28 @@
 				headerMenu: false,
 				preQQ:'',
 				preCustomer:"",
+				intervalTimer: null, // 定时刷新定时器
+				currentCountDown: 0, // 定时刷新倒计时,单位毫秒（当前）
+				countDown: 0, // 定时刷新倒计时,单位毫秒（当前）
+				countDownList: [
+					{
+						text: '30秒',
+						val: 30 * 1000,
+					},
+					{
+						text: '60秒',
+						val: 60 * 1000,
+					},
+					{
+						text: '3分钟',
+						val: 3 * 60 * 1000,
+					},
+				],
+			},
+			computed: {
+				currentCountDownText() {
+					return `${this.currentCountDown / 1000}s`
+				},
 			},
 			created() {
 				if(!localStorage.getItem('wxOpenId')){
@@ -1016,7 +1043,21 @@
 				this.preQQ =    JSON.parse(localStorage.getItem("userInfo")).customerServiceQq
               this.preCustomer = JSON.parse(localStorage.getItem("userInfo")).customerService
 			},
+			beforeDestroy() {
+				this.setIntervalTimer(false)
+			},
 			methods: {
+				// 切换倒计时时间
+				tabCountDownTime(time) {
+					if (time === this.countDown) {
+						this.countDown = this.currentCountDown = 0
+						
+						this.setIntervalTimer(false)
+					} else {
+						this.countDown = time
+						this.setIntervalTimer(true)
+					}
+				},
 				goQuick(){
 				if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
 							this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
@@ -1339,8 +1380,25 @@
 					}else if(index == 3){
 						window.location.href = './about_us.html'
 					}
-				}
-			}
+				},
+				// 定时刷新|毫秒
+				setIntervalTimer(begin) {
+					clearInterval(this.intervalTimer)
+					if (!begin) {
+						return
+					}
+					this.currentCountDown = this.countDown
+					this.intervalTimer = setInterval(() => {
+						this.currentCountDown -= 1000
+						if (this.currentCountDown < 0) {
+							this.currentCountDown = 0
+							this.searchClick()
+							this.currentCountDown = this.countDown
+							this.setIntervalTimer(true)
+						}
+					}, 1000)
+				},
+			},
 		})
 	</script>
 </html>
