@@ -292,7 +292,7 @@
       <el-row>
         <el-col :span="20">
           <el-form-item label="银行账号" prop="bankAccount" :label-width="formLabelWidth" >
-            <el-input v-model="form.bankAccount" maxLength="19" autocomplete="off"></el-input>
+            <el-input v-model="form.bankAccount" maxLength="60" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -376,7 +376,7 @@
                 callback()
             };
             let validateBankAccount = (rule, value, callback) => {
-                var reg = /^[0-9]{1,19}$/;
+                var reg = /^[\d\D]{1,60}$/;
                 if (value === '') {
                     callback(new Error('请输入银行卡号'));
                 }
