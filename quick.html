@@ -439,6 +439,7 @@
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货时间</label>
                         <div class="booking-form-item-content">
                           <el-date-picker
+                            size="small"
                             v-model="pickUp.pickUpTime"
                             type="datetime"
                             value-format="yyyy-MM-dd HH:mm"
@@ -836,9 +837,14 @@
               }
             },
             pickUpTimePickerOptions() {
+              const departureDate = this.departureDate
               return {
                 disabledDate(time) {
-                  return time.getTime() < Date.now()- 86400000;
+                  if (!departureDate) {
+                      return time.getTime() < Date.now()- 86400000;
+                    } else {
+                      return (time.getTime() < Date.now()- 86400000) || (time.getTime() > dayjs(departureDate).valueOf());
+                    }
                 }
               }
             },
@@ -1300,6 +1306,10 @@
 								}
                 if ( dayjs(this.expectedInboundTime).valueOf() > dayjs(this.departureDate).valueOf() ) {
                   this.$message.error('请选择早于航班日期的预计进仓时间')
+                  return
+                }
+                if ( this.isPickUp === 2 && dayjs(this.pickUp.pickUpTime).valueOf() > dayjs(this.departureDate).valueOf() ) {
+                  this.$message.error('请选择早于航班日期的提货时间')
                   return
                 }
                 let {
