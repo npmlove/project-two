@@ -2638,6 +2638,15 @@
 	margin-bottom: 0;
 	background-image: url(../img/kefudianhua.png);
 }
+.list-userInfo-customer .userInfo-customer:nth-child(2){
+	padding-left: 23px;
+	font-size: 12px;
+	margin-bottom: 20px;
+	background-image: url(../img/kefudianhua.png);
+	background-size: 16px 16px;
+	background-repeat: no-repeat;
+	background-position: top 0 left;
+}
 .list-userInfo-customer .userInfo-customer > div:first-child{
 	color: #333;
 }
