@@ -260,5 +260,78 @@ div{
 .group-radio-ul .radio-li{
     color: #000000 !important;
 }
-
+.order-agreement-dialog .header-tips {
+    font-size: 12px;
+    transform: translateY(-20px);
+}
+.order-agreement-dialog .content {
+    height: 400px;
+    overflow-y: auto;
+}
+.order-agreement-dialog .content p {
+    font-size: 12px;
+    line-height: 20px;
+}
+.computed-bill-dialog {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    width: 260px;
+    transform: translateY(-50%);
+}
+.computed-bill-dialog header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+    height: 80px;
+    background-image: url(../img/orderDetails_zhangdan.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.computed-bill-dialog .content {
+    border: 1px solid #EFEFEF;
+    border-top: none;
+    padding: 20px;
+    background: #fff;
+}
+.computed-bill-dialog .content .content-title {
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+}
+.computed-bill-dialog .price-list li {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+}
+.computed-bill-dialog .price-list li .item-title {
+    font-size: 14px;
+    font-weight: 500px;
+    color: #999;
+}
+.computed-bill-dialog .price-list li .item-price {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+.computed-bill-dialog .price-list li .item-price span {
+    width: 80px;
+    text-align: right;
+}
+.computed-bill-dialog footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border: 1px solid #EFEFEF;
+    border-top: none;
+    padding: 20px 50px;
+    background: #fff;
+    font-size: 34px;
+    color: #FF9914;
+    font-weight: bold;
+}
 

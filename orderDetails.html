@@ -526,6 +526,9 @@
                 <div class="details-table-tab-title">国内提货</div>
                 <div class="details-table-details">
                   <div class="details-table-tabs" style="word-break: break-all;"><span
+                    style="flex: 0 0 70px;">提货时间：</span>{{ dayjs(detailsArr.pickUpTime).format('YYYY-MM-DD HH:mm') }}
+                  </div>
+                  <div class="details-table-tabs" style="word-break: break-all;"><span
                     style="flex: 0 0 70px;">提货地址：</span>{{detailsArr.pickUpAddress}}
                   </div>
                   <div class="details-table-tabs" style="word-break: break-all;"><span
