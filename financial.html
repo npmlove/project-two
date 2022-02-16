@@ -620,6 +620,7 @@
 	</div>
 </body>
 <script src="./service/index.js"></script>
+<script src="./js/utils.js"></script>
 <script>
 	new Vue({
 		el: '#app',
@@ -847,7 +848,7 @@
 							this.initList()
 							this.$message.success('开票成功')
 						} else if (data.code == -200) {
-							window.location.href = './login.html'
+							DcUtils.tokenExpired()
 						} else {
 							this.$message.error(data.message)
 						}
@@ -913,7 +914,7 @@
 						this.invoiceTitle = data.data[0].invoiceTitle
 						this.invoiceTitleJson = data.data[0]
 					} else if (data.code == -200) {
-						window.location.href = './login.html'
+						DcUtils.tokenExpired()
 					} else {
 						this.$message.error(data.message)
 					}
@@ -933,7 +934,7 @@
 						this.recipient = data.data[0].recipient
 						this.recipientJson = data.data[0]
 					} else if (data.code == -200) {
-						window.location.href = './login.html'
+						DcUtils.tokenExpired()
 					} else {
 						this.$message.error(data.message)
 					}
@@ -980,7 +981,7 @@
 						}
 						this.tableData2 = tempData
 					} else if (data.code == -200) {
-						window.location.href = './login.html'
+						DcUtils.tokenExpired()
 					} else {
 						this.$message.error(data.message)
 					}
@@ -1004,7 +1005,7 @@
 						this.tableData1 = data.data
 
 					} else if (data.code == -200) {
-						window.location.href = './login.html'
+						DcUtils.tokenExpired()
 					} else {
 						this.$message.error(data.message)
 					}
@@ -1025,7 +1026,7 @@
 					if (data.code == 200) {
 						this.userInfo = data.data.tportalUser
 					} else if (data.code == -200) {
-						window.location.href = './login.html'
+						DcUtils.tokenExpired()
 					} else {
 						this.$message.error(data.message)
 					}

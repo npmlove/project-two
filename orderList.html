@@ -960,6 +960,7 @@
 		</div>
 	</body>
 	<script src="./service/index.js"></script>
+	<script src="./js/utils.js"></script>
 	<script>
 		new Vue({
 			el: '#app',
@@ -1201,7 +1202,7 @@
 				            this.orderCountCompleted = data.data.completedCount
                             this.orderCountCancelled = data.data.cancelledCount
 						}else if(data.code == -200){
-							window.location.href = './login.html'
+							DcUtils.tokenExpired()
 						}else{
 							this.$message.error(data.message)
 
@@ -1249,7 +1250,7 @@
 								this.total = data.data.total
 							}
 						}else if(data.code == -200){
-							window.location.href = './login.html'
+							DcUtils.tokenExpired()
 						}else{
 							this.$message.error(data.message)
 
@@ -1268,7 +1269,7 @@
 						if(data.code == 200){
 							this.userInfo = data.data.tportalUser
 						}else if(data.code == -200){
-							window.location.href = './login.html'
+							DcUtils.tokenExpired()
 						}else{
 							this.$message.error(data.message)
 
