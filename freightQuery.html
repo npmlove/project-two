@@ -57,7 +57,7 @@
 </head>
 <body >
 <div id="app" v-cloak>
-  <div v-show="!certificationBody">
+  <div v-if="!certificationBody">
     <div  id="17dc-web" class="vr" ></div>
 
     <div class="vr_wrap"></div>
@@ -412,6 +412,7 @@
                         style="margin-right: 30px;font-size: 16px;font-weight: 500;">订舱
                 </button>
                 <button class="box-btn el-button--warning com-width110 com-height50" 
+                @click="getDom"
                         style="font-size: 16px;font-weight: 500;">咨询客服
                 </button>
               </div>
@@ -691,6 +692,13 @@
 						}
 					}
 				},
+        getDom(){
+          let id = document.getElementById('17dc-web')
+          if(id) {
+          id.click() 
+          }
+  
+        },
             valueChange(e){
                 console.log(e)
             },
