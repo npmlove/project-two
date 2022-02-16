@@ -118,12 +118,174 @@
 	background-image: url(../img/header-title.svg);
 	margin-left: 20px;
 }
+.vr {
+	
+	display: block;
 
+	width: 71px;
+
+	height: 71px;
+
+	border-radius: 50%;
+
+	position: fixed;
+
+	right: 20px;
+
+	bottom: 200px;
+
+	background:#fff url('../img/qidian.png') no-repeat ;
+
+	background-size: 80% 80%;
+	background-position:10px ;
+	filter: drop-shadow(0 0 15px rgba(0, 129, 255, 0.19));
+
+	z-index: 99;
+
+}
+
+ 
+
+.vr_wrap {
+
+	background: #fff;
+
+	opacity: 0.7;
+
+	filter: alpha(opacity=70);
+
+	width: 71px;
+
+	height: 71px;
+
+	border-radius: 50%;
+
+	position: fixed;
+
+	right: 20px;
+
+	bottom: 200px;
+
+	box-shadow: 0px 0px 50px 10px rgba(0, 129, 255, 0.19);
+
+	animation: mymove 1.5s infinite;
+
+	/*animation-direction:alternate;*/
+
+	border-radius: 50%;
+	z-index: 98;
+
+}
+
+ 
+
+.vr_wrap2 {
+
+	background: #fff;
+
+	opacity: 0.9;
+
+	filter: alpha(opacity=90);
+
+	border-radius: 50%;
+
+	width: 71px;
+
+	height: 71px;
+
+	border-radius: 50%;
+
+	position: fixed;
+
+	right: 20px;
+
+	bottom: 200px;
+
+	box-shadow: 0px 0px 50px 10px rgba(0, 129, 255, 0.19);
+
+	animation: mymove1 1.5s infinite;
+	z-index: 98;
+
+	/*animation-direction:alternate;*/
+
+}
+
+ 
+
+@keyframes mymove {
+
+0% {
+
+box-shadow: 0px 0px 0px 2px skyblue;
+
+height: 71px;
+
+width: 71px;
+
+}
+
+100% {
+
+box-shadow: 0px 0px 0px 20px  skyblue;
+
+height: 72px;
+
+width: 72px;
+
+}
+
+100% {
+
+opacity: 0;
+
+filter: alpha(opacity=0);
+
+}
+
+}
+
+
+
+@keyframes mymove1 {
+
+0% {
+
+box-shadow: 0px 0px 0px 2px  skyblue;
+
+height: 71px;
+
+width: 71px;
+
+}
+
+50% {
+
+box-shadow: 0px 0px 0px 20px  skyblue;
+
+height: 72px;
+
+width: 72px;
+
+opacity: 0;
+
+}
+
+100% {
+
+opacity: 0;
+
+filter: alpha(opacity=0);
+
+}
+}
+[v-cloak] {
+	display: none;
+  }
 .header-user {
-	position: absolute;
+	margin-left:500px;
 	top: 50%;
-	right: 0;
-	transform: translateY(-50%);
+	
+
 	background-image: url(../img/user.png);
 	background-repeat: no-repeat;
 	background-position: left center;
@@ -134,7 +296,7 @@
 	color: #2273CB;
 	font-weight: 500;
 	padding-left: 30px;
-	cursor: pointer;
+	
 }
 .header-userInfo{
 	position: relative;

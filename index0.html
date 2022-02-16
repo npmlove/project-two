@@ -32,9 +32,33 @@
 		</script>
 		<script src="./js/forbidden.js"></script>
 		<script src="./js/forbibben.js"></script>
+		<style>
+			.tips{
+				position: relative;
+				background: #FFFFFF;
+				border-radius: 5px 5px 5px 5px;
+				opacity: 1;
+				font-size: 10px;
+				font-weight: bold;
+				color: #333333;
+				padding: 0 10px;
+				height: 25px;
+				line-height: 25px;
+				margin-left: 40px;
+				margin-bottom: 10px;
+			}
+		</style>
 	</head>
 	<body  >
-		<div id="app">
+		<div id="app" v-cloak>
+			<div v-show="!certificationBody">
+				<div  id="17dc-web" class="vr" ></div>
+	
+				<div class="vr_wrap"></div>
+	
+				<div class="vr_wrap2"></div>
+	
+			</div>
 			<!-- 头部 -->
 			<div class="header">
 				<div class="header-img">
@@ -353,8 +377,8 @@
 				</div>
 			</div>
 		</div>
-		<!-- WPA start -->
-<script id="qd3009105440eae7949c0717633a3a3b0afeadebfc9c" src="https://wp.qiye.qq.com/qidian/3009105440/eae7949c0717633a3a3b0afeadebfc9c" charset="utf-8" async defer></script>
+<!-- WPA start -->
+<script id="qd300910544025a0ebbabd71b26102946a262af043f2" src="https://wp.qiye.qq.com/qidian/3009105440/25a0ebbabd71b26102946a262af043f2" charset="utf-8" async defer></script>
 <!-- WPA end -->
 	</body>
 	<script src="./service/index.js"></script>
@@ -691,6 +715,7 @@
 				],
 				nullImage: './img/null.png',
 				trackSearchInput: '',
+				certificationBody:'',
 				isShowYundan: false,
 				userInfo: '',
 				headerMenu: false
@@ -704,6 +729,9 @@
 				// if(!localStorage.getItem('wxOpenId')){
 				// 	window.location.href = './login.html'
 				// }
+				if(localStorage.getItem('certificationBody')) {
+						this.certificationBody = localStorage.getItem('certificationBody')
+					}
 				if (localStorage.getItem('wxOpenId')) {
                  this.wxOpenId = localStorage.getItem('wxOpenId')
             }
@@ -780,7 +808,7 @@
 				},
 				tuiChu() {
 					localStorage.clear()
-					window.location.href = './login.html'
+					window.location.href = './index.html'
 				},
 				trackSearch() {
 					if(!this.trackSearchInput){

@@ -39,7 +39,15 @@
   <script src="./js/forbibben.js"></script>
 </head>
 <body  >
-<div id="app">
+<div id="app" v-cloak>
+  <div v-show="!certificationBody">
+    <div  id="17dc-web" class="vr" ></div>
+
+    <div class="vr_wrap"></div>
+
+    <div class="vr_wrap2"></div>
+
+  </div>
   <!-- 头部 -->
   <div class="header">
     <div class="header-img">
@@ -141,7 +149,7 @@
 
 </div>
 <!-- WPA start -->
-<script id="qd3009105440eae7949c0717633a3a3b0afeadebfc9c" src="https://wp.qiye.qq.com/qidian/3009105440/eae7949c0717633a3a3b0afeadebfc9c" charset="utf-8" async defer></script>
+<script id="qd300910544025a0ebbabd71b26102946a262af043f2" src="https://wp.qiye.qq.com/qidian/3009105440/25a0ebbabd71b26102946a262af043f2" charset="utf-8" async defer></script>
 <!-- WPA end -->
 </body>
 <script src="./service/index.js"></script>
@@ -150,6 +158,7 @@
     new Vue({
         el: '#app',
         data: {
+          certificationBody:'',
           wxOpenId:'',
             menuIndex: 2,
             userInfo: '',
@@ -176,6 +185,9 @@
             if (localStorage.getItem('wxOpenId')) {
                  this.wxOpenId = localStorage.getItem('wxOpenId')
             }
+            if(localStorage.getItem('certificationBody')) {
+						this.certificationBody = localStorage.getItem('certificationBody')
+					}
             if (localStorage.getItem('userInfo')) {
                 this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
             }
@@ -413,7 +425,7 @@
             },
             tuiChu() {
                 localStorage.clear()
-                window.location.href = './login.html'
+                window.location.href = './index.html'
             },
             //登录
             loginClick() {

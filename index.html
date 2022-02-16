@@ -49,173 +49,14 @@
 				margin-left: 40px;
 				margin-bottom: 10px;
 			}
-			.vr {
-	
-	display: block;
-
-	width: 71px;
-
-	height: 71px;
-
-	border-radius: 50%;
-
-	position: fixed;
-
-	right: 20px;
-
-	bottom: 200px;
-
-	background:#fff url('./img/qidian.png') no-repeat ;
-
-	background-size: 80% 80%;
-	background-position:10px ;
-	filter: drop-shadow(0 0 15px rgba(0, 129, 255, 0.19));
-
-	z-index: 99;
-
-}
-
- 
-
-.vr_wrap {
-
-	background: #fff;
-
-	opacity: 0.7;
-
-	filter: alpha(opacity=70);
-
-	width: 71px;
-
-	height: 71px;
-
-	border-radius: 50%;
-
-	position: fixed;
-
-	right: 20px;
-
-	bottom: 200px;
-
-	box-shadow: 0px 0px 50px 10px rgba(0, 129, 255, 0.19);
-
-	animation: mymove 1.5s infinite;
-
-	/*animation-direction:alternate;*/
-
-	border-radius: 50%;
-	z-index: 98;
-
-}
-
- 
-
-.vr_wrap2 {
-
-	background: #fff;
-
-	opacity: 0.9;
-
-	filter: alpha(opacity=90);
-
-	border-radius: 50%;
-
-	width: 71px;
-
-	height: 71px;
-
-	border-radius: 50%;
-
-	position: fixed;
-
-	right: 20px;
-
-	bottom: 200px;
-
-	box-shadow: 0px 0px 50px 10px rgba(0, 129, 255, 0.19);
-
-	animation: mymove1 1.5s infinite;
-	z-index: 98;
-
-	/*animation-direction:alternate;*/
-
-}
-
- 
-
-@keyframes mymove {
-
-0% {
-
-box-shadow: 0px 0px 0px 2px rgba(0, 129, 255, 0.19);
-
-height: 71px;
-
-width: 71px;
-
-}
-
-100% {
-
-box-shadow: 0px 0px 0px 20px rgba(0, 129, 255, 0.19);
-
-height: 72px;
-
-width: 72px;
-
-}
-
-100% {
-
-opacity: 0;
-
-filter: alpha(opacity=0);
-
-}
-
-}
-
-
-
-@keyframes mymove1 {
-
-0% {
-
-box-shadow: 0px 0px 0px 2px rgba(0, 129, 255, 0.19);
-
-height: 71px;
-
-width: 71px;
-
-}
-
-50% {
-
-box-shadow: 0px 0px 0px 20px rgba(0, 129, 255, 0.19);
-
-height: 72px;
-
-width: 72px;
-
-opacity: 0;
-
-}
-
-100% {
-
-opacity: 0;
-
-filter: alpha(opacity=0);
-
-}
-}
+			
 
 
 		</style>
 	</head>
 	<body  >
-		<div id="app">
-			<div v-show="!certificationBody">
+		<div id="app"  v-cloak>
+			<div v-if="!certificationBody">
 				<div  id="17dc-web" class="vr" ></div>
 	
 				<div class="vr_wrap"></div>
@@ -863,7 +704,7 @@ filter: alpha(opacity=0);
 				],
 				portCountyIndex: 99999,
 				countyName: '',
-				certificationBody:'',
+				certificationBody:true,
 				aircraftRadioName: '全部',
 				perferredArr: [],
 
@@ -992,8 +833,11 @@ filter: alpha(opacity=0);
 				}
 			},
 			created() {
+				
 				if(localStorage.getItem('certificationBody')){
 				 this.certificationBody = localStorage.getItem('certificationBody')
+				}else{
+					this.certificationBody =false
 				}
 				if(localStorage.getItem('userInfo')){
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
