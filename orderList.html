@@ -179,8 +179,10 @@
 									自动刷新
 									<i class="el-icon-refresh"></i>
 								</span>
-								<!-- <span class="count-down-text">{{ currentCountDownText }}</span> -->
-								<div class="tab-btn" v-for="item in countDownList" :key="item.val" :class="{ active: countDown === item.val }" @click="tabCountDownTime(item.val)">{{ item.text }}</div>
+								<el-tooltip v-for="item in countDownList" :key="item.val" :content="`订单列表将每${item.text}刷新一次`" placement="top" effect="light">
+									<div class="tab-btn" :class="{ active: countDown === item.val }" @click="tabCountDownTime(item.val)">{{ item.text }}</div>
+								</el-tooltip>
+								<span v-show="intervalTimer">{{ currentCountDownText }}</span>
 							</div>
 						</div>
 						<div class="tabs__nav-wrap">
@@ -1020,7 +1022,7 @@
 			},
 			computed: {
 				currentCountDownText() {
-					return `${this.currentCountDown / 1000}s`
+					return `${this.currentCountDown / 1000}s后刷新当前页面`
 				},
 			},
 			created() {
@@ -1384,6 +1386,7 @@
 				// 定时刷新|毫秒
 				setIntervalTimer(begin) {
 					clearInterval(this.intervalTimer)
+					this.intervalTimer = null
 					if (!begin) {
 						return
 					}
