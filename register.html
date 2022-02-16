@@ -120,9 +120,9 @@
 								<div v-if="isYzm" @click="yzmClick" class="input-yzm">获取验证码</div>
 								<div v-if="!isYzm" class="input-yzm">{{yzmTime}} S</div>
 							</div>
-							<div class="input-item com-bottom10">
+							<!-- <div class="input-item com-bottom10">
 								<input v-model="invitationCode" @focus="isError = false" placeholder="请输入邀请码" class="input-inner input-icon3 com-padding-right100" type="text" />
-							</div>
+							</div> -->
 							<div class="input-item com-bottom10">
 								<div class="input-icon2"></div>
 								<input v-model="password" @focus="isError = false" placeholder="请设置密码(6-20位字符)" class="input-inner" type="password" />
@@ -163,6 +163,9 @@
 				</div>
 			</div>
 		</div>
+		<!-- WPA start -->
+<script id="qd3009105440eae7949c0717633a3a3b0afeadebfc9c" src="https://wp.qiye.qq.com/qidian/3009105440/eae7949c0717633a3a3b0afeadebfc9c" charset="utf-8" async defer></script>
+<!-- WPA end -->
 	</body>
 	<script src="./service/index.js"></script>
 	<script src="./js/utils.js"></script>
@@ -181,7 +184,7 @@
 				password: '',
 				newPassword: '',
 				registerCode: '',
-				invitationCode: ''
+				// invitationCode: ''
 
 			},
 			mounted() {
@@ -203,11 +206,13 @@
 						this.isError = true
 						this.errorText = '请输入有效的验证码'
 						return
-					}else if(this.invitationCode == ''){
-						this.isError = true
-						this.errorText = '请输入邀请码'
-						return
-					}else if(!regpass.test(this.password)){
+					}
+					// else if(this.invitationCode == ''){
+					// 	this.isError = true
+					// 	this.errorText = '请输入邀请码'
+					// 	return
+					// }
+					else if(!regpass.test(this.password)){
 						this.isError = true
 						this.errorText = '请输入有效的密码'
 						return
@@ -226,7 +231,7 @@
 						password: this.password,
 						registerCode: this.registerCode,
 						tel: this.tel,
-						invitationCode: this.invitationCode
+						// invitationCode: this.invitationCode
 					}
 					axios({
 						method: 'post',
