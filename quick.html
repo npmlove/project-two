@@ -960,7 +960,7 @@
                   if (!departureDate) {
                       return time.getTime() < Date.now()- 86400000;
                     } else {
-                      return (time.getTime() < Date.now()- 86400000) || (time.getTime() > dayjs(departureDate).valueOf());
+                      return (time.getTime() < Date.now()- 86400000) || (time.getTime() >= dayjs(departureDate).valueOf());
                     }
                 }
               }
@@ -1440,7 +1440,7 @@
                   this.$message.error('请选择早于航班日期的预计进仓时间')
                   return
                 }
-                if ( this.isPickUp === 2 && dayjs(this.pickUp.pickUpTime).valueOf() > dayjs(this.departureDate).valueOf() ) {
+                if ( this.isPickUp === 2 && dayjs(this.pickUp.pickUpTime).valueOf() >= dayjs(this.departureDate).valueOf() ) {
                   this.$message.error('请选择早于航班日期的提货时间')
                   return
                 }
