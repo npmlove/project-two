@@ -19,6 +19,8 @@
 		<link rel="stylesheet" href="./css/element-ui-min.css">
 		<link rel="stylesheet" href="./css/reset.css" />
 		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/dayjs.min.js"></script>
+		<script src="./js/qs.min.js"></script>
 		<script src="./js/vue.js"></script>
 		<script src="./js/axios.min.js"></script>
 		<script src="./js/swiper-bundle.min.js"></script>
@@ -300,14 +302,14 @@
 						<li @mouseover="moreClick(true)" @mouseout="moreClick(false)" class="city-more-arrow">更多</li>
 					</ul>
 					<!-- <div class="more-arrow">更多</div> -->
-					<div class="aircraft-group">
+					<!-- <div class="aircraft-group">
 						<ul class="group-radio-ul">
 							<li @click="aircraftRadioClick('全部')" :class="{radio_li_active: aircraftRadioName == '全部'}" class="radio-li">全部</li>
 							<li @click="aircraftRadioClick('特价航线')" :class="{radio_li_active: aircraftRadioName == '特价航线'}" class="radio-li">特价航线</li>
 							<li @click="aircraftRadioClick('直达航线')" :class="{radio_li_active: aircraftRadioName == '直达航线'}" class="radio-li">直达航线</li>
 						</ul>
-					</div>
-					<ul @mouseover="moreClick(true)" @mouseout="moreClick(false)" v-show="isMoreCity" class="more-city-prop">
+					</div> -->
+					<ul @mouseover="moreClick(true)" @mouseout="moreClick(false)" v-show="isMoreCity" class="more-city-prop" style="right:0px">
 						<li :class="{'city-prop-active': cityName == item.value}" @click="cityActiveClick(item.value)" v-for="(item,index) in gengduoArr" :key="item.value">{{item.name}}</li>
 					</ul>
 				</div>
@@ -571,10 +573,7 @@
 					{
 						name: '重庆',
 						value: 'Chongqing'
-					}
-				],
-				cityName: '全部',
-				gengduoArr: [
+					},
 					{
 						name: '济南',
 						value: 'Jinan'
@@ -587,7 +586,11 @@
 						name: '南京',
 						value: 'Nanjing'
 					},
-					{
+					
+				],
+				cityName: '全部',
+				gengduoArr: [
+				{
 						name: '杭州',
 						value: 'Hangzhou'
 					},
