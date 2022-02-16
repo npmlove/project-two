@@ -8,7 +8,7 @@
       }
       const script = document.createElement('script')
       script.type = 'text/javascript'
-      script.setAttribute('defer', true)
+      script.setAttribute('async', true)
       script.id = name
       script.onload = () => {
         console.log(`${name} is loaded, use ${val}`)
