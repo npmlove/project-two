@@ -3454,3 +3454,16 @@
 	background: #409EFF;
 	color: #fff;
 }
+
+.wrapper-li-content .fix-updatetime {
+	position: absolute;
+	right: 20PX;
+	top: 20PX;
+}
+.wrapper-li-content .fix-recommend-flag {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 1;
+	transform: translate(-40%, -40%);
+}

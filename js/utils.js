@@ -1,30 +1,5 @@
 (function () {
   const DcUtils = {
-    loadScript({ name, val, src }) {
-      // 如果已存在，不再重新加载
-      const existedScript = document.querySelector(`#${name}`)
-      if (existedScript) {
-        return
-      }
-      const script = document.createElement('script')
-      script.type = 'text/javascript'
-      script.id = name
-      script.onload = () => {
-        console.log(`${name} is loaded, use ${val}`)
-      }
-      script.src = src
-      document.head.appendChild(script)
-    },
-    loadScripts() {
-      const scripts = [
-        {
-          name: 'qs',
-          val: 'Qs',
-          src: './js/qs.min.js',
-        },
-      ]
-      scripts.forEach(item => DcUtils.loadScript(item))
-    },
     // token过期，清空本地存储里的用户信息，然后跳转login页面
     tokenExpired() {
       const removeExpiredItems = [
@@ -80,6 +55,5 @@
       }
     },
   }
-  DcUtils.loadScripts()
   window.DcUtils = DcUtils
 })()

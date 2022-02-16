@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="./css/reset.css"/>
   <link rel="stylesheet" href="./css/common.css"/>
   <link rel="stylesheet" href="./css/freightQuery.css"/>
+  <script src="./js/package.js"></script>
   <script src="./js/vue.js"></script>
   <script src="./js/axios.min.js"></script>
   <script src="./js/element-ui.js"></script>
@@ -321,7 +322,11 @@
       </div>
       <ul v-if="priceArr.length > 0" class="result-wrapper-ul">
         <li v-for="(item,index) in priceArr" :key="index" class="result-wrapper-li"  @click="shrink(item,index)">
-          <div class="wrapper-li-content">
+          <div class="wrapper-li-content" style="position: relative;">
+            <div class="fix-recommend-flag" v-if="item.recommendFlag === 1">
+              <img src="./img/recommend-flag.png">
+            </div>
+            <div class="fix-updatetime"><span style="font-weight: bold;">更新时间：</span><span>{{ dayjs(item.airlineUpdateTime).format('YYYY年MM月DD日 HH:mm') }}</span></div>
             <div class="wrapper-li-content-left">
               <div class="wrapper-li-tags" style="justify-content: space-between;">
                 <div style="width: auto;font-size: 12px;display: flex;align-items: center;">
@@ -330,10 +335,10 @@
                   {{item.name}}
                   <span style="margin-left:10px;">{{item.airCompanyCode}}</span>
                 </div>
-                <div style="display: flex;width: auto;flex: 0 0 130px;justify-content: flex-end;">
+                <!-- <div style="display: flex;width: auto;flex: 0 0 130px;justify-content: flex-end;">
                   <div v-if="item.legCount == '1'" class="li-tag1">时效快</div>
                   <div v-if="item.tag" class="li-tag2">价格低</div>
-                </div>
+                </div> -->
               </div>
               <div class="wrapper-li-flgiht">
                 <div class="li-flgiht-airline">
@@ -623,6 +628,7 @@
 
         },
         methods: {
+          dayjs,
           onlyOneChoose(index) {
 					if(index == 1){
 						if(this.qiPageArr.length>1) {
