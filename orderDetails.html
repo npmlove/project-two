@@ -363,7 +363,7 @@
                 </div>
                 <div v-if="detailsArr.legCount > 1" style="position: absolute;top: 0;left: 142px;">
                   <el-tooltip class="item" effect="dark" :content="detailsArr.fullLeg" placement="top-start">
-                    <a>{{detailsArr.firstHub}}</a>
+                    <a> {{detailsArr.legCount == '1' ? '直达' :detailsArr.firstHub?detailsArr.firstHub : ''}}</a>
                   </el-tooltip>
                 </div>
                 <!-- 价格和分泡比例 -->
@@ -562,13 +562,12 @@
                 <div v-if="guonerArr.length > 0" class="booking-price-item">
                   <div class="booking-price-item-name">国内段</div>
                   <div v-for="(item,index) in guonerArr" class="booking-price-item-list">
-                    <div>{{item.expenseName}}</div>
-                    <div v-if="item.expenseName == '空运费'"><span
-                      style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span>
+                    <div style="flex:1">{{item.expenseName}}</div>
+                    <div
+                      style="flex:1;text-align:right">{{item.price}}*{{item.quantity}}
                     </div>
-                    <div v-else><span
-                      style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span>
-                    </div>
+                      <div style="flex:1;text-align:right">￥{{item.totalCny}}</div>
+                   
                   </div>
                 </div>
                 <div class="booking-price-total">
