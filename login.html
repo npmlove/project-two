@@ -223,6 +223,7 @@
 <!-- WPA end -->
 	</body>
 	<script src="./service/index.js"></script>
+	<script src="./js/utils.js"></script>
 	<script>
 		new Vue({
 			el: '#app',
@@ -336,7 +337,7 @@
 							localStorage.setItem('wxOpenId',data.data.tportalUser.wechatOpenId)
 							localStorage.setItem('tokenId',data.data.tokenId)
 							localStorage.setItem('certificationBody',data.data.tportalUser.certificationBody)
-							window.location.href = './index.html'
+							DcUtils.redirectLogin()
 						}else{
 							this.isError = true
 							this.errorText = data.message
@@ -391,7 +392,7 @@
 								localStorage.setItem('wxOpenId',user.data.tportalUser.wechatOpenId)
 								localStorage.setItem('tokenId',user.data.tokenId)
 								localStorage.setItem('certificationBody',user.data.tportalUser.certificationBody)
-								window.location.href = './index.html'
+								DcUtils.redirectLogin()
 							}
 						})
 					}

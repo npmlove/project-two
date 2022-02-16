@@ -294,7 +294,7 @@
       <el-row>
         <el-col :span="20">
           <el-form-item label="银行账号" prop="bankAccount" :label-width="formLabelWidth" >
-            <el-input v-model="form.bankAccount" maxLength="19" autocomplete="off"></el-input>
+            <el-input v-model="form.bankAccount" maxLength="60" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -350,6 +350,7 @@
 <!-- WPA end -->
 </body>
 <script src="./service/index.js"></script>
+<script src="./js/utils.js"></script>
 <script>
     new Vue({
         el: '#app',
@@ -380,7 +381,7 @@
                 callback()
             };
             let validateBankAccount = (rule, value, callback) => {
-                var reg = /^[0-9]{1,19}$/;
+                var reg = /^[\d\D]{1,60}$/;
                 if (value === '') {
                     callback(new Error('请输入银行卡号'));
                 }
@@ -595,7 +596,7 @@
                                 }
 
                             } else if (data.code == -200) {
-                                window.location.href = './login.html'
+                              DcUtils.tokenExpired()
                             } else {
                                 this.$message.error(data.message)
                             }
@@ -644,7 +645,7 @@
                                 this.expressInfoList();
                             }
                         } else if (data.code == -200) {
-                            window.location.href = './login.html'
+                          DcUtils.tokenExpired()
                         } else {
                             this.$message.error(data.message)
                         }
@@ -715,7 +716,7 @@
                     if (data.code == 200) {
                         this.expressListData = data.data;
                     } else if (data.code == -200) {
-                        window.location.href = './login.html'
+                      DcUtils.tokenExpired()
                     } else {
                         this.$message.error(data.message)
                     }
@@ -734,7 +735,7 @@
                     if (data.code == 200) {
                         this.invoiceListData = data.data;
                     } else if (data.code == -200) {
-                        window.location.href = './login.html'
+                        DcUtils.tokenExpired()
                     } else {
                         this.$message.error(data.message)
                     }
@@ -792,7 +793,7 @@
                         this.userInfo = data.data.tportalUser
                         this.phoneContack = data.data.tportalUser.customerServiceTel
                     } else if (data.code == -200) {
-                        window.location.href = './login.html'
+                      DcUtils.tokenExpired()
                     } else {
                         this.$message.error(data.message)
                     }
