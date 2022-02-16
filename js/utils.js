@@ -50,15 +50,33 @@
       }
     },
     // 离开页面前的操作
-    beforeLeavePage() {
+    beforeLeavePage(callback) {
       window.onbeforeunload = (ev) => {
-        ev = ev || window.event;
-        // 兼容IE8和Firefox 4之前的版本
-        if (ev) {
-          ev.returnValue = '关闭提示'
-        }
-        // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
-        return '关闭提示'
+        callback && callback()
+        // ev = ev || window.event;
+        // // 兼容IE8和Firefox 4之前的版本
+        // if (ev) {
+        //   ev.returnValue = '关闭提示'
+        // }
+        // // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
+        // return '关闭提示'
+      }
+    },
+    // 设置sessionStorage
+    setSessionStorage(key, val) {
+      if (!key || !val) {
+        return
+      } else {
+        sessionStorage.setItem(key, JSON.stringify(val))
+      }
+    },
+    // 设置sessionStorage
+    getSessionStorage(key) {
+      if (!key) {
+        return
+      } else {
+        const val = sessionStorage.getItem(key)
+        return JSON.parse(val)
       }
     },
   }

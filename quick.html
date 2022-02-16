@@ -898,6 +898,7 @@
             this.openId = localStorage.getItem('wxOpenId')
             this.initUserInfo()
             this.loadSearchData()
+            this.localDataDeal()
               this.preQQ =    JSON.parse(localStorage.getItem("userInfo")).customerServiceQq
               this.preCustomer = JSON.parse(localStorage.getItem("userInfo")).customerService
 
@@ -1030,6 +1031,7 @@
         watch: {
             isShow: {
                 handler(newV, oldVal) {
+                  
                     this.showBtn = false;
                     let arr = [];
                     let sum = 0;
@@ -1181,6 +1183,90 @@
             },
         },
         methods: {
+          // 本地存储数据处理
+          localDataDeal() {
+            // 离开页面 sessionStorage 存 页面数据
+            DcUtils.beforeLeavePage(() => {
+              if (this.isPdf) {
+                return
+              }
+              const {
+                pol,
+                pod,
+                airCompanyCode,
+                departureDate,
+                expectedInboundTime,
+                shipper,
+                notifier,
+                consignee,
+                bookingPrice,
+                bubblePoint,
+                bookingVwr,
+                bookingPiece,
+                bookingWeight,
+                bookingCbm,
+                pickUp,
+                delivery,
+                chicun,
+                packageType,
+                cargoType,
+                customsType,
+                isPickUp,
+                cclType,
+                cargoName,
+                marks,
+                trayDetail,
+                showBtn,
+                btnShow,
+                btnShow1,
+                btnShow2,
+                btnShow3,
+              } = this
+              DcUtils.setSessionStorage('quickPage', {
+                pol, //始发站
+                pod, //终点站
+                airCompanyCode, //航司
+                departureDate, //航班日期
+				        expectedInboundTime, // 预计进仓时间
+                shipper, //发货人
+                notifier, //通知人
+                consignee, //收货人
+                bookingPrice, //单价
+                bubblePoint, //分泡
+                bookingVwr, //比重
+                pickUp, // 国内提货信息
+                delivery, // 清关服务信息
+                chicun, // 托盘尺寸
+                packageType, // 包装类型
+                cargoType, // 货物类型
+                customsType, // 报关服务
+                isPickUp, // 国内提货
+                cclType, // 清关类型
+                bookingPiece, // 件数
+                bookingWeight, // 重量
+                bookingCbm, // 体积
+                cargoName, // 品名
+                marks, // 唛头
+                trayDetail, // 托盘数据
+                showBtn,
+                btnShow,
+                btnShow1,
+                btnShow2,
+                btnShow3,
+              })
+            })
+            // 进入页面读取 sessionStorage 数据
+            const quickPage = DcUtils.getSessionStorage('quickPage') || {}
+            for (const key in quickPage) {
+              this[key] = quickPage[key]
+            }
+            // 单独处理一下
+            if (quickPage.packageType) {
+              this.packageType = 2
+              this.packageType = quickPage.packageType
+            }
+            this.changeEstimateVal()
+          },
           // 调整预估变量
           changeEstimateVal(key) {
             // this[`${key}Estimate`] = this[key]
@@ -1504,7 +1590,8 @@
                         this.orderAgreementDialogVisible = false
                         this.canBeOrdered = false
                         // window.location.href=data.data.xpath
-
+                        // 订舱成功后清除本地存储
+                      sessionStorage.removeItem('quickPage')
                     } else if (data.code == -200) {
                       DcUtils.tokenExpired()
                     } else {

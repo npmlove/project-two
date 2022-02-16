@@ -235,9 +235,24 @@
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 				}
 				this.trackSearchInput = getQueryVariable('trackSearchInput')
+				this.localDataDeal()
 				this.trackSearchInput && this.initData()
 			},
 			methods: {
+          // 本地存储数据处理
+          localDataDeal() {
+            // 离开页面 sessionStorage 存页面数据
+            DcUtils.beforeLeavePage(() => {
+              DcUtils.setSessionStorage('trackSearchPage', {
+                trackSearchInput: this.trackSearchInput
+              })
+            })
+            // 进入页面读取 sessionStorage 数据
+            const trackSearchPage = DcUtils.getSessionStorage('trackSearchPage') || {}
+						if (!this.trackSearchInput) {
+							this.trackSearchInput = trackSearchPage.trackSearchInput || ''
+						}
+          },
 				goQuick(){
 				if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
 							this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
