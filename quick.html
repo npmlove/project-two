@@ -1274,17 +1274,22 @@
                 btnShow3,
               })
             })
-            // 进入页面读取 sessionStorage 数据
-            const quickPage = DcUtils.getSessionStorage('quickPage') || {}
-            for (const key in quickPage) {
-              this[key] = quickPage[key]
+            // 如果是从其他页面带过来了航线信息，不再读取本地数据
+            if (!this.pol) {
+              // 进入页面读取 sessionStorage 数据
+              const quickPage = DcUtils.getSessionStorage('quickPage') || {}
+              for (const key in quickPage) {
+                this[key] = quickPage[key]
+              }
+              // 单独处理一下
+              if (quickPage.packageType) {
+                this.packageType = 2
+                this.packageType = quickPage.packageType
+              }
+              this.changeEstimateVal()
+            } else {
+              sessionStorage.removeItem('quickPage')
             }
-            // 单独处理一下
-            if (quickPage.packageType) {
-              this.packageType = 2
-              this.packageType = quickPage.packageType
-            }
-            this.changeEstimateVal()
           },
           // 调整预估变量
           changeEstimateVal(key) {
@@ -1552,7 +1557,7 @@
                 this.$message.error('请选择早于航班日期的预计进仓时间')
                 return
               }
-              if ( this.isPickUp === 2 && dayjs(this.pickUp.pickUpTime).valueOf() > dayjs(this.departureDate).valueOf() ) {
+              if ( this.isPickUp === 2 && dayjs(this.pickUp.pickUpTime).valueOf() >= dayjs(this.departureDate).valueOf() ) {
                 this.$message.error('请选择早于航班日期的提货时间')
                 return
               }
