@@ -388,6 +388,7 @@
 		</div>
 	</body>
 	<script src="./service/index.js"></script>
+	<script src="./js/utils.js"></script>
 	<script>
 		new Vue({
 			el: '#app',
@@ -514,7 +515,7 @@
 						if(data.code == 200){
 							this.isMagnetic = data.data
 						}else if(data.code == -200){
-							window.location.href = './login.html'
+							DcUtils.tokenExpired()
 						}else{
 							this.$message.error(data.message)
 
@@ -674,7 +675,7 @@
                     if (data.code == 200) {
                         window.location.href = './orderList.html'
                     } else if (data.code == -200) {
-                        window.location.href = './login.html'
+											DcUtils.tokenExpired()
                     } else {
                         this.$message.error(data.message)
 
@@ -856,7 +857,7 @@
                         this.proportionArr = data.data
                         this.otherFeeMap = data.data.otherFeeMap
                     } else if (data.code == -200) {
-                        window.location.href = './login.html'
+												DcUtils.tokenExpired()
                     } else {
                         this.$message.error(data.message)
 
