@@ -327,7 +327,7 @@
             <div class="fix-recommend-flag" v-if="item.recommendFlag === 1">
               <img src="./img/recommend-flag.png">
             </div>
-            <div class="fix-updatetime"><span style="font-weight: bold;">更新时间：</span><span>{{ dayjs(item.airlineUpdateTime).format('YYYY年MM月DD日 HH:mm') }}</span></div>
+            <div class="fix-updatetime" v-if="item.airlineUpdateTime"><span style="font-weight: bold;">更新时间：</span><span>{{ dayjs(item.airlineUpdateTime).format('YYYY年MM月DD日 HH:mm') }}</span></div>
             <div class="wrapper-li-content-left">
               <div class="wrapper-li-tags" style="justify-content: space-between;">
                 <div style="width: auto;font-size: 12px;display: flex;align-items: center;">
