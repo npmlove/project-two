@@ -113,6 +113,7 @@
 				</a>
 				<div class="logo-title"></div>
 			</div>
+		
 			<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
 				<img class="header-imgUrl" :src="userInfo.headImgUrl" />
 				<div class="header-user-center-btn" @mousemove.stop><a href="./orderList.html">个人中心</a></div>
@@ -126,6 +127,7 @@
 				</div>
 			</div>
 			<div v-else @click="loginClick" class="header-user">登录</div>
+	
 			<div class="quick " @click="goQuick">
 				<img src="img/quick.png">
 				<span>一键订舱</span>
@@ -253,11 +255,11 @@
 										style="width:25px;margin-left:10px;" src="img/qq.svg" /></a></div>
 						</div>
 						<div class="userInfo-customer">
-							<div>欢迎致电:</div>
-							<div>13567862626</div>
+							<div>致电专属客服:</div>
+							<div>{{phoneContack}}</div>
 						</div>
 						<div class="userInfo-customer">
-							<div>统一服务热线：  </div>
+							<div>全国统一服务热线：  </div>
 							<div>4008861116</div>
 						  </div>
 					</div>
@@ -618,12 +620,16 @@
 			</div>
 		</div>
 	</div>
+	<!-- WPA start -->
+<script id="qd3009105440eae7949c0717633a3a3b0afeadebfc9c" src="https://wp.qiye.qq.com/qidian/3009105440/eae7949c0717633a3a3b0afeadebfc9c" charset="utf-8" async defer></script>
+<!-- WPA end -->
 </body>
 <script src="./service/index.js"></script>
 <script>
 	new Vue({
 		el: '#app',
 		data: {
+			phoneContack:'',
 			noteBoolen: false,
 			orderCount:'',
 			tableDataTotalCny: '',
@@ -714,9 +720,9 @@
 			invoiceInfosArr: []
 		},
 		created() {
-			if (!localStorage.getItem('wxOpenId')) {
-				window.location.href = './login.html'
-			}
+			// if (!localStorage.getItem('wxOpenId')) {
+			// 	window.location.href = './login.html'
+			// }
 			if (localStorage.getItem('userInfo')) {
 				this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 			}
@@ -783,7 +789,11 @@
 				this.initBillList()
 			},
 			goQuick() {
+				if(this.openId == "") {
+					window.location.href = './login.html'
+				} else {
 				window.location.href = './quick.html'
+				}
 			},
 			InvoicingClick(type) {
 
@@ -1024,6 +1034,7 @@
 					var data = data.data
 					if (data.code == 200) {
 						this.userInfo = data.data.tportalUser
+						this.phoneContack = data.data.tportalUser.customerServiceTel
 					} else if (data.code == -200) {
 						window.location.href = './login.html'
 					} else {
