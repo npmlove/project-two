@@ -538,7 +538,7 @@
               </div>
             </div>
           </div>
-          <div :class="['btn',showBtn?'active':'btn']"  @click="() => { showBtn && (orderAgreementDialogVisible = true) }">订舱</div>
+          <div :class="['btn',showBtn?'active':'btn']"  @click="openOrderAgreementDialog">订舱</div>
         </div>
         <div v-show="isPdf" style="position: relative">
             <div class="success">
@@ -1425,25 +1425,29 @@
                 // })
 
             },
+            // 打开协议弹窗
+            openOrderAgreementDialog() {
+              if(!this.showBtn){
+                  return false
+              }
+              if (!this.expectedInboundTime) {
+                this.$message.error('请选择预计进仓时间')
+                return
+              }else if(!this.departureDate) {
+                this.$message.error('航班日期')
+                return
+              }
+              if ( dayjs(this.expectedInboundTime).valueOf() > dayjs(this.departureDate).valueOf() ) {
+                this.$message.error('请选择早于航班日期的预计进仓时间')
+                return
+              }
+              if ( this.isPickUp === 2 && dayjs(this.pickUp.pickUpTime).valueOf() > dayjs(this.departureDate).valueOf() ) {
+                this.$message.error('请选择早于航班日期的提货时间')
+                return
+              }
+              this.showBtn && (this.orderAgreementDialogVisible = true)
+            },
             submit() {
-                if(!this.showBtn){
-                    return false
-                }
-                if (!this.expectedInboundTime) {
-									this.$message.error('请选择预计进仓时间')
-                  return
-								}else if(!this.departureDate) {
-									this.$message.error('航班日期')
-                  return
-								}
-                if ( dayjs(this.expectedInboundTime).valueOf() > dayjs(this.departureDate).valueOf() ) {
-                  this.$message.error('请选择早于航班日期的预计进仓时间')
-                  return
-                }
-                if ( this.isPickUp === 2 && dayjs(this.pickUp.pickUpTime).valueOf() >= dayjs(this.departureDate).valueOf() ) {
-                  this.$message.error('请选择早于航班日期的提货时间')
-                  return
-                }
                 let {
                     customsType,
                     isPickUp,
