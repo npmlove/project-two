@@ -226,7 +226,7 @@
           </div>
         </div>
       </div>
-      <div v-show="!isShowMore" style="margin-bottom: 20px" class="modify-flight-date com-width">
+      <div v-show="!isShowMore" style="margin-bottom: 20px" class="modify-flight-date com-width" v-if="false">
         <ul class="modify-date-tabs">
           <li v-for="(item,index) in dateArr" :key="index"
               :class="['modify-date-tab',
@@ -1146,7 +1146,7 @@
                     var data = data.data
                     if (data.code == 200) {
                         this.weekDatePrice = []
-                        for (var q = 0; q < data.data.weekRatesVOS.length; q++) {
+                        for (var q = 0; q < (data.data.weekRatesVOS || []).length; q++) {
                             this.weekDatePrice.push(data.data.weekRatesVOS[q].value)
                         }
                         let now = new Date();
