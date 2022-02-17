@@ -2812,7 +2812,7 @@ filter: alpha(opacity=0);
 .list-userInfo-customer .userInfo-customer > div:first-child{
 	color: #333;
 }
-.list-userInfo-customer .userInfo-customer > div:last-child{
+.list-userInfo-customer .userInfo-customer > div:nth-child(2){
 	line-height: 100%;
 	color: #2273CB;
 	margin-top: 6px;

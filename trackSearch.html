@@ -36,7 +36,7 @@
 	</head>
 	<body  >
 		<div id="app" v-cloak>
-			<div v-show="!certificationBody">
+			<div v-if="certificationBody=='null'||certificationBody==''">
 				<div  id="17dc-web" class="vr" ></div>
 	
 				<div class="vr_wrap"></div>

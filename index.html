@@ -58,7 +58,7 @@
 	</head>
 	<body  >
 		<div id="app"  v-cloak>
-			<div v-if="!certificationBody">
+			<div v-if="certificationBody=='null'||certificationBody==''">
 				<div  id="17dc-web" class="vr" ></div>
 	
 				<div class="vr_wrap"></div>
@@ -707,7 +707,7 @@
 				],
 				portCountyIndex: 99999,
 				countyName: '',
-				certificationBody:true,
+				certificationBody:"",
 				aircraftRadioName: '全部',
 				perferredArr: [],
 
@@ -839,8 +839,6 @@
 				
 				if(localStorage.getItem('certificationBody')){
 				 this.certificationBody = localStorage.getItem('certificationBody')
-				}else{
-					this.certificationBody =false
 				}
 				if(localStorage.getItem('userInfo')){
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
