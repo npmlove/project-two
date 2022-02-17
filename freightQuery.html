@@ -1325,6 +1325,10 @@
                       volume: Number(this.volume), // 体积
                       weight: Number(this.weight), // 重量
                       airCompanyCode: item.airCompanyCode, // 航司代码
+                      packageType: {
+                        '散货': 1,
+                        '托盘': 2,
+                      }[this.aircraftRadioName], // 货物类型
                     }
                     // 为了兼容IE Object Array 方法不能用
                     let searchArr = []
