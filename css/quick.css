@@ -328,9 +328,9 @@ div{
     align-items: center;
     border: 1px solid #EFEFEF;
     border-top: none;
-    padding: 20px 50px;
+    padding: 20px;
     background: #fff;
-    font-size: 34px;
+    font-size: 28px;
     color: #FF9914;
     font-weight: bold;
 }

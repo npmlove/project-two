@@ -709,7 +709,7 @@
           <li>
             <span class="item-title">空运费</span>
             <div class="item-price">
-              <span>{{ computedInboundCw }} * {{ bookingPrice }}</span>
+              <span>{{ computedInboundCw }} * {{ bookingPriceEstimate }}</span>
               <span>￥{{ computedAirFreight }}</span>
             </div>
           </li>
@@ -946,7 +946,7 @@
             const inboundCbm = this.bookingCbmEstimate
             const currentBubblePoint = this.options.find(item => item.value === this.bubblePointEstimate)
             if (currentBubblePoint.value === '10') {
-              return Math.max(inboundCbm * 167, inboundWeight)
+              return Math.ceil(Math.max(inboundCbm * 167, inboundWeight))
             } else {
               return Math.ceil(inboundCbm * 167 * currentBubblePoint.cbmRatio + inboundWeight * currentBubblePoint.weightRatio)
             }
