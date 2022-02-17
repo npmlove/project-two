@@ -275,8 +275,6 @@
                         <el-input
                           placeholder="请输入毛重"
                           v-model="bookingWeight"
-                          maxLength="6"
-                          onkeyup="value=value.replace(/[^\d]/g, '')"
                           @change="changeEstimateVal('bookingWeight')"
                           clearable>
                         </el-input>
@@ -285,8 +283,6 @@
                         <el-input
                           placeholder="请输入体积"
                           v-model="bookingCbm"
-                          @input="inputChange"
-                          @blur="inputChange('blur')"
                           @change="changeEstimateVal('bookingCbm')"
                           clearable>
                         </el-input>
@@ -1048,6 +1044,36 @@
             },
         },
         watch: {
+          bookingCbm(newVal, oldVal) {
+              // 小数点前最大输入4位数，小数点后最大输入4位数
+              if (isNaN(newVal)) {
+                this.bookingCbm = oldVal
+              } else {
+                const int = newVal.split('.')[0]
+                const float = newVal.split('.')[1]
+                if (int > 9999) {
+                  this.bookingCbm = oldVal
+                }
+                if (float > 9999) {
+                  this.bookingCbm = oldVal
+                }
+              }
+            },
+            bookingWeight(newVal, oldVal) {
+              // 最大支持八位,小数点前6后2
+              if (isNaN(newVal)) {
+                this.bookingWeight = oldVal
+              } else {
+                const int = newVal.split('.')[0]
+                const float = newVal.split('.')[1]
+                if (int > 999999) {
+                  this.bookingWeight = oldVal
+                }
+                if (float > 99) {
+                  this.bookingWeight = oldVal
+                }
+              }
+            },
             isShow: {
                 handler(newV, oldVal) {
                   
