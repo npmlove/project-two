@@ -50,6 +50,13 @@
       margin-left: 40px;
       margin-bottom: 10px;
     }
+    a{
+      color:#fff;
+      display: block;
+      line-height:50px;
+      width:110px;
+      height: 50px;
+    }
 
 
 
@@ -411,9 +418,13 @@
                 <button @click="bookingSpace(item)" class="box-btn btn-prprimary com-width110 com-height50"
                         style="margin-right: 30px;font-size: 16px;font-weight: 500;">订舱
                 </button>
-                <button class="box-btn el-button--warning com-width110 com-height50" 
+                <button  v-if="!certificationBody"  class="box-btn el-button--warning com-width110 com-height50" 
                 @click="getDom"
                         style="font-size: 16px;font-weight: 500;">咨询客服
+                </button>
+                <button  v-else  class="box-btn el-button--warning com-width110 com-height50" 
+                @click="getDom"
+                        style="font-size: 16px;font-weight: 500;"><label v-if="!preQQ" >咨询客服</label><a  v-else :href="`tencent://message/?uin=${preQQ}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`">咨询客服</a>
                 </button>
               </div>
             </div>
@@ -558,6 +569,7 @@
             priceArr: [],
             dateArr: [],
             dateMoreArr: [],
+            preQQ:null,
             isIndexDay: 0,
             bookingDate: '',
             userInfo: '',
@@ -583,6 +595,7 @@
             }
         },
         mounted() {
+            this.getDom()
             var myDate = new Date()
             this.currWeekDate = myDate.getDay()
             // this.dow = myDate.getDay()
@@ -695,12 +708,15 @@
         getDom(){
           let id = document.getElementById('17dc-web')
           if(id) {
-          id.click() 
+            id.click() 
+            this.preQQ = null
+          } else {
+            this.preQQ = JSON.parse(localStorage.getItem("userInfo")).customerServiceQq
           }
-  
+          console.log(this.preQQ)
         },
             valueChange(e){
-                console.log(e)
+                
             },
             goQuick(){
               
@@ -753,7 +769,6 @@
                 this.$nextTick(() => {
                     window.addEventListener("scroll", () => {
                         let num = this.$refs.sticky.offsetTop  -  document.documentElement.scrollTop
-                        console.dir(num)
                         if(num==0){
                             this.dateShow = false
                             this.qiShowState = false
@@ -1158,7 +1173,6 @@
                             }
                             this.dateMoreArr[parseInt(index/7)].push(item);
                         })
-                        console.log(this.dateTabActive)
 
                         this.priceArr = data.data.freightQueryVOS?data.data.freightQueryVOS:[];
                         this.initTwoCode()
