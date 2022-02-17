@@ -159,7 +159,7 @@
               <div class="form-item">
                 <label>件</label>
                 <div class="form-item-owrt">
-                  <input maxlength="4" v-model="piece" @input="valueChange" onkeyup="value=value.replace(/[^\d]/g, '')" type="text"/>
+                  <input maxlength="4" v-model="piece" onkeyup="value=value.replace(/[^\d]/g, '')" type="text"/>
                   <div class="owrt-text">PCS</div>
                 </div>
               </div>
@@ -168,7 +168,7 @@
               <div class="form-item">
                 <label>体积</label>
                 <div class="form-item-owrt">
-                  <input maxlength="4" v-model="volume" @input="valueChange" onkeyup="value=value.replace(/[^\d\.]/g, '')" type="text"/>
+                  <input v-model="volume" type="text"/>
                   <div class="owrt-text">CBM</div>
                 </div>
               </div>
@@ -177,7 +177,7 @@
               <div class="form-item">
                 <label>重量</label>
                 <div class="form-item-owrt">
-                  <input maxlength="6" v-model="weight" @input="valueChange" onkeyup="value=value.replace(/[^\d]/g, '')" type="text"/>
+                  <input v-model="weight" type="text"/>
                   <div class="owrt-text">KG</div>
                 </div>
               </div>
@@ -653,24 +653,36 @@
                 },
                 deep: true
             },
-            volume: {
-                handler(newV, oldVal) {
-                    console.log(isNaN(newV))
-                    if(isNaN(newV)){
-                        this.volume="";
-                    }
-                },
-                deep: true
+            volume(newVal, oldVal) {
+              // 小数点前最大输入4位数，小数点后最大输入4位数
+              if (isNaN(newVal)) {
+                this.volume = oldVal
+              } else {
+                const int = newVal.split('.')[0]
+                const float = newVal.split('.')[1]
+                if (int > 9999) {
+                  this.volume = oldVal
+                }
+                if (float > 9999) {
+                  this.volume = oldVal
+                }
+              }
             },
-            weight: {
-                handler(newV, oldVal) {
-                    console.log(isNaN(newV))
-                    if(isNaN(newV)){
-                        this.weight=""
-                    }
-                },
-                deep: true
-            },
+            weight(newVal, oldVal) {
+              // 最大支持八位,小数点前6后2
+              if (isNaN(newVal)) {
+                this.weight = oldVal
+              } else {
+                const int = newVal.split('.')[0]
+                const float = newVal.split('.')[1]
+                if (int > 999999) {
+                  this.weight = oldVal
+                }
+                if (float > 99) {
+                  this.weight = oldVal
+                }
+              }
+            }
 
         },
         methods: {
@@ -715,9 +727,6 @@
           }
           console.log(this.preQQ)
         },
-            valueChange(e){
-                
-            },
             goQuick(){
               
               if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
@@ -1325,6 +1334,10 @@
                       volume: Number(this.volume), // 体积
                       weight: Number(this.weight), // 重量
                       airCompanyCode: item.airCompanyCode, // 航司代码
+                      packageType: {
+                        '散货': 1,
+                        '托盘': 2,
+                      }[this.aircraftRadioName], // 货物类型
                     }
                     // 为了兼容IE Object Array 方法不能用
                     let searchArr = []
