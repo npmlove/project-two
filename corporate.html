@@ -280,7 +280,7 @@
     </div>
   </div>
   <!--  发票抬头信息弹框-->
-  <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="550px">
+  <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="550px"  :close-on-click-modal='false'>
     <el-form :model="form" :rules="rules" ref="ruleForm">
       <el-row>
         <el-col :span="20">
@@ -332,7 +332,7 @@
     </div>
   </el-dialog>
   <!--  发票邮寄信息弹框-->
-  <el-dialog :title="dialogTitle" :visible.sync="expressdialogFormVisible" width="550px">
+  <el-dialog :title="dialogTitle" :visible.sync="expressdialogFormVisible" width="550px" :close-on-click-modal='false'>
     <el-form :model="expressForm" :rules="rules" ref="expressruleForm">
       <el-row>
         <el-col :span="20">
