@@ -494,7 +494,7 @@
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
                         <div class="booking-form-item-content">
                           <input v-model=" pickUp.pickUpTel" onkeyup="value=value.replace(/[^(\d | \-)]/g, '')"
-                                 placeholder="请填写联系电话" class="booking-form-input" type="text" style="width: 450px;"/>
+                                 placeholder="请填写联系电话" maxlength="20" class="booking-form-input" type="text" style="width: 450px;"/>
                         </div>
                       </div>
                     </div>
@@ -539,7 +539,7 @@
                       <div class="booking-form-item">
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
                         <div class="booking-form-item-content">
-                          <input v-model="delivery.deliveryTel" placeholder="请填写联系电话" onkeyup="value=value.replace(/[^(\d | \-)]/g, '')"
+                          <input v-model="delivery.deliveryTel" placeholder="请填写联系电话" maxlength="20" onkeyup="value=value.replace(/[^(\d | \-)]/g, '')"
                                  class="booking-form-input"
                                  type="text" style="width: 450px;"/>
                         </div>
