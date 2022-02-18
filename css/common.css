@@ -2238,11 +2238,13 @@ filter: alpha(opacity=0);
 	justify-content: center;
 }
 .li-content-price-ul .li-content-price-li {
+	padding-left: 45px;
 	display: flex;
 	flex-direction: row;
 	height: 20px;
 }
 .li-content-price-ul2 .li-content-price-li {
+	padding-left: 45px;
 	display: flex;
 	flex-direction: row;
 	height: 20px;
