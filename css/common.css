@@ -2227,6 +2227,8 @@ filter: alpha(opacity=0);
 
 .wrapper-li-content-right .li-content-price-ul {
 	height: 100px;
+	display: flex;
+	flex-direction: column;
 	overflow-y: auto;
 }
 .wrapper-li-content-right .li-content-price-ul2 {
@@ -2237,6 +2239,7 @@ filter: alpha(opacity=0);
 }
 .li-content-price-ul .li-content-price-li {
 	display: flex;
+	flex-direction: row;
 	height: 20px;
 }
 .li-content-price-ul2 .li-content-price-li {
