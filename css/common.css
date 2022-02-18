@@ -2236,13 +2236,11 @@ filter: alpha(opacity=0);
 	justify-content: center;
 }
 .li-content-price-ul .li-content-price-li {
-	padding-left: 45px;
 	display: flex;
 	flex-direction: row;
 	height: 20px;
 }
 .li-content-price-ul2 .li-content-price-li {
-	padding-left: 45px;
 	display: flex;
 	flex-direction: row;
 	height: 20px;
@@ -2271,7 +2269,7 @@ filter: alpha(opacity=0);
 	flex: 0 0 80px;
 	/* min-width: 120px; */
 }
-.li-content-price-ul .li-content-price-li>div:first-child {
+.li-content-price-ul2 .li-content-price-li>div:first-child {
 	color: #999;
 	font-weight: 500;
 	flex: 0 0 80px;
