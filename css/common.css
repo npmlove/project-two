@@ -2095,7 +2095,7 @@ filter: alpha(opacity=0);
 
 .wrapper-li-content {
 	display: flex;
-	padding: 20px;
+	padding:0  20px 20px 20px;
 	box-sizing: border-box;
 }
 
@@ -2105,9 +2105,10 @@ filter: alpha(opacity=0);
 }
 
 .wrapper-li-tags {
+	padding-top: 20px;
 	display: flex;
 	justify-content: right;
-	margin-right: 30px;
+	margin-right: 10px;
 	font-size: 12px;
 }
 
@@ -2146,11 +2147,11 @@ filter: alpha(opacity=0);
 }
 
 .wrapper-li-flgiht {
-	margin: 10px 0;
-	padding: 52px 20px 52px 0;
+	/* margin: 10px 0; */
+	padding: 20px 20px 20px 0;
 	display: flex;
 	border-right: 1px solid #EFEFEF;
-	justify-content: space-evenly;
+	justify-content: center ;
 	/* align-items: center; */
 }
 
@@ -2225,31 +2226,54 @@ filter: alpha(opacity=0);
 }
 
 .wrapper-li-content-right .li-content-price-ul {
-	height: 150px;
+	height: 100px;
 	overflow-y: auto;
 }
-
+.wrapper-li-content-right .li-content-price-ul2 {
+	height: 100px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
 .li-content-price-ul .li-content-price-li {
 	display: flex;
+	height: 20px;
 }
-
+.li-content-price-ul2 .li-content-price-li {
+	display: flex;
+	flex-direction: row;
+	height: 20px;
+}
 .li-content-price-ul .li-content-price-li>div {
 	margin-right: 30px;
-	padding: 8px 0;
-	line-height: 100%;
+	height: 100%;
+	line-height: 20px;
 	font-size: 14px;
 	color: #333;
 	width: 34px;
 	text-align: center;
 }
-
+.li-content-price-ul2 .li-content-price-li>div {
+	margin-right: 30px;
+	height: 100%;
+	line-height: 20px;
+	font-size: 14px;
+	color: #333;
+	width: 34px;
+	text-align: center;
+}
 .li-content-price-ul .li-content-price-li>div:first-child {
 	color: #999;
 	font-weight: 500;
 	flex: 0 0 80px;
 	/* min-width: 120px; */
 }
-
+.li-content-price-ul .li-content-price-li>div:first-child {
+	color: #999;
+	font-weight: 500;
+	flex: 0 0 80px;
+	/* min-width: 120px; */
+}
 /* 订舱 */
 .booking .booking-edit {
 	font-size: 18px;

@@ -53,9 +53,8 @@
     a{
       color:#fff;
       display: block;
-      line-height:50px;
-      width:110px;
-      height: 50px;
+      line-height:34px;
+      text-align: center;
     }
 
 
@@ -396,7 +395,7 @@
                 <div>预估运价</div>
                 <div style="font-size: 16px;margin-top: 5px;color: #FF9914;font-weight: bold;">￥{{item.amount}}</div>
               </div>
-              <ul class="li-content-price-ul">
+              <ul :class="item.rates > 5?'li-content-price-ul':'li-content-price-ul2'">
                 <li v-for="(childerItem,childerIndex) in item.rates" :key="childerIndex" class="li-content-price-li">
                   <!-- <div v-if="childerIndex == 0">{{childerItem.vwrLow}}CMB < {{childerItem.vwrHigh}}</div> -->
                   <div>1:{{childerItem.vwr}}</div>
@@ -415,16 +414,17 @@
                 </li>
               </ul>
               <div style="margin-top: 15px;text-align: right;">
-                <button @click="bookingSpace(item)" class="box-btn btn-prprimary com-width110 com-height50"
-                        style="margin-right: 30px;font-size: 16px;font-weight: 500;">订舱
+                <button @click="bookingSpace(item)" class="box-btn btn-prprimary"
+                        style="margin-right: 30px;font-size: 16px;font-weight: 500;height: 34px;width: 75px;">订舱
                 </button>
-                <button  v-if="!certificationBody"  class="box-btn el-button--warning com-width110 com-height50" 
+                <button  v-if="!certificationBody"  class="box-btn el-button--warning" 
                 @click="getDom"
-                        style="font-size: 16px;font-weight: 500;">咨询客服
+                        style="font-size: 16px;font-weight: 500;height: 34px;width: 75px;">咨询客服
                 </button>
-                <button  v-else  class="box-btn el-button--warning com-width110 com-height50" 
+                <button  v-else  class="box-btn el-button--warning" 
                 @click="getDom"
-                        style="font-size: 16px;font-weight: 500;"><label v-if="!preQQ" >咨询客服</label><a  v-else :href="`tencent://message/?uin=${preQQ}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`">咨询客服</a>
+                        style="font-size: 16px;font-weight: 500;height: 34px;width: 75px;"><label v-if="!preQQ" >咨询客服</label>
+                        <a style="height: 34px;width: 65px" v-else :href="`tencent://message/?uin=${preQQ}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`">咨询客服</a>
                 </button>
               </div>
             </div>
