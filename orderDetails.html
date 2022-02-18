@@ -627,6 +627,9 @@
                   <div class="length" v-if="tbcBillVO.tbcNum != 0">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}}
                     <span>/{{tbcBillVO.totalCount}}</span></div>
               </button> -->
+              <button class="box-btn btn-prprimary com-height50" v-if="!isTbcBillVO"  style="width: 100%; font-size: 18px;background:rgba(153,153,153,0.7);">
+                  对账单未生成  
+              </button>
               <button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50"
                       style="width: 100%; font-size: 18px;">
                   <!-- 确认费用并开票 -->
