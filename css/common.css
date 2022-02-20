@@ -148,7 +148,7 @@
 	background-position:10px ;
 	filter: drop-shadow(0 0 15px rgba(0, 129, 255, 0.19));
 
-	z-index: 99;
+	z-index: 9999;
 
 }
 
@@ -181,7 +181,7 @@
 	/*animation-direction:alternate;*/
 
 	border-radius: 50%;
-	z-index: 98;
+	z-index: 9998;
 
 }
 
@@ -212,7 +212,7 @@
 	box-shadow: 0px 0px 50px 10px rgba(0, 129, 255, 0.19);
 
 	animation: mymove1 1.5s infinite;
-	z-index: 98;
+	z-index: 9997;
 
 	/*animation-direction:alternate;*/
 
