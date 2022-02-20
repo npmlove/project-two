@@ -207,7 +207,7 @@
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
 										<li @click="orderClick(item.id)" v-for="(item,index) in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
+											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;" @click.stop>
 												<div style="display: flex;">
 													<div>订单号：{{item.orderNo}}</div>
 													<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
@@ -291,7 +291,7 @@
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
 										<li @click="orderClick(item.id)" v-for="(item,index) in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
+											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;" @click.stop>
 												<div style="display: flex;">
 													<div>订单号：{{item.orderNo}}</div>
 													<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
@@ -364,7 +364,7 @@
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order">
+											<div class="nav-wrap-order" @click.stop>
 												<div>订单号：{{item.orderNo}}</div>
 												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
 												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
@@ -434,7 +434,7 @@
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order">
+											<div class="nav-wrap-order" @click.stop>
 												<div>订单号：{{item.orderNo}}</div>
 												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
 												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
@@ -513,7 +513,7 @@
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order">
+											<div class="nav-wrap-order" @click.stop>
 												<div>订单号：{{item.orderNo}}</div>
 												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
 												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
@@ -585,7 +585,7 @@
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order">
+											<div class="nav-wrap-order" @click.stop>
 												<div>订单号：{{item.orderNo}}</div>
 												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
 												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
@@ -657,7 +657,7 @@
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order">
+											<div class="nav-wrap-order" @click.stop>
 												<div>订单号：{{item.orderNo}}</div>
 												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
 												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
@@ -729,7 +729,7 @@
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
 										<li @click="orderClick(item.id)" v-for="item in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order">
+											<div class="nav-wrap-order" @click.stop>
 												<div>订单号：{{item.orderNo}}</div>
 												<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
 												<div style="margin-left: 20px;">进仓编号：{{item.inboundNo}}</div>
@@ -809,7 +809,7 @@
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
 										<li @click="orderClick(item.id)" v-for="(item,index) in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
+											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;" @click.stop>
 												<div style="display: flex;">
 													<div>订单号：{{item.orderNo}}</div>
 													<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
@@ -892,7 +892,7 @@
 									</div>
 									<ul v-if="total != '0'" class="nav-wrap-ul">
 										<li @click="orderClick(item.id)" v-for="(item,index) in dataArr" :key="item.orderNo" class="nav-wrap-li">
-											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;">
+											<div class="nav-wrap-order" style="display: flex;justify-content: space-between;" @click.stop>
 												<div style="display: flex;">
 													<div>订单号：{{item.orderNo}}</div>
 													<div style="margin-left: 20px;">运单号：{{item.waybillNo}}</div>
