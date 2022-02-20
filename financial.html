@@ -817,7 +817,8 @@
 				this.cardLists=[]
 				this.initBillList()
 			},
-			goQuick() {
+			async goQuick() {
+				await DcUtils.getLocalCertificationBody()
 				if(this.openId == "") {
 					window.location.href = './login.html'
 				} else {
