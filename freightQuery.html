@@ -1289,7 +1289,8 @@ return (...args) => {
 
 
                         for (var i = 0; i < this.priceArr.length; i++) {
-                            this.priceArr[i].legDetail = this.priceArr[i].legDetail ? JSON.parse(this.priceArr[i].legDetail) : []
+                            const legDetail = this.priceArr[i].legDetail
+                            this.priceArr[i].legDetail = legDetail ? (Array.isArray(legDetail) ? legDetail : JSON.parse(legDetail)) : []
                             this.priceArr[i].isShow = false;
                             this.priceArr[i].isShowType = 1;
                             this.priceArr[i].sortMTop = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)), 'M', 'top')
