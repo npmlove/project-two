@@ -375,9 +375,9 @@
                     <div>{{detailsArr.podName}}</div>
                   </div>
                 </div>
-                <div v-if="detailsArr.legCount > 1" style="position: absolute;top: 0;left: 142px;">
+                <div  style="position: absolute;top: 0;left: 142px;">
                   <el-tooltip class="item" effect="dark" :content="detailsArr.fullLeg" placement="top-start">
-                    <a> {{detailsArr.legCount == '1' ? '直达' :detailsArr.firstHub?detailsArr.firstHub : ''}}</a>
+                    <a>{{detailsArr.legCount == 1 ? '直达' :detailsArr.firstHub?detailsArr.firstHub : ''}}</a>
                   </el-tooltip>
                 </div>
                 <!-- 价格和分泡比例 -->
