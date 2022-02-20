@@ -201,7 +201,8 @@
 
         },
         methods: {
-            goQuick(){
+            async goQuick(){
+              await DcUtils.getLocalCertificationBody()
               if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
                         this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
                             confirmButtonText: '确定',

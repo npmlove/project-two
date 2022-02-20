@@ -54,6 +54,41 @@
         return JSON.parse(val)
       }
     },
+    // 获取认证主体
+    async getLocalCertificationBody() {
+      const wxOpenId = localStorage.getItem('wxOpenId')
+      const tokenId = localStorage.getItem('tokenId')
+      if (!wxOpenId || !tokenId) {
+        DcUtils.tokenExpired()
+        return
+      }
+      try {
+        const { data } = await axios({
+          method: 'get',
+          url: webIp + serviceApi.userUserInfo + '?openId=' + wxOpenId,
+          headers: {
+            'tokenId': localStorage.getItem('tokenId')
+          }
+        })
+        switch (data.code) {
+          case 200:
+            localStorage.setItem('userInfo', JSON.stringify(data.data.tportalUser))
+            localStorage.setItem('wxOpenId', data.data.tportalUser.wechatOpenId)
+            localStorage.setItem('tokenId', data.data.tokenId)
+            localStorage.setItem('certificationBody', data.data.tportalUser.certificationBody)
+            break;
+          case -200:
+            DcUtils.tokenExpired()
+            break;
+          default:
+            ELEMENT.Message.error(data.message)
+            break;
+        }
+      } catch (error) {
+        ELEMENT.Message.error(error.message)
+      }
+      return
+    }
   }
   window.DcUtils = DcUtils
 })()
