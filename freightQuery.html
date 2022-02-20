@@ -984,6 +984,22 @@ return (...args) => {
                         this.qiShowState = state //显示下拉列表
                     } else {
                         this.qiShowState = state //隐藏下拉框
+                        if(!this.qiPageArr || this.qiPageArr.length==0){
+                            this.pol= "";
+                            return false
+                        }
+                        let bz = false;
+                       for(let i=0;i<this.qiPageArr.length;i++){
+                           if(this.pol.toUpperCase() == this.qiPageArr[i].threeLetterCode){
+                                bz = true;
+                               this.pol= this.qiPageArr[i].threeLetterCode;
+                                break;
+                           }
+                       }
+                       if(!bz){
+                           this.pol= "";
+                           return false
+                       }
                     }
                 } else if (type == 2) {
                     if (state) {
@@ -991,6 +1007,22 @@ return (...args) => {
                         this.muShowState = state //显示下拉列表
                     } else {
                         this.muShowState = state //隐藏下拉框
+                        if(!this.muPageArr || this.muPageArr.length==0){
+                            this.pod= "";
+                            return false
+                        }
+                        let bz = false;
+                       for(let i=0;i<this.muPageArr.length;i++){
+                           if(this.pod.toUpperCase() == this.muPageArr[i].threeLetterCode){
+                                bz = true;
+                               this.pod= this.muPageArr[i].threeLetterCode;
+                                break;
+                           }
+                       }
+                       if(!bz){
+                           this.pod= "";
+                           return false
+                       }
                     }
                 } else if (type == 3) {
                     if (state) {

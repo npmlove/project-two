@@ -1190,6 +1190,23 @@
 							this.qiShowState = state //显示下拉列表
 						} else {
 							this.qiShowState = state //隐藏下拉框
+							if(!this.qiPageArr || this.qiPageArr.length==0){
+                            this.qiSearchInput= "";
+                            return false
+                        }
+                        let bz = false;
+                       for(let i=0;i<this.qiPageArr.length;i++){
+                           if(this.qiSearchInput.toUpperCase() == this.qiPageArr[i].threeLetterCode){
+                                bz = true;
+                               this.qiSearchInput= this.qiPageArr[i].threeLetterCode;
+                                break;
+                           }
+                       }
+                       if(!bz){
+                           this.qiSearchInput= "";
+                           return false
+                       }
+							
 						}
 					} else {
 						this.isShowGang = false
@@ -1198,6 +1215,22 @@
 							this.muShowState = state //显示下拉列表
 						} else {
 							this.muShowState = state //隐藏下拉框
+							if(!this.muPageArr || this.muPageArr.length==0){
+                            this.muSearchInput= "";
+                            return false
+                        }
+                        let bz = false;
+                       for(let i=0;i<this.muPageArr.length;i++){
+                           if(this.muSearchInput.toUpperCase() == this.muPageArr[i].threeLetterCode){
+                                bz = true;
+                               this.muSearchInput= this.muPageArr[i].threeLetterCode;
+                                break;
+                           }
+                       }
+                       if(!bz){
+                           this.muSearchInput= "";
+                           return false
+                       }
 						}
 					}
 				},
