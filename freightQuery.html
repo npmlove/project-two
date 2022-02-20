@@ -385,15 +385,15 @@
                   <div class="li-flgiht-airline-tip">{{item.podName}}</div>
                 </div>
               </div>
-              <div class="wrapper-li-date" :class="item.rates.length>2?'':wrapper-li-date1">
+              <div class="wrapper-li-date" :class="item.rates.length>2?'':'wrapper-li-date1'">
                 <div class="li-date-text">时效：{{item.shortDuration}}天</div>
                 <div class="li-date-text">班期：D{{item.dows}}</div>
               </div>
             </div>
             <div class="wrapper-li-content-right" style="position: relative;">
-              <div v-if="item.amount" style="position: absolute;font-size: 14px;right: 0;top: 6px;">
-                <div>预估运价</div>
-                <div style="font-size: 16px;margin-top: 5px;color: #FF9914;font-weight: bold;">￥{{item.amount}}</div>
+              <div v-if="item.amount" style="position: absolute;font-size: 14px;right: 53px;top: 6px;">
+                <div style="text-align: center;">预估运价</div>
+                <div style="text-align: center;font-size: 16px;margin-top: 5px;color: #FF9914;font-weight: bold;">￥{{item.amount}}</div>
               </div>
               <!-- 11111111111111111111 -->
               <ul :class="(item.rates.length > 4?'li-content-price-ul':price_ul[item.rates.length])">
@@ -552,7 +552,7 @@
             time1:0,
             time2:0,
             pageNum: 0,
-            pageSize: 50,
+            pageSize: 10,
             currWeekDate: '',
             currentDayWeekDate: [],
             currentDay: '',
@@ -568,7 +568,6 @@
                 {name: '1000+', value: '1000'}
             ],
             priceArr: [],
-            priceContiune:[],
             dateArr: [],
             dateMoreArr: [],
             preQQ:null,
@@ -580,6 +579,7 @@
             dateShow: true,
             certificationBody:'',
             dateValue: 0,
+            priceArrNew:[],
             weekRatesVOS:[]
         },
         created() {
@@ -689,8 +689,7 @@
 
         },
         methods: {
-          throttle(fn, delay = 100) {
-
+          throttle(fn, delay = 500) {
 let flag = true;
 
 return (...args) => {
@@ -782,17 +781,20 @@ return (...args) => {
                 }
             },
             handleScroll() {
-        console.log(1111111111111111111111111);
-        this.$nextTick(function () {
+          this.$nextTick(function () {
           let pageTop = document.documentElement.scrollTop || document.body.scrollTop
           let pageHeight = document.body.scrollHeight
           let clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-          if (pageHeight - pageTop <= (1.5) * clientHeight) {
-            this.priceArr = this.priceArr.concat(this.priceContiune.splice(0, 10))
+          if (pageHeight - pageTop <= (1.6) * clientHeight) {
+            if(this.priceArrNew.length<10)
+            { this.pageNum =0
+              window.removeEventListener('scroll', this.throttle(this.handleScroll))
+              return
+            } 
+              this.pageNum++
+              this.initData()
           }
-          if (this.priceContiune.length == 0) {
-            window.removeEventListener('scroll', this.handleScroll)
-          }
+         
 
         })
       },
@@ -1086,6 +1088,8 @@ return (...args) => {
                 if (!this.pod) {
                     return
                 }
+                this.priceArr=[]
+                this.pageNum = 0
                 this.initData()
 
             },
@@ -1250,9 +1254,8 @@ return (...args) => {
                             }
                             this.dateMoreArr[parseInt(index/7)].push(item);
                         })
-
-                        this.priceContiune = data.data.freightQueryVOS?data.data.freightQueryVOS:[];
-                        this.priceArr = this.priceContiune.splice(0,10)
+                        this.priceArrNew = data.data.freightQueryVOS?data.data.freightQueryVOS:[];
+                        this.priceArr = this.priceArr.concat(this.priceArrNew)
                         this.initTwoCode()
                         // if (data.data.freightQueryVOS == null || data.data.freightQueryVOS.length==0) {
                         //     this.priceArr = []
