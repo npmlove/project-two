@@ -117,7 +117,7 @@
                 <div class="form-item">
                   <label>起飞港</label>
                   <div class="form-item-owrt">
-                    <input @input="qiSearchByPage(pol);showCityList(1,true)" @focus="showCityList(1,true)" @keyup.enter = "onlyOneChoose(1)" @blur="showCityList(1,false)"
+                    <input @input="qiSearchByPage;showCityList(1,true)" @focus="showCityList(1,true)" @keyup.enter = "onlyOneChoose(1)" @blur="showCityList(1,false)"
                            v-model="pol" placeholder="输入城市或机场三字码" type="text"/>
                     <div v-show="qiShowState" style="display: none;z-index: 9999" class="open-warp-router">
                       <div v-if="!pol" class="open-warp-router-hot">热门机场</div>
@@ -135,7 +135,7 @@
                 <div class="form-item">
                   <label>目的港</label>
                   <div class="form-item-owrt">
-                    <input @input="muSearchByPage" @focus="showCityList(2,true)" @keyup.enter = "onlyOneChoose(2)" @blur="showCityList(2,false)"
+                    <input @input="muSearchByPage;showCityList(2,true)" @focus="showCityList(2,true)" @keyup.enter = "onlyOneChoose(2)" @blur="showCityList(2,false)"
                            v-model="pod" placeholder="输入城市或机场三字码" type="text"/>
                     <div v-show="muShowState" style="display: none;z-index: 9999" class="open-warp-router">
                       <div v-if="!pod" class="open-warp-router-hot">热门机场</div>
@@ -372,8 +372,9 @@
                   <div v-if="item.legCount == '1'" class="li-tag1">时效快</div>
                   <div v-if="item.tag" class="li-tag2">价格低</div>
                 </div> -->
-              </div>
-              <div class="wrapper-li-flgiht">
+              </div> 
+              <!-- 1111111111111111111-->
+              <div class="wrapper-li-flgiht" :class="item.rates.length>4?'':price_tip[item.rates.length]">
                 <div class="li-flgiht-airline">
                   <div class="li-flgiht-airline-name">{{item.pol}}</div>
                   <div class="li-flgiht-airline-tip">{{item.polName}}</div>
@@ -384,17 +385,18 @@
                   <div class="li-flgiht-airline-tip">{{item.podName}}</div>
                 </div>
               </div>
-              <div class="wrapper-li-date">
+              <div class="wrapper-li-date" :class="item.rates.length>2?'':wrapper-li-date1">
                 <div class="li-date-text">时效：{{item.shortDuration}}天</div>
                 <div class="li-date-text">班期：D{{item.dows}}</div>
               </div>
             </div>
             <div class="wrapper-li-content-right" style="position: relative;">
-              <div v-if="item.amount" style="position: absolute;font-size: 14px;right: 0;top: -16px;">
+              <div v-if="item.amount" style="position: absolute;font-size: 14px;right: 0;top: 6px;">
                 <div>预估运价</div>
                 <div style="font-size: 16px;margin-top: 5px;color: #FF9914;font-weight: bold;">￥{{item.amount}}</div>
               </div>
-              <ul :class="(item.rates.length > 5?'li-content-price-ul':'li-content-price-ul2')">
+              <!-- 11111111111111111111 -->
+              <ul :class="(item.rates.length > 4?'li-content-price-ul':price_ul[item.rates.length])">
                 <li v-for="(childerItem,childerIndex) in item.rates" :key="childerIndex" class="li-content-price-li">
                   <!-- <div v-if="childerIndex == 0">{{childerItem.vwrLow}}CMB < {{childerItem.vwrHigh}}</div> -->
                   <div>1:{{childerItem.vwr}}</div>
@@ -526,6 +528,8 @@
                 {name: '行业咨询'},
                 {name: '关于我们'}
             ],
+            price_tip:['wrapper-li-flgiht2','wrapper-li-flgiht2','wrapper-li-flgiht2','wrapper-li-flgiht3','wrapper-li-flgiht','wrapper-li-flgiht'],
+            price_ul:['li-content-price-ul2','li-content-price-ul2','li-content-price-ul2','li-content-price-ul3','li-content-price-ul4','li-content-price-ul'],
             wxOpenId:'',
             menuIndex: -999,
             aircraftRadioName: '散货',
@@ -984,22 +988,6 @@ return (...args) => {
                         this.qiShowState = state //显示下拉列表
                     } else {
                         this.qiShowState = state //隐藏下拉框
-                        if(!this.qiPageArr || this.qiPageArr.length==0){
-                            this.pol= "";
-                            return false
-                        }
-                        let bz = false;
-                       for(let i=0;i<this.qiPageArr.length;i++){
-                           if(this.pol.toUpperCase() == this.qiPageArr[i].threeLetterCode){
-                                bz = true;
-                               this.pol= this.qiPageArr[i].threeLetterCode;
-                                break;
-                           }
-                       }
-                       if(!bz){
-                           this.pol= "";
-                           return false
-                       }
                     }
                 } else if (type == 2) {
                     if (state) {
@@ -1007,22 +995,6 @@ return (...args) => {
                         this.muShowState = state //显示下拉列表
                     } else {
                         this.muShowState = state //隐藏下拉框
-                        if(!this.muPageArr || this.muPageArr.length==0){
-                            this.pod= "";
-                            return false
-                        }
-                        let bz = false;
-                       for(let i=0;i<this.muPageArr.length;i++){
-                           if(this.pod.toUpperCase() == this.muPageArr[i].threeLetterCode){
-                                bz = true;
-                               this.pod= this.muPageArr[i].threeLetterCode;
-                                break;
-                           }
-                       }
-                       if(!bz){
-                           this.pod= "";
-                           return false
-                       }
                     }
                 } else if (type == 3) {
                     if (state) {
@@ -1043,10 +1015,7 @@ return (...args) => {
                 // this.initTwoCode()
                 this.twoLetterCode1 = []
             },
-            qiSearchByPage(val) {
-              if (!val) {
-                return
-              }
+            qiSearchByPage() {
                 var jsonData = {
                     keyWord: this.pol,
                     type: this.pol ? '' : '1'
@@ -1062,10 +1031,7 @@ return (...args) => {
                     }
                 })
             },
-            muSearchByPage(val) {
-              if (!val) {
-                return
-              }
+            muSearchByPage() {
                 var jsonData = {
                     keyWord: this.pod,
                     type: this.pod ? '' : '2'

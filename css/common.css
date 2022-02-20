@@ -148,7 +148,7 @@
 	background-position:10px ;
 	filter: drop-shadow(0 0 15px rgba(0, 129, 255, 0.19));
 
-	z-index: 9999;
+	z-index: 99;
 
 }
 
@@ -181,7 +181,7 @@
 	/*animation-direction:alternate;*/
 
 	border-radius: 50%;
-	z-index: 9998;
+	z-index: 98;
 
 }
 
@@ -212,7 +212,7 @@
 	box-shadow: 0px 0px 50px 10px rgba(0, 129, 255, 0.19);
 
 	animation: mymove1 1.5s infinite;
-	z-index: 9997;
+	z-index: 98;
 
 	/*animation-direction:alternate;*/
 
@@ -2101,7 +2101,7 @@ filter: alpha(opacity=0);
 
 .wrapper-li-content {
 	display: flex;
-	padding:0  20px 20px 20px;
+	padding:0  20px 10px 20px;
 	box-sizing: border-box;
 }
 
@@ -2111,7 +2111,7 @@ filter: alpha(opacity=0);
 }
 
 .wrapper-li-tags {
-	padding-top: 20px;
+	padding-top: 8px;
 	display: flex;
 	justify-content: right;
 	margin-right: 10px;
@@ -2154,13 +2154,18 @@ filter: alpha(opacity=0);
 
 .wrapper-li-flgiht {
 	/* margin: 10px 0; */
-	padding: 20px 20px 20px 0;
+	padding: 20px 20px 20px 20px;
 	display: flex;
 	border-right: 1px solid #EFEFEF;
 	justify-content: center ;
 	/* align-items: center; */
 }
-
+.wrapper-li-flgiht2{
+	padding: 0px 20px 4px 20px;
+}
+.wrapper-li-flgiht3{
+	padding: 10px 20px 10px 20px;
+}
 .wrapper-li-flgiht .li-flgiht-airline {
 	flex: 0 0 120px;
 	text-align: center;
@@ -2189,7 +2194,12 @@ filter: alpha(opacity=0);
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 }
-
+/* .wrapper-li-flgiht1 .li-flgiht-airline .li-flgiht-airline-tip{
+	height: 30px;
+} */
+.wrapper-li-flgiht2 .li-flgiht-airline .li-flgiht-airline-tip{
+	height: 30px;
+}
 .wrapper-li-flgiht .li-flgiht-icon {
 	padding-top: 5px;
 	font-size: 12px;
@@ -2205,13 +2215,21 @@ filter: alpha(opacity=0);
 	background-position: bottom 20px center;
 	height: 30px;
 }
+.wrapper-li-flgiht2 .li-flgiht-icon {
+	padding-bottom: 0px;
+	background-position: bottom 0px center;
+}
 
 .wrapper-li-date {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
-
+.wrapper-li-date1 {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 .wrapper-li-date .li-date-text {
 	padding: 10px 20px 0 40px;
 	font-size: 12px;
@@ -2224,7 +2242,9 @@ filter: alpha(opacity=0);
 	background-size: 16px 16px;
 	background-position: left 20px bottom;
 }
-
+.wrapper-li-date1 .li-date-text {
+	padding: 5px 20px 0 40px;
+}
 .wrapper-li-content-right {
 	margin-top: 40px;
 	margin-left: 40px;
@@ -2238,7 +2258,19 @@ filter: alpha(opacity=0);
 	overflow-y: auto;
 }
 .wrapper-li-content-right .li-content-price-ul2 {
-	height: 100px;
+	height: 40px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.wrapper-li-content-right .li-content-price-ul3 {
+	height: 60px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.wrapper-li-content-right .li-content-price-ul4 {
+	height: 80px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -2249,6 +2281,16 @@ filter: alpha(opacity=0);
 	height: 20px;
 }
 .li-content-price-ul2 .li-content-price-li {
+	display: flex;
+	flex-direction: row;
+	height: 20px;
+}
+.li-content-price-ul3 .li-content-price-li {
+	display: flex;
+	flex-direction: row;
+	height: 20px;
+}
+.li-content-price-ul4 .li-content-price-li {
 	display: flex;
 	flex-direction: row;
 	height: 20px;
@@ -2271,6 +2313,24 @@ filter: alpha(opacity=0);
 	width: 34px;
 	text-align: center;
 }
+.li-content-price-ul3 .li-content-price-li>div {
+	margin-right: 30px;
+	height: 100%;
+	line-height: 20px;
+	font-size: 14px;
+	color: #333;
+	width: 34px;
+	text-align: center;
+}
+.li-content-price-ul4 .li-content-price-li>div {
+	margin-right: 30px;
+	height: 100%;
+	line-height: 20px;
+	font-size: 14px;
+	color: #333;
+	width: 34px;
+	text-align: center;
+}
 .li-content-price-ul .li-content-price-li>div:first-child {
 	color: #999;
 	font-weight: 500;
@@ -2278,6 +2338,18 @@ filter: alpha(opacity=0);
 	/* min-width: 120px; */
 }
 .li-content-price-ul2 .li-content-price-li>div:first-child {
+	color: #999;
+	font-weight: 500;
+	flex: 0 0 80px;
+	/* min-width: 120px; */
+}
+.li-content-price-ul3 .li-content-price-li>div:first-child {
+	color: #999;
+	font-weight: 500;
+	flex: 0 0 80px;
+	/* min-width: 120px; */
+}
+.li-content-price-ul4 .li-content-price-li>div:first-child {
 	color: #999;
 	font-weight: 500;
 	flex: 0 0 80px;
