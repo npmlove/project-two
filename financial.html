@@ -901,8 +901,11 @@
 						this.invoiceInfosPrice += val[i].applyAmount
 						for (var q = 0; q < val[i].billInfos.length; q++) {
 							this.invoiceInfosArr.push(val[i].billInfos[q])
+							this.invoiceInfosArr[i].isUpload = val.isUpload
 						}
+
 					}
+
 				}
 				for (let i in this.invoiceInfosArr) {
 					if (this.invoiceInfosArr[i].invoiceNumbers && this.invoiceInfosArr[i].invoiceNumbers.indexOf(
@@ -912,9 +915,9 @@
 					}
 
 				}
-				this.invoiceInfosArr.forEach((item,index)=>{
-					item.isUpload =this.tableData2[index].isUpload
-				})
+				// this.invoiceInfosArr.forEach((item,index)=>{
+				// 	item.isUpload =this.tableData2[index].isUpload
+				// })
 				console.log(this.invoiceInfosArr)
 			},
 			selectionChange(val) {
