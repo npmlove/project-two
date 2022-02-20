@@ -118,6 +118,12 @@
 	background-image: url(../img/header-title.svg);
 	margin-left: 20px;
 }
+.qidian-tips{
+	position: relative;
+	top:85px;
+	left:15px;
+	color: #1e2330;				
+}
 .vr {
 	
 	display: block;
