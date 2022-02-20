@@ -1011,15 +1011,15 @@ return (...args) => {
                         this.muShowState = state //显示下拉列表
                     } else {
                         this.muShowState = state //隐藏下拉框
-                        if(!this.qiPageArr || this.qiPageArr.length==0){
+                        if(!this.muPageArr || this.muPageArr.length==0){
                             this.pod= "";
                             return false
                         }
                         let bz = false;
-                       for(let i=0;i<this.qiPageArr.length;i++){
-                           if(this.pod.toUpperCase() == this.qiPageArr[i].threeLetterCode){
+                       for(let i=0;i<this.muPageArr.length;i++){
+                           if(this.pod.toUpperCase() == this.muPageArr[i].threeLetterCode){
                                 bz = true;
-                               this.pod= this.qiPageArr[i].threeLetterCode;
+                               this.pod= this.muPageArr[i].threeLetterCode;
                                 break;
                            }
                        }
