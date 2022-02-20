@@ -492,7 +492,7 @@
 									<el-table-column prop="invoiceNumbers" label="发票号" min-width="120">
 										<template slot-scope="scope">
 											<div v-for='(item,index) in scope.row.invoiceNumbers' :key="index">
-												<a :href="`http://10.8.0.1/image/invoicePdf/${item}.pdf`" v-if="scope.row.isUpload.[index]==1" style="color:#169BD5;cursor:pointer">{{item}}</a>
+												<a :href="`http://10.8.0.1/image/invoicePdf/${item}.pdf`" v-if="scope.row.isUpload[index]==1" style="color:#169BD5;cursor:pointer">{{item}}</a>
 												<span v-else>{{item}}</span>
 											</div>
 										</template>
