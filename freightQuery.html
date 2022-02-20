@@ -117,7 +117,7 @@
                 <div class="form-item">
                   <label>起飞港</label>
                   <div class="form-item-owrt">
-                    <input @input="qiSearchByPage" @focus="showCityList(1,true)" @keyup.enter = "onlyOneChoose(1)" @blur="showCityList(1,false)"
+                    <input @input="qiSearchByPage;showCityList(1,true)" @focus="showCityList(1,true)" @keyup.enter = "onlyOneChoose(1)" @blur="showCityList(1,false)"
                            v-model="pol" placeholder="输入城市或机场三字码" type="text"/>
                     <div v-show="qiShowState" style="display: none;z-index: 9999" class="open-warp-router">
                       <div v-if="!pol" class="open-warp-router-hot">热门机场</div>
@@ -135,7 +135,7 @@
                 <div class="form-item">
                   <label>目的港</label>
                   <div class="form-item-owrt">
-                    <input @input="muSearchByPage" @focus="showCityList(2,true)" @keyup.enter = "onlyOneChoose(2)" @blur="showCityList(2,false)"
+                    <input @input="muSearchByPage;showCityList(2,true)" @focus="showCityList(2,true)" @keyup.enter = "onlyOneChoose(2)" @blur="showCityList(2,false)"
                            v-model="pod" placeholder="输入城市或机场三字码" type="text"/>
                     <div v-show="muShowState" style="display: none;z-index: 9999" class="open-warp-router">
                       <div v-if="!pod" class="open-warp-router-hot">热门机场</div>
@@ -548,7 +548,7 @@
             time1:0,
             time2:0,
             pageNum: 0,
-            pageSize: 10,
+            pageSize: 50,
             currWeekDate: '',
             currentDayWeekDate: [],
             currentDay: '',
@@ -564,6 +564,7 @@
                 {name: '1000+', value: '1000'}
             ],
             priceArr: [],
+            priceContiune:[],
             dateArr: [],
             dateMoreArr: [],
             preQQ:null,
@@ -593,6 +594,7 @@
         },
         mounted() {
             this.getDom()
+            window.addEventListener('scroll', this.throttle(this.handleScroll), false)
             var myDate = new Date()
             this.currWeekDate = myDate.getDay()
             // this.dow = myDate.getDay()
@@ -683,6 +685,24 @@
 
         },
         methods: {
+          throttle(fn, delay = 100) {
+
+let flag = true;
+
+return (...args) => {
+
+    if (!flag) return;
+
+    flag = false;
+
+    setTimeout(() => {
+
+      fn.apply(this, args);
+
+      flag = true;
+    }, delay)
+  }
+},
           dayjs,
           onlyOneChoose(index) {
 					if(index == 1){
@@ -757,6 +777,21 @@
                     default: return index*1+1;
                 }
             },
+            handleScroll() {
+        console.log(1111111111111111111111111);
+        this.$nextTick(function () {
+          let pageTop = document.documentElement.scrollTop || document.body.scrollTop
+          let pageHeight = document.body.scrollHeight
+          let clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+          if (pageHeight - pageTop <= (1.5) * clientHeight) {
+            this.priceArr = this.priceArr.concat(this.priceContiune.splice(0, 10))
+          }
+          if (this.priceContiune.length == 0) {
+            window.removeEventListener('scroll', this.handleScroll)
+          }
+
+        })
+      },
             changeDate(date){
               switch (date){
                   case 1:return "周一";
@@ -1180,7 +1215,8 @@
                             this.dateMoreArr[parseInt(index/7)].push(item);
                         })
 
-                        this.priceArr = data.data.freightQueryVOS?data.data.freightQueryVOS:[];
+                        this.priceContiune = data.data.freightQueryVOS?data.data.freightQueryVOS:[];
+                        this.priceArr = this.priceContiune.splice(0,10)
                         this.initTwoCode()
                         // if (data.data.freightQueryVOS == null || data.data.freightQueryVOS.length==0) {
                         //     this.priceArr = []

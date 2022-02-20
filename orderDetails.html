@@ -621,13 +621,14 @@
               <button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'"
                       class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据确认
               </button>
+              <div v-if="detailsArr.status == '17'" style="width:100%;text-align:center;height:50px;line-height:50px;font-size:18px;font-weight:600;color:#979696;border-bottom:2px dotted;">进仓数据若有异议，请联系客服</div>
               <!-- <button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50"
                       style="width: 100%; font-size: 18px;">
                   {{tbcBillVO.tbcNum == 0?'账单已生成，请确认':'确认费用并开票'}}
                   <div class="length" v-if="tbcBillVO.tbcNum != 0">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}}
                     <span>/{{tbcBillVO.totalCount}}</span></div>
               </button> -->
-              <button class="box-btn btn-prprimary com-height50" v-if="detailsArr.showNotBillFlag == 1"  style="width: 100%; font-size: 18px;background:rgba(153,153,153,0.7);">
+              <button class="box-btn btn-prprimary com-height50" v-if="detailsArr.showNotBillFlag == 1"  style="width:100%; font-size: 18px;background:rgba(153,153,153,0.7);">
                   对账单未生成  
               </button>
               <button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50"
