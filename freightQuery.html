@@ -121,7 +121,7 @@
                            v-model="pol" placeholder="输入城市或机场三字码" type="text"/>
                     <div v-show="qiShowState" style="display: none;z-index: 9999" class="open-warp-router">
                       <div v-if="!pol" class="open-warp-router-hot">热门机场</div>
-                      <div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index"
+                      <div @mousedown="openCityClick(1,item)" v-for="(item,index) in computedQiList" :key="index"
                            class="opne-warp-city">
                         <span>{{item.threeLetterCode}}</span>
                         <span>{{item.name}}</span>
@@ -139,7 +139,7 @@
                            v-model="pod" placeholder="输入城市或机场三字码" type="text"/>
                     <div v-show="muShowState" style="display: none;z-index: 9999" class="open-warp-router">
                       <div v-if="!pod" class="open-warp-router-hot">热门机场</div>
-                      <div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index"
+                      <div @mousedown="openCityClick(2,item)" v-for="(item,index) in computedMuList" :key="index"
                            class="opne-warp-city">
                         <span>{{item.threeLetterCode}}</span>
                         <span>{{item.name}}</span>
@@ -155,7 +155,7 @@
               <div class="form-item">
                 <label>件</label>
                 <div class="form-item-owrt">
-                  <input maxlength="4" v-model="piece" onkeyup="value=value.replace(/[^\d]/g, '')" type="text"/>
+                  <input maxlength="4" v-model="piece" onkeyup="value=value.replace(/[^\d]/g, '')" type="text" style="padding-right: 40px;" />
                   <div class="owrt-text">PCS</div>
                 </div>
               </div>
@@ -164,7 +164,7 @@
               <div class="form-item">
                 <label>体积</label>
                 <div class="form-item-owrt">
-                  <input v-model="volume" type="text"/>
+                  <input v-model="volume" type="text" style="padding-right: 40px;" />
                   <div class="owrt-text">CBM</div>
                 </div>
               </div>
@@ -173,7 +173,7 @@
               <div class="form-item">
                 <label>重量</label>
                 <div class="form-item-owrt">
-                  <input v-model="weight" type="text"/>
+                  <input v-model="weight" type="text" style="padding-right: 30px;" />
                   <div class="owrt-text">KG</div>
                 </div>
               </div>
@@ -580,7 +580,17 @@
             certificationBody:'',
             dateValue: 0,
             priceArrNew:[],
-            weekRatesVOS:[]
+            weekRatesVOS:[],
+            hotQiList: [],
+				    HotMuList: [],
+        },
+        computed: {
+          computedQiList() {
+					  return this.pol ? this.qiPageArr : this.hotQiList
+          },
+          computedMuList() {
+            return this.pod ? this.muPageArr : this.HotMuList
+          },
         },
         created() {
             // if (!localStorage.getItem('wxOpenId')) {
@@ -1051,6 +1061,9 @@ return (...args) => {
                 this.twoLetterCode1 = []
             },
             qiSearchByPage() {
+              if (!this.pol && this.computedQiList.length > 0) {
+                return
+              }
                 var jsonData = {
                     keyWord: this.pol,
                     type: this.pol ? '' : '1'
@@ -1062,11 +1075,18 @@ return (...args) => {
                 }).then((data) => {
                     var data = data.data
                     if (data.code == 200) {
+                      if (this.pol) {
                         this.qiPageArr = data.data
+                      } else {
+                        this.hotQiList = data.data
+                      }
                     }
                 })
             },
             muSearchByPage() {
+              if (!this.pod && this.computedMuList.length > 0) {
+                return
+              }
                 var jsonData = {
                     keyWord: this.pod,
                     type: this.pod ? '' : '2'
@@ -1078,7 +1098,11 @@ return (...args) => {
                 }).then((data) => {
                     var data = data.data
                     if (data.code == 200) {
+                      if (this.pod) {
                         this.muPageArr = data.data
+                      } else {
+                        this.HotMuList = data.data
+                      }
                     }
                 })
             },
