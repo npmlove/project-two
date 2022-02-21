@@ -827,7 +827,7 @@ return (...args) => {
                 this.$nextTick(() => {
                     window.addEventListener("scroll", () => {
                         let num = this.$refs.sticky.offsetTop  -  document.documentElement.scrollTop
-                        if(num==0){
+                        if(num <= 5){
                             this.dateShow = false
                             this.qiShowState = false
                             this.muShowState = false
@@ -1103,6 +1103,7 @@ return (...args) => {
                 }
                 this.priceArr=[]
                 this.pageNum = 0
+                this.scrollToTop()
                 this.initData()
 
             },
@@ -1115,9 +1116,16 @@ return (...args) => {
                 }else {
                     this.priceArr=[]
                     this.pageNum = 0
+                    this.scrollToTop()
                     this.initData()
                 }
 
+            },
+            scrollToTop() {
+              window.scroll({
+                top: 0,
+                // behavior: "smooth"
+              })
             },
             dateClick(date, childerIndex,index,item) {
 
@@ -1469,6 +1477,7 @@ return (...args) => {
                 this.aircraftRadioName = name
                 this.priceArr=[]
                 this.pageNum = 0
+                this.scrollToTop()
                 this.initData()
             },
             //登录
