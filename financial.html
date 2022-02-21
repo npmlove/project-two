@@ -895,18 +895,17 @@
 				}
 			},
 			invoiceInfosChange(val) {
+				console.log(val)
 				this.invoiceInfosPrice = 0
 				this.invoiceInfosArr = []
 				if (val.length > 0) {
 					for (var i = 0; i < val.length; i++) {
 						this.invoiceInfosPrice += val[i].applyAmount
 						for (var q = 0; q < val[i].billInfos.length; q++) {
+							val[i].billInfos[q].isUpload = val[i].isUpload
 							this.invoiceInfosArr.push(val[i].billInfos[q])
-							this.invoiceInfosArr[i].isUpload = val[i].isUpload
 						}
-
 					}
-
 				}
 				for (let i in this.invoiceInfosArr) {
 					if (this.invoiceInfosArr[i].invoiceNumbers && this.invoiceInfosArr[i].invoiceNumbers.indexOf(
