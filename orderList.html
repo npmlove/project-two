@@ -99,7 +99,7 @@
 						<div class="list-userInfo-menu">
 							<div class="userInfo-touxiang-list">
 								<div class="userInfo-touxiang-img">
-									<img alt="图片" :src="userInfo.headImgUrl" />
+									<img alt="图片" :src="userInfo.headImgUrl?userInfo.headImgUrl:'./img/defaultEvater.png'" />
 								</div>
 								<div class="userInfo-huanyin">欢迎您{{userInfo.nickname}}</div>
 								<!-- <div class="userInfo-youxiang">设置邮箱</div> -->
