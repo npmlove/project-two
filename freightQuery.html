@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="./css/reset.css"/>
   <link rel="stylesheet" href="./css/common.css"/>
   <link rel="stylesheet" href="./css/freightQuery.css"/>
+  <script src="./js/dayjs.min.js"></script>
+		<script src="./js/qs.min.js"></script>
   <script src="./js/vue.js"></script>
   <script src="./js/axios.min.js"></script>
   <script src="./js/element-ui.js"></script>
@@ -33,9 +35,39 @@
   </script>
   <script src="./js/forbidden.js"></script>
   <script src="./js/forbibben.js"></script>
+  <style>
+    .tips{
+      position: relative;
+      background: #FFFFFF;
+      border-radius: 5px 5px 5px 5px;
+      opacity: 1;
+      font-size: 10px;
+      font-weight: bold;
+      color: #333333;
+      padding: 0 10px;
+      height: 25px;
+      line-height: 25px;
+      margin-left: 40px;
+      margin-bottom: 10px;
+    }
+    a{
+      color:#fff;
+    }
+
+
+
+  </style>
 </head>
 <body >
-<div id="app">
+<div id="app" v-cloak>
+  <div  v-if="certificationBody=='null'||certificationBody==''">
+    <div id="17dc-web" class="vr" > <span class="qidian-tips">在线客服</span></div>
+
+    <div class="vr_wrap"></div>
+
+    <div class="vr_wrap2"></div>
+
+  </div>
   <!-- 头部 -->
   <div class="header">
     <div class="header-img">
@@ -45,8 +77,9 @@
       </a>
       <div class="logo-title"></div>
     </div>
+   
     <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
-      <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+      <img class="header-imgUrl" :src="userInfo.headImgUrl?userInfo.headImgUrl:'./img/defaultEvater.png'"/>
       <div class="header-user-center-btn" @mousemove.stop><a href="./orderList.html">个人中心</a></div>
       <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
         <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
@@ -58,6 +91,7 @@
       </div>
     </div>
     <div v-else @click="loginClick" class="header-user">登录</div>
+  
     <div class="quick " @click="goQuick">
       <img src="img/quick.png">
       <span >一键订舱</span>
@@ -83,11 +117,11 @@
                 <div class="form-item">
                   <label>起飞港</label>
                   <div class="form-item-owrt">
-                    <input @input="qiSearchByPage" @focus="showCityList(1,true)" @blur="showCityList(1,false)"
+                    <input @input="qiSearchByPage;showCityList(1,true)" @focus="showCityList(1,true)" @keyup.enter = "onlyOneChoose(1)" @blur="showCityList(1,false)"
                            v-model="pol" placeholder="输入城市或机场三字码" type="text"/>
                     <div v-show="qiShowState" style="display: none;z-index: 9999" class="open-warp-router">
                       <div v-if="!pol" class="open-warp-router-hot">热门机场</div>
-                      <div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index"
+                      <div @mousedown="openCityClick(1,item)" v-for="(item,index) in computedQiList" :key="index"
                            class="opne-warp-city">
                         <span>{{item.threeLetterCode}}</span>
                         <span>{{item.name}}</span>
@@ -101,11 +135,11 @@
                 <div class="form-item">
                   <label>目的港</label>
                   <div class="form-item-owrt">
-                    <input @input="muSearchByPage" @focus="showCityList(2,true)" @blur="showCityList(2,false)"
+                    <input @input="muSearchByPage;showCityList(2,true)" @focus="showCityList(2,true)" @keyup.enter = "onlyOneChoose(2)" @blur="showCityList(2,false)"
                            v-model="pod" placeholder="输入城市或机场三字码" type="text"/>
                     <div v-show="muShowState" style="display: none;z-index: 9999" class="open-warp-router">
                       <div v-if="!pod" class="open-warp-router-hot">热门机场</div>
-                      <div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index"
+                      <div @mousedown="openCityClick(2,item)" v-for="(item,index) in computedMuList" :key="index"
                            class="opne-warp-city">
                         <span>{{item.threeLetterCode}}</span>
                         <span>{{item.name}}</span>
@@ -121,7 +155,7 @@
               <div class="form-item">
                 <label>件</label>
                 <div class="form-item-owrt">
-                  <input maxlength="4" v-model="piece" @input="valueChange" onkeyup="value=value.replace(/[^\d]/g, '')" type="text"/>
+                  <input maxlength="4" v-model="piece" onkeyup="value=value.replace(/[^\d]/g, '')" type="text" style="padding-right: 40px;" />
                   <div class="owrt-text">PCS</div>
                 </div>
               </div>
@@ -130,7 +164,7 @@
               <div class="form-item">
                 <label>体积</label>
                 <div class="form-item-owrt">
-                  <input maxlength="4" v-model="volume" @input="valueChange" onkeyup="value=value.replace(/[^\d\.]/g, '')" type="text"/>
+                  <input v-model="volume" type="text" style="padding-right: 40px;" />
                   <div class="owrt-text">CBM</div>
                 </div>
               </div>
@@ -139,7 +173,7 @@
               <div class="form-item">
                 <label>重量</label>
                 <div class="form-item-owrt">
-                  <input maxlength="6" v-model="weight" @input="valueChange" onkeyup="value=value.replace(/[^\d]/g, '')" type="text"/>
+                  <input v-model="weight" type="text" style="padding-right: 30px;" />
                   <div class="owrt-text">KG</div>
                 </div>
               </div>
@@ -188,7 +222,7 @@
           </div>
         </div>
       </div>
-      <div v-show="!isShowMore" style="margin-bottom: 20px" class="modify-flight-date com-width">
+      <div v-show="!isShowMore" style="margin-bottom: 20px" class="modify-flight-date com-width" v-if="false">
         <ul class="modify-date-tabs">
           <li v-for="(item,index) in dateArr" :key="index"
               :class="['modify-date-tab',
@@ -257,7 +291,7 @@
           </table>
         </div>
       </div>
-      <div style="position: sticky;top: 0;z-index: 999" ref="sticky">
+      <div style="position: sticky;top: 0;z-index: 999; -webkit-transform: translateZ(0);" ref="sticky">
         <div class="modify-flight-bar com-width" style="margin-top: 0">
           <div class="flight-bar-box">
             <div class="flight-bar-input">
@@ -280,7 +314,8 @@
                   class="radio-li com-font-size14">托盘
               </li>
             </ul>
-            <div class="flight-bar-input" v-if="!dateShow">
+            <!-- 不确定是否后期还需要，加个v-if false -->
+            <div class="flight-bar-input" v-if="false">
               <el-select v-model="dateValue" @change="selectChange(2)" collapse-tags placeholder="请选择日期">
                 <el-option
                   v-for="(item,index) in dateArr"
@@ -295,7 +330,8 @@
             </div>
             <!-- <div class="flight-bar-btn"><button @click="submitQuery" class="box-btn btn-prprimary com-width60">确认</button></div> -->
           </div>
-          <ul class="flight-bar-ul" :style="{marginLeft:!dateShow?'60px':'400px'}">
+          <!-- <ul class="flight-bar-ul" style="margin-left: auto;"></ul> -->
+          <ul class="flight-bar-ul">
             <li v-for="(item,index) in distanceArr" :key="index" class="flight-bar-li">
               <div v-if="index != 0" class="flight-bar-arrow1">
                 <img alt="图片" @click="sortClick(item.value,'top')" class="flight-bar-arrow1-img"
@@ -319,21 +355,26 @@
       </div>
       <ul v-if="priceArr.length > 0" class="result-wrapper-ul">
         <li v-for="(item,index) in priceArr" :key="index" class="result-wrapper-li"  @click="shrink(item,index)">
-          <div class="wrapper-li-content">
+          <div class="wrapper-li-content" style="position: relative;">
+            <div class="fix-recommend-flag" v-if="item.recommendFlag === 1">
+              <img src="./img/recommend-flag.png">
+            </div>
+            <div class="fix-updatetime" v-if="item.airlineUpdateTime"><span style="font-weight: bold;">更新时间：</span><span>{{ dayjs(item.airlineUpdateTime).format('YYYY年MM月DD日 HH:mm') }}</span></div>
             <div class="wrapper-li-content-left">
               <div class="wrapper-li-tags" style="justify-content: space-between;">
                 <div style="width: auto;font-size: 12px;display: flex;align-items: center;">
                   <img alt="图片" v-if="item.logoPath" style="margin-right: 10px;height: 20px;width: auto;"
                        :src="item.logoPath"/>
                   {{item.name}}
-                  <span style="marginLeft:10px;">{{item.airCompanyCode}}</span>
+                  <span style="margin-left:10px;">{{item.airCompanyCode}}</span>
                 </div>
-                <div style="display: flex;width: auto;flex: 0 0 130px;justify-content: flex-end;">
+                <!-- <div style="display: flex;width: auto;flex: 0 0 130px;justify-content: flex-end;">
                   <div v-if="item.legCount == '1'" class="li-tag1">时效快</div>
                   <div v-if="item.tag" class="li-tag2">价格低</div>
-                </div>
-              </div>
-              <div class="wrapper-li-flgiht">
+                </div> -->
+              </div> 
+              <!-- 1111111111111111111-->
+              <div class="wrapper-li-flgiht" :class="item.rates.length>4?'':price_tip[item.rates.length]">
                 <div class="li-flgiht-airline">
                   <div class="li-flgiht-airline-name">{{item.pol}}</div>
                   <div class="li-flgiht-airline-tip">{{item.polName}}</div>
@@ -344,17 +385,18 @@
                   <div class="li-flgiht-airline-tip">{{item.podName}}</div>
                 </div>
               </div>
-              <div class="wrapper-li-date">
+              <div class="wrapper-li-date" :class="item.rates.length>2?'':'wrapper-li-date1'">
                 <div class="li-date-text">时效：{{item.shortDuration}}天</div>
                 <div class="li-date-text">班期：D{{item.dows}}</div>
               </div>
             </div>
             <div class="wrapper-li-content-right" style="position: relative;">
-              <div v-if="item.amount" style="position: absolute;font-size: 14px;right: 0;top: -16px;">
-                <div>预估运价</div>
-                <div style="font-size: 16px;margin-top: 5px;color: #FF9914;font-weight: bold;">￥{{item.amount}}</div>
+              <div v-if="item.amount" style="position: absolute;font-size: 14px;right: 53px;top: 6px;">
+                <div style="text-align: center;">预估运价</div>
+                <div style="text-align: center;font-size: 16px;margin-top: 5px;color: #FF9914;font-weight: bold;">￥{{item.amount}}</div>
               </div>
-              <ul class="li-content-price-ul">
+              <!-- 11111111111111111111 -->
+              <ul :class="(item.rates.length > 4?'li-content-price-ul':price_ul[item.rates.length])">
                 <li v-for="(childerItem,childerIndex) in item.rates" :key="childerIndex" class="li-content-price-li">
                   <!-- <div v-if="childerIndex == 0">{{childerItem.vwrLow}}CMB < {{childerItem.vwrHigh}}</div> -->
                   <div>1:{{childerItem.vwr}}</div>
@@ -373,11 +415,17 @@
                 </li>
               </ul>
               <div style="margin-top: 15px;text-align: right;">
-                <button @click="bookingSpace(item.id)" class="box-btn btn-prprimary com-width110 com-height50"
-                        style="margin-right: 30px;font-size: 16px;font-weight: 500;">订舱
+                <button @click="bookingSpace(item)" class="box-btn btn-prprimary"
+                        style="margin-right: 30px;font-size: 16px;font-weight: 500;height: 34px;width: 75px;">订舱
                 </button>
-                <button class="box-btn el-button--warning com-width110 com-height50"
-                        style="font-size: 16px;font-weight: 500;">咨询客服
+                <button  v-if="!certificationBody"  class="box-btn el-button--warning" 
+                @click="getDom"
+                        style="font-size: 16px;font-weight: 500;height: 34px;width: 75px;">咨询客服
+                </button>
+                <button  v-else  class="box-btn el-button--warning" 
+                @click="getDom"
+                        style="font-size: 16px;font-weight: 500;height: 34px;width: 75px;"><label v-if="!preQQ" >咨询客服</label>
+                        <a style="height: 34px;width: 65px;line-height:34px;text-align: center;" v-else :href="`tencent://message/?uin=${preQQ}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`">咨询客服</a>
                 </button>
               </div>
             </div>
@@ -403,11 +451,16 @@
               </div>
               <div class="wrapper-content-item">
                 <div class="wrapper-content-item-text">
-                  <label>化工品包装要求（能接）：</label>托盘、散货
+                  <!-- 先这么写 -->
+                  <label>包装要求（能接）：</label>{{ {
+                    0: '散货和托盘',
+                    1: '散货',
+                    2: '托盘'
+                  }[item.acceptCargoType] }}
                 </div>
-                <div class="wrapper-content-item-text">
+                <!-- <div class="wrapper-content-item-text">
                   <label>其他政策：</label>重货，泡货价格另议
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="result-wrapper-content flightInof" v-if="item.isShowType==2">
@@ -445,9 +498,7 @@
       <div class="footer-content">
         <div class="footer-label">
           <div class="footer-cool" style="margin-bottom: 10px;">
-            <span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank"
-                                                                               href="./yingyezhizhaoImg.html"
-                                                                               class="yingyezhizhao">营业执照</a></span>
+            <span>Copyright © 2020-2021 17dc.com  丨  <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px; vertical-align: top;" /><a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011802004581" class="register-system-info">沪公网安备 31011802004581号</a>  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
           </div>
           <!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
             <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
@@ -455,13 +506,17 @@
           </div> -->
           <div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋  丨  <a target="_blank" href="https://beian.miit.gov.cn/#/Integrated/index">沪ICP备2021024815号-1</a></div>
         </div>
-        <div class="footer-img"><img alt="图片" src="./img/qcode.png"/></div>
+        <div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
       </div>
     </div>
   </div>
 </div>
+<!-- WPA start -->
+<script id="qd300910544025a0ebbabd71b26102946a262af043f2" src="https://wp.qiye.qq.com/qidian/3009105440/25a0ebbabd71b26102946a262af043f2" charset="utf-8" async defer></script>
+<!-- WPA end -->
 </body>
 <script src="./service/index.js"></script>
+<script src="./js/utils.js"></script>
 <script>
     new Vue({
         el: '#app',
@@ -473,7 +528,10 @@
                 {name: '行业咨询'},
                 {name: '关于我们'}
             ],
-            menuIndex: 0,
+            price_tip:['wrapper-li-flgiht2','wrapper-li-flgiht2','wrapper-li-flgiht2','wrapper-li-flgiht3','wrapper-li-flgiht','wrapper-li-flgiht'],
+            price_ul:['li-content-price-ul2','li-content-price-ul2','li-content-price-ul2','li-content-price-ul3','li-content-price-ul4','li-content-price-ul'],
+            wxOpenId:'',
+            menuIndex: -999,
             aircraftRadioName: '散货',
             dateTabActive: '',
             pod: '',
@@ -491,6 +549,8 @@
             twoLetterCodeStatus: false,
             twoCodeArr: [],
             dow: '',
+            time1:0,
+            time2:0,
             pageNum: 0,
             pageSize: 10,
             currWeekDate: '',
@@ -510,24 +570,45 @@
             priceArr: [],
             dateArr: [],
             dateMoreArr: [],
+            preQQ:null,
             isIndexDay: 0,
             bookingDate: '',
             userInfo: '',
             headerMenu: false,
             actDay: true,
             dateShow: true,
+            certificationBody:'',
             dateValue: 0,
-            weekRatesVOS:[]
+            priceArrNew:[],
+            weekRatesVOS:[],
+            hotQiList: [],
+				    HotMuList: [],
+        },
+        computed: {
+          computedQiList() {
+					  return this.pol ? this.qiPageArr : this.hotQiList
+          },
+          computedMuList() {
+            return this.pod ? this.muPageArr : this.HotMuList
+          },
         },
         created() {
-            if (!localStorage.getItem('wxOpenId')) {
-                window.location.href = './login.html'
+            // if (!localStorage.getItem('wxOpenId')) {
+            //     window.location.href = './login.html'
+            // }
+            if (localStorage.getItem('wxOpenId')) {
+                 this.wxOpenId = localStorage.getItem('wxOpenId')
             }
+            if(localStorage.getItem('certificationBody')) {
+						this.certificationBody = localStorage.getItem('certificationBody')
+					}
             if (localStorage.getItem('userInfo')) {
                 this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
             }
         },
         mounted() {
+            this.getDom()
+            window.addEventListener('scroll', this.throttle(this.handleScroll), false)
             var myDate = new Date()
             this.currWeekDate = myDate.getDay()
             // this.dow = myDate.getDay()
@@ -548,10 +629,11 @@
                 this.currentDayWeekDate = this.currentDayWeekDate.sort()
             }
             this.currentDayWeekDate = isDateCurrent1(this.currentDayWeekDate)
-
-            this.dateArr = JSON.parse(JSON.stringify(this.currentDayWeekDate)).slice(0, 7)
             this.currentDay = formatDate(myDate.toLocaleDateString())
             this.bookingDate = this.currentDay
+            // 获取当前日期index，取以当前日期为开始的一周7天显示在页面上
+            var currentDayIndex = this.currentDayWeekDate.findIndex(item => item.date === this.currentDay)
+            this.dateArr = JSON.parse(JSON.stringify(this.currentDayWeekDate)).slice(currentDayIndex, currentDayIndex + 7)
             // this.dateTabActive = this.splitDate(this.currentDay)
 
             var mmWeek = []
@@ -584,38 +666,113 @@
                 },
                 deep: true
             },
-            volume: {
-                handler(newV, oldVal) {
-                    console.log(isNaN(newV))
-                    if(isNaN(newV)){
-                        this.volume="";
-                    }
-                },
-                deep: true
+            volume(newVal, oldVal) {
+              // 小数点前最大输入4位数，小数点后最大输入4位数
+              if (isNaN(newVal)) {
+                this.volume = oldVal
+              } else {
+                const int = newVal.split('.')[0]
+                const float = newVal.split('.')[1]
+                if (int > 9999) {
+                  this.volume = oldVal
+                }
+                if (float > 9999) {
+                  this.volume = oldVal
+                }
+              }
             },
-            weight: {
-                handler(newV, oldVal) {
-                    console.log(isNaN(newV))
-                    if(isNaN(newV)){
-                        this.weight=""
-                    }
-                },
-                deep: true
-            },
+            weight(newVal, oldVal) {
+              // 最大支持八位,小数点前6后2
+              if (isNaN(newVal)) {
+                this.weight = oldVal
+              } else {
+                const int = newVal.split('.')[0]
+                const float = newVal.split('.')[1]
+                if (int > 999999) {
+                  this.weight = oldVal
+                }
+                if (float > 99) {
+                  this.weight = oldVal
+                }
+              }
+            }
 
         },
         methods: {
-            valueChange(e){
-                console.log(e)
-            },
-            goQuick(){
+          throttle(fn, delay = 500) {
+let flag = true;
+
+return (...args) => {
+
+    if (!flag) return;
+
+    flag = false;
+
+    setTimeout(() => {
+
+      fn.apply(this, args);
+
+      flag = true;
+    }, delay)
+  }
+},
+          dayjs,
+          onlyOneChoose(index) {
+					if(index == 1){
+						if(this.qiPageArr.length>1) {
+							return 
+						}
+						else {
+							this.pol = this.qiPageArr[0].threeLetterCode
+							this.qiShowState = false
+              this.time1++
+							if(this.time1>1) {
+							  this.submitQuery()
+							  this.time1=0
+							}
+						}
+					} 
+					else if (index == 2) {
+						if(this.muPageArr.length>1) {
+							return 
+						}
+						else {
+							this.pod = this.muPageArr[0].threeLetterCode
+							this.muShowState = false
+              this.time2++
+							if(this.time2>1) {
+							  this.submitQuery()
+							  this.time2=0
+							}
+						}
+					}
+				},
+        getDom(){
+          let id = document.getElementById('17dc-web')
+          if(id) {
+            id.click() 
+            this.preQQ = null
+          } else {
+            this.preQQ = JSON.parse(localStorage.getItem("userInfo")).customerServiceQq
+          }
+          console.log(this.preQQ)
+        },
+            async goQuick(){
+              await DcUtils.getLocalCertificationBody()
+              
               if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
                         this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
                             confirmButtonText: '确定',
                             callback: action => {
                             }
                         })
-                    }else{
+                    }  	
+                    else if(this.wxOpenId == ""){
+                   window.location.href = './login.html'
+                  
+				}
+                    
+                    else{
               window.location.href='./quick.html'
             }
             },
@@ -634,6 +791,24 @@
                     default: return index*1+1;
                 }
             },
+            handleScroll() {
+          this.$nextTick(function () {
+          let pageTop = document.documentElement.scrollTop || document.body.scrollTop
+          let pageHeight = document.body.scrollHeight
+          let clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+          if (pageHeight - pageTop <= (1.6) * clientHeight) {
+            if(this.priceArrNew.length<10)
+            { this.pageNum =0
+              window.removeEventListener('scroll', this.throttle(this.handleScroll))
+              return
+            } 
+              this.pageNum++
+              this.initData()
+          }
+         
+
+        })
+      },
             changeDate(date){
               switch (date){
                   case 1:return "周一";
@@ -652,7 +827,6 @@
                 this.$nextTick(() => {
                     window.addEventListener("scroll", () => {
                         let num = this.$refs.sticky.offsetTop  -  document.documentElement.scrollTop
-                        console.dir(num)
                         if(num==0){
                             this.dateShow = false
                             this.qiShowState = false
@@ -677,7 +851,7 @@
                     case "2":
                         return "窄体飞机";
                     case "3":
-                        return "货车";
+                        return "货机";
                     case "4":
                         return "卡车";
                     case "5":
@@ -708,7 +882,7 @@
             },
             tuiChu() {
                 localStorage.clear()
-                window.location.href = './login.html'
+                window.location.href = './index.html'
             },
             sortClick(value, type) {
                 for (var i = 0; i < this.priceArr.length; i++) {
@@ -827,6 +1001,22 @@
                         this.qiShowState = state //显示下拉列表
                     } else {
                         this.qiShowState = state //隐藏下拉框
+                        if(!this.qiPageArr || this.qiPageArr.length==0){
+                            this.pol= "";
+                            return false
+                        }
+                        let bz = false;
+                       for(let i=0;i<this.qiPageArr.length;i++){
+                           if(this.pol.toUpperCase() == this.qiPageArr[i].threeLetterCode){
+                                bz = true;
+                               this.pol= this.qiPageArr[i].threeLetterCode;
+                                break;
+                           }
+                       }
+                       if(!bz){
+                           this.pol= "";
+                           return false
+                       }
                     }
                 } else if (type == 2) {
                     if (state) {
@@ -834,6 +1024,22 @@
                         this.muShowState = state //显示下拉列表
                     } else {
                         this.muShowState = state //隐藏下拉框
+                        if(!this.muPageArr || this.muPageArr.length==0){
+                            this.pod= "";
+                            return false
+                        }
+                        let bz = false;
+                       for(let i=0;i<this.muPageArr.length;i++){
+                           if(this.pod.toUpperCase() == this.muPageArr[i].threeLetterCode){
+                                bz = true;
+                               this.pod= this.muPageArr[i].threeLetterCode;
+                                break;
+                           }
+                       }
+                       if(!bz){
+                           this.pod= "";
+                           return false
+                       }
                     }
                 } else if (type == 3) {
                     if (state) {
@@ -855,6 +1061,9 @@
                 this.twoLetterCode1 = []
             },
             qiSearchByPage() {
+              if (!this.pol && this.computedQiList.length > 0) {
+                return
+              }
                 var jsonData = {
                     keyWord: this.pol,
                     type: this.pol ? '' : '1'
@@ -866,11 +1075,18 @@
                 }).then((data) => {
                     var data = data.data
                     if (data.code == 200) {
+                      if (this.pol) {
                         this.qiPageArr = data.data
+                      } else {
+                        this.hotQiList = data.data
+                      }
                     }
                 })
             },
             muSearchByPage() {
+              if (!this.pod && this.computedMuList.length > 0) {
+                return
+              }
                 var jsonData = {
                     keyWord: this.pod,
                     type: this.pod ? '' : '2'
@@ -882,7 +1098,11 @@
                 }).then((data) => {
                     var data = data.data
                     if (data.code == 200) {
+                      if (this.pod) {
                         this.muPageArr = data.data
+                      } else {
+                        this.HotMuList = data.data
+                      }
                     }
                 })
             },
@@ -893,6 +1113,8 @@
                 if (!this.pod) {
                     return
                 }
+                this.priceArr=[]
+                this.pageNum = 0
                 this.initData()
 
             },
@@ -903,6 +1125,8 @@
 
                     this.initData()
                 }else {
+                    this.priceArr=[]
+                    this.pageNum = 0
                     this.initData()
                 }
 
@@ -912,8 +1136,24 @@
                 if(item.disabled){
                     return false
                 }
-                let start = index * 7;
-                this.dateArr = this.currentDayWeekDate.slice(start,index * 7 + 7)
+                // let start = index * 7;
+                // this.dateArr = this.currentDayWeekDate.slice(start,index * 7 + 7)
+                // 效果为选中日期后居中显示前3后3，如果前面可选数量小于3，显示从可选开始的7个，如果后面可选小于3，显示最后7个
+                var nowDate = formatDate(new Date().toLocaleDateString())
+                var nowDateIndex = this.currentDayWeekDate.findIndex(item => item.date === nowDate)
+                // 当前日期之后的日期
+                var enableDateArr = this.currentDayWeekDate.slice(nowDateIndex)
+                var dateIndex = enableDateArr.findIndex(item => item.date === date)
+                var start = (function() {
+                  if (dateIndex + 1 < 4) {
+                    return 0
+                  }
+                  if (dateIndex + 1 >= enableDateArr.length - 3) {
+                    return enableDateArr.length - 7
+                  }
+                  return dateIndex - 3
+                })()
+                this.dateArr = enableDateArr.slice(start, start + 7)
                 this.dateArr.forEach((item,index)=>{
                     if(item.date == date){
                         this.dateValue = index;
@@ -1005,7 +1245,7 @@
                     var data = data.data
                     if (data.code == 200) {
                         this.weekDatePrice = []
-                        for (var q = 0; q < data.data.weekRatesVOS.length; q++) {
+                        for (var q = 0; q < (data.data.weekRatesVOS || []).length; q++) {
                             this.weekDatePrice.push(data.data.weekRatesVOS[q].value)
                         }
                         let now = new Date();
@@ -1041,9 +1281,8 @@
                             }
                             this.dateMoreArr[parseInt(index/7)].push(item);
                         })
-                        console.log(this.dateTabActive)
-
-                        this.priceArr = data.data.freightQueryVOS?data.data.freightQueryVOS:[];
+                        this.priceArrNew = data.data.freightQueryVOS?data.data.freightQueryVOS:[];
+                        this.priceArr = this.priceArr.concat(this.priceArrNew)
                         this.initTwoCode()
                         // if (data.data.freightQueryVOS == null || data.data.freightQueryVOS.length==0) {
                         //     this.priceArr = []
@@ -1077,7 +1316,8 @@
 
 
                         for (var i = 0; i < this.priceArr.length; i++) {
-                            this.priceArr[i].legDetail = this.priceArr[i].legDetail ? JSON.parse(this.priceArr[i].legDetail) : []
+                            const legDetail = this.priceArr[i].legDetail
+                            this.priceArr[i].legDetail = legDetail ? (Array.isArray(legDetail) ? legDetail : JSON.parse(legDetail)) : []
                             this.priceArr[i].isShow = false;
                             this.priceArr[i].isShowType = 1;
                             this.priceArr[i].sortMTop = this.initSort(JSON.parse(JSON.stringify(this.priceArr[i].rates)), 'M', 'top')
@@ -1167,17 +1407,59 @@
             },
             // --------------------------------------------------------------------------------------
             //订舱
-            bookingSpace(id) {
+            async bookingSpace(item) {
+              await DcUtils.getLocalCertificationBody()
+              const id = item.id
                 if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
                     this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
                         confirmButtonText: '确定',
                         callback: action => {
                         }
                     })
-                } else {
-                    var dow = this.dow == 0 ? 7 : this.dow
-                    var aircraftRadioName = this.aircraftRadioName == '散货' ? 1 : 2
-                    window.location.href = './bookingSpace.html?airlineId=' + id + '&cargoType=' + aircraftRadioName + '&dow=' + dow + '&date=' + this.bookingDate + '&bookingPiece=' + this.piece + '&bookingWeight=' + this.weight + '&bookingCbm=' + this.volume
+                }  else if(this.wxOpenId == "") {
+                  window.location.href ='./login.html'
+                }
+                  
+                
+                else {
+                    // 普通订舱
+                    // var dow = this.dow == 0 ? 7 : this.dow
+                    // var aircraftRadioName = this.aircraftRadioName == '散货' ? 1 : 2
+                    // window.location.href = './bookingSpace.html?airlineId=' + id + '&cargoType=' + aircraftRadioName + '&dow=' + dow + '&date=' + this.bookingDate + '&bookingPiece=' + this.piece + '&bookingWeight=' + this.weight + '&bookingCbm=' + this.volume
+
+                    // 一键订舱
+                    const searchObj = {
+                      pol: this.pol, // 起飞港
+                      pod: this.pod, // 目的港
+                      piece: Number(this.piece), // 件
+                      volume: Number(this.volume), // 体积
+                      weight: Number(this.weight), // 重量
+                      airCompanyCode: item.airCompanyCode, // 航司代码
+                      packageType: {
+                        '散货': 1,
+                        '托盘': 2,
+                      }[this.aircraftRadioName], // 货物类型
+                    }
+                    // 为了兼容IE Object Array 方法不能用
+                    let searchArr = []
+                    for (const key in searchObj) {
+                      const val = searchObj[key]
+                      if (val) {
+                        searchArr.push({
+                          key: key,
+                          value: val,
+                        })
+                      }
+                    }
+                    const search = searchArr.reduce((str, item, index) => {
+                      if (str.includes('?')) {
+                        str += `&${item.key}=${item.value}`
+                      } else {
+                        str += `?${item.key}=${item.value}`
+                      }
+                      return str
+                    }, '')
+                    window.location.href = `./quick.html${search}`
                 }
 
             },

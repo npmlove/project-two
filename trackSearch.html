@@ -17,6 +17,8 @@
 		<link rel="stylesheet" href="./css/element-ui-min.css">
 		<link rel="stylesheet" href="./css/reset.css" />
 		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/dayjs.min.js"></script>
+		<script src="./js/qs.min.js"></script>
 		<script src="./js/vue.js"></script>
 		<script src="./js/axios.min.js"></script>
 		<script src="./js/element-ui.js"></script>
@@ -33,7 +35,14 @@
 		<script src="./js/forbibben.js"></script>
 	</head>
 	<body  >
-		<div id="app">
+		<div id="app" v-cloak>
+			<div v-if="certificationBody=='null'||certificationBody==''">
+				<div id="17dc-web" class="vr" > <span class="qidian-tips">在线客服</span></div>
+				<div class="vr_wrap"></div>
+	
+				<div class="vr_wrap2"></div>
+	
+			</div>
 			<div class="pubH">
 			<!-- 头部 -->
 			<div class="header">
@@ -43,8 +52,9 @@
 					</a>
 					<div class="logo-title"></div>
 				</div>
+			
 				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
-					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<img class="header-imgUrl" :src="userInfo.headImgUrl?userInfo.headImgUrl:'./img/defaultEvater.png'"/>
 					<div class="header-user-center-btn" @mousemove.stop><a href="./orderList.html">个人中心</a></div>
 					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
@@ -56,6 +66,7 @@
 					</div>
 				</div>
 				<div v-else @click="loginClick" class="header-user">登录</div>
+		
 				<div class="quick " @click="goQuick">
 					<img src="img/quick.png">
 					<span >一键订舱</span>
@@ -78,7 +89,9 @@
 							<div>
 								<div class="form-item">
 									<div class="form-item-owrt">
-										<input v-model="trackSearchInput"  @input="valueChange" placeholder="全网货物跟踪，运单信息全掌握" type="text" style="width: 100%;" />
+										<input v-model="trackSearchInput" @focu="isShowYundan = false"  @input="valueChange" placeholder="全网货物跟踪，运单信息全掌握" type="text" style="width: 100%;" />
+										<span v-show="isShowYundan" style="position: relative;bottom: 0px;font-size: 12px;color: #F00;">{{dataTips}}</span>
+										<span v-show="isShowhangsi" style="position: relative;bottom: 0px;font-size: 12px;color: #F00;">,该航司暂未支持查询,航司官网：{{website}}</span>
 									</div>
 								</div>
 							</div>
@@ -204,12 +217,19 @@
 				</div>
 			</div>
 		</div>
+<!-- WPA start -->
+<script id="qd300910544025a0ebbabd71b26102946a262af043f2" src="https://wp.qiye.qq.com/qidian/3009105440/25a0ebbabd71b26102946a262af043f2" charset="utf-8" async defer></script>
+<!-- WPA end -->
 	</body>
 	<script src="./service/index.js"></script>
+	<script src="./js/utils.js"></script>
 	<script>
 		new Vue({
 			el: '#app',
 			data: {
+				certificationBody:'',
+				isShowhangsi:false,
+				website:'',
 				menuIndex: 1,
 				trackSearchInput: '',
 				data: '',
@@ -217,14 +237,23 @@
 				tableData1: [],
 				tableData2: [],
 				tableData3: [],
+				isShowYundan:false,
+				dataTips:'',
 				userInfo: '',
 				headerMenu: false,
 				isLoading:false,
+				wxOpenId:'',
 			},
 			created() {
 				// if(!localStorage.getItem('wxOpenId')){
 				// 	window.location.href = './login.html'
 				// }
+				if(localStorage.getItem('certificationBody')) {
+						this.certificationBody = localStorage.getItem('certificationBody')
+					}
+				if (localStorage.getItem('wxOpenId')) {
+                 this.wxOpenId = localStorage.getItem('wxOpenId')
+            }
 				if(localStorage.getItem('userInfo')){
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 				}
@@ -234,23 +263,45 @@
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 				}
 				this.trackSearchInput = getQueryVariable('trackSearchInput')
+				// this.localDataDeal()
 				this.trackSearchInput && this.initData()
 			},
 			methods: {
-				goQuick(){
-				if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
+          // 本地存储数据处理
+          localDataDeal() {
+            // 离开页面 sessionStorage 存页面数据
+            DcUtils.beforeLeavePage(() => {
+              DcUtils.setSessionStorage('trackSearchPage', {
+                trackSearchInput: this.trackSearchInput
+              })
+            })
+            // 进入页面读取 sessionStorage 数据
+            const trackSearchPage = DcUtils.getSessionStorage('trackSearchPage') || {}
+						if (!this.trackSearchInput) {
+							this.trackSearchInput = trackSearchPage.trackSearchInput || ''
+						}
+          },
+				async goQuick(){
+					await DcUtils.getLocalCertificationBody()
+					if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
 							this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
 								confirmButtonText: '确定',
 								callback: action => {
 								}
 							})
-						}else{
+						}   else if(this.wxOpenId == ""){
+                   window.location.href = './login.html'
+				}
+
+						else{
 				window.location.href='./quick.html'
 				}
 				},
 				valueChange(e){
+					
 					this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
 					this.isShowYundan = false
+					this.isShowhangsi = false
 					if(this.trackSearchInput.match(/-/g) && this.trackSearchInput.match(/-/g).length > 1 ){
 						let sr = this.trackSearchInput.split("");
 						sr.splice(this.trackSearchInput.lastIndexOf('-'),1)
@@ -276,7 +327,7 @@
 				},
 				tuiChu() {
 					localStorage.clear()
-					window.location.href = './login.html'
+					window.location.href = './index.html'
 				},
 				//物流追踪
 				initData() {
@@ -295,8 +346,17 @@
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
+							
 							this.data = JSON.parse(data.data)
-							// console.log(this.data)
+							console.log(this.data);
+							this.dataTips = this.data.errMsg
+							if(this.dataTips) {
+                              this.isShowYundan = true
+							}
+							this.website = this.data.airCompany.website
+							if(this.website) {
+								this.isShowhangsi = true
+							}
 							this.tableData1 = this.data.cargoInfos
 							this.tableData2 = this.data.flightInfo
 							this.tableData3 = this.data.statusFlows

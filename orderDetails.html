@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="./css/element-ui-min.css">
   <link rel="stylesheet" href="./css/reset.css"/>
   <link rel="stylesheet" href="./css/common.css"/>
+  <script src="./js/dayjs.min.js"></script>
+		<script src="./js/qs.min.js"></script>
   <script src="./js/vue.js"></script>
   <script src="./js/axios.min.js"></script>
   <script src="./js/dayjs.min.js"></script>
@@ -165,7 +167,15 @@
   <script src="./js/forbibben.js"></script>
 </head>
 <body  > 
-<div id="app">
+<div id="app" v-cloak>
+  <div v-if="certificationBody=='null'||certificationBody==''">
+    <div id="17dc-web" class="vr" > <span class="qidian-tips">在线客服</span></div>
+
+    <div class="vr_wrap"></div>
+
+    <div class="vr_wrap2"></div>
+
+  </div>
   <div class="pubH">
     <!-- 头部 -->
     <div class="header">
@@ -176,8 +186,9 @@
         </a>
         <div class="logo-title"></div>
       </div>
+   
       <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
-        <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+        <img class="header-imgUrl" :src="userInfo.headImgUrl?userInfo.headImgUrl:'./img/defaultEvater.png'"/>
         <div class="header-user-center-btn" @mousemove.stop><a href="./orderList.html">个人中心</a></div>
         <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
           <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
@@ -189,6 +200,7 @@
         </div>
       </div>
       <div v-else @click="loginClick" class="header-user">登录</div>
+   
       					<div class="quick " @click="goQuick">
       						<img src="img/quick.png">
       						<span >一键订舱</span>
@@ -210,6 +222,9 @@
           <img alt="图片" src="./img/arrow_details.png"/>
           <div>订单详情</div>
           <div>订单号：{{detailsArr.orderNo}}</div>
+          <div class="list-title-arr-right" style="margin-left:20px">运单号：{{detailsArr.waybillNo?detailsArr.waybillNo:'暂无'}}</div>
+          <div  class="list-title-arr-right" style="margin-left:20px;">分单号：{{detailsArr.subWaybillNo ? detailsArr.subWaybillNo : "暂无"}}</div>
+
         </div>
         <div class="order-details-step">
           <div v-for="(item,index) in activityFlowVOList"
@@ -312,7 +327,6 @@
                             <span>￥{{ite.totalCny}}</span>
                           </div>
                         </template>
-
                         <div class="line"></div>
                         <div class="list">
                           <span>合计金额:</span>
@@ -337,9 +351,8 @@
                   <div>{{detailsArr.podName}}({{detailsArr.pod}})</div>
                     <a  v-if="detailsArr.mscsQq" :href="`tencent://message/?uin=${detailsArr.mscsQq}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;margin-left:20px;" src="img/qq.svg"/></a><span  v-if="detailsArr.mscsQq" style="color:black;margin-left: 10px;">订单问题,联系客服</span>
                 </div>
-                <div v-if="detailsArr.waybillNo" class="list-title-arr-right">运单号：{{detailsArr.waybillNo}}</div>
               </div>
-              <div class="list-route-icon">
+              <div class="list-route-icon">              
                 <img v-if="detailsArr.logoPath" alt="tupian" :src="detailsArr.logoPath"/>
                 <div class="list-route-icon-title">{{detailsArr.airCompanyName}}<span
                   style="marginLeft:5px;">{{detailsArr.airCompanyCode}}</div>
@@ -362,12 +375,17 @@
                     <div>{{detailsArr.podName}}</div>
                   </div>
                 </div>
-                <div v-if="detailsArr.legCount > 1" style="position: absolute;top: 0;left: 142px;">
+                <div  style="position: absolute;top: 0;left: 142px;">
                   <el-tooltip class="item" effect="dark" :content="detailsArr.fullLeg" placement="top-start">
-                    <a>{{detailsArr.firstHub}}</a>
+                    <a>{{detailsArr.legCount == 1 ? '直达' :detailsArr.firstHub?detailsArr.firstHub : ''}}</a>
                   </el-tooltip>
                 </div>
-                <div class="list-arr-route-jiaqian">单价：{{detailsArr.bookingPrice}}元/kg</div>
+                <!-- 价格和分泡比例 -->
+                <aside class="order-aside-info">
+                  <div style="margin-bottom:10px"><span class="title" style="margin-right:10px">航班号:</span>{{detailsArr.flightNo?detailsArr.flightNo:'暂无'}}</div>
+                  <div><span class="title">单价：</span>{{detailsArr.bookingPrice}}元/kg</div>
+                  <div style="margin-top: 10px;"><span class="title">分泡比例：</span>{{ detailsArr.bubblePointText }}</div>
+                </aside>
               </div>
             </div>
             <!-- 货物信息 -->
@@ -385,16 +403,40 @@
 
               <div class="details-table-tab">
                 <div class="details-table-tab-title">订舱信息</div>
-                <div class="details-table-details" style="display: flex;">
+                <div class="details-table-details multiple-row" style="display: flex;">
                   <div class="details-table-tabs"><span>品名：</span>{{detailsArr.cargoName}}</div>
                   <div v-if="detailsArr.cargoType == '1'" class="details-table-tabs"><span>类型：</span>普货</div>
                   <div v-if="detailsArr.cargoType == '2'" class="details-table-tabs"><span>类型：</span>化工品</div>
                   <div v-if="detailsArr.cargoType == '3'" class="details-table-tabs"><span>类型：</span>危险品</div>
                   <div v-if="detailsArr.cargoType == '4'" class="details-table-tabs"><span>类型：</span>防疫物资</div>
+                  <div v-if="detailsArr.packageType === 1" class="details-table-tabs"><span>包装：</span>散货</div>
+                  <div v-if="detailsArr.packageType === 2" class="details-table-tabs"><span>包装：</span>托盘</div>          
+                </div>
+                <div v-if="trayDetail.length > 0 && detailsArr.packageType === 2" class="booking" style="margin-top: 20px; width: 400px">
+                  <table class="booking-proportion-table">
+                    <thead>
+                      <tr>
+                        <th>数量</th>
+                        <th>长CM</th>
+                        <th>宽CM</th>
+                        <th>高CM</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- 不要问我为什么是trayNumber和traySize，原前端开发人员定义的 -->
+                      <tr v-for="(item,index) in trayDetail">
+                        <td>{{ item.trayNumber }}</td>
+                        <td>{{ item.traySize }}</td>
+                        <td>{{ item.trayWidth }}</td>
+                        <td>{{ item.trayHeight }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="details-table-tab-title">订舱数据</div>
+                <div class="details-table-details multiple-row" style="display: flex;">
                   <div class="details-table-tabs"><span>件数：</span>{{detailsArr.bookingPiece}}PCS</div>
                   <div class="details-table-tabs"><span>重量：</span>{{detailsArr.bookingWeight}}KG</div>
-                </div>
-                <div class="details-table-details" style="display: flex;">
                   <div class="details-table-tabs"><span>体积：</span>{{detailsArr.bookingCbm}}CBM</div>
                   <div class="details-table-tabs"><span>比重：</span>1:{{detailsArr.bookingVwr}}</div>
                   <div class="details-table-tabs"><span>计费重：</span>{{detailsArr.bookingCw}}KG</div>
@@ -402,29 +444,17 @@
               </div>
               <div v-if="detailsArr.inboundPiece" class="details-table-tab">
                 <div class="details-table-tab-title">进仓数据</div>
-                <div class="details-table-details" style="display: flex;">
+                <div class="details-table-details multiple-row" style="display: flex;">
                   <div class="details-table-tabs"><span style="flex: 0 0 42px;">件数：</span>{{detailsArr.inboundPiece}}PCS
                   </div>
                   <div class="details-table-tabs"><span style="flex: 0 0 42px;">重量：</span>{{detailsArr.inboundWeight}}KGS
                   </div>
                   <div class="details-table-tabs"><span style="flex: 0 0 42px;">体积：</span>{{detailsArr.inboundCbm}}CBM
                   </div>
-                </div>
-                <div class="details-table-details" style="display: flex;">
                   <div class="details-table-tabs"><span style="flex: 0 0 42px;">比重：</span>1:{{detailsArr.inboundVwr}}
                   </div>
                   <div class="details-table-tabs"><span style="flex: 0 0 70px;">计费重：</span>{{detailsArr.inboundCw}}KGS
                   </div>
-                  <div v-if="detailsArr.bubblePoint == '10'" class="details-table-tabs"><span>分泡比例：</span>不分泡</div>
-                  <div v-if="detailsArr.bubblePoint == '1'" class="details-table-tabs"><span>分泡比例：</span>1/9</div>
-                  <div v-if="detailsArr.bubblePoint == '2'" class="details-table-tabs"><span>分泡比例：</span>2/8</div>
-                  <div v-if="detailsArr.bubblePoint == '3'" class="details-table-tabs"><span>分泡比例：</span>3/7</div>
-                  <div v-if="detailsArr.bubblePoint == '4'" class="details-table-tabs"><span>分泡比例：</span>4/6</div>
-                  <div v-if="detailsArr.bubblePoint == '5'" class="details-table-tabs"><span>分泡比例：</span>5/5</div>
-                  <div v-if="detailsArr.bubblePoint == '6'" class="details-table-tabs"><span>分泡比例：</span>6/4</div>
-                  <div v-if="detailsArr.bubblePoint == '7'" class="details-table-tabs"><span>分泡比例：</span>7/3</div>
-                  <div v-if="detailsArr.bubblePoint == '8'" class="details-table-tabs"><span>分泡比例：</span>8/2</div>
-                  <div v-if="detailsArr.bubblePoint == '9'" class="details-table-tabs"><span>分泡比例：</span>9/1</div>
                 </div>
                 <div v-if="orderAttachmentList.length > 0" class="details-table-details" style="display: flex;">
                   <div class="details-table-tabs" style="align-items: flex-start;">
@@ -487,9 +517,9 @@
                   <div class="details-table-tabs"><span>预计进仓时间：</span>{{ dayjs(detailsArr.expectedInboundTime).format('YYYY-MM-DD HH:mm') }}</div>
                   <div class="details-table-tabs"><span>最晚进仓时间：</span>{{ detailsArr.latestInboundDate }}</div>
                 </div>
-                <div class="details-table-details" style="display: flex;">
+                <!-- <div class="details-table-details" style="display: flex;">
                   <div class="details-table-tabs"><span>仓库名称：</span>{{ detailsArr.warehouseName || '暂无' }}</div>
-                </div>
+                </div> -->
                 <div class="details-table-details" style="display: flex;">
                   <div class="details-table-tabs"><span>仓库地址：</span>{{ detailsArr.warehouseAddress || '暂无' }}</div>
                 </div>
@@ -510,6 +540,9 @@
               <div v-if="detailsArr.isPickUp == '2'" class="details-table-tab">
                 <div class="details-table-tab-title">国内提货</div>
                 <div class="details-table-details">
+                  <div class="details-table-tabs" style="word-break: break-all;"><span
+                    style="flex: 0 0 70px;">提货时间：</span>{{ dayjs(detailsArr.pickUpTime).format('YYYY-MM-DD HH:mm') }}
+                  </div>
                   <div class="details-table-tabs" style="word-break: break-all;"><span
                     style="flex: 0 0 70px;">提货地址：</span>{{detailsArr.pickUpAddress}}
                   </div>
@@ -544,19 +577,20 @@
                 <div v-if="guonerArr.length > 0" class="booking-price-item">
                   <div class="booking-price-item-name">国内段</div>
                   <div v-for="(item,index) in guonerArr" class="booking-price-item-list">
-                    <div>{{item.expenseName}}</div>
-                    <div v-if="item.expenseName == '空运费'"><span
-                      style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span>
+                    <div style="flex:1">{{item.expenseName}}</div>
+                    <div
+                      style="flex:1;text-align:right">{{item.price}}*{{item.quantity}}
                     </div>
-                    <div v-else><span
-                      style="margin-right: 30px;">{{item.price}}*{{item.quantity}}</span><span>￥{{item.totalCny}}</span>
-                    </div>
+                      <div style="flex:1;text-align:right">￥{{item.totalCny}}</div>
+                   
                   </div>
                 </div>
                 <div class="booking-price-total">
                   <div></div>
                   <div>{{guonerJiaqian}}</div>
                 </div>
+                <div style="font-size: 13px;font-weight:400;text-align:center;padding-bottom:10px;color:#999" v-if="!isTbcBillVO || tbcBillVO.tbcNum>0">此账单只针对该票货物空运费与报关费，如有其他杂费另计</div>
+
               </div>
             </div>
             <div v-if="guowaiArr.length > 0" style="margin-top: 20px;">
@@ -587,11 +621,22 @@
               <button @click="submitBtn('进仓')" v-if="detailsArr.status == '17'"
                       class="box-btn btn-prprimary com-height50" style="width: 100%; font-size: 18px;">进仓数据确认
               </button>
+              <div v-if="detailsArr.status == '17'" style="width:100%;text-align:center;height:50px;line-height:50px;font-size:18px;font-weight:600;color:#979696;border-bottom:2px dotted;">进仓数据若有异议，请联系客服</div>
+              <!-- <button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50"
+                      style="width: 100%; font-size: 18px;">
+                  {{tbcBillVO.tbcNum == 0?'账单已生成，请确认':'确认费用并开票'}}
+                  <div class="length" v-if="tbcBillVO.tbcNum != 0">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}}
+                    <span>/{{tbcBillVO.totalCount}}</span></div>
+              </button> -->
+              <button class="box-btn btn-prprimary com-height50" v-if="detailsArr.showNotBillFlag == 1"  style="width:100%; font-size: 18px;background:rgba(153,153,153,0.7);">
+                  对账单未生成  
+              </button>
               <button @click="submitBtn('账单')" v-if="isTbcBillVO" class="box-btn btn-prprimary com-height50"
                       style="width: 100%; font-size: 18px;">
                   <!-- 确认费用并开票 -->
-                  账单已生成，请确认
-                  <div class="length">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}}
+
+                  {{tbcBillVO.tbcNum==0?'账单确认完成':'账单已生成，请确认'}}
+                  <div class="length" v-if="tbcBillVO.tbcNum>0">确认进度：{{tbcBillVO.totalCount - tbcBillVO.tbcNum}}
                     <span>/{{tbcBillVO.totalCount}}</span></div>
               </button>
             </div>
@@ -640,12 +685,17 @@
     </div>
   </div>
 </div>
+<!-- WPA start -->
+<script id="qd300910544025a0ebbabd71b26102946a262af043f2" src="https://wp.qiye.qq.com/qidian/3009105440/25a0ebbabd71b26102946a262af043f2" charset="utf-8" async defer></script>
+<!-- WPA end -->
 </body>
 <script src="./service/index.js"></script>
+<script src="./js/utils.js"></script>
 <script>
     new Vue({
         el: '#app',
         data: {
+          certificationBody:'',
             loading: false,
             menuIndex: 4,
             orderId: '',
@@ -659,6 +709,7 @@
             guowaiJiaqian: 0,
             preStatus: '',
             status: '',
+            wxOpenId:'',
             orderCargoDetailList: [],
             orderAttachmentList: [],
             activityFlowVOList: [],
@@ -676,13 +727,21 @@
             countdownsetInterval: null,
             mapData: {},
             totalImages: [],
+            trayDetail: [], // 订舱托盘数据
         },
         created() {
-            if (!localStorage.getItem('wxOpenId')) {
-                window.location.href = './login.html'
+            // if (!localStorage.getItem('wxOpenId')) {
+            //     window.location.href = './login.html'
+            // }
+            if(localStorage.getItem('certificationBody')) {
+						this.certificationBody = localStorage.getItem('certificationBody')
+					}
+            if (localStorage.getItem('wxOpenId')) {
+                 this.wxOpenId = localStorage.getItem('wxOpenId')
             }
             if (localStorage.getItem('userInfo')) {
                 this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+                
             }
             this.orderId = getQueryVariable('orderId')
             this.orderSearchDetail()
@@ -715,14 +774,18 @@
                 }, 1000);
 
             },
-            goQuick(){
+            async goQuick(){
+              await DcUtils.getLocalCertificationBody()
               if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
                         this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
                             confirmButtonText: '确定',
                             callback: action => {
                             }
                         })
-                    }else{
+                    } else if(this.wxOpenId == ""){
+                   window.location.href = './login.html'
+				}
+                    else{
               window.location.href='./quick.html'
             }
             },
@@ -759,7 +822,7 @@
                     if (data.code == 200) {
                         this.dialogFormVisible = false
                     } else if (data.code == -200) {
-                        window.location.href = './login.html'
+                      DcUtils.tokenExpired()
                     } else {
                         this.$message.error(data.message)
 
@@ -796,7 +859,7 @@
                         this.dialogFormVisible = false
                         this.orderSearchDetail()
                     } else if (data.code == -200) {
-                        window.location.href = './login.html'
+                      DcUtils.tokenExpired()
                     } else {
                         this.$message.error(data.message)
 
@@ -812,7 +875,7 @@
             },
             tuiChu() {
                 localStorage.clear()
-                window.location.href = './login.html'
+                window.location.href = './index.html'
             },
             toPriceTotal(item) {
                 var num = Math.ceil((item.bubblePoint / 10 * this.detailsArr.bookingCw + (1 - item.bubblePoint / 10) * this.detailsArr.bookingWeight))
@@ -862,7 +925,7 @@
                         if (data.code == 200) {
                             window.location.href = './orderList.html'
                         } else if (data.code == -200) {
-                            window.location.href = './login.html'
+                          DcUtils.tokenExpired()
                         } else {
                             this.$message.error(data.message)
 
@@ -892,7 +955,7 @@
                         if (data.code == 200) {
                             window.location.href = './orderList.html'
                         } else if (data.code == -200) {
-                            window.location.href = './login.html'
+                          DcUtils.tokenExpired()
                         } else {
                             this.$message.error(data.message)
 
@@ -925,7 +988,7 @@
                         if (data.code == 200) {
                             window.location.href = './orderList.html'
                         } else if (data.code == -200) {
-                            window.location.href = './login.html'
+                          DcUtils.tokenExpired()
                         } else {
                             this.$message.error(data.message)
 
@@ -937,7 +1000,6 @@
                     // localStorage.setItem("leftTime", this.billInfos.map(item=>new Date(item.billCreateTime).getTime())) 
                     // localStorage.setItem("pdfPath", this.billInfos.map(item=>item.pdfPath))
                     // window.location.href = './getInvoice.html?orderId='+this.orderId+"&billId="+this.billInfos.map(item=>item.billId)
-                    
                  }
             },
             //账单转化
@@ -991,6 +1053,19 @@
                             this.orderOptionsList = data.data.orderOptionsList
                         }
                         this.totalImages = this.detailsArr.orderAttachmentList.filter(item => item.attachmentType === 1),
+                        // 分泡比例文本
+                        this.detailsArr.bubblePointText = {
+                          1: '1/9',
+                          2: '2/8',
+                          3: '3/7',
+                          4: '4/6',
+                          5: '5/5',
+                          6: '6/4',
+                          7: '7/3',
+                          8: '8/2',
+                          9: '9/1',
+                          10: '不分泡',
+                        }[this.detailsArr.bubblePoint]
                         this.guonerArr = []
                         this.guowaiArr = []
                         for (var i = 0; i < this.detailsArr.orderPriceList.length; i++) {
@@ -1008,6 +1083,7 @@
                             this.status = this.detailsArr.status
                         }
                         this.orderCargoDetailList = this.detailsArr.orderCargoDetailList
+                        this.trayDetail = JSON.parse(this.detailsArr.trayDetail)
                         this.orderAttachmentList = this.detailsArr.orderAttachmentList
                         this.mapData = this.orderAttachmentList.find((item) => {
                           return item.attachmentType === 5;
@@ -1019,17 +1095,17 @@
                             this.isTbcBillVO = true
                             this.tbcBillVO = this.detailsArr.tbcBillVO
                             this.billInfos = this.detailsArr.tbcBillVO.billInfos
-                            for (var q = 0; q < this.billInfos.length; q++) {
-                                if (this.billInfos[q].status == 0) {
-                                    this.isTbcBillVO = true
-                                    return
-                                } else {
-                                    this.isTbcBillVO = false
-                                }
-                            }
+                            // for (var q = 0; q < this.billInfos.length; q++) {
+                            //     if (this.billInfos[q].status == 0) {
+                            //         this.isTbcBillVO = true
+                            //         return
+                            //     } else {
+                            //         this.isTbcBillVO = false
+                            //     }
+                            // }
                         }
                     } else if (data.code == -200) {
-                        window.location.href = './login.html'
+                      DcUtils.tokenExpired()
                     } else {
                         this.$message.error(data.message)
 

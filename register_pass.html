@@ -16,6 +16,8 @@
 		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
 		<link rel="stylesheet" href="./css/reset.css" />
 		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/dayjs.min.js"></script>
+		<script src="./js/qs.min.js"></script>
 		<script src="./js/vue.js"></script>
 		<script src="./js/axios.min.js"></script>
 		<style>
@@ -101,7 +103,15 @@
 		<script src="./js/forbibben.js"></script>
 	</head>
 	<body  >
-		<div id="app" style="font-size: 0;">
+		<div id="app" style="font-size: 0;" v-cloak>
+			<div>
+				<div id="17dc-web" class="vr" > <span class="qidian-tips">在线客服</span></div>
+	
+				<div class="vr_wrap"></div>
+	
+				<div class="vr_wrap2"></div>
+	
+			</div>
 			<div class="login-bg">
 				<div class="com-width login-total">
 					<div style="margin-top: 100px;">
@@ -165,8 +175,12 @@
 				</div>
 			</div>
 		</div>
+<!-- WPA start -->
+<script id="qd300910544025a0ebbabd71b26102946a262af043f2" src="https://wp.qiye.qq.com/qidian/3009105440/25a0ebbabd71b26102946a262af043f2" charset="utf-8" async defer></script>
+<!-- WPA end -->
 	</body>
 	<script src="./service/index.js"></script>
+	<script src="./js/utils.js"></script>
 	<script>
 		new Vue({
 			el: '#app',

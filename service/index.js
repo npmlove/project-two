@@ -213,17 +213,21 @@ function getWeekDay(data) {
 function getWeekDay1(data) {
 	var dateString = formatDate(data);//当天的日期，例如2020-2-28
 	var presentDate = new Date(dateString);
-	if(presentDate.getDay() == 0){
-		var today = 28;
-		return Array.from(new Array(28), function (val, index) {
-			return formatDate(new Date(presentDate.getTime() + (today - index - 1) * 24 * 60 * 60 * 1000));
-		});
-	}else{
-		var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 28;
-		return Array.from(new Array(28), function (val, index) {
-			return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
-		});
-	}
+	var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 7;
+	return Array.from(new Array(28), function (val, index) {
+		return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
+	});
+	// if(presentDate.getDay() == 0){
+	// 	var today = 28;
+	// 	return Array.from(new Array(28), function (val, index) {
+	// 		return formatDate(new Date(presentDate.getTime() + (today - index - 1) * 24 * 60 * 60 * 1000));
+	// 	});
+	// }else{
+	// 	var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 28;
+	// 	return Array.from(new Array(28), function (val, index) {
+	// 		return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
+	// 	});
+	// }
 }
 // 获取当前月的所有日期
 function getNowM() {
