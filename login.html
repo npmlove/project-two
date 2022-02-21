@@ -16,6 +16,8 @@
 		<title>17订舱-国际货代-空运价格-在线订舱-航线-一站式国际货运在线服务平台</title>
 		<link rel="stylesheet" href="./css/reset.css" />
 		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/dayjs.min.js"></script>
+		<script src="./js/qs.min.js"></script>
 		<script src="./js/vue.js"></script>
 		<script src="./js/axios.min.js"></script>
 		<script src="./js/forbidden.js"></script>
@@ -92,8 +94,28 @@
 			}
 			.login-tips > a{
 				color: #2273CB;
+				
 				padding: 0;
 			}
+		
+			.tips{
+				position: relative;
+				background: #FFFFFF;
+				border-radius: 5px 5px 5px 5px;
+				opacity: 1;
+				font-size: 10px;
+				font-weight: bold;
+				color: #333333;
+				padding: 0 10px;
+				height: 25px;
+				line-height: 25px;
+				margin-left: 40px;
+				margin-bottom: 10px;
+			}
+
+
+
+		
 		</style>
 		<script>
 			var _hmt = _hmt || [];
@@ -106,7 +128,15 @@
 		</script>
 	</head>
 	<body  >
-		<div id="app">
+		<div id="app" v-cloak>
+			<div >
+				<div id="17dc-web" class="vr" > <span style="color:#fff" class="qidian-tips">在线客服</span></div>
+	
+				<div class="vr_wrap"></div>
+	
+				<div class="vr_wrap2"></div>
+	
+			</div>
 			<div class="login-bg">
 				<div class="com-width login-total">
 					<div style="margin-top: 100px;">
@@ -218,8 +248,12 @@
 				</div>
 			</div>
 		</div>
+<!-- WPA start -->
+<script id="qd300910544025a0ebbabd71b26102946a262af043f2" src="https://wp.qiye.qq.com/qidian/3009105440/25a0ebbabd71b26102946a262af043f2" charset="utf-8" async defer></script>
+<!-- WPA end -->
 	</body>
 	<script src="./service/index.js"></script>
+	<script src="./js/utils.js"></script>
 	<script>
 		new Vue({
 			el: '#app',
@@ -333,7 +367,7 @@
 							localStorage.setItem('wxOpenId',data.data.tportalUser.wechatOpenId)
 							localStorage.setItem('tokenId',data.data.tokenId)
 							localStorage.setItem('certificationBody',data.data.tportalUser.certificationBody)
-							window.location.href = './index.html'
+							DcUtils.redirectLogin()
 						}else{
 							this.isError = true
 							this.errorText = data.message
@@ -388,7 +422,7 @@
 								localStorage.setItem('wxOpenId',user.data.tportalUser.wechatOpenId)
 								localStorage.setItem('tokenId',user.data.tokenId)
 								localStorage.setItem('certificationBody',user.data.tportalUser.certificationBody)
-								window.location.href = './index.html'
+								DcUtils.redirectLogin()
 							}
 						})
 					}

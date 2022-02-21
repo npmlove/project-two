@@ -20,6 +20,8 @@
   <link rel="stylesheet" href="./css/common.css"/>
   <link rel="stylesheet" href="./css/corporate.css"/>
   <link rel="stylesheet" href="./css/quick.css"/>
+  <script src="./js/dayjs.min.js"></script>
+		<script src="./js/qs.min.js"></script>
   <script src="./js/vue.js"></script>
   <script src="./js/axios.min.js"></script>
   <script src="./js/dayjs.min.js"></script>
@@ -37,7 +39,14 @@
   <script src="./js/forbibben.js"></script>
 </head>
 <body  >
-<div id="app">
+<div id="app" v-cloak>
+  <div  v-if="certificationBody=='null'||certificationBody==''">
+    <div id="17dc-web" class="vr" > <span class="qidian-tips">在线客服</span></div>
+    <div class="vr_wrap"></div>
+
+    <div class="vr_wrap2"></div>
+
+  </div>
   <!-- 头部 -->
   <div class="header">
     <div class="header-img">
@@ -47,8 +56,9 @@
       </a>
       <div class="logo-title"></div>
     </div>
+   
     <div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
-      <img class="header-imgUrl" :src="userInfo.headImgUrl"/>
+      <img class="header-imgUrl" :src="userInfo.headImgUrl?userInfo.headImgUrl:'./img/defaultEvater.png'"/>
       <div class="header-user-center-btn" @mousemove.stop><a href="./orderList.html">个人中心</a></div>
       <div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
         <div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
@@ -60,6 +70,7 @@
       </div>
     </div>
     <div v-else @click="loginClick" class="header-user">登录</div>
+  
     <div class="quick " @click="goQuick">
       <img src="img/quick.png">
       <span>一键订舱</span>
@@ -83,7 +94,7 @@
               <img alt="图片" :src="userInfo.headImgUrl"/>
             </div>
             <div class="userInfo-huanyin">欢迎您{{userInfo.nickname}}</div>
-            <div class="userInfo-youxiang">设置邮箱</div>
+            <!-- <div class="userInfo-youxiang">设置邮箱</div> -->
           </div>
           <ul class="userInfo-menu-list">
 <!--            <li class="menu-list-active"><a href="./quick.html">一键订舱</a></li>-->
@@ -99,8 +110,12 @@
             <div v-if="preQQ">{{preCustomer}}<a   :href="`tencent://message/?uin=${preQQ}&Menu=yes&Service=300&sigT=42a1e5347953b64c5ff3980f8a6e644d4b31456cb0b6ac6b27663a3c4dd0f4aa14a543b1716f9d45`"><img  style="width:25px;margin-left:10px;" src="img/qq.svg"/></a></div>
           </div>
           <div class="userInfo-customer">
-            <div>欢迎致电:</div>
-            <div>13567862626</div>
+            <div>致电专属客服:</div>
+            <div>{{phoneContack}}</div>
+          </div>
+          <div class="userInfo-customer">
+            <div>全国统一服务热线：  </div>
+            <div>4008861116</div>
           </div>
         </div>
       </div>
@@ -117,7 +132,7 @@
                     <el-input
                       placeholder="请输入始发站"
                       v-model="pol"
-                      @input="qiSearchByPage(pol)" @focus="showCityList(1,true)" @blur="showCityList(1,false)"
+                      @input="qiSearchByPage(pol)"  @focus="showCityList(1,true)" @keyup.enter.native = "onlyOneChoose(1)" @blur="showCityList(1,false)"
                       >
                     </el-input>
                     <div v-show="qiShowState" style="display: none;" class="open-warp-router">
@@ -135,7 +150,7 @@
                     <el-input
                       placeholder="请输入到达站"
                       v-model="pod"
-                      @input="muSearchByPage(pod)" @focus="showCityList(2,true)" @blur="showCityList(2,false)"
+                      @input="muSearchByPage(pod)" @focus="showCityList(2,true)" @blur="showCityList(2,false)" @keyup.enter.native = "onlyOneChoose(2)"
                      >
                     </el-input>
                     <div v-show="muShowState" style="display: none;" class="open-warp-router">
@@ -153,7 +168,7 @@
                     <el-input
                       placeholder="请输入航司"
                       v-model="airCompanyCode"
-                      @input="lineSearchByPage(airCompanyCode)" @focus="showCityList(3,true)" @blur="showCityList(3,false)"
+                      @input="lineSearchByPage(airCompanyCode)" @focus="showCityList(3,true)" @blur="showCityList(3,false)" @keyup.enter.native = "onlyOneChoose(3)"
                       >
                     </el-input>
                     <div v-show="lineShowState" style="display: none;" class="open-warp-router">
@@ -247,35 +262,33 @@
                     <tr>
                       <td>
                         <el-input
-                          placeholder="请输入内容"
+                          placeholder="请输入件数"
                           v-model="bookingPiece"
                           maxLength="4"
                           onkeyup="value=value.replace(/[^\d]/g, '')"
+                          @change="changeEstimateVal('bookingPiece')"
                           clearable>
                         </el-input>
                       </td>
                       <td>
                         <el-input
-                          placeholder="请输入内容"
+                          placeholder="请输入毛重"
                           v-model="bookingWeight"
-                          maxLength="6"
-                          onkeyup="value=value.replace(/[^\d]/g, '')"
+                          @change="changeEstimateVal('bookingWeight')"
                           clearable>
                         </el-input>
                       </td>
                       <td>
                         <el-input
-                          placeholder="请输入内容"
+                          placeholder="请输入体积"
                           v-model="bookingCbm"
-
-                          @input="inputChange"
-                          @blur="inputChange('blur')"
+                          @change="changeEstimateVal('bookingCbm')"
                           clearable>
                         </el-input>
                       </td>
                       <td>
                         <el-input
-                          placeholder="请输入内容"
+                          placeholder="请输入货物品名"
                           v-model="cargoName"
                           maxLength="100"
                           clearable>
@@ -283,7 +296,7 @@
                       </td>
                       <td>
                         <el-input
-                          placeholder="请输入内容"
+                          placeholder="请输入唛头"
                           v-model="marks"
                           maxLength="100"
                           clearable>
@@ -355,13 +368,14 @@
                       v-model="bookingPrice"
                       @input="priceChange"
                       @blur="priceChange('blur')"
+                      @change="changeEstimateVal('bookingPrice')"
                       clearable>
                     </el-input>
                     <div class="kg">/kg</div>
                   </div>
                   <div>
                     <span>*</span>分泡
-                    <el-select v-model="bubblePoint" placeholder="请选择">
+                    <el-select v-model="bubblePoint" placeholder="请选择" @change="changeEstimateVal('bubblePoint')">
                       <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -436,6 +450,22 @@
                   <div v-if="isPickUp == '2'" style="padding-left: 60px">
                     <div class="booking-form-line">
                       <div class="booking-form-item">
+                        <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货时间</label>
+                        <div class="booking-form-item-content">
+                          <el-date-picker
+                            size="small"
+                            v-model="pickUp.pickUpTime"
+                            type="datetime"
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            format="yyyy-MM-dd HH:mm"
+                            placeholder="请选择提货时间"
+                            :picker-options="pickUpTimePickerOptions">
+                          </el-date-picker>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="booking-form-line">
+                      <div class="booking-form-item">
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>提货地址</label>
                         <div class="booking-form-item-content">
                           <input v-model=" pickUp.pickUpAddress" maxlength="50" placeholder="请填写提货地址"
@@ -458,8 +488,8 @@
                       <div class="booking-form-item">
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
                         <div class="booking-form-item-content">
-                          <input v-model=" pickUp.pickUpTel" onkeyup="value=value.replace(/[^\d]/g, '')" maxlength="11"
-                                 placeholder="请填写联系电话" class="booking-form-input" type="text" style="width: 450px;"/>
+                          <input v-model=" pickUp.pickUpTel" onkeyup="value=value.replace(/[^(\d | \-)]/g, '')"
+                                 placeholder="请填写联系电话" maxlength="20" class="booking-form-input" type="text" style="width: 450px;"/>
                         </div>
                       </div>
                     </div>
@@ -504,7 +534,7 @@
                       <div class="booking-form-item">
                         <label class="booking-form-item-label" style="width: 84px;"><span style="color: #F00;">*</span>联系电话</label>
                         <div class="booking-form-item-content">
-                          <input v-model="delivery.deliveryTel" maxlength="20" placeholder="请填写联系电话"
+                          <input v-model="delivery.deliveryTel" placeholder="请填写联系电话" maxlength="20" onkeyup="value=value.replace(/[^(\d | \-)]/g, '')"
                                  class="booking-form-input"
                                  type="text" style="width: 450px;"/>
                         </div>
@@ -515,7 +545,7 @@
               </div>
             </div>
           </div>
-          <div :class="['btn',showBtn?'active':'btn']"  @click="submit">订舱</div>
+          <div :class="['btn',showBtn?'active':'btn']"  @click="openOrderAgreementDialog">订舱</div>
         </div>
         <div v-show="isPdf" style="position: relative">
             <div class="success">
@@ -650,6 +680,49 @@
 
       </div>
     </div>
+      <!-- 订舱协议弹窗 -->
+      <el-dialog
+        title="订舱协议"
+        class="order-agreement-dialog"
+        :visible.sync="orderAgreementDialogVisible"
+        append-to-body
+        width="500px"
+        center
+        @close="canBeOrdered = false"
+      >
+      <header class="header-tips">请阅读至底部</header>
+      <div class="content" @scroll="orderAgreementDialogScroll">
+        <p v-for="item in 40" :key="item">这是一条很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的订舱协议条款</p>
+      </div>
+      <span slot="footer" style="text-align: center;">
+        <el-button size="small" @click="orderAgreementDialogVisible = false; canBeOrdered = false">放弃</el-button>
+        <el-button size="small" type="primary" @click="submit" :disabled="!canBeOrdered">同意并订舱</el-button>
+      </span>
+    </el-dialog>
+    <!-- 预估账单 -->
+    <div class="computed-bill-dialog" v-show="showComputedBillDialog">
+      <header>预估账单</header>
+      <div class="content">
+        <div class="content-title">国内段</div>
+        <ul class="price-list">
+          <li>
+            <span class="item-title">空运费</span>
+            <div class="item-price">
+              <span>{{ computedInboundCw }} * {{ bookingPriceEstimate }}</span>
+              <span>￥{{ computedAirFreight }}</span>
+            </div>
+          </li>
+          <li v-show="computedCustomsFees > 0">
+            <span class="item-title">报关费</span>
+            <div class="item-price">
+              <span>100 * 1</span>
+              <span>￥{{ computedCustomsFees }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <footer>￥{{ totalFees }}</footer>
+    </div>
   </div>
 
   <!-- 尾部 -->
@@ -671,18 +744,23 @@
     </div>
   </div>
 </div>
-
+<!-- WPA start -->
+<script id="qd300910544025a0ebbabd71b26102946a262af043f2" src="https://wp.qiye.qq.com/qidian/3009105440/25a0ebbabd71b26102946a262af043f2" charset="utf-8" async defer></script>
+<!-- WPA end -->
 </body>
 <script src="./service/index.js"></script>
 <!--<script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script>-->
 <!--<script src="https://cdn.bootcss.com/jspdf/1.3.4/jspdf.debug.js"></script>-->
 <script src="./js/html2canvas.js"></script>
 <script src="./js/jspdf.js"></script>
+<script src="./js/utils.js"></script>
 <script>
     new Vue({
         el: '#app',
         data() {
             return {
+              certificationBody:'',
+                phoneContack:"",
                 qiShowState: false,
                 muShowState: false,
                 lineShowState: false,
@@ -721,6 +799,7 @@
                     pickUpAddress: '',
                     pickUpContacts: '',
                     pickUpTel: '',
+                    pickUpTime: '',
                 },
                 delivery: {
                     deliveryAddress: '',
@@ -743,37 +822,66 @@
                 airlineIdA: '',
                 cargoTypeA: '',
                 dowA: '',
-                options: [{
+                options: [
+                  {
                     value: '1',
-                    label: '1/9分泡'
-                }, {
+                    label: '1/9分泡',
+                    cbmRatio: 0.1,
+                    weightRatio: 0.9,
+                  },
+                  {
                     value: '2',
-                    label: '2/8分泡'
-                }, {
+                    label: '2/8分泡',
+                    cbmRatio: 0.2,
+                    weightRatio: 0.8,
+                  },
+                  {
                     value: '3',
-                    label: '3/7分泡'
-                }, {
+                    label: '3/7分泡',
+                    cbmRatio: 0.3,
+                    weightRatio: 0.7,
+                  },
+                  {
                     value: '4',
-                    label: '4/6分泡'
-                }, {
+                    label: '4/6分泡',
+                    cbmRatio: 0.4,
+                    weightRatio: 0.6,
+                  },
+                  {
                     value: '5',
-                    label: '5/5分泡'
-                }, {
+                    label: '5/5分泡',
+                    cbmRatio: 0.5,
+                    weightRatio: 0.5,
+                  },
+                  {
                     value: '6',
-                    label: '6/4分泡'
-                }, {
+                    label: '6/4分泡',
+                    cbmRatio: 0.6,
+                    weightRatio: 0.4,
+                  },
+                  {
                     value: '7',
-                    label: '7/3分泡'
-                }, {
+                    label: '7/3分泡',
+                    cbmRatio: 0.7,
+                    weightRatio: 0.3,
+                  },
+                  {
                     value: '8',
-                    label: '8/2分泡'
-                }, {
+                    label: '8/2分泡',
+                    cbmRatio: 0.8,
+                    weightRatio: 0.2,
+                  },
+                  {
                     value: '9',
-                    label: '9/1分泡'
-                }, {
+                    label: '9/1分泡',
+                    cbmRatio: 0.9,
+                    weightRatio: 0.1,
+                  },
+                  {
                     value: '10',
-                    label: '不分泡'
-                }],
+                    label: '不分泡',
+                  }
+                ],
                 chicun:"",
                 btnShow: false,
                 btnShow1: false,
@@ -781,25 +889,67 @@
                 btnShow3: false,
                 showBtn: false,
                 fileName:"",
-                filePath:""
-
+                filePath:"",
+                orderAgreementDialogVisible: false, // 订舱协议弹窗显示
+                canBeOrdered: false, // 是否阅读完协议可进行订舱
+                bookingPriceEstimate: '', // 预估单价
+                bookingWeightEstimate: '', // 预估重量
+                bookingCbmEstimate: '', // 预估体积
+                bubblePointEstimate: '10', // 预估分泡
+                
             }
         },
         created() {
-            if (!localStorage.getItem('wxOpenId')) {
-                window.location.href = './login.html'
-            }
+            // if (!localStorage.getItem('wxOpenId')) {
+            //     window.location.href = './login.html'
+            // }
+            if(localStorage.getItem('certificationBody')) {
+						this.certificationBody = localStorage.getItem('certificationBody')
+					}
             if (localStorage.getItem('userInfo')) {
                 this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
             }
             this.openId = localStorage.getItem('wxOpenId')
             this.initUserInfo()
-            this.initList()
+            this.loadSearchData()
+            this.localDataDeal()
               this.preQQ =    JSON.parse(localStorage.getItem("userInfo")).customerServiceQq
               this.preCustomer = JSON.parse(localStorage.getItem("userInfo")).customerService
 
         },
         computed: {
+          // 显示预估账单
+          showComputedBillDialog() {
+            return this.computedInboundCw && this.bookingPriceEstimate && this.bookingWeightEstimate && this.bookingCbmEstimate && this.bubblePointEstimate
+          },
+          // 空运费
+          computedAirFreight() {
+            return `${this.computedInboundCw * this.bookingPriceEstimate}`
+          },
+          // 报关费
+          computedCustomsFees() {
+            return 100 * (this.customsType == 2 ? 1 : 0)
+          },
+          // 预估总费用
+          totalFees() {
+            return (Number(this.computedAirFreight) + Number(this.computedCustomsFees)).toLocaleString('en-US')
+          },
+          // 计费重
+          computedInboundCw() {
+            // inboundCbm 体积
+            // inboundWeight 毛重
+            // bubblePoint 分泡比率
+            // inboundVwr 比重
+            // inboundCw: 计费重
+            const inboundWeight = this.bookingWeightEstimate
+            const inboundCbm = this.bookingCbmEstimate
+            const currentBubblePoint = this.options.find(item => item.value === this.bubblePointEstimate)
+            if (currentBubblePoint.value === '10') {
+              return Math.ceil(Math.max(inboundCbm * 167, inboundWeight))
+            } else {
+              return Math.ceil(inboundCbm * 167 * currentBubblePoint.cbmRatio + inboundWeight * currentBubblePoint.weightRatio)
+            }
+          },
             departureDatePickerOptions() {
                 return {
                   disabledDate(time) {
@@ -817,6 +967,18 @@
                       return (time.getTime() < Date.now()- 86400000) || (time.getTime() > dayjs(departureDate).valueOf());
                     }
                   }
+              }
+            },
+            pickUpTimePickerOptions() {
+              const departureDate = this.departureDate
+              return {
+                disabledDate(time) {
+                  if (!departureDate) {
+                      return time.getTime() < Date.now()- 86400000;
+                    } else {
+                      return (time.getTime() < Date.now()- 86400000) || (time.getTime() >= dayjs(departureDate).valueOf());
+                    }
+                }
               }
             },
             changeData() {
@@ -881,8 +1043,39 @@
             },
         },
         watch: {
+          bookingCbm(newVal, oldVal) {
+              // 小数点前最大输入4位数，小数点后最大输入4位数
+              if (isNaN(newVal)) {
+                this.bookingCbm = oldVal
+              } else {
+                const int = newVal.split('.')[0]
+                const float = newVal.split('.')[1]
+                if (int > 9999) {
+                  this.bookingCbm = oldVal
+                }
+                if (float > 9999) {
+                  this.bookingCbm = oldVal
+                }
+              }
+            },
+            bookingWeight(newVal, oldVal) {
+              // 最大支持八位,小数点前6后2
+              if (isNaN(newVal)) {
+                this.bookingWeight = oldVal
+              } else {
+                const int = newVal.split('.')[0]
+                const float = newVal.split('.')[1]
+                if (int > 999999) {
+                  this.bookingWeight = oldVal
+                }
+                if (float > 99) {
+                  this.bookingWeight = oldVal
+                }
+              }
+            },
             isShow: {
                 handler(newV, oldVal) {
+                  
                     this.showBtn = false;
                     let arr = [];
                     let sum = 0;
@@ -1005,7 +1198,7 @@
             changePickUp: {
                 handler(newV, oldVal) {
                     for (let key in newV) {
-                        if (newV[key] == "") {
+                        if (newV[key] == "" || newV[key] == null) {
                             this.btnShow1 = false
                             this.copybtnShow1 = false
                             break
@@ -1034,6 +1227,140 @@
             },
         },
         methods: {
+          // 本地存储数据处理
+          localDataDeal() {
+            // 离开页面 sessionStorage 存 页面数据
+            DcUtils.beforeLeavePage(() => {
+              if (this.isPdf) {
+                return
+              }
+              const {
+                pol,
+                pod,
+                airCompanyCode,
+                departureDate,
+                expectedInboundTime,
+                shipper,
+                notifier,
+                consignee,
+                bookingPrice,
+                bubblePoint,
+                bookingVwr,
+                bookingPiece,
+                bookingWeight,
+                bookingCbm,
+                pickUp,
+                delivery,
+                chicun,
+                packageType,
+                cargoType,
+                customsType,
+                isPickUp,
+                cclType,
+                cargoName,
+                marks,
+                trayDetail,
+                showBtn,
+                btnShow,
+                btnShow1,
+                btnShow2,
+                btnShow3,
+              } = this
+              DcUtils.setSessionStorage('quickPage', {
+                pol, //始发站
+                pod, //终点站
+                airCompanyCode, //航司
+                departureDate, //航班日期
+				        expectedInboundTime, // 预计进仓时间
+                shipper, //发货人
+                notifier, //通知人
+                consignee, //收货人
+                bookingPrice, //单价
+                bubblePoint, //分泡
+                bookingVwr, //比重
+                pickUp, // 国内提货信息
+                delivery, // 清关服务信息
+                chicun, // 托盘尺寸
+                packageType, // 包装类型
+                cargoType, // 货物类型
+                customsType, // 报关服务
+                isPickUp, // 国内提货
+                cclType, // 清关类型
+                bookingPiece, // 件数
+                bookingWeight, // 重量
+                bookingCbm, // 体积
+                cargoName, // 品名
+                marks, // 唛头
+                trayDetail, // 托盘数据
+                showBtn,
+                btnShow,
+                btnShow1,
+                btnShow2,
+                btnShow3,
+              })
+            })
+            // 如果是从其他页面带过来了航线信息，不再读取本地数据
+            if (!this.pol) {
+              // 进入页面读取 sessionStorage 数据
+              const quickPage = DcUtils.getSessionStorage('quickPage') || {}
+              for (const key in quickPage) {
+                this[key] = quickPage[key]
+              }
+              // 单独处理一下
+              if (quickPage.packageType) {
+                this.packageType = 2
+                this.packageType = quickPage.packageType
+              }
+              this.changeEstimateVal()
+            } else {
+              sessionStorage.removeItem('quickPage')
+            }
+          },
+          // 调整预估变量
+          changeEstimateVal(key) {
+            // this[`${key}Estimate`] = this[key]
+            this.bookingPriceEstimate = this.bookingPrice // 预估单价
+            this.bookingWeightEstimate = this.bookingWeight // 预估重量
+            this.bookingCbmEstimate = this.bookingCbm // 预估体积
+            this.bubblePointEstimate = this.bubblePoint // 预估分泡
+            
+          },
+          // 协议弹窗滚动事件
+          orderAgreementDialogScroll(ev) {
+            if (ev.target.scrollTop + ev.target.clientHeight >= ev.target.scrollHeight) {
+              this.canBeOrdered = true
+            }
+          },
+         //仅有一个选项 enter直接选中
+         onlyOneChoose(index) {
+					if(index == 1){
+						if(this.qiPageArr.length>1) {
+							return 
+						}
+						else {
+							this.pol = this.qiPageArr[0].threeLetterCode
+							this.qiShowState = false
+						}
+					} 
+					else if (index == 2) {
+						if(this.muPageArr.length>1) {
+							return 
+						}
+						else {
+							this.pod = this.muPageArr[0].threeLetterCode
+							this.muShowState = false
+						}
+					}
+          else if (index == 3) {
+						if(this.linePageArr.length>1) {
+							return 
+						}
+						else {
+							this.airCompanyCode = this.linePageArr[0].airCompanyCode
+							this.lineShowState = false
+						}
+					}
+				},
             openCityClick(type, item) {
                 if (type == 1) {
                     this.pol = item.threeLetterCode
@@ -1173,14 +1500,20 @@
                     }
                 })
             },
-            goQuick(){
+            async goQuick(){
+              await DcUtils.getLocalCertificationBody()
               if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
                         this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
                             confirmButtonText: '确定',
                             callback: action => {
                             }
                         })
-                    }else{
+                    } 
+                    else if(this.openId == ""){
+                   window.location.href = './login.html'
+				}
+
+                    else{
               window.location.href='./quick.html'
             }
             },
@@ -1234,21 +1567,29 @@
                 // })
 
             },
+            // 打开协议弹窗
+            openOrderAgreementDialog() {
+              if(!this.showBtn){
+                  return false
+              }
+              if (!this.expectedInboundTime) {
+                this.$message.error('请选择预计进仓时间')
+                return
+              }else if(!this.departureDate) {
+                this.$message.error('航班日期')
+                return
+              }
+              if ( dayjs(this.expectedInboundTime).valueOf() > dayjs(this.departureDate).valueOf() ) {
+                this.$message.error('请选择早于航班日期的预计进仓时间')
+                return
+              }
+              if ( this.isPickUp === 2 && dayjs(this.pickUp.pickUpTime).valueOf() >= dayjs(this.departureDate).valueOf() ) {
+                this.$message.error('请选择早于航班日期的提货时间')
+                return
+              }
+              this.showBtn && (this.orderAgreementDialogVisible = true)
+            },
             submit() {
-                if(!this.showBtn){
-                    return false
-                }
-                if (!this.expectedInboundTime) {
-									this.$message.error('请选择预计进仓时间')
-                  return
-								}else if(!this.departureDate) {
-									this.$message.error('航班日期')
-                  return
-								}
-                if ( dayjs(this.expectedInboundTime).valueOf() > dayjs(this.departureDate).valueOf() ) {
-                  this.$message.error('请选择早于航班日期的预计进仓时间')
-                  return
-                }
                 let {
                     customsType,
                     isPickUp,
@@ -1301,10 +1642,13 @@
                       })
                         this.filePath = data.data.xpath;
                         this.fileName = data.data.attachmentName;
+                        this.orderAgreementDialogVisible = false
+                        this.canBeOrdered = false
                         // window.location.href=data.data.xpath
-
+                        // 订舱成功后清除本地存储
+                      sessionStorage.removeItem('quickPage')
                     } else if (data.code == -200) {
-                        window.location.href = './login.html'
+                      DcUtils.tokenExpired()
                     } else {
                         this.$message.error(data.message)
                     }
@@ -1421,7 +1765,23 @@
             packageTypeClick(act) {
                 this.packageType = act
             },
-            initList() {
+            // 载入search携带的数据
+            loadSearchData() {
+              const search = location.search.slice(1)
+              const searchArr = search.split('&')
+              const searchObj = searchArr.reduce((obj, item) => {
+                const key = item.split('=')[0]
+                const val = item.split('=')[1]
+                obj[key] = val
+                return obj
+              }, {})
+              searchObj.pol && (this.pol = searchObj.pol)
+              searchObj.pod && (this.pod = searchObj.pod)
+              searchObj.piece && (this.bookingPiece = searchObj.piece)
+              searchObj.volume && (this.bookingCbm = searchObj.volume)
+              searchObj.weight && (this.bookingWeight = searchObj.weight)
+              searchObj.airCompanyCode && (this.airCompanyCode = searchObj.airCompanyCode)
+              searchObj.packageType && (this.packageType = searchObj.packageType)
             },
             initUserInfo() {
                 axios({
@@ -1434,8 +1794,9 @@
                     var data = data.data
                     if (data.code == 200) {
                         this.userInfo = data.data.tportalUser
+                        this.phoneContack = data.data.tportalUser.customerServiceTel
                     } else if (data.code == -200) {
-                        window.location.href = './login.html'
+                      DcUtils.tokenExpired()
                     } else {
                         this.$message.error(data.message)
                     }
@@ -1451,7 +1812,7 @@
             },
             tuiChu() {
                 localStorage.clear()
-                window.location.href = './login.html'
+                window.location.href = './index.html'
             },
             //登录
             loginClick() {
