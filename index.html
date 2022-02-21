@@ -142,7 +142,7 @@
 											<input @input="qiSearchByPage(qiSearchInput);showCityList(1,true)" @focus="showCityList(1,true)" @keyup.enter = "onlyOneChoose(1)" @blur="showCityList(1,false)" v-model="qiSearchInput" class="box-input banner-box-border" type="text" placeholder="起飞港"/>
 											<div v-show="qiShowState" style="display: none;" class="open-warp-router">
 												<div v-if="!qiSearchInput" class="open-warp-router-hot">热门机场</div>
-												<div @mousedown="openCityClick(1,item)" v-for="(item,index) in qiPageArr" :key="index" class="opne-warp-city">
+												<div @mousedown="openCityClick(1,item)" v-for="(item,index) in computedQiList" :key="index" class="opne-warp-city">
 													<span>{{item.threeLetterCode}}</span>
 													<span>{{item.name}}</span>
 													<span>{{item.city}}</span>
@@ -156,7 +156,7 @@
 											<div v-show="isShowGang" class="isShowGang" style="color: #F00;font-size: 12px;display: none;position: absolute;">{{gangText}}</div>
 											<div v-show="muShowState" style="display: none;" class="open-warp-router">
 												<div v-if="!muSearchInput" class="open-warp-router-hot">热门机场</div>
-												<div @mousedown="openCityClick(2,item)" v-for="(item,index) in muPageArr" :key="index" class="opne-warp-city">
+												<div @mousedown="openCityClick(2,item)" v-for="(item,index) in computedMuList" :key="index" class="opne-warp-city">
 													<span>{{item.threeLetterCode}}</span>
 													<span>{{item.name}}</span>
 													<span>{{item.city}}</span>
@@ -828,12 +828,20 @@
 				headerMenu: false,
 				aiStr: '',
 				volumeConetn: '',
-				flightSearch: ''
+				flightSearch: '',
+				hotQiList: [],
+				HotMuList: [],
 			},
 			computed: {
 				swiper() {
 					return this.$refs.mySwiper.swiper;
-				}
+				},
+				computedQiList() {
+					return this.qiSearchInput ? this.qiPageArr : this.hotQiList
+				},
+				computedMuList() {
+					return this.muSearchInput ? this.muPageArr : this.HotMuList
+				},
 			},
 			created() {
 				
@@ -1236,6 +1244,9 @@
 					}
 				},
 				qiSearchByPage(val) {
+					if (!this.qiSearchInput && this.computedQiList.length > 0) {
+						return
+					}
 					var jsonData = {
 						keyWord: this.qiSearchInput,
 						type: this.qiSearchInput ? '' : '1'
@@ -1247,12 +1258,19 @@
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
-							this.qiPageArr = data.data
+							if (this.qiSearchInput) {
+								this.qiPageArr = data.data
+							} else {
+								this.hotQiList = data.data
+							}
+							
 						}
 					})
 				},
 				muSearchByPage(val) {
-					console.log(val)
+					if (!this.muSearchInput && this.computedMuList.length > 0) {
+						return
+					}
 					var jsonData = {
 						keyWord: this.muSearchInput,
 						type: this.muSearchInput ? '' : '2'
@@ -1264,7 +1282,11 @@
 					}).then((data) =>{
 						var data = data.data
 						if(data.code == 200){
-							this.muPageArr = data.data
+							if (this.muSearchInput) {
+								this.muPageArr = data.data
+							} else {
+								this.HotMuList = data.data
+							}
 						}
 					})
 				},
