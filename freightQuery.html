@@ -582,14 +582,14 @@
             priceArrNew:[],
             weekRatesVOS:[],
             hotQiList: [],
-				    HotMuList: [],
+				    hotMuList: [],
         },
         computed: {
           computedQiList() {
 					  return this.pol ? this.qiPageArr : this.hotQiList
           },
           computedMuList() {
-            return this.pod ? this.muPageArr : this.HotMuList
+            return this.pod ? this.muPageArr : this.hotMuList
           },
         },
         created() {
@@ -1001,22 +1001,16 @@ return (...args) => {
                         this.qiShowState = state //显示下拉列表
                     } else {
                         this.qiShowState = state //隐藏下拉框
-                        if(!this.qiPageArr || this.qiPageArr.length==0){
-                            this.pol= "";
-                            return false
+                        const list = [...this.hotQiList, ...this.qiPageArr]
+                        const matchUpperCase = list.find(item => {
+                          if (this.pol.toUpperCase() === item.threeLetterCode) {
+                            this.pol = item.threeLetterCode
+                            return true
+                          }
+                        })
+                        if (!matchUpperCase) {
+                          this.pol = ''
                         }
-                        let bz = false;
-                       for(let i=0;i<this.qiPageArr.length;i++){
-                           if(this.pol.toUpperCase() == this.qiPageArr[i].threeLetterCode){
-                                bz = true;
-                               this.pol= this.qiPageArr[i].threeLetterCode;
-                                break;
-                           }
-                       }
-                       if(!bz){
-                           this.pol= "";
-                           return false
-                       }
                     }
                 } else if (type == 2) {
                     if (state) {
@@ -1024,22 +1018,16 @@ return (...args) => {
                         this.muShowState = state //显示下拉列表
                     } else {
                         this.muShowState = state //隐藏下拉框
-                        if(!this.muPageArr || this.muPageArr.length==0){
-                            this.pod= "";
-                            return false
+                        const list = [...this.hotMuList, ...this.muPageArr]
+                        const matchUpperCase = list.find(item => {
+                          if (this.pod.toUpperCase() === item.threeLetterCode) {
+                            this.pod = item.threeLetterCode
+                            return true
+                          }
+                        })
+                        if (!matchUpperCase) {
+                          this.pod = ''
                         }
-                        let bz = false;
-                       for(let i=0;i<this.muPageArr.length;i++){
-                           if(this.pod.toUpperCase() == this.muPageArr[i].threeLetterCode){
-                                bz = true;
-                               this.pod= this.muPageArr[i].threeLetterCode;
-                                break;
-                           }
-                       }
-                       if(!bz){
-                           this.pod= "";
-                           return false
-                       }
                     }
                 } else if (type == 3) {
                     if (state) {
@@ -1101,7 +1089,7 @@ return (...args) => {
                       if (this.pod) {
                         this.muPageArr = data.data
                       } else {
-                        this.HotMuList = data.data
+                        this.hotMuList = data.data
                       }
                     }
                 })
@@ -1479,6 +1467,8 @@ return (...args) => {
             //货物类型单选
             aircraftRadioClick(name) {
                 this.aircraftRadioName = name
+                this.priceArr=[]
+                this.pageNum = 0
                 this.initData()
             },
             //登录
