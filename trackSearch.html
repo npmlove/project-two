@@ -90,7 +90,8 @@
 								<div class="form-item">
 									<div class="form-item-owrt">
 										<input v-model="trackSearchInput" @focu="isShowYundan = false"  @input="valueChange" placeholder="全网货物跟踪，运单信息全掌握" type="text" style="width: 100%;" />
-										<div v-show="isShowYundan" style="position: relative;bottom: 0px;font-size: 12px;color: #F00;">{{dataTips}}</div>
+										<span v-show="isShowYundan" style="position: relative;bottom: 0px;font-size: 12px;color: #F00;">{{dataTips}}</span>
+										<span v-show="isShowhangsi" style="position: relative;bottom: 0px;font-size: 12px;color: #F00;">,该航司暂未支持查询,航司官网：{{website}}</span>
 									</div>
 								</div>
 							</div>
@@ -227,6 +228,8 @@
 			el: '#app',
 			data: {
 				certificationBody:'',
+				isShowhangsi:false,
+				website:'',
 				menuIndex: 1,
 				trackSearchInput: '',
 				data: '',
@@ -298,6 +301,7 @@
 					
 					this.trackSearchInput=this.trackSearchInput.replace(/[^\d|-]/g, '')
 					this.isShowYundan = false
+					this.isShowhangsi = false
 					if(this.trackSearchInput.match(/-/g) && this.trackSearchInput.match(/-/g).length > 1 ){
 						let sr = this.trackSearchInput.split("");
 						sr.splice(this.trackSearchInput.lastIndexOf('-'),1)
@@ -348,6 +352,10 @@
 							this.dataTips = this.data.errMsg
 							if(this.dataTips) {
                               this.isShowYundan = true
+							}
+							this.website = this.data.airCompany.website
+							if(this.website) {
+								this.isShowhangsi = true
 							}
 							this.tableData1 = this.data.cargoInfos
 							this.tableData2 = this.data.flightInfo
