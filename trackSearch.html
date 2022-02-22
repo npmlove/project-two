@@ -352,7 +352,6 @@
 						if(data.code == 200){
 							
 							this.data = JSON.parse(data.data)
-<<<<<<< HEAD
 							// console.log(this.data)
 							if(this.data.errMsg) {
                               this.isShowYundan = true
@@ -361,16 +360,6 @@
 							if(this.data.airCompany&&this.data.airCompany.website) {
 								this.isShowhangsi = true
 								this.website = this.data.airCompany.website
-=======
-							console.log(this.data);
-							this.dataTips = this.data.errMsg
-							if(this.dataTips) {
-                              this.isShowYundan = true
-							}
-							this.website = this.data.airCompany.website
-							if(this.website) {
-								this.isShowhangsi = true
->>>>>>> 8d9d899ebe15c9ab57f46a24c7e38387f196627b
 							}
 							this.tableData1 = this.data.cargoInfos
 							this.tableData2 = this.data.flightInfo
