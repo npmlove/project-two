@@ -17,6 +17,8 @@
 		<link rel="stylesheet" href="./css/element-ui-min.css">
 		<link rel="stylesheet" href="./css/reset.css" />
 		<link rel="stylesheet" href="./css/common.css" />
+		<script src="./js/dayjs.min.js"></script>
+		<script src="./js/qs.min.js"></script>
 		<script src="./js/vue.js"></script>
 		<script src="./js/axios.min.js"></script>
 		<script src="./js/element-ui.js"></script>
@@ -31,12 +33,19 @@
 		</script>
 		   <script src="./js/forbidden.js"></script>
 		   <script src="./js/forbibben.js"></script>
-			   
 	</head>
 	<!-- onload="forbiddenDevT()" -->
 	<body >
-		<div id="app" style="font-size: 0;">
+		<div id="app" style="font-size: 0;"  v-cloak>
 			<!-- 头部 -->
+			<div  v-if="certificationBody=='null'||certificationBody==''">
+				<div id="17dc-web" class="vr" > <span class="qidian-tips">在线客服</span></div>
+	
+				<div class="vr_wrap"></div>
+	
+				<div class="vr_wrap2"></div>
+	
+			</div>
 			<div class="header">
 				<div class="header-img">
 					<a href="./index.html">
@@ -46,11 +55,12 @@
 					<div class="logo-title"></div>
 				</div>
 				<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
-					<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+					<img class="header-imgUrl" :src="userInfo.headImgUrl?userInfo.headImgUrl:'./img/defaultEvater.png'"/>
+					<div class="header-user-center-btn" @mousemove.stop><a href="./orderList.html">个人中心</a></div>
 					<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 						<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
 						<div class="header-bak"><a @click="goQuick">一键订舱</a></div>
-						<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+						<div class="header-bak"><a href="./corporate.html">企业信息</a></div>
 						<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
 						<div class="header-bak"><a href="./financial.html">财务管理</a></div>
 						<div @click="tuiChu" class="header-bak">退出</div>
@@ -66,7 +76,7 @@
 				<ul class="header-menu-list com-width">
 					<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
 					<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-					<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li> -->
+					<li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
 					<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 				</ul>
 			</div>
@@ -92,46 +102,62 @@
 					<div class="footer-content">
 						<div class="footer-label">
 							<div class="footer-cool" style="margin-bottom: 10px;">
-								<span>Copyright © 2020-2021 17dc.com  丨  沪ICP备2021024815号-1  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
+								<span>Copyright © 2020-2021 17dc.com  丨  <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px; vertical-align: top;" /><a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011802004581" class="register-system-info">沪公网安备 31011802004581号</a>  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
 							</div>
 							<!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋  丨  <a target="_blank" href="https://beian.miit.gov.cn/#/Integrated/index">沪ICP备2021024815号-1</a></div>
 						</div>
 						<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 					</div>
 				</div>
 			</div>
 		</div>
+<!-- WPA start -->
+<script id="qd300910544025a0ebbabd71b26102946a262af043f2" src="https://wp.qiye.qq.com/qidian/3009105440/25a0ebbabd71b26102946a262af043f2" charset="utf-8" async defer></script>
+<!-- WPA end -->
 	</body>
 	<script src="./service/index.js"></script>
+	<script src="./js/utils.js"></script>
 	<script>
 		new Vue({
 			el: '#app',
 			data: {
+				certificationBody:'',
+				wxOpenId:'',
 				menuIndex: 3,
 				userInfo: '',
 				headerMenu: false
 			},
 			created() {
-				if(!localStorage.getItem('wxOpenId')){
-					window.location.href = './login.html'
-				}
+					// window.location.href = './login.html'
+					if(localStorage.getItem('wxOpenId')){
+					  this.wxOpenId =   localStorage.getItem('wxOpenId')
+					}
+					if(localStorage.getItem('certificationBody')) {
+						this.certificationBody = localStorage.getItem('certificationBody')
+					}
 				if(localStorage.getItem('userInfo')){
 					this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 				}
 			},
 			methods: {
-				goQuick(){
-				if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
+				async goQuick(){
+					await DcUtils.getLocalCertificationBody()
+					if (localStorage.getItem('certificationBody') == 'null' || localStorage.getItem('certificationBody') == '') {
 							this.$alert('当前帐户未绑定认证主体，订舱失败，请联系客服人员', '提示', {
 								confirmButtonText: '确定',
 								callback: action => {
 								}
 							})
-						}else{
+						}
+							else if(this.wxOpenId == ""){
+                   window.location.href = './login.html'
+				}
+
+						else{
 				window.location.href='./quick.html'
 				}
 				},
@@ -144,7 +170,7 @@
 				},
 				tuiChu() {
 					localStorage.clear()
-					window.location.href = './login.html'
+					window.location.href = './index.html'
 				},
 				//登录
 				loginClick() {

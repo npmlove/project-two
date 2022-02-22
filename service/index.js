@@ -1,5 +1,5 @@
 var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境或测试环境
-// var websocketUrl = 'wss://www.17dc.com/back/dcPortal/user/' //生产环境
+// var websocketUrl = 'wss://www.17dc.com/back/dcPortal/user/' //生成环境
 
 
 
@@ -8,17 +8,8 @@ var websocketUrl = 'wss://17dc.shenghuoq.com/back/dcPortal/user/' //开发环境
 // var publicWeb = '/back/dcPortal/faw'
 
 //测试环境或生成环境
-// var webIp = ''
-// var publicWeb = '/back/dcPortalTest/faw'
-
-//测试环境或生成环境
-// var webIp = ''
-// var publicWeb = '/back/dcPortal/faw'
-
-// hotfix环境
 var webIp = ''
 var publicWeb = '/back/dcPortal/faw'
-
 
 //接口
 const serviceApi = {
@@ -222,17 +213,21 @@ function getWeekDay(data) {
 function getWeekDay1(data) {
 	var dateString = formatDate(data);//当天的日期，例如2020-2-28
 	var presentDate = new Date(dateString);
-	if(presentDate.getDay() == 0){
-		var today = 28;
-		return Array.from(new Array(28), function (val, index) {
-			return formatDate(new Date(presentDate.getTime() + (today - index - 1) * 24 * 60 * 60 * 1000));
-		});
-	}else{
-		var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 28;
-		return Array.from(new Array(28), function (val, index) {
-			return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
-		});
-	}
+	var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 7;
+	return Array.from(new Array(28), function (val, index) {
+		return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
+	});
+	// if(presentDate.getDay() == 0){
+	// 	var today = 28;
+	// 	return Array.from(new Array(28), function (val, index) {
+	// 		return formatDate(new Date(presentDate.getTime() + (today - index - 1) * 24 * 60 * 60 * 1000));
+	// 	});
+	// }else{
+	// 	var today = presentDate.getDay() !== 0 ? presentDate.getDay() : 28;
+	// 	return Array.from(new Array(28), function (val, index) {
+	// 		return formatDate(new Date(presentDate.getTime() - (today - index - 1) * 24 * 60 * 60 * 1000));
+	// 	});
+	// }
 }
 // 获取当前月的所有日期
 function getNowM() {

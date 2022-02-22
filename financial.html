@@ -19,6 +19,8 @@
 	<link rel="stylesheet" href="./css/element-ui-min.css">
 	<link rel="stylesheet" href="./css/reset.css" />
 	<link rel="stylesheet" href="./css/common.css" />
+	<script src="./js/dayjs.min.js"></script>
+		<script src="./js/qs.min.js"></script>
 	<script src="./js/vue.js"></script>
 	<script src="./js/axios.min.js"></script>
 	<script src="./js/element-ui.js"></script>
@@ -99,11 +101,33 @@
 		.modal-margin-5>p {
 			margin-top: 5px;
 		}
+		
+			.tips{
+				position: relative;
+				background: #FFFFFF;
+				border-radius: 5px 5px 5px 5px;
+				opacity: 1;
+				font-size: 10px;
+				font-weight: bold;
+				color: #333333;
+				padding: 0 10px;
+				height: 25px;
+				line-height: 25px;
+				margin-left: 40px;
+				margin-bottom: 10px;
+			}
 	</style>
 </head>
 
 <body>
-	<div id="app" style="font-size: 0;">
+	<div id="app" style="font-size: 0;" v-cloak>
+		<div v-if="certificationBody=='null'||certificationBody==''">
+			<div id="17dc-web" class="vr" > <span class="qidian-tips">在线客服</span></div>
+			<div class="vr_wrap"></div>
+
+			<div class="vr_wrap2"></div>
+
+		</div>
 		<!-- 头部 -->
 		<div class="header">
 			<div class="header-img">
@@ -113,18 +137,21 @@
 				</a>
 				<div class="logo-title"></div>
 			</div>
+		
 			<div v-if="userInfo" @mousemove="showHeaderMenu(1)" @mouseout="showHeaderMenu(2)" class="header-userInfo">
-				<img class="header-imgUrl" :src="userInfo.headImgUrl" />
+				<img class="header-imgUrl" :src="userInfo.headImgUrl?userInfo.headImgUrl:'./img/defaultEvater.png'"/>
+				<div class="header-user-center-btn" @mousemove.stop><a href="./orderList.html">个人中心</a></div>
 				<div v-show="headerMenu" style="display: none;" class="header-userInfo-menu">
 					<div class="header-userInfo-menu-name">{{userInfo.nickname}}</div>
 					<div class="header-bak"><a href="./quick.html">一键订舱</a></div>
-					<div class="header-bak"><a href="./corporate.html">企业认证</a></div>
+					<div class="header-bak"><a href="./corporate.html">企业信息</a></div>
 					<div class="header-bak"><a href="./orderList.html">订单管理</a></div>
 					<div class="header-bak"><a href="./financial.html">财务管理</a></div>
 					<div @click="tuiChu" class="header-bak">退出</div>
 				</div>
 			</div>
 			<div v-else @click="loginClick" class="header-user">登录</div>
+	
 			<div class="quick " @click="goQuick">
 				<img src="img/quick.png">
 				<span>一键订舱</span>
@@ -134,7 +161,7 @@
 			<ul class="header-menu-list com-width">
 				<li @click="menuClick(0)" :class="{headerActive: menuIndex == 0}" class="header-menu-content">首页</li>
 				<li @click="menuClick(1)" :class="{headerActive: menuIndex == 1}" class="header-menu-content">运单跟踪</li>
-				<!-- <li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li> -->
+				<li @click="menuClick(2)" :class="{headerActive: menuIndex == 2}" class="header-menu-content">地址搜索</li>
 				<li @click="menuClick(3)" :class="{headerActive: menuIndex == 3}" class="header-menu-content">关于我们</li>
 			</ul>
 		</div>
@@ -235,7 +262,7 @@
 								<img alt="图片" :src="userInfo.headImgUrl" />
 							</div>
 							<div class="userInfo-huanyin">欢迎您{{userInfo.nickname}}</div>
-							<div class="userInfo-youxiang">设置邮箱</div>
+							<!-- <div class="userInfo-youxiang">设置邮箱</div> -->
 						</div>
 						<ul class="userInfo-menu-list">
 							<li><a href="./quick.html">一键订舱</a></li>
@@ -252,9 +279,13 @@
 										style="width:25px;margin-left:10px;" src="img/qq.svg" /></a></div>
 						</div>
 						<div class="userInfo-customer">
-							<div>欢迎致电:</div>
-							<div>13567862626</div>
+							<div>致电专属客服:</div>
+							<div>{{phoneContack}}</div>
 						</div>
+						<div class="userInfo-customer">
+							<div>全国统一服务热线：  </div>
+							<div>4008861116</div>
+						  </div>
 					</div>
 				</div>
 				<div class="order-list-manage">
@@ -460,7 +491,8 @@
 									<el-table-column prop="invoiceNumbers" label="发票号" min-width="120">
 										<template slot-scope="scope">
 											<div v-for='(item,index) in scope.row.invoiceNumbers' :key="index">
-												{{item}}
+												<a target="_blank" :href="`http://10.8.0.1/image/invoicePdf/${item}.pdf`"  v-if="scope.row.isUpload[index]==1" style="color:#169BD5;cursor:pointer">{{item}}</a>
+												<span v-else>{{item}}</span>
 											</div>
 										</template>
 									</el-table-column>
@@ -501,7 +533,7 @@
 								<div class="financial-table-price">总金额：<span>￥{{tableDataTotalCny}}</span></div>
 							</el-tab-pane>
 
-							<el-tab-pane label="已确认账单">
+							<el-tab-pane label="已确认账单" v-if="false">
 								<div
 									style="height: 50px;text-align: center;border-bottom:1px dashed rgba(153, 153, 153, 0.2);margin-bottom:10px;">
 									<el-form :inline="true" :model="selectResult" style="float: right;"
@@ -599,26 +631,30 @@
 				<div class="footer-content">
 					<div class="footer-label">
 						<div class="footer-cool" style="margin-bottom: 10px;">
-							<span>Copyright © 2020-2021 17dc.com 丨 沪ICP备2021024815号-1 丨 <a target="_blank"
-									href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
+							<span>Copyright © 2020-2021 17dc.com  丨  <img src="./img/footer-wangjing.png" style="width: 16px;height: 16px; vertical-align: top;" /><a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011802004581" class="register-system-info">沪公网安备 31011802004581号</a>  丨  <a target="_blank" href="./yingyezhizhaoImg.html" class="yingyezhizhao">营业执照</a></span>
 						</div>
 						<!-- <div class="footer-cool" style="margin-bottom: 10px;display: flex;align-items: center;justify-content: center;">
 								<img src="./img/footer-wangjing.png" style="width: 16px;height: 16px;margin-right: 10px;" />
 								<span>沪公网备XXXXXXXXXXXXX号</span>
 							</div> -->
-						<div class="footer-ipc">上海傲晔物流科技有限公司 丨 上海市青浦区诸光路1588弄虹桥世界中心L3B栋</div>
+							<div class="footer-ipc">上海傲晔物流科技有限公司  丨  上海市青浦区诸光路1588弄虹桥世界中心L3B栋  丨  <a target="_blank" href="https://beian.miit.gov.cn/#/Integrated/index">沪ICP备2021024815号-1</a></div>
 					</div>
 					<div class="footer-img"><img alt="图片" src="./img/qcode.png" /></div>
 				</div>
 			</div>
 		</div>
 	</div>
+<!-- WPA start -->
+<script id="qd300910544025a0ebbabd71b26102946a262af043f2" src="https://wp.qiye.qq.com/qidian/3009105440/25a0ebbabd71b26102946a262af043f2" charset="utf-8" async defer></script>
+<!-- WPA end -->
 </body>
 <script src="./service/index.js"></script>
+<script src="./js/utils.js"></script>
 <script>
 	new Vue({
 		el: '#app',
 		data: {
+			phoneContack:'',
 			noteBoolen: false,
 			orderCount:'',
 			tableDataTotalCny: '',
@@ -664,7 +700,7 @@
 				waybillNo: ''
 			},
 			cardLists: [],
-			menuIndex: 1,
+			menuIndex: 4,
 			userInfo: {},
 			openId: '',
 			headerMenu: false,
@@ -705,16 +741,20 @@
 			tableData3: [],
 			tempInvoicePop: '',
 			tempDeparturePop: '',
+			certificationBody:'',
 			invoiceInfosPrice: 0,
 			invoiceInfosArr: []
 		},
 		created() {
-			if (!localStorage.getItem('wxOpenId')) {
-				window.location.href = './login.html'
-			}
+			// if (!localStorage.getItem('wxOpenId')) {
+			// 	window.location.href = './login.html'
+			// }
 			if (localStorage.getItem('userInfo')) {
 				this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
 			}
+			if(localStorage.getItem('certificationBody')) {
+						this.certificationBody = localStorage.getItem('certificationBody')
+					}
 
 			console.log(serviceApi)
 			this.openId = localStorage.getItem('wxOpenId')
@@ -777,8 +817,13 @@
 				this.cardLists=[]
 				this.initBillList()
 			},
-			goQuick() {
+			async goQuick() {
+				await DcUtils.getLocalCertificationBody()
+				if(this.openId == "") {
+					window.location.href = './login.html'
+				} else {
 				window.location.href = './quick.html'
+				}
 			},
 			InvoicingClick(type) {
 
@@ -840,9 +885,9 @@
 						var data = data.data
 						if (data.code == 200) {
 							this.initList()
-							this.$message.success('开票成功')
+							this.$message.success('开票申请成功')
 						} else if (data.code == -200) {
-							window.location.href = './login.html'
+							DcUtils.tokenExpired()
 						} else {
 							this.$message.error(data.message)
 						}
@@ -850,12 +895,14 @@
 				}
 			},
 			invoiceInfosChange(val) {
+				console.log(val)
 				this.invoiceInfosPrice = 0
 				this.invoiceInfosArr = []
 				if (val.length > 0) {
 					for (var i = 0; i < val.length; i++) {
 						this.invoiceInfosPrice += val[i].applyAmount
 						for (var q = 0; q < val[i].billInfos.length; q++) {
+							val[i].billInfos[q].isUpload = val[i].isUpload
 							this.invoiceInfosArr.push(val[i].billInfos[q])
 						}
 					}
@@ -868,6 +915,9 @@
 					}
 
 				}
+				// this.invoiceInfosArr.forEach((item,index)=>{
+				// 	item.isUpload =this.tableData2[index].isUpload
+				// })
 				console.log(this.invoiceInfosArr)
 			},
 			selectionChange(val) {
@@ -908,7 +958,7 @@
 						this.invoiceTitle = data.data[0].invoiceTitle
 						this.invoiceTitleJson = data.data[0]
 					} else if (data.code == -200) {
-						window.location.href = './login.html'
+						DcUtils.tokenExpired()
 					} else {
 						this.$message.error(data.message)
 					}
@@ -928,7 +978,7 @@
 						this.recipient = data.data[0].recipient
 						this.recipientJson = data.data[0]
 					} else if (data.code == -200) {
-						window.location.href = './login.html'
+						DcUtils.tokenExpired()
 					} else {
 						this.$message.error(data.message)
 					}
@@ -969,13 +1019,13 @@
 								1) {
 								tempData[i].invoiceNumbers = tempData[i].invoiceNumbers.split(",").slice(0,
 									-1)
-								tempData[i].tempInvoicePop = tempData[i].invoiceNumbers.pop()
+								tempData[i].tempInvoicePop = tempData[i].invoiceNumbers[0]
 							}
 
 						}
 						this.tableData2 = tempData
 					} else if (data.code == -200) {
-						window.location.href = './login.html'
+						DcUtils.tokenExpired()
 					} else {
 						this.$message.error(data.message)
 					}
@@ -999,7 +1049,7 @@
 						this.tableData1 = data.data
 
 					} else if (data.code == -200) {
-						window.location.href = './login.html'
+						DcUtils.tokenExpired()
 					} else {
 						this.$message.error(data.message)
 					}
@@ -1019,8 +1069,9 @@
 					var data = data.data
 					if (data.code == 200) {
 						this.userInfo = data.data.tportalUser
+						this.phoneContack = data.data.tportalUser.customerServiceTel
 					} else if (data.code == -200) {
-						window.location.href = './login.html'
+						DcUtils.tokenExpired()
 					} else {
 						this.$message.error(data.message)
 					}
@@ -1077,7 +1128,7 @@
 			},
 			tuiChu() {
 				localStorage.clear()
-				window.location.href = './login.html'
+				window.location.href = './index.html'
 			},
 			//登录
 			loginClick() {
