@@ -2000,12 +2000,41 @@ filter: alpha(opacity=0);
 
 .flight-bar-ul {
 	display: flex;
+	position: relative;
 	align-items: center;
 	text-align: center;
 	margin-left: auto;
 	margin-right: 284px;
 }
-
+.flight_title{
+	width: 280px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 12px;
+	position:absolute;
+	right: 280px;
+	color: #2d6aaf;
+	/* font-weight: bold; */
+}
+.flight_title_top{
+	width: 280px;
+	height: 20px;
+	line-height: 20px;
+	font-size: 14px;
+	position:absolute;
+	right: 0px;
+	top: -40px;
+	color: #2273ce;
+	font-weight: bold;
+}
+.flight_title img{
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+}
+.flight_title img:nth-child(1){
+	transform: rotate(180deg);
+}
 .flight-bar-ul .flight-bar-li {
 	color: #333;
 	font-size: 12px;
