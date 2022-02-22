@@ -77,7 +77,9 @@
 							<div>
 								<div class="form-item">
 									<div class="form-item-owrt">
-										<input v-model="trackSearchInput"  @input="valueChange" placeholder="全网货物跟踪，运单信息全掌握" type="text" style="width: 100%;" />
+										<input v-model="trackSearchInput" @focus="isShowYundan = false;isShowhangsi=false;" @input="valueChange" placeholder="全网货物跟踪，运单信息全掌握" type="text" style="width: 100%;" />
+										<span v-show="isShowYundan==true&&isShowhangsi ==false" style="position: relative;bottom: 0px;font-size: 12px;color: #F00;">{{dataTips}}</span>
+										<span v-show="isShowhangsi" style="position: relative;bottom: 0px;font-size: 12px;color: #F00;">该航司暂未支持查询,航司官网：{{website}}</span>
 									</div>
 								</div>
 							</div>
@@ -217,7 +219,11 @@
 				tableData2: [],
 				tableData3: [],
 				userInfo: '',
+				dataTips:'',
+				website:'',
 				headerMenu: false,
+				isShowYundan:false,
+				isShowhangsi:false,
 				isLoading:false,
 			},
 			created() {
@@ -296,6 +302,14 @@
 						if(data.code == 200){
 							this.data = JSON.parse(data.data)
 							// console.log(this.data)
+							if(this.data.errMsg) {
+                              this.isShowYundan = true
+							  this.dataTips = this.data.errMsg
+							}
+							if(this.data.airCompany&&this.data.airCompany.website) {
+								this.isShowhangsi = true
+								this.website = this.data.airCompany.website
+							}
 							this.tableData1 = this.data.cargoInfos
 							this.tableData2 = this.data.flightInfo
 							this.tableData3 = this.data.statusFlows
